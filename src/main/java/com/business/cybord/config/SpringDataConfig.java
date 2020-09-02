@@ -30,8 +30,8 @@ public class SpringDataConfig {
 		HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 		em.setJpaVendorAdapter(vendorAdapter);
 		HashMap<String, Object> properties = new HashMap<>();
-		properties.put("hibernate.hbm2ddl.auto", "validate");
-		properties.put("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
+		properties.put("hibernate.hbm2ddl.auto", "create-drop");
+		properties.put("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
 		em.setJpaPropertyMap(properties);
 		return em;
 	}
