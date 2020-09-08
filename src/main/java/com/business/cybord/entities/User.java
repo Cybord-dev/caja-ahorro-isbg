@@ -11,8 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -28,12 +26,9 @@ public class User {
 	@Column(name = "ID_USER")
 	private int id;
 
-	@NotNull
 	@Column(name = "ACTIVO")
 	private Boolean activo;
 
-	@NotNull
-	@NotEmpty
 	@Column(name = "NOMBRE")
 	private String nombre;
 
