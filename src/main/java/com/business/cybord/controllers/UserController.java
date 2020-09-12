@@ -12,13 +12,13 @@ import com.business.cybord.models.dtos.UserDto;
 import com.business.cybord.services.UserService;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/usuarios")
 public class UserController {
 
 	@Autowired
 	private UserService service;
 
-	@GetMapping("{id}")
+	@GetMapping("/{id}")
 	public ResponseEntity<UserDto> getUserById(@PathVariable Integer id) {
 		return new ResponseEntity<>(service.getUserById(id), HttpStatus.OK);
 	}

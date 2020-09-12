@@ -18,28 +18,34 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "USERS")
+@Table(name = "usuarios")
 public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID_USER")
+	@Column(name = "id_usuario")
 	private int id;
 
-	@Column(name = "ACTIVO")
+	@Column(name = "estatus")
 	private Boolean activo;
 
-	@Column(name = "NOMBRE")
+	@Column(name = "nombre")
 	private String nombre;
+
+	@Column(name = "email")
+	private String email;
+
+	@Column(name = "tipo_usuario")
+	private String tipoUsuario;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
-	@Column(name = "FECHA_CREACION")
+	@Column(name = "fecha_creacion")
 	private Date fechaCreacion;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@LastModifiedDate
-	@Column(name = "FECHA_ACTUALIZACION")
+	@Column(name = "fecha_actualizacion")
 	private Date fechaActualizacion;
 
 	public int getId() {
@@ -66,6 +72,22 @@ public class User {
 		this.nombre = nombre;
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getTipoUsuario() {
+		return tipoUsuario;
+	}
+
+	public void setTipoUsuario(String tipoUsuario) {
+		this.tipoUsuario = tipoUsuario;
+	}
+
 	public Date getFechaCreacion() {
 		return fechaCreacion;
 	}
@@ -84,8 +106,8 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", activo=" + activo + ", nombre=" + nombre + ", fechaCreacion=" + fechaCreacion
-				+ ", fechaActualizacion=" + fechaActualizacion + "]";
+		return "User [id=" + id + ", activo=" + activo + ", nombre=" + nombre + ", email=" + email + ", tipoUsuario="
+				+ tipoUsuario + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
 
 }
