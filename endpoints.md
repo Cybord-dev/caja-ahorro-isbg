@@ -1,3 +1,5 @@
+# [ENDPOINTS DOCUMENTATION]
+
 CATALOGOS
 
 GET /catalogos/{tipo_cat} <-- todo los catalogos de un tipo especifico
