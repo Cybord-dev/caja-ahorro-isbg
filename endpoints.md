@@ -6,9 +6,9 @@ GET /catalogos/{tipo_cat} <-- todo los catalogos de un tipo especifico
 
 GET /catalogos/{tipo_cat}/{nombre} <-- regresa un catalogo especifico
 
-POST /catalogos/{tipo_cat}
+POST /catalogos
 
-PUT /catalogos/{tipo_cat}/{nombre}
+DELETE /catalogos/{tipo_cat}/{nombre}
 
 RESOURCES
 
