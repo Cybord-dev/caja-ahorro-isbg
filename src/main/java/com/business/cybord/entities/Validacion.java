@@ -66,7 +66,15 @@ public class Validacion {
 	@JsonIgnore
     @JoinColumn(name="id_solicitud", insertable=false, updatable=false)
 	private Solicitud solicitud;
-
+	
+	public void update(Validacion n) {
+		this.fechaActualizacion = n.fechaActualizacion;
+		this.fechaCreacion = n.fechaCreacion;
+		this.numeroValidacion = n.numeroValidacion;
+		this.solicitud = n.solicitud;
+		this.tipoValidacion = n.tipoValidacion;
+	}
+	
 	public int getId() {
 		return id;
 	}

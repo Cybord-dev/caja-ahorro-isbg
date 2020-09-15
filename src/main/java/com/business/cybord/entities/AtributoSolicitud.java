@@ -63,6 +63,13 @@ public class AtributoSolicitud {
 	@JsonIgnore
     @JoinColumn(name="id_solicitud", insertable=false, updatable=false)
 	private Solicitud solicitud;
+	
+	public void update(AtributoSolicitud n) {
+		this.fechaActualizacion = n.fechaActualizacion;
+		this.fechaCreacion = n.fechaCreacion;
+		this.nombre = n.nombre;
+		this.valor = n.valor;
+	}
 
 	public int getId() {
 		return id;

@@ -19,8 +19,8 @@ public interface SolicitudMapper {
 	List<SolicitudDto> SolicitudDtoToSolicitud(Stream<Solicitud> dto);
 	
 	//Atributos
-	AtributoSolicitud getEntityFromAtributoDto(AtributoSolicitudDto dto);
-	AtributoSolicitudDto getDtoFromAtributoEntity(AtributoSolicitud dto);
+	AtributoSolicitud getEntityFromAtributoSolicitudDto(AtributoSolicitudDto dto);
+	AtributoSolicitudDto getDtoFromAtributoSolicitudEntity(AtributoSolicitud dto);
 	
 	//Validaciones
 	Validacion getEntityFromValidacionesDto(ValidacionDto dto);

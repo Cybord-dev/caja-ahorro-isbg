@@ -7,6 +7,7 @@ import com.business.cybord.entities.Solicitud;
 public class AtributoSolicitudDto {
 	
 	private int id;
+	private int idSolicitud;
 	private boolean tipoAtributo;
 	private String nombre;
 	private String valor;
@@ -14,6 +15,14 @@ public class AtributoSolicitudDto {
 	private Date fechaActualizacion;
 	private Solicitud solicitud;
 	
+	
+	
+	public int getIdSolicitud() {
+		return idSolicitud;
+	}
+	public void setIdSolicitud(int idSolicitud) {
+		this.idSolicitud = idSolicitud;
+	}
 	public int getId() {
 		return id;
 	}
@@ -58,9 +67,10 @@ public class AtributoSolicitudDto {
 	}
 	@Override
 	public String toString() {
-		return "AtributoSolicitudDto [id=" + id + ", tipoAtributo=" + tipoAtributo + ", nombre=" + nombre + ", valor="
-				+ valor + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
-				+ ", solicitud=" + solicitud + "]";
+		return "AtributoSolicitudDto [id=" + id + ", idSolicitud=" + idSolicitud + ", tipoAtributo=" + tipoAtributo
+				+ ", nombre=" + nombre + ", valor=" + valor + ", fechaCreacion=" + fechaCreacion
+				+ ", fechaActualizacion=" + fechaActualizacion + ", solicitud=" + solicitud + "]";
 	}
+	
 	
 }
