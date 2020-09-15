@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.business.cybord.models.dtos.DatosUsuarioDto;
+import com.business.cybord.models.dtos.SolicitudDto;
 import com.business.cybord.models.dtos.UsuariosDto;
 import com.business.cybord.services.UsuariosService;
 
@@ -40,13 +41,23 @@ public class UsuariosController {
 		return new ResponseEntity<>(service.getUsuariosPorParametros(parameters), HttpStatus.OK);
 	}
 	
+	@PostMapping("/{id}/solicitudes")
+	public ResponseEntity<SolicitudDto> getAllFacturasByParametros(@PathVariable Integer id, @RequestBody @Valid SolicitudDto solicitudDto) {
+		return new ResponseEntity<>(service.crearSolicitud(id, solicitudDto), HttpStatus.OK);
+	}
+	
+	@PutMapping("{id}/solicitudes/{id_solicitud}")
+	public ResponseEntity<SolicitudDto> deleteSolicitud(@PathVariable Integer id, @PathVariable Integer id_solicitud, @RequestBody @Valid SolicitudDto solicitudDto) {
+		return new ResponseEntity<>(service.actualizarSolicitudbyId(id, id_solicitud, solicitudDto), HttpStatus.OK);
+	}
+	
 	@PostMapping
 	public ResponseEntity<UsuariosDto> NewUsuarios(@RequestBody @Valid UsuariosDto usuarioDto) {
 		return new ResponseEntity<>(service.insertarNuevoUsuario(usuarioDto), HttpStatus.OK);
 	}
 	
 	@PutMapping
-	public ResponseEntity<UsuariosDto> upadteUser(@RequestBody @Valid UsuariosDto userDto) {
+	public ResponseEntity<UsuariosDto> updateUser(@RequestBody @Valid UsuariosDto userDto) {
 		return new ResponseEntity<>(service.actualizarUsuario(userDto), HttpStatus.OK);
 	}
 	

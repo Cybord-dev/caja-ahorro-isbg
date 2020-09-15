@@ -23,11 +23,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.cybord.entities.DatosUsuario;
+import com.business.cybord.entities.Solicitud;
 import com.business.cybord.entities.Usuario;
+import com.business.cybord.mappers.SolicitudMapper;
 import com.business.cybord.mappers.UsuariosMapper;
 import com.business.cybord.models.dtos.DatosUsuarioDto;
+import com.business.cybord.models.dtos.SolicitudDto;
 import com.business.cybord.models.dtos.UsuariosDto;
 import com.business.cybord.repositories.DatosUsuarioRepository;
+import com.business.cybord.repositories.SolicitudRepository;
 import com.business.cybord.repositories.UsuariosRepository;
 
 @Service
@@ -42,6 +46,11 @@ public class UsuariosService {
 	@Autowired
 	private DatosUsuarioRepository datosUsuarioRepository;
 	
+	@Autowired
+	private SolicitudRepository solicitudRepository;
+	
+	@Autowired
+	private SolicitudMapper solicitudMapper;
 	
 	
 	private static final Logger log = LoggerFactory.getLogger(UsuariosService.class);
@@ -141,6 +150,26 @@ public class UsuariosService {
 		DatosUsuario entity = datosUsuarioRepository.findById(id).orElseThrow(
 				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("El Dato no existe %s", id)));
 		datosUsuarioRepository.delete(entity);
+	}
+	
+	public SolicitudDto actualizarSolicitudbyId(int idUsuario, int idSolicitud, SolicitudDto nueva) {
+		Usuario usuario = repository.findById(idUsuario).orElseThrow(
+				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("user no existe %d", idUsuario)));
+		Optional<Solicitud> solicitud = solicitudRepository.findByUsuarioAndId(usuario, idSolicitud);
+		if(solicitud.isPresent()) {
+			solicitud.get().update(mapper.getEntityFromSolicitudDto(nueva));
+			return solicitudMapper.getDtoFromSolicitudEntity(solicitud.get());
+		}else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("la solicitud id= %d no existe", idSolicitud));
+		}
+	}
+	
+	public SolicitudDto crearSolicitud(int id, SolicitudDto solicitud) {
+		Usuario usuario = repository.findById(id).orElseThrow(
+				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("usuario id= %d no existe", id)));
+		Solicitud nueva = solicitudRepository.save(mapper.getEntityFromSolicitudDto(solicitud));
+		return mapper.getDtoFromSolicitudEntity(nueva);
+		
 	}
 	
 }
