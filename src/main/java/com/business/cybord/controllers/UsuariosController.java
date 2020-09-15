@@ -42,12 +42,12 @@ public class UsuariosController {
 	}
 	
 	@PostMapping("/{id}/solicitudes")
-	public ResponseEntity<SolicitudDto> getAllFacturasByParametros(@PathVariable Integer id, @RequestBody @Valid SolicitudDto solicitudDto) {
+	public ResponseEntity<SolicitudDto> crearSolicitudesUsuario(@PathVariable Integer id, @RequestBody @Valid SolicitudDto solicitudDto) {
 		return new ResponseEntity<>(service.crearSolicitud(id, solicitudDto), HttpStatus.OK);
 	}
 	
 	@PutMapping("{id}/solicitudes/{id_solicitud}")
-	public ResponseEntity<SolicitudDto> deleteSolicitud(@PathVariable Integer id, @PathVariable Integer id_solicitud, @RequestBody @Valid SolicitudDto solicitudDto) {
+	public ResponseEntity<SolicitudDto> actualizarSolicitud(@PathVariable Integer id, @PathVariable Integer id_solicitud, @RequestBody @Valid SolicitudDto solicitudDto) {
 		return new ResponseEntity<>(service.actualizarSolicitudbyId(id, id_solicitud, solicitudDto), HttpStatus.OK);
 	}
 	
