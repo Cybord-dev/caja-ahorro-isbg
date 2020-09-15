@@ -33,28 +33,10 @@ CREATE TABLE `PRESTAMO` (
   `fecha_actualizacion` timestamp NOT NULL
 );
 
-CREATE TABLE `AHORRADOR` (
-  `id_ahorrador` int(11) NOT NULL AUTO_INCREMENT,
-  `id_usuario` int(11) NOT NULL,
-  `monto_ahorro` decimal(10,2) NOT NULL,
-  `porcentaje_ahorro` decimal(5,2)  NOT NULL,
-  `antiguedad` timestamp NOT NULL,
-  `sueldo` decimal(10,2) NOT NULL,
-  `fecha_creacion` timestamp NOT NULL,
-  `fecha_actualizacion` timestamp NOT NULL
-);
-
-CREATE TABLE `DEUDOR` (
-  `id_deudor` int(11) NOT NULL AUTO_INCREMENT,
-  `id_usuario` int(11) NOT NULL,
-  `antiguedad` timestamp NOT NULL,
-  `sueldo` decimal(10,2) NOT NULL,
-  `fecha_creacion` timestamp NOT NULL,
-  `fecha_actualizacion` timestamp NOT NULL
-);
 
 CREATE TABLE `DATOS_USER` (
-  `id_datos` int(11) NOT NULL,
+  `id_datos_user` int(11) NOT NULL AUTO_INCREMENT,
+  `id_usuario` int(11) NOT NULL,
   `tipo_dato` varchar(50) NOT NULL,
   `dato` varchar(100) NOT NULL DEFAULT '0',
   `relevancia` tinyint(1) NOT NULL DEFAULT '0',

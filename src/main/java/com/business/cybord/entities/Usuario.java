@@ -1,13 +1,14 @@
 package com.business.cybord.entities;
 
 import java.util.Date;
-
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -16,10 +17,13 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "usuarios")
-public class User {
+public class Usuario {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,7 +51,13 @@ public class User {
 	@LastModifiedDate
 	@Column(name = "fecha_actualizacion")
 	private Date fechaActualizacion;
-
+	
+	@OneToMany(mappedBy="usuario")
+	private List<DatosUsuario> datosUsuario;
+	
+	@OneToMany(mappedBy="usuario")
+	private List<Rol>roles;
+	
 	public int getId() {
 		return id;
 	}
@@ -104,10 +114,25 @@ public class User {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", activo=" + activo + ", nombre=" + nombre + ", email=" + email + ", tipoUsuario="
-				+ tipoUsuario + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
+	public List<DatosUsuario> getDatosUsuario() {
+		return datosUsuario;
 	}
 
+	public void setDatosUsuario(List<DatosUsuario> datosUsuario) {
+		this.datosUsuario = datosUsuario;
+	}
+
+	@Override
+	public String toString() {
+		return "Usuarios [id=" + id + ", activo=" + activo + ", nombre=" + nombre + ", email=" + email
+				+ ", tipoUsuario=" + tipoUsuario + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
+				+ fechaActualizacion + ", datosUsuario=" + datosUsuario + "]";
+	}
+
+	
+
+	
+
+
+	
 }

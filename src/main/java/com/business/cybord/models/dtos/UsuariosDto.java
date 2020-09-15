@@ -2,13 +2,15 @@ package com.business.cybord.models.dtos;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
+import com.business.cybord.entities.DatosUsuario;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UserDto implements Serializable {
+public class UsuariosDto implements Serializable {
 
 	private static final long serialVersionUID = 2329712110850660822L;
 	
@@ -19,6 +21,8 @@ public class UserDto implements Serializable {
 	private String tipoUsuario;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
+	private List<DatosUsuario> datosUsuario;
+
 	
 	public int getId() {
 		return id;
@@ -62,11 +66,22 @@ public class UserDto implements Serializable {
 	public void setFechaActualizacion(Date fechaActualizacion) {
 		this.fechaActualizacion = fechaActualizacion;
 	}
-	
+	public List<DatosUsuario> getDatosUsuario() {
+		return datosUsuario;
+	}
+	public void setDatosUsuario(List<DatosUsuario> datosUsuario) {
+		this.datosUsuario = datosUsuario;
+	}
 	@Override
 	public String toString() {
-		return "UserDto [id=" + id + ", activo=" + activo + ", nombre=" + nombre + ", email=" + email + ", tipoUsuario="
-				+ tipoUsuario + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
+		return "UsuariosDto [id=" + id + ", activo=" + activo + ", nombre=" + nombre + ", email=" + email
+				+ ", tipoUsuario=" + tipoUsuario + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
+				+ fechaActualizacion + ", datosUsuario=" + datosUsuario + "]";
 	}
+	
+	
+	
+	
+	
 
 }
