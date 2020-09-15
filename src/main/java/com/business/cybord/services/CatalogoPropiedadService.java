@@ -20,7 +20,7 @@ public class CatalogoPropiedadService {
 	private CatalogoPropiedadRepository repository;
 	@Autowired
 	private CatalogoPropiedadMapper mapper;
-	private static final Logger log = LoggerFactory.getLogger(UserService.class);
+	private static final Logger log = LoggerFactory.getLogger(CatalogoPropiedadService.class);
 	
 	public List<CatalogoPropiedadDto> getCatPropiedadByTipo(String tipo) {
 		log.info("Buscando CAT_PROPIEDADES de tipo : {}", tipo);
