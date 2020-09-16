@@ -23,6 +23,7 @@ import com.business.cybord.models.dtos.SolicitudDto;
 import com.business.cybord.models.dtos.UsuariosDto;
 import com.business.cybord.models.dtos.ValidacionDto;
 import com.business.cybord.services.UsuariosService;
+import com.business.cybord.services.ValidacionService;
 
 
 @RestController
@@ -57,8 +58,9 @@ public class UsuariosController {
 		return new ResponseEntity<>(service.crearValidacion(id, validacionDto), HttpStatus.OK);
 	}
 	
+	
 	@PutMapping("/{id}/validaciones/{id_validacion}")
-	public ResponseEntity<ValidacionDto> actualizarSolicitudbyId(@PathVariable Integer id, @PathVariable Integer id_validacion, @RequestBody @Valid ValidacionDto validacionDto) {
+	public ResponseEntity<ValidacionDto> actualizarValidacionbyId(@PathVariable Integer id, @PathVariable Integer id_validacion, @RequestBody @Valid ValidacionDto validacionDto) {
 		return new ResponseEntity<>(service.actualizarValidacionById(id, id_validacion, validacionDto), HttpStatus.OK);
 	}
 	

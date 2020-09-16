@@ -41,11 +41,6 @@ public class SolicitudContoller {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
-	//realocar
-	@PostMapping("/{id}/validaciones")
-	public ResponseEntity<ValidacionDto> getValidacionById(@PathVariable Integer id) {
-		return new ResponseEntity<>(validacionService.getValidacionById(id), HttpStatus.OK);
-	}
 	
 	@PostMapping("/{id}/atributos")
 	public ResponseEntity<AtributoSolicitudDto> crearAtributoById(@PathVariable Integer id, @RequestBody @Valid AtributoSolicitudDto atributo) {
