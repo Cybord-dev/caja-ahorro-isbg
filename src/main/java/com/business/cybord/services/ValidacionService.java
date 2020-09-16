@@ -1,9 +1,10 @@
 package com.business.cybord.services;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.business.cybord.entities.Validacion;
 import com.business.cybord.mappers.SolicitudMapper;
@@ -18,15 +19,9 @@ public class ValidacionService {
 	@Autowired
 	SolicitudMapper mapper;
 	
-	public ValidacionDto getValidacionById(int id) {
-		Validacion entity = repositoryValidacion.findById(id).orElseThrow(
-				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("La validacion id=%d no existe", id)));
-		return mapper.getDtoFromValidacionesEntity(entity);
-	}
-	
-	public void deleteValidacionById(int id) {
-		Validacion entity = repositoryValidacion.findById(id).orElseThrow(
-				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("La validacion id=%d no existe", id)));
-		repositoryValidacion.delete(entity);
+	public List<ValidacionDto> getAllValidaciones(){
+		List<Validacion> validaciones = new ArrayList<>();
+		repositoryValidacion.findAll().forEach(validaciones::add);
+		return mapper.ValidacionDtoToValidacion(validaciones.stream());
 	}
 }

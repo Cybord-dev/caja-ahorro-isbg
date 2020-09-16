@@ -13,7 +13,6 @@ public class AtributoSolicitudDto {
 	private String valor;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
-	private Solicitud solicitud;
 	
 	
 	
@@ -59,18 +58,7 @@ public class AtributoSolicitudDto {
 	public void setFechaActualizacion(Date fechaActualizacion) {
 		this.fechaActualizacion = fechaActualizacion;
 	}
-	public Solicitud getSolicitud() {
-		return solicitud;
-	}
-	public void setSolicitud(Solicitud solicitud) {
-		this.solicitud = solicitud;
-	}
-	@Override
-	public String toString() {
-		return "AtributoSolicitudDto [id=" + id + ", idSolicitud=" + idSolicitud + ", tipoAtributo=" + tipoAtributo
-				+ ", nombre=" + nombre + ", valor=" + valor + ", fechaCreacion=" + fechaCreacion
-				+ ", fechaActualizacion=" + fechaActualizacion + ", solicitud=" + solicitud + "]";
-	}
+	
 	
 	
 }

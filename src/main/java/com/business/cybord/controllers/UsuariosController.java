@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.business.cybord.models.dtos.AtributoSolicitudDto;
 import com.business.cybord.models.dtos.DatosUsuarioDto;
 import com.business.cybord.models.dtos.SolicitudDto;
 import com.business.cybord.models.dtos.UsuariosDto;
@@ -43,26 +44,6 @@ public class UsuariosController {
 		return new ResponseEntity<>(service.getUsuariosPorParametros(parameters), HttpStatus.OK);
 	}
 	
-	@PostMapping("/{id}/solicitudes")
-	public ResponseEntity<SolicitudDto> crearSolicitudUsuario(@PathVariable Integer id, @RequestBody @Valid SolicitudDto solicitudDto) {
-		return new ResponseEntity<>(service.crearSolicitudUsuario(id, solicitudDto), HttpStatus.OK);
-	}
-	
-	@PutMapping("{id}/solicitudes/{id_solicitud}")
-	public ResponseEntity<SolicitudDto> actualizarSolicitudbyId(@PathVariable Integer id, @PathVariable Integer id_solicitud, @RequestBody @Valid SolicitudDto solicitudDto) {
-		return new ResponseEntity<>(service.actualizarSolicitudbyId(id, id_solicitud, solicitudDto), HttpStatus.OK);
-	}
-	
-	@PostMapping("/{id}/validaciones")
-	public ResponseEntity<ValidacionDto> crearValidacionesUsuario(@PathVariable Integer id, @RequestBody @Valid ValidacionDto validacionDto) {
-		return new ResponseEntity<>(service.crearValidacion(id, validacionDto), HttpStatus.OK);
-	}
-	
-	
-	@PutMapping("/{id}/validaciones/{id_validacion}")
-	public ResponseEntity<ValidacionDto> actualizarValidacionbyId(@PathVariable Integer id, @PathVariable Integer id_validacion, @RequestBody @Valid ValidacionDto validacionDto) {
-		return new ResponseEntity<>(service.actualizarValidacionById(id, id_validacion, validacionDto), HttpStatus.OK);
-	}
 	
 	@PostMapping
 	public ResponseEntity<UsuariosDto> NewUsuarios(@RequestBody @Valid UsuariosDto usuarioDto) {
@@ -93,6 +74,74 @@ public class UsuariosController {
 	@DeleteMapping("/datos/{id}")
 	public ResponseEntity<Void> setborrarDatoUsuario(@PathVariable Integer id) {
 		service.borraDatoUsuario(id);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	/**Solicitudes**/
+	@PostMapping("/{id_usuario}/solicitudes")
+	public ResponseEntity<SolicitudDto> crearSolicitudUsuario(@PathVariable Integer id_usuario, @RequestBody @Valid SolicitudDto solicitudDto) {
+		return new ResponseEntity<>(service.crearSolicitudUsuario(id_usuario, solicitudDto), HttpStatus.OK);
+	}
+	
+	@PutMapping("/{id_usuario}/solicitudes/{id_solicitud}")
+	public ResponseEntity<SolicitudDto> actualizarSolicitudbyId(@PathVariable Integer id_usuario, @PathVariable Integer id_solicitud, @RequestBody @Valid SolicitudDto solicitudDto) {
+		return new ResponseEntity<>(service.actualizarSolicitudbyId(id_usuario, id_solicitud, solicitudDto), HttpStatus.OK);
+	}
+	
+	@GetMapping("/{id_usuario}/solicitudes/{id_solicitud}")
+	public ResponseEntity<SolicitudDto> getSolicitudById(@PathVariable Integer id_usuario, @PathVariable Integer id_solicitud) {
+		return new ResponseEntity<>(service.getSolicitudById(id_usuario,id_solicitud), HttpStatus.OK);
+	}
+	
+	@DeleteMapping("/{id_usuario}/solicitudes/{id_solicitud}")
+	public ResponseEntity<Void> deleteSolicitudById(@PathVariable Integer id_usuario, @PathVariable Integer id_solicitud) {
+		service.deleteSolicitudById(id_usuario, id_solicitud);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	/*Validaciones*/
+	@PostMapping("/{id_usuario}/solicitudes/{id_solicitud}/validaciones")
+	public ResponseEntity<ValidacionDto> crearValidacionesUsuario(@PathVariable Integer id_usuario,@PathVariable Integer id_solicitud ,@RequestBody @Valid ValidacionDto validacionDto) {
+		return new ResponseEntity<>(service.crearValidacion(id_usuario,id_solicitud, validacionDto), HttpStatus.OK);
+	}
+	
+	
+	@PutMapping("/{id_usuario}/solicitudes/{id_solicitud}/validaciones/{id_validacion}")
+	public ResponseEntity<ValidacionDto> actualizarValidacionbyId(@PathVariable Integer id_usuario,@PathVariable Integer id_solicitud,@PathVariable Integer id_validacion, @RequestBody @Valid ValidacionDto validacionDto) {
+		return new ResponseEntity<>(service.actualizarValidacionById(id_usuario, id_solicitud,id_validacion,validacionDto), HttpStatus.OK);
+	}
+	
+	@GetMapping("/{id_usuario}/solicitudes/{id_solicitud}/validaciones/{id_validacion}")
+	public ResponseEntity<ValidacionDto> getValidacionById(@PathVariable Integer id_usuario,@PathVariable Integer id_solicitud,@PathVariable Integer id_validacion) {
+		return new ResponseEntity<>(service.getValidacionById(id_usuario, id_solicitud, id_validacion), HttpStatus.OK);
+	}
+	
+	@DeleteMapping("/{id_usuario}/solicitudes/{id_solicitud}/validaciones/{id_validacion}")
+	public ResponseEntity<Void> deleteValidacionById(@PathVariable Integer id_usuario, @PathVariable Integer id_solicitud, @PathVariable Integer id_validacion) {
+		service.deleteValidacionById(id_usuario, id_solicitud, id_validacion);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	/*Atributos-Solicitud*/
+	
+	@PostMapping("/{id_usuario}/solicitudes/{id_solicitud}/atributos")
+	public ResponseEntity<AtributoSolicitudDto> crearAtributoById(@PathVariable Integer id_usuario,@PathVariable Integer id_solicitud, @RequestBody @Valid AtributoSolicitudDto atributo) {
+		return new ResponseEntity<>(service.createAtributoSolicitud(id_usuario, id_solicitud, atributo), HttpStatus.OK);
+	}
+	
+	@PutMapping("/{id_usuario}/solicitudes/{id_solicitud}/atributos/{id_atributo}")
+	public ResponseEntity<AtributoSolicitudDto> actualizarAtributoById(@PathVariable Integer id_usuario, @PathVariable Integer id_solicitud,@PathVariable Integer id_atributo,  @RequestBody @Valid AtributoSolicitudDto atributo) {
+		return new ResponseEntity<>(service.actualizarAtributoSolicitud(id_usuario, id_solicitud, id_atributo, atributo), HttpStatus.OK);
+	}
+	
+	@GetMapping("/{id_usuario}/solicitudes/{id_solicitud}/atributos/{id_atributo}")
+	public ResponseEntity<AtributoSolicitudDto> getAtributoSolicitudById(@PathVariable Integer id_usuario, @PathVariable Integer id_solicitud,@PathVariable Integer id_atributo) {
+		return new ResponseEntity<>(service.getAtributoSolicitudById(id_usuario, id_solicitud, id_atributo), HttpStatus.OK);
+	}
+	
+	@DeleteMapping("/{id_usuario}/solicitudes/{id_solicitud}/atributos/{id_atributo}")
+	public ResponseEntity<Void> deleteAtributoSolicitudById(@PathVariable Integer id_usuario, @PathVariable Integer id_solicitud,@PathVariable Integer id_atributo) {
+		service.deleteAtributoSolicitudById(id_usuario, id_solicitud, id_atributo);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

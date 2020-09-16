@@ -26,7 +26,9 @@ import javax.validation.constraints.NotNull;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -39,7 +41,7 @@ public class Solicitud {
 	private int id;
 	
 	@Column(name = "id_usuario")
-	private int idUsuario;
+	private Integer idUsuario;
 	
 	@NotNull
 	@Column(name = "tipo_solicitud")
@@ -77,19 +79,19 @@ public class Solicitud {
 	private Date fechaActualizacion;
 	
 	@ManyToOne(optional=false)
-	@JsonIgnore
     @JoinColumn(name="id_usuario", insertable=false, updatable=false)
+	@JsonIgnore
 	private Usuario usuario;
 	
 	@OneToMany(mappedBy = "solicitud")
+	@JsonIgnore
 	private List<AtributoSolicitud> atributos;
 	
 	@OneToMany(mappedBy = "solicitud")
+	@JsonIgnore
 	private List<Validacion> validaciones;
 	
 	public void update(Solicitud n) {
-		this.atributos = n.getAtributos();
-		this.validaciones = n.getValidaciones();
 		this.fechaActualizacion = n.getFechaActualizacion();
 		this.fechaCreacion = n.getFechaCreacion();
 		this.fechaEjecucion = n.getFechaEjecucion();
@@ -175,11 +177,11 @@ public class Solicitud {
 		this.validaciones = validaciones;
 	}
 
-	public int getIdUsuario() {
+	public Integer getIdUsuario() {
 		return idUsuario;
 	}
 
-	public void setIdUsuario(int idUsuario) {
+	public void setIdUsuario(Integer idUsuario) {
 		this.idUsuario = idUsuario;
 	}
 

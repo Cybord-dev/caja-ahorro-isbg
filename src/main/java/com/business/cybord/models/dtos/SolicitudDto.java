@@ -11,6 +11,7 @@ import com.business.cybord.entities.Validacion;
 public class SolicitudDto {
 	
 	private int id;
+	private Integer idUsuario;
 	private String tipo;
 	private String status;
 	private String statusDetalle;
@@ -19,7 +20,6 @@ public class SolicitudDto {
 	private Date fechaEjecucion;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
-	private Usuario usuario;
 	private List<AtributoSolicitud> atributos;
 	private List<Validacion> validaciones;
 	public int getId() {
@@ -76,12 +76,7 @@ public class SolicitudDto {
 	public void setFechaActualizacion(Date fechaActualizacion) {
 		this.fechaActualizacion = fechaActualizacion;
 	}
-	public Usuario getUsuario() {
-		return usuario;
-	}
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
-	}
+	
 	public List<AtributoSolicitud> getAtributos() {
 		return atributos;
 	}
@@ -94,13 +89,13 @@ public class SolicitudDto {
 	public void setValidaciones(List<Validacion> validaciones) {
 		this.validaciones = validaciones;
 	}
-	@Override
-	public String toString() {
-		return "SolicitudDto [id=" + id + ", tipo=" + tipo + ", status=" + status + ", statusDetalle=" + statusDetalle
-				+ ", porcentaje=" + porcentaje + ", cantidad=" + cantidad + ", fechaEjecucion=" + fechaEjecucion
-				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + ", usuario="
-				+ usuario + ", atributos=" + atributos + ", validaciones=" + validaciones + "]";
+	public Integer getIdUsuario() {
+		return idUsuario;
 	}
+	public void setIdUsuario(Integer idUsuario) {
+		this.idUsuario = idUsuario;
+	}
+	
 	
 	
 }
