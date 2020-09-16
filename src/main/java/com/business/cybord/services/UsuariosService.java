@@ -61,6 +61,7 @@ public class UsuariosService {
 	@Autowired
 	private ValidacionRepository validacionRepository;
 	
+	@Autowired
 	private AtributoSolicitudRepository atribRepository;
 	
 	@Autowired
