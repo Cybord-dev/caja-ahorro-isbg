@@ -19,8 +19,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -125,6 +123,16 @@ public class Usuario {
 
 	public void setDatosUsuario(List<DatosUsuario> datosUsuario) {
 		this.datosUsuario = datosUsuario;
+	}
+	
+	
+
+	public List<Rol> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<Rol> roles) {
+		this.roles = roles;
 	}
 
 	@Override
