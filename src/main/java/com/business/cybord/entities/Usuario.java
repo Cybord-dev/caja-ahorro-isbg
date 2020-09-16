@@ -3,7 +3,6 @@ package com.business.cybord.entities;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -18,7 +17,6 @@ import javax.persistence.TemporalType;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -58,8 +56,11 @@ public class Usuario {
 	@OneToMany(mappedBy="usuario")
 	private List<Rol>roles;
 	
-	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "usuario")
 	private List<Solicitud> solicitudes;
+	
+	@OneToMany(mappedBy = "usuario")
+	private List<Validacion> validaciones;
 	
 	public int getId() {
 		return id;
@@ -137,15 +138,14 @@ public class Usuario {
 
 	@Override
 	public String toString() {
-		return "Usuarios [id=" + id + ", activo=" + activo + ", nombre=" + nombre + ", email=" + email
-				+ ", tipoUsuario=" + tipoUsuario + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
-				+ fechaActualizacion + ", datosUsuario=" + datosUsuario + "]";
+		return "Usuario [id=" + id + ", activo=" + activo + ", nombre=" + nombre + ", email=" + email + ", tipoUsuario="
+				+ tipoUsuario + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
+				+ ", datosUsuario=" + datosUsuario + ", roles=" + roles + ", solicitudes=" + solicitudes
+				+ ", validaciones=" + validaciones + "]";
 	}
 
-	
 
 	
-
 
 	
 }

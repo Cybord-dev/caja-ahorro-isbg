@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.business.cybord.models.dtos.DatosUsuarioDto;
+import com.business.cybord.models.dtos.SolicitudDto;
 import com.business.cybord.models.dtos.UsuariosDto;
+import com.business.cybord.models.dtos.ValidacionDto;
 import com.business.cybord.services.UsuariosService;
 
 
@@ -40,13 +42,33 @@ public class UsuariosController {
 		return new ResponseEntity<>(service.getUsuariosPorParametros(parameters), HttpStatus.OK);
 	}
 	
+	@PostMapping("/{id}/solicitudes")
+	public ResponseEntity<SolicitudDto> crearSolicitudUsuario(@PathVariable Integer id, @RequestBody @Valid SolicitudDto solicitudDto) {
+		return new ResponseEntity<>(service.crearSolicitudUsuario(id, solicitudDto), HttpStatus.OK);
+	}
+	
+	@PutMapping("{id}/solicitudes/{id_solicitud}")
+	public ResponseEntity<SolicitudDto> actualizarSolicitudbyId(@PathVariable Integer id, @PathVariable Integer id_solicitud, @RequestBody @Valid SolicitudDto solicitudDto) {
+		return new ResponseEntity<>(service.actualizarSolicitudbyId(id, id_solicitud, solicitudDto), HttpStatus.OK);
+	}
+	
+	@PostMapping("/{id}/validaciones")
+	public ResponseEntity<ValidacionDto> crearValidacionesUsuario(@PathVariable Integer id, @RequestBody @Valid ValidacionDto validacionDto) {
+		return new ResponseEntity<>(service.crearValidacion(id, validacionDto), HttpStatus.OK);
+	}
+	
+	@PutMapping("/{id}/validaciones/{id_validacion}")
+	public ResponseEntity<ValidacionDto> actualizarSolicitudbyId(@PathVariable Integer id, @PathVariable Integer id_validacion, @RequestBody @Valid ValidacionDto validacionDto) {
+		return new ResponseEntity<>(service.actualizarValidacionById(id, id_validacion, validacionDto), HttpStatus.OK);
+	}
+	
 	@PostMapping
 	public ResponseEntity<UsuariosDto> NewUsuarios(@RequestBody @Valid UsuariosDto usuarioDto) {
 		return new ResponseEntity<>(service.insertarNuevoUsuario(usuarioDto), HttpStatus.OK);
 	}
 	
 	@PutMapping
-	public ResponseEntity<UsuariosDto> upadteUser(@RequestBody @Valid UsuariosDto userDto) {
+	public ResponseEntity<UsuariosDto> updateUser(@RequestBody @Valid UsuariosDto userDto) {
 		return new ResponseEntity<>(service.actualizarUsuario(userDto), HttpStatus.OK);
 	}
 	

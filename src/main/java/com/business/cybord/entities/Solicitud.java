@@ -5,7 +5,9 @@ package com.business.cybord.entities;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -13,11 +15,18 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -27,29 +36,75 @@ public class Solicitud {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_solicitud")
+	private int id;
+	
+	@Column(name = "id_usuario")
 	private int idUsuario;
+	
+	@NotNull
+	@Column(name = "tipo_solicitud")
 	private String tipo;
+	
+	@NotNull
+	@Column(name = "estatus")
 	private String status;
+	
+	@NotNull
+	@Column(name = "estatus_detalle")
 	private String statusDetalle;
+	
+	@NotNull
+	@Column(name = "porcentaje")
 	private BigDecimal porcentaje;
+	
+	@NotNull
+	@Column(name = "cantidad")
 	private BigDecimal cantidad;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@CreatedDate
+	@Column(name = "fecha_ejecucion")
 	private Date fechaEjecucion;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@CreatedDate
+	@Column(name = "fecha_creacion")
 	private Date fechaCreacion;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@CreatedDate
+	@Column(name = "fecha_actualizacion")
 	private Date fechaActualizacion;
-	@ManyToOne(fetch = FetchType.LAZY)
+	
+	@ManyToOne(optional=false)
+	@JsonIgnore
+    @JoinColumn(name="id_usuario", insertable=false, updatable=false)
 	private Usuario usuario;
+	
+	@OneToMany(mappedBy = "solicitud")
+	private List<AtributoSolicitud> atributos;
+	
+	@OneToMany(mappedBy = "solicitud")
+	private List<Validacion> validaciones;
+	
+	public void update(Solicitud n) {
+		this.atributos = n.getAtributos();
+		this.validaciones = n.getValidaciones();
+		this.fechaActualizacion = n.getFechaActualizacion();
+		this.fechaCreacion = n.getFechaCreacion();
+		this.fechaEjecucion = n.getFechaEjecucion();
+		this.cantidad = n.getCantidad();
+		this.porcentaje = n.getPorcentaje();
+		this.status = n.getStatus();
+		this.statusDetalle = n.getStatusDetalle();
+		this.tipo = n.getTipo();
+	}
 	
 	public int getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
-	}
-	public int getIdUsuario() {
-		return idUsuario;
-	}
-	public void setIdUsuario(int idUsuario) {
-		this.idUsuario = idUsuario;
 	}
 	public String getTipo() {
 		return tipo;
@@ -100,6 +155,42 @@ public class Solicitud {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 	
+	
+	public Usuario getUsuario() {
+		return usuario;
+	}
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+	public List<AtributoSolicitud> getAtributos() {
+		return atributos;
+	}
+	public void setAtributos(List<AtributoSolicitud> atributos) {
+		this.atributos = atributos;
+	}
+	public List<Validacion> getValidaciones() {
+		return validaciones;
+	}
+	public void setValidaciones(List<Validacion> validaciones) {
+		this.validaciones = validaciones;
+	}
+
+	public int getIdUsuario() {
+		return idUsuario;
+	}
+
+	public void setIdUsuario(int idUsuario) {
+		this.idUsuario = idUsuario;
+	}
+
+	@Override
+	public String toString() {
+		return "Solicitud [id=" + id + ", idUsuario=" + idUsuario + ", tipo=" + tipo + ", status=" + status
+				+ ", statusDetalle=" + statusDetalle + ", porcentaje=" + porcentaje + ", cantidad=" + cantidad
+				+ ", fechaEjecucion=" + fechaEjecucion + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
+				+ fechaActualizacion + ", usuario=" + usuario + ", atributos=" + atributos + ", validaciones="
+				+ validaciones + "]";
+	}
 	
 	
 	
