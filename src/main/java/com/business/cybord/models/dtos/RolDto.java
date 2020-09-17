@@ -15,7 +15,7 @@ public class RolDto {
 	private int id;
 	private int idUsuario;
 	private int idRol;
-    private Usuario usuario;
+//    private Usuario usuario;
 	private RolCat rolname;
 	
 	public int getId() {
@@ -30,12 +30,12 @@ public class RolDto {
 	public void setIdUsuario(int idUsuario) {
 		this.idUsuario = idUsuario;
 	}
-	public Usuario getUsuario() {
-		return usuario;
-	}
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
-	}
+//	public Usuario getUsuario() {
+//		return usuario;
+//	}
+//	public void setUsuario(Usuario usuario) {
+//		this.usuario = usuario;
+//	}
 	public RolCat getRolname() {
 		return rolname;
 	}
@@ -52,7 +52,7 @@ public class RolDto {
 	}
 	@Override
 	public String toString() {
-		return "RolDto [id=" + id + ", idUsuario=" + idUsuario + ", usuario=" + usuario + ", rolname=" + rolname + "]";
+		return "RolDto [id=" + id + ", idUsuario=" + idUsuario + ", rolname=" + rolname + "]";
 	}
 	
 	

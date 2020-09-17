@@ -9,7 +9,7 @@ CREATE TABLE `CAT_ROLES` (
 
 CREATE TABLE `USER_ROLES` (
   `id` int(11) NOT NULL,
-  `id_user` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
   `id_rol` int(11) NOT NULL
 );
 
@@ -105,7 +105,7 @@ CREATE TABLE `SALDO_PRESTAMO` (
   `fecha_actualizacion` timestamp NOT NULL
 );
 
-CREATE TABLE `RESOURSCES` (
+CREATE TABLE `RESOURCES` (
   `id_recurso` int(11) NOT NULL AUTO_INCREMENT,
   `referencia` varchar(45) NOT NULL,
   `tipo_referencia` tinyint(1) NOT NULL DEFAULT '0',

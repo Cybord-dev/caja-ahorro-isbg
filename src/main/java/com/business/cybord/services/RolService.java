@@ -35,7 +35,7 @@ public class RolService {
 	
 	public RolDto insertNuevoRol(Integer userId,RolDto roleDto) {
 		Usuario entity = repositoryUsuario.findById(userId).orElseThrow(
-				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("usuario no existe %d", userId)));
+				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Usuario no existe %d", userId)));
 		Optional<Rol> rol = repository.findByIdRolAndIdUsuario(userId, roleDto.getId());
 		if(rol.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("Ya existe el rol con el nombre %s para el user %d",roleDto.getRolname().getNombre(),userId));
@@ -44,6 +44,21 @@ public class RolService {
 			role.setUsuario(entity);
 			return rolMapper.getDtoFromRolEntity(repository.save(role));
 		}
+	}
+	
+	public List<RolDto> getRolesPorUsuarioId(Integer id) {
+		Usuario entity = repositoryUsuario.findById(id).orElseThrow(
+				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Usuario no existe %d", id)));
+		return rolMapper.getDtosFromRolsEntity(repository.findByUserId(entity.getId()));
+	}
+	
+	public void borrarRolePorUsuarioIdyIdRol(Integer userId, Integer id) {
+		Usuario entity = repositoryUsuario.findById(userId).orElseThrow(
+				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Usuario no existe %d", userId)));
+		Rol rol = repository.findByIdUsuarioAndId(entity.getId(), id).orElseThrow(
+				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Rol no existe %d", id)));
+		;
+		repository.delete(rol);
 	}
 
 }

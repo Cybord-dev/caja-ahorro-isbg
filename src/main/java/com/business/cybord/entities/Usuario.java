@@ -127,6 +127,8 @@ public class Usuario {
 	}
 	
 	
+	
+	
 
 	public List<Rol> getRoles() {
 		return roles;

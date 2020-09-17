@@ -33,8 +33,6 @@ public class Rol {
 	@JsonIgnore
     @JoinColumn(name="id_usuario", insertable=false, updatable=false)
     private Usuario usuario;
-	
-	
 
 
 	@OneToOne(cascade = CascadeType.ALL)
