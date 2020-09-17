@@ -19,6 +19,7 @@ INSERT /recursos
 
 SALDO AHORRO & SALDO PRESTAMO
 
+
 GET /usuarios/{id_user}/ahorros  <-- TODOS LOS AHORROS DE UN USUARIO
 GET /usuarios/{id_user}/ahorros/{id_ahorro} <-- ahorro especifico
 
@@ -30,8 +31,9 @@ GET /usuarios/{id_user}/prestamos  <-- TODOS LOS prestamos DE UN USUARIO
 GET /usuarios/{id_user}/prestamos/{id_ahorro} <-- prestamo especifico
 
 POST GET /usuarios/{id_user}/prestamos
-
-
+GET /usuarios/{id_user}/prestamos/{id_prestamo}/saldos
+GET /usuarios/{id_user}/prestamos/{id_prestamo}/saldos/{id_saldos}
+POST /usuarios/{id_user}/prestamos/{id_prestamo}/saldos
 
 USERS (EL objeto debe de contener informacion de USUARIOS-DEUDOR-AHORRADOR-DATOS-USER)
 
@@ -58,15 +60,32 @@ DELETE /usuarios/{id_user}/roles/{id_role}
 
 SOLICITUDES (informacion de SOLICITUDES-ATRIBUTOS-VALIDACIONES)
 
+
 GET /solicitudes todos los solicitudes de la plataforma <-- filtrados dinamicos
- 
-GET /solicitudes/{id_solicitud}
+-GET /usuarios/{id_user}/solicitudes/{id_solicitud}
+-DELETE /usuarios/{id_user}/solicitudes/{id_solicitud}
+-POST /usuarios/{id_user}/solicitudes
+-PUT /usuarios/{id_user}/solicitudes/{id_solicitud}
+-GET /usuarios/{id_user}/solicitudes
+-GET /usuarios/{id_user}/solicitudes/{id_solicitud}
 
-DELETE /solicitudes/{id_solicitud}
 
-POST /usuarios/{id_user}/solicitudes
+GET /usuarios/{id_user}/solicitudes/{id_solicitud}/atributos todos los solicitudes de la plataforma <-- filtrados dinamicos
+GET /usuarios/{id_user}/solicitudes/{id_solicitud}/atributos/{id_atributo}
+DELETE /usuarios/{id_user}/solicitudes/{id_solicitud}/atributos/{id_solicitud}
+POST /usuarios/{id_user}/solicitudes/{id_solicitud}/atributos
+PUT /usuarios/{id_user}/solicitudes/{id_solicitud}/atributos/{id_atributos}
 
-PUT /usuarios/{id_user}/solicitudes/{id_solicitud}
+
+GET /usuarios/{id_user}/solicitudes/{id_solicitud}/validaciones todos los solicitudes de la plataforma <-- filtrados dinamicos
+GET usuarios/{id_user}/solicitudes/{id_solicitud}/validaciones/{id_validaciones}
+DELETE usuarios/{id_user}/solicitudes/{id_solicitud}/validaciones/{id_validaciones}
+POST usuarios/{id_user}/solicitudes/{id_solicitud}/validaciones
+PUT usuarios/{id_user}/solicitudes/{id_solicitud}/validaciones/{id_validaciones}
+
+GET /validaciones
+GET /solicitudes
+
 
 
 

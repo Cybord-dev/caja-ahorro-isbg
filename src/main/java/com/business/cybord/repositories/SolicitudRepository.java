@@ -9,6 +9,6 @@ import com.business.cybord.entities.Solicitud;
 import com.business.cybord.entities.Usuario;
 
 public interface SolicitudRepository extends CrudRepository<Solicitud, Integer>{
-	List<Solicitud> findByUsuario(Usuario dto);
-	Optional<Solicitud> findByUsuarioAndId(Usuario dto, int id);
+	List<Solicitud> findByIdUsuario(int idU);
+	Optional<Solicitud> findByIdUsuarioAndId(int idU, int id);
 }

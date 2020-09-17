@@ -22,7 +22,9 @@ import javax.validation.constraints.NotNull;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -60,8 +62,8 @@ public class AtributoSolicitud {
 	private Date fechaActualizacion;
 	
 	@ManyToOne(optional=false)
-	@JsonIgnore
     @JoinColumn(name="id_solicitud", insertable=false, updatable=false)
+	@JsonIgnore
 	private Solicitud solicitud;
 	
 	public void update(AtributoSolicitud n) {

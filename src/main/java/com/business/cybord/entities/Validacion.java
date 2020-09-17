@@ -20,6 +20,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "validaciones")
@@ -30,7 +31,7 @@ public class Validacion {
 	private int id;
 	
 	@Column(name = "id_usuario")
-	private int idUsuario;
+	private Integer idUsuario;
 	
 	@Column(name = "id_solicitud")
 	private int idSolicitud;
@@ -58,20 +59,14 @@ public class Validacion {
 	private Date fechaActualizacion;
 	
 	@ManyToOne(optional=false)
-	@JsonIgnore
-    @JoinColumn(name="id_usuario", insertable=false, updatable=false)
-	private Usuario usuario;
-	
-	@ManyToOne(optional=false)
-	@JsonIgnore
     @JoinColumn(name="id_solicitud", insertable=false, updatable=false)
+	@JsonIgnore
 	private Solicitud solicitud;
 	
 	public void update(Validacion n) {
 		this.fechaActualizacion = n.fechaActualizacion;
 		this.fechaCreacion = n.fechaCreacion;
 		this.numeroValidacion = n.numeroValidacion;
-		this.solicitud = n.solicitud;
 		this.tipoValidacion = n.tipoValidacion;
 	}
 	
@@ -123,13 +118,7 @@ public class Validacion {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	public Usuario getUsuario() {
-		return usuario;
-	}
-
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
-	}
+	
 
 	public Solicitud getSolicitud() {
 		return solicitud;
@@ -139,17 +128,23 @@ public class Validacion {
 		this.solicitud = solicitud;
 	}
 
-	@Override
-	public String toString() {
-		return "Validacion [id=" + id + ", idUsuario=" + idUsuario + ", idSolicitud=" + idSolicitud
-				+ ", numeroValidacion=" + numeroValidacion + ", status=" + status + ", tipoValidacion=" + tipoValidacion
-				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + ", usuario="
-				+ usuario + ", solicitud=" + solicitud + ", getId()=" + getId() + ", isNumeroValidacion()="
-				+ isNumeroValidacion() + ", isStatus()=" + isStatus() + ", getTipoValidacion()=" + getTipoValidacion()
-				+ ", getFechaCreacion()=" + getFechaCreacion() + ", getFechaActualizacion()=" + getFechaActualizacion()
-				+ ", getUsuario()=" + getUsuario() + ", getSolicitud()=" + getSolicitud() + ", getClass()=" + getClass()
-				+ ", hashCode()=" + hashCode() + ", toString()=" + super.toString() + "]";
+	public Integer getIdUsuario() {
+		return idUsuario;
 	}
+
+	public void setIdUsuario(Integer idUsuario) {
+		this.idUsuario = idUsuario;
+	}
+
+	public int getIdSolicitud() {
+		return idSolicitud;
+	}
+
+	public void setIdSolicitud(int idSolicitud) {
+		this.idSolicitud = idSolicitud;
+	}
+
+	
 
 	
 	

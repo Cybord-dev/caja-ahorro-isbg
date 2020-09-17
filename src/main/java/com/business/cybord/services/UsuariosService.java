@@ -10,7 +10,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.mapstruct.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,16 +22,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.business.cybord.entities.AtributoSolicitud;
 import com.business.cybord.entities.DatosUsuario;
 import com.business.cybord.entities.Solicitud;
 import com.business.cybord.entities.Usuario;
 import com.business.cybord.entities.Validacion;
 import com.business.cybord.mappers.SolicitudMapper;
 import com.business.cybord.mappers.UsuariosMapper;
+import com.business.cybord.models.dtos.AtributoSolicitudDto;
 import com.business.cybord.models.dtos.DatosUsuarioDto;
 import com.business.cybord.models.dtos.SolicitudDto;
 import com.business.cybord.models.dtos.UsuariosDto;
 import com.business.cybord.models.dtos.ValidacionDto;
+import com.business.cybord.repositories.AtributoSolicitudRepository;
 import com.business.cybord.repositories.DatosUsuarioRepository;
 import com.business.cybord.repositories.SolicitudRepository;
 import com.business.cybord.repositories.UsuariosRepository;
@@ -48,6 +50,9 @@ public class UsuariosService {
 	private UsuariosMapper mapper;
 	
 	@Autowired
+	private SolicitudMapper mapperSol;
+	
+	@Autowired
 	private DatosUsuarioRepository datosUsuarioRepository;
 	
 	@Autowired
@@ -55,6 +60,9 @@ public class UsuariosService {
 	
 	@Autowired
 	private ValidacionRepository validacionRepository;
+	
+	@Autowired
+	private AtributoSolicitudRepository atribRepository;
 	
 	@Autowired
 	private SolicitudMapper solicitudMapper;
@@ -159,44 +167,130 @@ public class UsuariosService {
 		datosUsuarioRepository.delete(entity);
 	}
 	
-	public SolicitudDto actualizarSolicitudbyId(int idUsuario, int idSolicitud, SolicitudDto nueva) {
-		Usuario usuario = repository.findById(idUsuario).orElseThrow(
-				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("user no existe %d", idUsuario)));
-		Optional<Solicitud> solicitud = solicitudRepository.findByUsuarioAndId(usuario, idSolicitud);
+	/*
+	 * Solicitudes
+	 * */
+	public SolicitudDto actualizarSolicitudbyId(int id_usuario, int id_solicitud, SolicitudDto nueva) {
+		Optional<Solicitud> solicitud = solicitudRepository.findByIdUsuarioAndId(id_usuario, id_solicitud);
 		if(solicitud.isPresent()) {
 			solicitud.get().update(mapper.getEntityFromSolicitudDto(nueva));
 			return solicitudMapper.getDtoFromSolicitudEntity(solicitud.get());
 		}else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("la solicitud id= %d no existe", idSolicitud));
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("la solicitud id=%d no existe con el usuario id=%d", id_solicitud, id_usuario));
 		}
 	}
 	
-	public SolicitudDto crearSolicitudUsuario(int id, SolicitudDto solicitud) {
-		Usuario usuario = repository.findById(id).orElseThrow(
-				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("usuario id= %d no existe", id)));
+	public SolicitudDto crearSolicitudUsuario(int id_usuario, SolicitudDto solicitud) {
+		Usuario usuario = repository.findById(id_usuario).orElseThrow(
+				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("el usuario id= %d no existe", id_usuario)));
 		Solicitud nueva = solicitudRepository.save(mapper.getEntityFromSolicitudDto(solicitud));
 		return mapper.getDtoFromSolicitudEntity(nueva);
 		
 	}
 	
-	//realocar
-	public ValidacionDto crearValidacion(int id, ValidacionDto validacion) {
-		Usuario usuario = repository.findById(id).orElseThrow(
-				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("usuario id= %d no existe", id)));
-		Validacion nueva = validacionRepository.save(solicitudMapper.getEntityFromValidacionesDto(validacion));
-		return solicitudMapper.getDtoFromValidacionesEntity(nueva);
+	public List<SolicitudDto> getAllSolicitudes(int id_usuario){
+		List<Solicitud> solicitudes = new ArrayList<>();
+		solicitudRepository.findByIdUsuario(id_usuario).forEach(solicitudes::add);
+		return mapperSol.SolicitudDtoToSolicitud((solicitudes.stream()));
 	}
 	
-	public ValidacionDto actualizarValidacionById(int idUsuario, int idValidacion, ValidacionDto nueva) {
-		Usuario usuario = repository.findById(idUsuario).orElseThrow(
-				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("user no existe %d", idUsuario)));
-		Optional<Validacion> validacion = validacionRepository.findByUsuarioAndId(usuario, idValidacion);
+	public SolicitudDto getSolicitudById(int id_usuario, int id_solicitud) {
+		Optional<Solicitud> solicitud = solicitudRepository.findByIdUsuarioAndId(id_usuario, id_solicitud);
+		if(solicitud.isPresent()) {
+			return mapper.getDtoFromSolicitudEntity(solicitud.get());
+		}else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("la solicitud id=%d no existe con el usuario id=%d", id_solicitud, id_usuario));
+		}
+	}
+	
+	public void deleteSolicitudById(int id_usuario, int id_solicitud) {
+		Optional<Solicitud> solicitud = solicitudRepository.findByIdUsuarioAndId(id_usuario, id_solicitud);
+		if(solicitud.isPresent()) {
+			solicitudRepository.delete(solicitud.get());
+		}else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("la solicitud id=%d no existe con el usuario id=%d", id_solicitud, id_usuario));
+		}
+	}
+	
+	/*
+	 * Validaciones
+	 * */
+	public ValidacionDto crearValidacion(int id_usuario, int id_solicitud,ValidacionDto validacion) {
+		Optional<Solicitud> solicitud = solicitudRepository.findByIdUsuarioAndId(id_usuario, id_solicitud);
+		if(!solicitud.isPresent()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("solicitud id= %d del usuario id=%d no existe", id_solicitud, id_usuario));
+		}else {
+			Validacion nueva = validacionRepository.save(solicitudMapper.getEntityFromValidacionesDto(validacion));
+			return solicitudMapper.getDtoFromValidacionesEntity(nueva);
+		}
+	}
+	
+	public ValidacionDto actualizarValidacionById(int idUsuario, int idSolicitud, int idValidacion, ValidacionDto nueva) {
+		Optional<Validacion> validacion = validacionRepository.findByIdUsuarioAndIdAndIdSolicitud(idUsuario, idValidacion, idSolicitud);
 		if(validacion.isPresent()) {
 			validacion.get().update(solicitudMapper.getEntityFromValidacionesDto(nueva));
 			return solicitudMapper.getDtoFromValidacionesEntity(validacion.get());
 		}else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("la validacion id= %d no existe", idValidacion));
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("la validacion id= %d perteneciente a solicitud id=%d validada por usuario id=%d no existe", idValidacion, idSolicitud, idValidacion));
 		}
+	}
+	
+	public ValidacionDto getValidacionById(int id_usuario, int id_solicitud, int id_validacion) {
+		Validacion entity = validacionRepository.findByIdUsuarioAndIdAndIdSolicitud(id_usuario, id_validacion, id_solicitud).orElseThrow(
+				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("La validacion id=%d no existe", id_validacion)));
+		return mapperSol.getDtoFromValidacionesEntity(entity);
+	}
+	
+	public void deleteValidacionById(int id_usuario, int id_solicitud, int id_validacion) {
+		Optional<Validacion> entity = validacionRepository.findByIdUsuarioAndIdAndIdSolicitud(id_usuario, id_validacion, id_solicitud);
+		if(entity.isPresent()) {
+			validacionRepository.delete(entity.get());
+		}else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("La validacion id=%d no existe", id_validacion));
+		}
+		
+	}
+	
+	/*Atributos*/
+	
+	public AtributoSolicitudDto createAtributoSolicitud(int id_usuario, int id_solicitud, AtributoSolicitudDto atributo) {
+		Solicitud entity = solicitudRepository.findByIdUsuarioAndId(id_usuario, id_solicitud).orElseThrow(
+				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("la solicitud id= %d del usuario =%d no existe", id_solicitud, id_usuario)));
+		AtributoSolicitud nuevo = atribRepository.save(mapperSol.getEntityFromAtributoSolicitudDto(atributo));
+		return mapperSol.getDtoFromAtributoSolicitudEntity(nuevo);
+	}
+	
+	public AtributoSolicitudDto actualizarAtributoSolicitud(int id_usuario, int id_solicitud, int id_atributo, AtributoSolicitudDto nuevo) {
+		Optional<AtributoSolicitud> atributo = atribRepository.findByIdSolicitudAndId(id_solicitud, id_atributo);
+		if(atributo.isPresent()) {
+			atributo.get().update(mapperSol.getEntityFromAtributoSolicitudDto(nuevo));
+			return mapperSol.getDtoFromAtributoSolicitudEntity(atributo.get());
+		}else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("el atributo id= %d de la solicitud id=%d del usuario id=%d no existe", id_atributo, id_solicitud, id_usuario));
+		}
+	}
+	
+	public AtributoSolicitudDto getAtributoSolicitudById(int id_usuario, int id_solicitud, int id_atributo) {
+		Solicitud sol = solicitudRepository.findByIdUsuarioAndId(id_usuario, id_solicitud).orElseThrow(
+				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("La solicitud id=%d no existe del usuario id =%d", id_solicitud, id_usuario)));
+		Optional<AtributoSolicitud> entity = atribRepository.findByIdSolicitudAndId(id_solicitud, id_atributo);
+		if(entity.isPresent()) {
+			return mapperSol.getDtoFromAtributoSolicitudEntity(entity.get());
+			
+		}else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("La el atributo-solicitud id=%d no existe", id_atributo));
+		}
+		
+	}
+	
+	public void deleteAtributoSolicitudById(int id_usuario, int id_solicitud, int id_atributo) {
+		Optional<AtributoSolicitud> entity = atribRepository.findByIdSolicitudAndId(id_solicitud, id_atributo);
+		if(entity.isPresent()) {
+			atribRepository.delete(entity.get());
+		}else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("La el atributo-solicitud id=%d no existe", id_atributo));
+		}
+		
 	}
 	
 }

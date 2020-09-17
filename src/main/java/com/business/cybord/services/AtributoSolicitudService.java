@@ -1,9 +1,10 @@
 package com.business.cybord.services;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.business.cybord.entities.AtributoSolicitud;
 import com.business.cybord.mappers.SolicitudMapper;
@@ -17,15 +18,9 @@ public class AtributoSolicitudService {
 	@Autowired
 	SolicitudMapper mapper;
 	
-	public AtributoSolicitudDto getAtributoSolicitudById(int id) {
-		AtributoSolicitud entity = repository.findById(id).orElseThrow(
-				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("La solicitud id=%d no existe", id)));
-		return mapper.getDtoFromAtributoSolicitudEntity(entity);
-	}
-	
-	public void deleteAtributoSolicitudById(int id) {
-		AtributoSolicitud entity = repository.findById(id).orElseThrow(
-				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("La solicitud id=%d no existe", id)));
-		repository.delete(entity);
+	public List<AtributoSolicitudDto> getAllAtributos(){
+		List<AtributoSolicitud> atributos = new ArrayList<>();
+		repository.findAll().forEach(atributos::add);
+		return mapper.AtributoSolicitudDtoToAtributoSolicitud(atributos.stream());
 	}
 }

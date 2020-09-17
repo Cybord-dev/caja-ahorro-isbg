@@ -18,6 +18,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "usuarios")
@@ -51,16 +52,17 @@ public class Usuario {
 	private Date fechaActualizacion;
 	
 	@OneToMany(mappedBy="usuario")
+	
 	private List<DatosUsuario> datosUsuario;
 	
 	@OneToMany(mappedBy="usuario")
+	
 	private List<Rol>roles;
 	
 	@OneToMany(mappedBy = "usuario")
+	
 	private List<Solicitud> solicitudes;
 	
-	@OneToMany(mappedBy = "usuario")
-	private List<Validacion> validaciones;
 	
 	public int getId() {
 		return id;
@@ -143,7 +145,7 @@ public class Usuario {
 		return "Usuario [id=" + id + ", activo=" + activo + ", nombre=" + nombre + ", email=" + email + ", tipoUsuario="
 				+ tipoUsuario + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
 				+ ", datosUsuario=" + datosUsuario + ", roles=" + roles + ", solicitudes=" + solicitudes
-				+ ", validaciones=" + validaciones + "]";
+				+ ", validaciones=" +"]";
 	}
 
 
