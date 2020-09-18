@@ -19,23 +19,23 @@ import com.business.cybord.services.SaldoAhorroService;
 
 
 @RestController
-@RequestMapping("saldoAhorro/usuarios/")
+@RequestMapping("/usuarios/")
 public class SaldoAhorroController {
 	
 	@Autowired
 	private SaldoAhorroService service;
 	
-	@GetMapping("/{idUsuario}/ahorros")
+	@GetMapping("{idUsuario}/ahorros")
 	public ResponseEntity<List<SaldoAhorroDto>> getSaldosAhorroDeUnUsuarioPorSuId(@PathVariable Integer idUsuario) {
 		return new ResponseEntity<>(service.getSaldosAhorroDeUnUsuarioPorSuId(idUsuario), HttpStatus.OK);
 	}
 	
-	@PostMapping("/{idUsuario}")
+	@PostMapping("{idUsuario}/ahorros")
 	public ResponseEntity<SaldoAhorroDto> insertSadoAhorro(@PathVariable Integer idUsuario,@RequestBody @Valid SaldoAhorroDto Dto) {
 		return new ResponseEntity<>(service.insertSadoAhorro(idUsuario,Dto), HttpStatus.OK);
 	}
 	
-	@GetMapping("/{idUsuario}/ahorros/{idAhorro}")
+	@GetMapping("{idUsuario}/ahorros/{idAhorro}")
 	public ResponseEntity<SaldoAhorroDto> getSaldoAhorroPorIdYIdusuario(@PathVariable Integer idUsuario,@PathVariable Integer idAhorro) {
 		return new ResponseEntity<>(service.getSaldoAhorroPorIdYIdusuario(idUsuario,idAhorro), HttpStatus.OK);
 	}

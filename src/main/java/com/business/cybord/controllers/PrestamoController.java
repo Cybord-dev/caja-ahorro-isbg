@@ -20,24 +20,24 @@ import com.business.cybord.services.PrestamoService;
 import com.business.cybord.services.SaldoAhorroService;
 
 @RestController
-@RequestMapping("prestamo/usuarios/")
+@RequestMapping("/usuarios")
 public class PrestamoController {
 	
 	
 	@Autowired
 	private PrestamoService service;
 	
-	@GetMapping("/{idUsuario}/prestamo")
+	@GetMapping("/{idUsuario}/prestamos")
 	public ResponseEntity<List<PrestamoDto>> getPrestamosdeUnUsuarioPorSuId(@PathVariable Integer idUsuario) {
 		return new ResponseEntity<>(service.getPrestamosdeUnUsuarioPorSuId(idUsuario), HttpStatus.OK);
 	}
 	
-	@PostMapping("/{idUsuario}")
+	@PostMapping("/{idUsuario/prestamos}")
 	public ResponseEntity<PrestamoDto> insertPrestamo(@PathVariable Integer idUsuario,@RequestBody @Valid PrestamoDto Dto) {
 		return new ResponseEntity<>(service.insertPrestamo(idUsuario,Dto), HttpStatus.OK);
 	}
 	
-	@GetMapping("/{idUsuario}/prestamo/{idPrestamo}/saldos/{idSaldo}")
+	@GetMapping("/{idUsuario}/prestamos/{idPrestamo}/saldos/{idSaldo}")
 	public ResponseEntity<PrestamoDto> getPrestamoPorIdPrestamoYIdusuarioYIdSaldo(@PathVariable Integer idUsuario,@PathVariable Integer idPrestamo ,@PathVariable Integer idSaldo) {
 		return new ResponseEntity<>(service.getPrestamoPorIdPrestamoYIdusuarioYIdSaldo(idUsuario,idPrestamo,idSaldo), HttpStatus.OK);
 	}

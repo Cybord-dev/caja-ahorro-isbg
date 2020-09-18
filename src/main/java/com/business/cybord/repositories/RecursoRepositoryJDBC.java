@@ -3,12 +3,14 @@ package com.business.cybord.repositories;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.sql.Types;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
-
+import org.springframework.jdbc.core.support.SqlLobValue;
 import org.springframework.stereotype.Repository;
 
 import com.business.cybord.extractor.RecursoRsExtractor;
@@ -21,22 +23,22 @@ public class RecursoRepositoryJDBC {
 	@Autowired
 	private JdbcTemplate invoiceManagerTemplate;
 	
-	private static final String FIND_RESOURCE_FILE_BY_RESOURCE_TYPE_AND_REFERENCE = "SELECT * FROM RESOURCES WHERE 1=1 AND referencia = ? AND tipo_referencia = ? ";
+	private static final String BUSCAR_RECURSO_POR_TIPO_RECURSO_Y_TIPO_ARCHIVO_Y_REFERENCIA = "SELECT * FROM RECURSOS WHERE 1=1 AND TIPO_ARCHIVO= ? AND REFERENCIA = ? AND TIPO_RECURSO = ? ";
 
-	private static final String DELETE_RESOURCE_FILE_BY_RESOURCE_TYPE_AND_REFERENCE = "DELETE FROM RESOURCES WHERE tipo_referencia = ? AND REFERENCIA = ?";
+	private static final String BORRAR_RECURSO_POR_TIPO_RECURSO_Y_TIPO_ARCHIVO_Y_REFERENCIA = "DELETE FROM RECURSOS WHERE TIPO_RECURSO = ? AND TIPO_ARCHIVO= ? AND REFERENCIA = ?";
 	
-	private static final String DELETE_RESOURCE_FILE_BY_ID = "DELETE FROM RESOURCES WHERE id_recurso= ?";
+	private static final String BORRAR_RECURSO_POR_ID = "DELETE FROM RECURSOS WHERE id_recurso= ?";
 
-	private static final String INSERT_RESOURCE_FILE = "INSERT INTO RESOURCES (referencia, tipo_referencia, documento, fecha_creacion, fecha_actualizacion) VALUES(?,?,?,?,?)";
+	private static final String INSERTAR_RECURSO = "INSERT INTO RECURSOS (REFERENCIA, TIPO_ARCHIVO, TIPO_RECURSO, DATO, FECHA_CREACION) VALUES(?,?,?,?,?)";
 
-	public Optional<RecursoDto> findResourceFileByResourceTypeAndReference(String resource, String reference, String fileType) {
+	public Optional<RecursoDto> findResourceFileByResourceTypeAndReference(String tipoRecurso, String referencia, String tipoArchivo) {
 		return invoiceManagerTemplate.query(new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-				PreparedStatement ps = con.prepareStatement(FIND_RESOURCE_FILE_BY_RESOURCE_TYPE_AND_REFERENCE);
-				ps.setString(1, fileType);
-				ps.setString(2, reference);
-				ps.setString(3, resource);
+				PreparedStatement ps = con.prepareStatement(BUSCAR_RECURSO_POR_TIPO_RECURSO_Y_TIPO_ARCHIVO_Y_REFERENCIA);
+				ps.setString(1, tipoArchivo);
+				ps.setString(2, referencia);
+				ps.setString(3, tipoRecurso);
 
 				return ps;
 			}
@@ -47,7 +49,7 @@ public class RecursoRepositoryJDBC {
 		return invoiceManagerTemplate.update(new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-				PreparedStatement ps = con.prepareStatement(DELETE_RESOURCE_FILE_BY_RESOURCE_TYPE_AND_REFERENCE);
+				PreparedStatement ps = con.prepareStatement(BORRAR_RECURSO_POR_TIPO_RECURSO_Y_TIPO_ARCHIVO_Y_REFERENCIA);
 				ps.setString(1, resource);
 				ps.setString(2, fileType);
 				ps.setString(3, reference);
@@ -56,15 +58,27 @@ public class RecursoRepositoryJDBC {
 		});
 	}
 	
-	public int deletResourceFileById(int id) {
+	public int borrarRecursoPorId(int id) {
 		return invoiceManagerTemplate.update(new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-				PreparedStatement ps = con.prepareStatement(DELETE_RESOURCE_FILE_BY_ID);
+				PreparedStatement ps = con.prepareStatement(BORRAR_RECURSO_POR_ID);
 				ps.setInt(1, id);
 				return ps;
 			}
 		});
+	}
+	
+	public int insertarRecurso(RecursoDto dto) {
+		return invoiceManagerTemplate.update(INSERTAR_RECURSO,
+				new Object[] { dto.getReferencia(), dto.getTipoArchivo(), dto.getTipoRecurso(),
+						new SqlLobValue(dto.getDato().getBytes()), new Timestamp(System.currentTimeMillis()) },
+				new int[] { Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.BLOB, Types.TIMESTAMP });
+	}
+
+	public int updateResourceFile(int id, RecursoDto dto) {
+		borrarRecursoPorId(id);
+		return insertarRecurso(dto);
 	}
 	
 

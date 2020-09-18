@@ -1,5 +1,6 @@
 package com.business.cybord.models.dtos;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -7,14 +8,18 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RecursoDto {
+public class RecursoDto  implements Serializable {
 	
+
+
+	private static final long serialVersionUID = 7706483751972616212L;
 	private int id;
 	private String referencia;
-	private Boolean tipoReferencia;
-	private String documento;
+	private String tipoArchivo;
+	private String tipoRecurso;
+	private String dato;
 	private Date fechaCreacion;
-	private Date fechaActualizacion;
+	
 	public int getId() {
 		return id;
 	}
@@ -27,17 +32,23 @@ public class RecursoDto {
 	public void setReferencia(String referencia) {
 		this.referencia = referencia;
 	}
-	public Boolean getTipoReferencia() {
-		return tipoReferencia;
+	public String getTipoArchivo() {
+		return tipoArchivo;
 	}
-	public void setTipoReferencia(Boolean tipoReferenciaBoolean) {
-		this.tipoReferencia = tipoReferenciaBoolean;
+	public void setTipoArchivo(String tipoArchivo) {
+		this.tipoArchivo = tipoArchivo;
 	}
-	public String getDocumento() {
-		return documento;
+	public String getTipoRecurso() {
+		return tipoRecurso;
 	}
-	public void setDocumento(String documento) {
-		this.documento = documento;
+	public void setTipoRecurso(String tipoRecurso) {
+		this.tipoRecurso = tipoRecurso;
+	}
+	public String getDato() {
+		return dato;
+	}
+	public void setDato(String documento) {
+		this.dato = documento;
 	}
 	public Date getFechaCreacion() {
 		return fechaCreacion;
@@ -45,19 +56,14 @@ public class RecursoDto {
 	public void setFechaCreacion(Date fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
 	}
-	public Date getFechaActualizacion() {
-		return fechaActualizacion;
-	}
-	public void setFechaActualizacion(Date fechaActualizacion) {
-		this.fechaActualizacion = fechaActualizacion;
-	}
+
 	@Override
 	public String toString() {
-		return "RecursoDto [id=" + id + ", referencia=" + referencia + ", tipoReferenciaBoolean="
-				+ tipoReferencia + ", documento=" + documento + ", fechaCreacion=" + fechaCreacion
-				+ ", fechaActualizacion=" + fechaActualizacion + "]";
+		return "RecursoDto [id=" + id + ", referencia=" + referencia + ", tipoArchivo=" + tipoArchivo + ", tipoRecurso="
+				+ tipoRecurso + ", dato=" + dato + ", fechaCreacion=" + fechaCreacion
+				+ "]";
 	}
 	
 	
-
+	
 }

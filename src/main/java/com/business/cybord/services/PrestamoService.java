@@ -33,7 +33,7 @@ public class PrestamoService {
 	public PrestamoDto getPrestamoPorIdPrestamoYIdusuario(Integer idUsuario, Integer idPrestamo) {
 		Optional<Prestamo> prestamo = repository.findByIdAndIdDeudor(idPrestamo, idUsuario);		
 		if(prestamo.isPresent()) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("No existe un usuario para ese prestamo"));
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("No existe un usuario para ese prestamo"));
 		}else {		
 			return mapper.getDtoFromEntity(prestamo.get());
 		}	
@@ -45,7 +45,7 @@ public class PrestamoService {
 			return mapper.getDtoFromEntity(prestamo.get());
 		}else {		
 			
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("No existe el saldo %d",idSaldo));
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("No existe el saldo %d",idSaldo));
 		}	
 	}
 		

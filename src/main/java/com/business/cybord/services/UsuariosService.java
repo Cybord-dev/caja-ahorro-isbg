@@ -105,21 +105,26 @@ public class UsuariosService {
 	}
 	
 	public UsuariosDto insertarNuevoUsuario(UsuariosDto usuario) {
-		Usuario entity = repository.findByEmail(usuario.getEmail()).orElseThrow(()->new ResponseStatusException(HttpStatus.BAD_REQUEST,
-				String.format("El usuario %s no existe.", usuario.getEmail())));	
-		repository.save(mapper.getEntityFromUserDto(usuario));
-		
-		return mapper.getDtoFromUserEntity(entity);		
+		log.info("Buscando usuario con eee : {}", usuario.getEmail());
+		Optional<Usuario> entity = repository.findByEmail(usuario.getEmail());		
+		if (entity.isPresent()) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,String.format("El dato %s ya existe", usuario.getEmail()));		
+		}
+		else {	
+			Usuario datos = repository.save(mapper.getEntityFromUserDto(usuario));
+			return mapper.getDtoFromUserEntity(datos);		
+		}						
 	}
 	
 	
 	public UsuariosDto actualizarUsuario(UsuariosDto usuario) {
-		Usuario entity = repository.findByEmail(usuario.getEmail()).orElseThrow(()->new ResponseStatusException(HttpStatus.BAD_REQUEST,
+		Usuario entity = repository.findByEmail(usuario.getEmail()).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,
 				String.format("El usuario %s no existe.", usuario.getEmail())));
 		entity.setActivo(usuario.getActivo());
 		entity.setNombre(usuario.getNombre());
 		entity.setTipoUsuario(usuario.getTipoUsuario());
 		entity.setNombre(usuario.getNombre());
+		entity.setDatosUsuario(usuario.getDatosUsuario());
 		
 		return mapper.getDtoFromUserEntity(repository.save(entity));
 	}

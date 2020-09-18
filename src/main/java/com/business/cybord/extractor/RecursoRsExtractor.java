@@ -20,12 +20,13 @@ public class RecursoRsExtractor implements ResultSetExtractor<Optional<RecursoDt
 			RecursoDto result = new RecursoDto();
 			result.setId(rs.getInt("id_recurso"));
 			result.setReferencia(rs.getString("referencia"));
-			result.setTipoReferencia(rs.getBoolean("tipo_referencia"));
+			result.setTipoArchivo(rs.getString("tipo_archivo"));
+			result.setTipoRecurso(rs.getString("tipo_recurso"));
 			result.setFechaCreacion(rs.getTimestamp("fecha_creacion"));
-			result.setFechaActualizacion(rs.getTimestamp("fecha_actualizacion"));
+			
 
-			byte[] fileData = lobHandler.getBlobAsBytes(rs, "documento");
-			result.setDocumento(new String(fileData,StandardCharsets.UTF_8));
+			byte[] fileData = lobHandler.getBlobAsBytes(rs, "dato");
+			result.setDato(new String(fileData,StandardCharsets.UTF_8));
 
 			return Optional.of(result);
 		} else {

@@ -39,19 +39,19 @@ public class UsuariosController {
 		return new ResponseEntity<>(service.getUserById(id), HttpStatus.OK);
 	}
 	
-	@GetMapping("/all")
+	@GetMapping
 	public ResponseEntity<Page<UsuariosDto>> getAllFacturasByParametros(@RequestParam Map<String, String> parameters) {
 		return new ResponseEntity<>(service.getUsuariosPorParametros(parameters), HttpStatus.OK);
 	}
 	
 	
 	@PostMapping
-	public ResponseEntity<UsuariosDto> NewUsuarios(@RequestBody @Valid UsuariosDto usuarioDto) {
+	public ResponseEntity<UsuariosDto> insertarNuevoUsuario(@RequestBody @Valid UsuariosDto usuarioDto) {
 		return new ResponseEntity<>(service.insertarNuevoUsuario(usuarioDto), HttpStatus.OK);
 	}
 	
 	@PutMapping
-	public ResponseEntity<UsuariosDto> updateUser(@RequestBody @Valid UsuariosDto userDto) {
+	public ResponseEntity<UsuariosDto> actualizarUsuario(@RequestBody @Valid UsuariosDto userDto) {
 		return new ResponseEntity<>(service.actualizarUsuario(userDto), HttpStatus.OK);
 	}
 	
@@ -62,12 +62,12 @@ public class UsuariosController {
 	}
 	
 	@PostMapping("/datos")
-	public ResponseEntity<DatosUsuarioDto> setinsertarNuevoDatoUsuario(@RequestBody @Valid DatosUsuarioDto datousuarioDto) {
+	public ResponseEntity<DatosUsuarioDto> insertarNuevoDatoUsuario(@RequestBody @Valid DatosUsuarioDto datousuarioDto) {
 		return new ResponseEntity<>(service.insertarNuevoDatoUsuario(datousuarioDto), HttpStatus.OK);
 	}
 	
 	@PutMapping("/datos")
-	public ResponseEntity<DatosUsuarioDto> setactualizarDatoUsuario(@RequestBody @Valid DatosUsuarioDto datousuarioDto) {
+	public ResponseEntity<DatosUsuarioDto> actualizarDatoUsuario(@RequestBody @Valid DatosUsuarioDto datousuarioDto) {
 		return new ResponseEntity<>(service.actualizarDatoUsuario(datousuarioDto), HttpStatus.OK);
 	}
 	

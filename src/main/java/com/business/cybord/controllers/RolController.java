@@ -20,29 +20,29 @@ import com.business.cybord.services.RolService;
 
 
 @RestController
-@RequestMapping("/usuarios/rol")
+@RequestMapping("/usuarios")
 public class RolController {
 	
 	@Autowired
 	private RolService service;
 	
-	@GetMapping
-	public ResponseEntity<List<RolDto>> getRoles() {
+	@GetMapping("/roles")
+	public ResponseEntity<List<RolDto>> getRolesController() {
 		return new ResponseEntity<>(service.getRoles(), HttpStatus.OK);
 	}
 	
-	@PostMapping("/{idUsuario}")
-	public ResponseEntity<RolDto> insertNuevoRol(@PathVariable Integer idUsuario,@RequestBody @Valid RolDto rolDto) {
+	@PostMapping("/{idUsuario}/roles")
+	public ResponseEntity<RolDto> insertNuevoRolController(@PathVariable Integer idUsuario,@RequestBody @Valid RolDto rolDto) {
 		return new ResponseEntity<>(service.insertNuevoRol(idUsuario,rolDto), HttpStatus.OK);
 	}
 	
-	@GetMapping("/{idUsuario}")
-	public ResponseEntity<List<RolDto>> getRolesByUserId(@PathVariable Integer idUsuario) {
+	@GetMapping("/{idUsuario}/roles")
+	public ResponseEntity<List<RolDto>> getRolesByUserIdController(@PathVariable Integer idUsuario) {
 		return new ResponseEntity<>(service.getRolesPorUsuarioId(idUsuario), HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/{idRol}/{idUsuario}")
-	public ResponseEntity<Void> deleteUserRoles(@PathVariable Integer idRol, @PathVariable Integer idUsuario) {
+	@DeleteMapping("/{idUsuario}/roles/{idRol}")
+	public ResponseEntity<Void> deleteUserRolesController(@PathVariable Integer idRol, @PathVariable Integer idUsuario) {
 		service.borrarRolePorUsuarioIdyIdRol(idUsuario, idRol);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
