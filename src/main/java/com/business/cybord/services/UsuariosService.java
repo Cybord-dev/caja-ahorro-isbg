@@ -216,9 +216,10 @@ public class UsuariosService {
 	 * Validaciones
 	 * */
 	public ValidacionDto crearValidacion(int id_usuario, int id_solicitud,ValidacionDto validacion) {
-		Optional<Solicitud> solicitud = solicitudRepository.findByIdUsuarioAndId(id_usuario, id_solicitud);
-		if(!solicitud.isPresent()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("solicitud id= %d del usuario id=%d no existe", id_solicitud, id_usuario));
+		Optional<Solicitud> solicitud = solicitudRepository.findById(id_solicitud);
+		Optional<Usuario> usuario = repository.findById(id_usuario);
+		if(!solicitud.isPresent() && !usuario.isPresent()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("solicitud id= %d o usuario id=%d no existe", id_solicitud, id_usuario));
 		}else {
 			Validacion nueva = validacionRepository.save(solicitudMapper.getEntityFromValidacionesDto(validacion));
 			return solicitudMapper.getDtoFromValidacionesEntity(nueva);
