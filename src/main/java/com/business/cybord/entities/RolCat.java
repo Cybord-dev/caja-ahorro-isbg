@@ -6,6 +6,7 @@ import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -22,10 +23,10 @@ public class RolCat {
 	
 	@Column(name = "nombre")
 	private String nombre;
+
+	@OneToOne(mappedBy = "rolname")
+	private Rol rol;
 	
-	@ManyToOne
-    @JoinColumn(name="id", nullable=false)
-    private Rol rol;
 
 	public int getId() {
 		return id;
@@ -43,17 +44,11 @@ public class RolCat {
 		this.nombre = nombre;
 	}
 
-	public Rol getRol() {
-		return rol;
-	}
 
-	public void setRol(Rol rol) {
-		this.rol = rol;
-	}
 
 	@Override
 	public String toString() {
-		return "RolCat [id=" + id + ", nombre=" + nombre + ", rol=" + rol + "]";
+		return "RolCat [id=" + id + ", nombre=" + nombre + "]";
 	}
 	
 	

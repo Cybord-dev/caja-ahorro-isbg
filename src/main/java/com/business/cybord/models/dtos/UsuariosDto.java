@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.business.cybord.entities.DatosUsuario;
+import com.business.cybord.entities.Rol;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -22,6 +23,7 @@ public class UsuariosDto implements Serializable {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private List<DatosUsuario> datosUsuario;
+	private List<Rol> roles;
 
 	
 	public int getId() {
@@ -72,6 +74,16 @@ public class UsuariosDto implements Serializable {
 	public void setDatosUsuario(List<DatosUsuario> datosUsuario) {
 		this.datosUsuario = datosUsuario;
 	}
+	
+	
+	public List<Rol> getRoles() {
+		return roles;
+	}
+	public void setRoles(List<Rol> roles) {
+		this.roles = roles;
+	}
+	
+	
 	@Override
 	public String toString() {
 		return "UsuariosDto [id=" + id + ", activo=" + activo + ", nombre=" + nombre + ", email=" + email
