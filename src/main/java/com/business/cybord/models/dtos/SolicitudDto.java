@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 import com.business.cybord.entities.AtributoSolicitud;
-import com.business.cybord.entities.Usuario;
 import com.business.cybord.entities.Validacion;
 
 public class SolicitudDto {
