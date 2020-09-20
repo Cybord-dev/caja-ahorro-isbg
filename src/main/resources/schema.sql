@@ -35,8 +35,6 @@ ALTER TABLE USER_ROLES
     ADD FOREIGN KEY (id_usuario) 
     REFERENCES USUARIOS(id_usuario);
 
-  
-
 CREATE TABLE `PRESTAMO` (
   `id_prestamo` int(11) NOT NULL AUTO_INCREMENT,
   `id_deudor` int(11) NOT NULL,
@@ -47,6 +45,10 @@ CREATE TABLE `PRESTAMO` (
   `fecha_actualizacion` timestamp NOT NULL
 );
 
+ALTER TABLE PRESTAMO
+    ADD FOREIGN KEY (id_deudor) 
+    REFERENCES USUARIOS(id_usuario);
+
 CREATE TABLE `DATOS_USER` (
   `id_datos_user` int(11) NOT NULL AUTO_INCREMENT,
   `id_usuario` int(11) NOT NULL,
@@ -56,6 +58,7 @@ CREATE TABLE `DATOS_USER` (
   `fecha_creacion` timestamp NOT NULL,
   `fecha_actualizacion` timestamp NOT NULL
 );
+
 ALTER TABLE DATOS_USER ADD CONSTRAINT DATOS_USER_ROLES_UNIQUE
 UNIQUE(id_usuario,tipo_dato);  
 
@@ -90,6 +93,13 @@ CREATE TABLE `ATRIBUTOS_SOLICITUD` (
   `fecha_actualizacion` timestamp NOT NULL
 );
 
+ALTER TABLE ATRIBUTOS_SOLICITUD ADD CONSTRAINT ATRIBUTOS_SOLICITUD_UNIQUE
+UNIQUE(id_solicitud,tipo_atributo);  
+
+ALTER TABLE ATRIBUTOS_SOLICITUD
+    ADD FOREIGN KEY (id_solicitud) 
+    REFERENCES SOLICITUDES(id_solicitud);
+
 CREATE TABLE `VALIDACIONES` (
   `id_validacion` int(11) NOT NULL AUTO_INCREMENT,
   `id_solicitud` int(11) NOT NULL,
@@ -100,6 +110,13 @@ CREATE TABLE `VALIDACIONES` (
   `fecha_creacion` timestamp NOT NULL,
   `fecha_actualizacion` timestamp NOT NULL
 );
+
+ALTER TABLE VALIDACIONES ADD CONSTRAINT VALIDACIONES_UNIQUE
+UNIQUE(id_solicitud,numero_validacion);  
+
+ALTER TABLE VALIDACIONES
+    ADD FOREIGN KEY (id_solicitud) 
+    REFERENCES SOLICITUDES(id_solicitud);
 
 CREATE TABLE `CAT_PROPIEDADES` (
   `id_atributo` int(11) NOT NULL AUTO_INCREMENT,
@@ -118,6 +135,10 @@ CREATE TABLE `SALDO_AHORRO` (
   `fecha_actualizacion` timestamp NOT NULL
 );
 
+ALTER TABLE SALDO_AHORRO
+    ADD FOREIGN KEY (id_usuario) 
+    REFERENCES USUARIOS(id_usuario);
+
 CREATE TABLE `SALDO_PRESTAMO` (
   `id_saldo_prestamo` int(11) NOT NULL AUTO_INCREMENT,
   `id_prestamo` int(11) NOT NULL,
@@ -128,6 +149,10 @@ CREATE TABLE `SALDO_PRESTAMO` (
   `fecha_actualizacion` timestamp NOT NULL
 );
 
+ALTER TABLE SALDO_PRESTAMO
+    ADD FOREIGN KEY (id_prestamo) 
+    REFERENCES PRESTAMO(id_prestamo);
+
 CREATE TABLE `RECURSOS` (
   `id_recurso` int(11) NOT NULL AUTO_INCREMENT,
   `referencia` varchar(45) NOT NULL,
@@ -136,3 +161,6 @@ CREATE TABLE `RECURSOS` (
   `dato` blob(45) NOT NULL,
   `fecha_creacion` timestamp NOT NULL
 );
+
+ALTER TABLE RECURSOS ADD CONSTRAINT RECURSOS_UNIQUE
+UNIQUE(referencia,tipo_archivo,tipo_recurso);  
