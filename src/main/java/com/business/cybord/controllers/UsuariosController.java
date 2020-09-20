@@ -18,13 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.business.cybord.models.dtos.AtributoSolicitudDto;
 import com.business.cybord.models.dtos.DatosUsuarioDto;
-import com.business.cybord.models.dtos.SolicitudDto;
 import com.business.cybord.models.dtos.UsuariosDto;
-import com.business.cybord.models.dtos.ValidacionDto;
 import com.business.cybord.services.UsuariosService;
-import com.business.cybord.services.ValidacionService;
 
 
 @RestController
@@ -66,9 +62,9 @@ public class UsuariosController {
 		return new ResponseEntity<>(service.insertarNuevoDatoUsuario(datousuarioDto), HttpStatus.OK);
 	}
 	
-	@PutMapping("/datos")
-	public ResponseEntity<DatosUsuarioDto> actualizarDatoUsuario(@RequestBody @Valid DatosUsuarioDto datousuarioDto) {
-		return new ResponseEntity<>(service.actualizarDatoUsuario(datousuarioDto), HttpStatus.OK);
+	@PutMapping("/datos/{id}")
+	public ResponseEntity<DatosUsuarioDto> actualizarDatoUsuario(@RequestBody @Valid DatosUsuarioDto datousuarioDto, @PathVariable Integer id ) {
+		return new ResponseEntity<>(service.actualizarDatoUsuario(id, datousuarioDto), HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/datos/{id}")

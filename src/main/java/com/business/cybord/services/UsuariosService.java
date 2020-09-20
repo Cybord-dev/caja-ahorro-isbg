@@ -155,9 +155,10 @@ public class UsuariosService {
 			
 	}
 	
-	public DatosUsuarioDto actualizarDatoUsuario(DatosUsuarioDto datosUsuario) {
+	public DatosUsuarioDto actualizarDatoUsuario(int idUsuario, DatosUsuarioDto datosUsuario) {
+		Optional<Usuario> usuario = repository.findById(idUsuario);
 		Optional<DatosUsuario> datosusuarioEntity = datosUsuarioRepository.findByTipoDatoAndIdUsuario(datosUsuario.getTipoDato(),datosUsuario.getIdUsuario());
-		if (datosusuarioEntity.isPresent()) {			
+		if (datosusuarioEntity.isPresent() && usuario.isPresent()) {			
 			datosusuarioEntity.get().setDato(datosUsuario.getDato());
 			datosusuarioEntity.get().setRelevancia(datosUsuario.isRelevancia());			
 			return mapper.getDtoFromDatosusuarioEntity(datosUsuarioRepository.save(datosusuarioEntity.get()));
