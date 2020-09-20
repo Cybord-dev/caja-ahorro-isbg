@@ -12,11 +12,11 @@ import com.business.cybord.models.dtos.AtributoSolicitudDto;
 import com.business.cybord.models.dtos.SolicitudDto;
 import com.business.cybord.models.dtos.ValidacionDto;
 
-@Mapper(componentModel = "spring")
+@Mapper
 public interface SolicitudMapper {
 	SolicitudDto getDtoFromSolicitudEntity(Solicitud dto);
 	Solicitud getEntityFromSolicitudDto(SolicitudDto dto);
-	List<SolicitudDto> SolicitudDtoToSolicitud(Stream<Solicitud> dto);
+	List<SolicitudDto> SolicitudDtoToSolicitud(List<Solicitud> dto);
 	
 	//Atributos
 	AtributoSolicitud getEntityFromAtributoSolicitudDto(AtributoSolicitudDto dto);
