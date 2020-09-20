@@ -28,13 +28,13 @@ public class PrestamoController {
 	private PrestamoService service;
 	
 	@GetMapping("/{idUsuario}/prestamos")
-	public ResponseEntity<List<PrestamoDto>> getPrestamosdeUnUsuarioPorSuId(@PathVariable Integer idUsuario) {
+	public ResponseEntity<List<PrestamoDto>> getPrestamosByUsuario (@PathVariable Integer idUsuario) {
 		return new ResponseEntity<>(service.getPrestamosdeUnUsuarioPorSuId(idUsuario), HttpStatus.OK);
 	}
 	
 	@PostMapping("/{idUsuario/prestamos}")
 	public ResponseEntity<PrestamoDto> insertPrestamo(@PathVariable Integer idUsuario,@RequestBody @Valid PrestamoDto Dto) {
-		return new ResponseEntity<>(service.insertPrestamo(idUsuario,Dto), HttpStatus.OK);
+		return new ResponseEntity<>(service.insertPrestamo(idUsuario,Dto), HttpStatus.CREATED);
 	}
 	
 	@GetMapping("/{idUsuario}/prestamos/{idPrestamo}/saldos/{idSaldo}")
