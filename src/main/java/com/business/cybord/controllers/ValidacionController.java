@@ -24,10 +24,10 @@ import com.business.cybord.services.ValidacionService;
 @RequestMapping
 public class ValidacionController {
 	@Autowired
-	ValidacionService service;
+	private ValidacionService service;
 	
 	@Autowired
-	UsuariosService serviceUsuario;
+	private UsuariosService serviceUsuario;
 	
 	@GetMapping("/validaciones")
 	public ResponseEntity<List<ValidacionDto>> getValidacionById() {
@@ -36,7 +36,7 @@ public class ValidacionController {
 	
 	@PostMapping("/usuarios/{id_usuario}/solicitudes/{id_solicitud}/validaciones")
 	public ResponseEntity<ValidacionDto> crearValidacionesUsuario(@PathVariable Integer id_usuario,@PathVariable Integer id_solicitud ,@RequestBody @Valid ValidacionDto validacionDto) {
-		return new ResponseEntity<>(serviceUsuario.crearValidacion(id_usuario,id_solicitud, validacionDto), HttpStatus.OK);
+		return new ResponseEntity<>(serviceUsuario.crearValidacion(id_usuario,id_solicitud, validacionDto), HttpStatus.CREATED);
 	}
 	
 	

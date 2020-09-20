@@ -24,34 +24,34 @@ import com.business.cybord.services.UsuariosService;
 @RequestMapping
 public class AtributoSolicitudController {
 	@Autowired
-	AtributoSolicitudService service;
+	private AtributoSolicitudService service;
 	
 	@Autowired
-	UsuariosService serviceUsuario;
+	private UsuariosService serviceUsuario;
 	
 	@GetMapping("/atributos")
-	public ResponseEntity<List<AtributoSolicitudDto>> getSolicitudById() {
+	public ResponseEntity<List<AtributoSolicitudDto>> getSolicitud() {
 		return new ResponseEntity<>(service.getAllAtributos(), HttpStatus.OK);
 	}
 	
-	@PostMapping("/usuarios/{id_usuario}/solicitudes/{id_solicitud}/atributos")
-	public ResponseEntity<AtributoSolicitudDto> crearAtributoById(@PathVariable Integer id_usuario,@PathVariable Integer id_solicitud, @RequestBody @Valid AtributoSolicitudDto atributo) {
-		return new ResponseEntity<>(serviceUsuario.createAtributoSolicitud(id_usuario, id_solicitud, atributo), HttpStatus.OK);
+	@PostMapping("/usuarios/{idUsuario}/solicitudes/{idSolicitud}/atributos")
+	public ResponseEntity<AtributoSolicitudDto> crearAtributo(@PathVariable Integer idUsuario,@PathVariable Integer idSolicitud, @RequestBody @Valid AtributoSolicitudDto atributo) {
+		return new ResponseEntity<>(serviceUsuario.createAtributoSolicitud(idUsuario, idSolicitud, atributo), HttpStatus.OK);
 	}
 	
-	@PutMapping("/usuarios/{id_usuario}/solicitudes/{id_solicitud}/atributos/{id_atributo}")
-	public ResponseEntity<AtributoSolicitudDto> actualizarAtributoById(@PathVariable Integer id_usuario, @PathVariable Integer id_solicitud,@PathVariable Integer id_atributo,  @RequestBody @Valid AtributoSolicitudDto atributo) {
-		return new ResponseEntity<>(serviceUsuario.actualizarAtributoSolicitud(id_usuario, id_solicitud, id_atributo, atributo), HttpStatus.OK);
+	@PutMapping("/usuarios/{idUsuario}/solicitudes/{idSolicitud}/atributos/{idAtributo}")
+	public ResponseEntity<AtributoSolicitudDto> actualizarAtributo(@PathVariable Integer idUsuario, @PathVariable Integer idSolicitud,@PathVariable Integer idAtributo,  @RequestBody @Valid AtributoSolicitudDto atributo) {
+		return new ResponseEntity<>(serviceUsuario.actualizarAtributoSolicitud(idUsuario, idSolicitud, idAtributo, atributo), HttpStatus.OK);
 	}
 	
-	@GetMapping("/usuarios/{id_usuario}/solicitudes/{id_solicitud}/atributos/{id_atributo}")
-	public ResponseEntity<AtributoSolicitudDto> getAtributoSolicitudById(@PathVariable Integer id_usuario, @PathVariable Integer id_solicitud,@PathVariable Integer id_atributo) {
-		return new ResponseEntity<>(serviceUsuario.getAtributoSolicitudById(id_usuario, id_solicitud, id_atributo), HttpStatus.OK);
+	@GetMapping("/usuarios/{idUsuario}/solicitudes/{idSolicitud}/atributos/{idAtributo}")
+	public ResponseEntity<AtributoSolicitudDto> getAtributoSolicitudById(@PathVariable Integer idUsuario, @PathVariable Integer idSolicitud,@PathVariable Integer idAtributo) {
+		return new ResponseEntity<>(serviceUsuario.getAtributoSolicitudById(idUsuario, idSolicitud, idAtributo), HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/usuarios/{id_usuario}/solicitudes/{id_solicitud}/atributos/{id_atributo}")
-	public ResponseEntity<Void> deleteAtributoSolicitudById(@PathVariable Integer id_usuario, @PathVariable Integer id_solicitud,@PathVariable Integer id_atributo) {
-		serviceUsuario.deleteAtributoSolicitudById(id_usuario, id_solicitud, id_atributo);
+	@DeleteMapping("/usuarios/{idUsuario}/solicitudes/{idSolicitud}/atributos/{idAtributo}")
+	public ResponseEntity<Void> deleteAtributoSolicitudById(@PathVariable Integer idUsuario, @PathVariable Integer idSolicitud,@PathVariable Integer idAtributo) {
+		serviceUsuario.deleteAtributoSolicitudById(idUsuario, idSolicitud, idAtributo);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }
