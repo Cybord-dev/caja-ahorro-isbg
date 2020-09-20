@@ -37,7 +37,7 @@ public class CatalogoPropiedadController {
 	
 	@PostMapping
 	public ResponseEntity<CatalogoPropiedadDto> createCatalogoPropiedad(@RequestBody @Validated CatalogoPropiedadDto dto){
-		return new ResponseEntity<>(service.createCatalogoPropiedad(dto), HttpStatus.CREATED);
+		return new ResponseEntity<>(service.createCatalogoPropiedad(dto), HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{tipo}/{nombre}")

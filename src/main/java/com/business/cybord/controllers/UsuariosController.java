@@ -43,7 +43,7 @@ public class UsuariosController {
 	
 	@PostMapping
 	public ResponseEntity<UsuariosDto> insertarNuevoUsuario(@RequestBody @Valid UsuariosDto usuarioDto) {
-		return new ResponseEntity<>(service.insertarNuevoUsuario(usuarioDto), HttpStatus.CREATED);
+		return new ResponseEntity<>(service.insertarNuevoUsuario(usuarioDto), HttpStatus.OK);
 	}
 	
 	@PutMapping
@@ -59,7 +59,7 @@ public class UsuariosController {
 	
 	@PostMapping("/datos")
 	public ResponseEntity<DatosUsuarioDto> insertarNuevoDatoUsuario(@RequestBody @Valid DatosUsuarioDto datousuarioDto) {
-		return new ResponseEntity<>(service.insertarNuevoDatoUsuario(datousuarioDto), HttpStatus.CREATED);
+		return new ResponseEntity<>(service.insertarNuevoDatoUsuario(datousuarioDto), HttpStatus.OK);
 	}
 	
 	@PutMapping("/datos/{id}")

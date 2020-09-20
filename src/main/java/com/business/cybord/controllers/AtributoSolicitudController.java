@@ -33,7 +33,7 @@ public class AtributoSolicitudController {
 	
 	@PostMapping("/usuarios/{idUsuario}/solicitudes/{idSolicitud}/atributos")
 	public ResponseEntity<AtributoSolicitudDto> crearAtributo(@PathVariable Integer idUsuario,@PathVariable Integer idSolicitud, @RequestBody @Valid AtributoSolicitudDto atributo) {
-		return new ResponseEntity<>(service.createAtributoSolicitud(idUsuario, idSolicitud, atributo), HttpStatus.CREATED);
+		return new ResponseEntity<>(service.createAtributoSolicitud(idUsuario, idSolicitud, atributo), HttpStatus.OK);
 	}
 	
 	@PutMapping("/usuarios/{idUsuario}/solicitudes/{idSolicitud}/atributos/{idAtributo}")
