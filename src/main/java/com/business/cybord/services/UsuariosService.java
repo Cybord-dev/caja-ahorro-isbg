@@ -21,24 +21,13 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
-import com.business.cybord.entities.AtributoSolicitud;
 import com.business.cybord.entities.DatosUsuario;
-import com.business.cybord.entities.Solicitud;
 import com.business.cybord.entities.Usuario;
-import com.business.cybord.entities.Validacion;
-import com.business.cybord.mappers.SolicitudMapper;
 import com.business.cybord.mappers.UsuariosMapper;
-import com.business.cybord.models.dtos.AtributoSolicitudDto;
 import com.business.cybord.models.dtos.DatosUsuarioDto;
-import com.business.cybord.models.dtos.SolicitudDto;
 import com.business.cybord.models.dtos.UsuariosDto;
-import com.business.cybord.models.dtos.ValidacionDto;
-import com.business.cybord.repositories.AtributoSolicitudRepository;
 import com.business.cybord.repositories.DatosUsuarioRepository;
-import com.business.cybord.repositories.SolicitudRepository;
 import com.business.cybord.repositories.UsuariosRepository;
-import com.business.cybord.repositories.ValidacionRepository;
 
 @Service
 public class UsuariosService {
@@ -50,23 +39,8 @@ public class UsuariosService {
 	private UsuariosMapper mapper;
 	
 	@Autowired
-	private SolicitudMapper mapperSol;
-	
-	@Autowired
 	private DatosUsuarioRepository datosUsuarioRepository;
-	
-	@Autowired
-	private SolicitudRepository solicitudRepository;
-	
-	@Autowired
-	private ValidacionRepository validacionRepository;
-	
-	@Autowired
-	private AtributoSolicitudRepository atribRepository;
-	
-	@Autowired
-	private SolicitudMapper solicitudMapper;
-	
+
 	
 	private static final Logger log = LoggerFactory.getLogger(UsuariosService.class);
 	
@@ -89,7 +63,6 @@ public class UsuariosService {
 	}
 	
 	public Page<UsuariosDto> getUsuariosPorParametros(Map<String, String> parameters) {
-		
 		int page = (parameters.get("page")==null)?0:Integer.valueOf(parameters.get("page"));
 		int size = (parameters.get("size")==null)?10:Integer.valueOf(parameters.get("size"));	
 		Page<Usuario> result = repository.findAll(buildSearchFilters(parameters), PageRequest.of(page, size,Sort.by("fechaActualizacion").descending()));
@@ -105,7 +78,6 @@ public class UsuariosService {
 	}
 	
 	public UsuariosDto insertarNuevoUsuario(UsuariosDto usuario) {
-		log.info("Buscando usuario con eee : {}", usuario.getEmail());
 		Optional<Usuario> entity = repository.findByEmail(usuario.getEmail());		
 		if (entity.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,String.format("El dato %s ya existe", usuario.getEmail()));		
@@ -124,15 +96,13 @@ public class UsuariosService {
 		entity.setNombre(usuario.getNombre());
 		entity.setTipoUsuario(usuario.getTipoUsuario());
 		entity.setNombre(usuario.getNombre());
-		entity.setDatosUsuario(usuario.getDatosUsuario());
-		
+		entity.setDatosUsuario(usuario.getDatosUsuario());	
 		return mapper.getDtoFromUserEntity(repository.save(entity));
 	}
 	
 	public void borrarUsuario(Integer id) {
 		Usuario entity = repository.findById(id).orElseThrow(
 				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("El Usuario no existe %d", id)));
-		
 		datosUsuarioRepository.findByIdUsuario(id).stream().forEach(a->datosUsuarioRepository.delete(a));
 		repository.delete(entity);
 	}
@@ -140,12 +110,9 @@ public class UsuariosService {
 	///
 
 	public DatosUsuarioDto insertarNuevoDatoUsuario(DatosUsuarioDto datosUsuario) {
-		
 		Optional<DatosUsuario> datosusuarioEntity = datosUsuarioRepository.findByTipoDatoAndIdUsuario(datosUsuario.getTipoDato(),datosUsuario.getIdUsuario());
-	
 		if (datosusuarioEntity.isPresent()) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,String.format("El dato %s ya existe", datosUsuario.getTipoDato()));
-			
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,String.format("El dato %s ya existe", datosUsuario.getTipoDato()));		
 		}
 		else {
 			
