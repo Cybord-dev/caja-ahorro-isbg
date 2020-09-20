@@ -17,20 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.business.cybord.models.dtos.SolicitudDto;
 import com.business.cybord.services.SolicitudService;
-import com.business.cybord.services.UsuariosService;
-import com.business.cybord.services.ValidacionService;
 
 @RestController
 @RequestMapping
 public class SolicitudContoller {
 	@Autowired
 	private SolicitudService service;
-	
-	@Autowired
-	private UsuariosService serviceUsuario;
-	
-	@Autowired
-	private ValidacionService validacionService;
 
 	
 	@GetMapping("/solicitudes")
@@ -40,22 +32,22 @@ public class SolicitudContoller {
 	
 	@PostMapping("/usuarios/{id_usuario}/solicitudes")
 	public ResponseEntity<SolicitudDto> crearSolicitudUsuario(@PathVariable Integer id_usuario, @RequestBody @Valid SolicitudDto solicitudDto) {
-		return new ResponseEntity<>(serviceUsuario.crearSolicitudUsuario(id_usuario, solicitudDto), HttpStatus.CREATED);
+		return new ResponseEntity<>(service.crearSolicitudUsuario(id_usuario, solicitudDto), HttpStatus.CREATED);
 	}
 	
 	@PutMapping("/usuarios/{id_usuario}/solicitudes/{id_solicitud}")
 	public ResponseEntity<SolicitudDto> actualizarSolicitudbyId(@PathVariable Integer id_usuario, @PathVariable Integer id_solicitud, @RequestBody @Valid SolicitudDto solicitudDto) {
-		return new ResponseEntity<>(serviceUsuario.actualizarSolicitudbyId(id_usuario, id_solicitud, solicitudDto), HttpStatus.OK);
+		return new ResponseEntity<>(service.actualizarSolicitudbyId(id_usuario, id_solicitud, solicitudDto), HttpStatus.OK);
 	}
 	
 	@GetMapping("/usuarios/{id_usuario}/solicitudes/{id_solicitud}")
 	public ResponseEntity<SolicitudDto> getSolicitudById(@PathVariable Integer id_usuario, @PathVariable Integer id_solicitud) {
-		return new ResponseEntity<>(serviceUsuario.getSolicitudById(id_usuario,id_solicitud), HttpStatus.OK);
+		return new ResponseEntity<>(service.getSolicitudById(id_usuario,id_solicitud), HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/usuarios/{id_usuario}/solicitudes/{id_solicitud}")
 	public ResponseEntity<Void> deleteSolicitudById(@PathVariable Integer id_usuario, @PathVariable Integer id_solicitud) {
-		serviceUsuario.deleteSolicitudById(id_usuario, id_solicitud);
+		service.deleteSolicitudById(id_usuario, id_solicitud);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
