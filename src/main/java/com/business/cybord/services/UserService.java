@@ -20,11 +20,8 @@ public class UserService {
 
 	@Autowired
 	private UserMapper mapper;
-	
-	
-	
-	private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
+	private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
 	public UserDto getUserById(Integer id) {
 		log.info("Buscando usuario con id : {}", id);
