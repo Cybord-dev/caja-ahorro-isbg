@@ -24,31 +24,33 @@ import com.business.cybord.services.ValidacionService;
 public class ValidacionController {
 	@Autowired
 	private ValidacionService service;
-	
+
 	@GetMapping("/validaciones")
 	public ResponseEntity<List<ValidacionDto>> getValidacionById() {
 		return new ResponseEntity<>(service.getAllValidaciones(), HttpStatus.OK);
 	}
-	
-	@PostMapping("/usuarios/{id_usuario}/solicitudes/{id_solicitud}/validaciones")
-	public ResponseEntity<ValidacionDto> crearValidacionesUsuario(@PathVariable Integer id_usuario,@PathVariable Integer id_solicitud ,@RequestBody @Valid ValidacionDto validacionDto) {
-		return new ResponseEntity<>(service.crearValidacion(id_usuario,id_solicitud, validacionDto), HttpStatus.CREATED);
+
+	@GetMapping("/usuarios/{idUsuario}/solicitudes/{idSolicitud}/validaciones/{idValidacion}")
+	public ResponseEntity<ValidacionDto> getValidacionById(@PathVariable Integer idUsuario,
+			@PathVariable Integer idSolicitud, @PathVariable Integer idValidacion) {
+		return new ResponseEntity<>(service.getValidacionById(idUsuario, idSolicitud, idValidacion), HttpStatus.OK);
 	}
-	
-	
-	@PutMapping("/usuarios/{id_usuario}/solicitudes/{id_solicitud}/validaciones/{id_validacion}")
-	public ResponseEntity<ValidacionDto> actualizarValidacionbyId(@PathVariable Integer id_usuario,@PathVariable Integer id_solicitud,@PathVariable Integer id_validacion, @RequestBody @Valid ValidacionDto validacionDto) {
-		return new ResponseEntity<>(service.actualizarValidacionById(id_usuario, id_solicitud,id_validacion,validacionDto), HttpStatus.OK);
+
+	@PostMapping("/usuarios/{idUsuario}/solicitudes/{idSolicitud}/validaciones")
+	public ResponseEntity<ValidacionDto> crearValidacion(@PathVariable Integer idUsuario,
+			@PathVariable Integer idSolicitud, @RequestBody @Valid ValidacionDto validacionDto) {
+		return new ResponseEntity<>(service.crearValidacion(idUsuario, idSolicitud, validacionDto), HttpStatus.CREATED);
 	}
-	
-	@GetMapping("/usuarios/{id_usuario}/solicitudes/{id_solicitud}/validaciones/{id_validacion}")
-	public ResponseEntity<ValidacionDto> getValidacionById(@PathVariable Integer id_usuario,@PathVariable Integer id_solicitud,@PathVariable Integer id_validacion) {
-		return new ResponseEntity<>(service.getValidacionById(id_usuario, id_solicitud, id_validacion), HttpStatus.OK);
+
+	@PutMapping("/validaciones/{idValidacion}")
+	public ResponseEntity<ValidacionDto> actualizarValidacion(@PathVariable Integer idValidacion,
+			@RequestBody @Valid ValidacionDto validacionDto) {
+		return new ResponseEntity<>(service.actualizarValidacion(idValidacion, validacionDto), HttpStatus.OK);
 	}
-	
-	@DeleteMapping("/usuarios/{id_usuario}/solicitudes/{id_solicitud}/validaciones/{id_validacion}")
-	public ResponseEntity<Void> deleteValidacionById(@PathVariable Integer id_usuario, @PathVariable Integer id_solicitud, @PathVariable Integer id_validacion) {
-		service.deleteValidacionById(id_usuario, id_solicitud, id_validacion);
+
+	@DeleteMapping("/validaciones/{idValidacion}")
+	public ResponseEntity<Void> deleteValidacion(@PathVariable Integer idValidacion) {
+		service.deleteValidacion(idValidacion);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 

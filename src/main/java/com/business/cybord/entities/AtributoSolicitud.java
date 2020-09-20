@@ -20,6 +20,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -57,7 +58,7 @@ public class AtributoSolicitud {
 	private Date fechaCreacion;
 	
 	@Temporal(TemporalType.TIMESTAMP)
-	@CreatedDate
+	@LastModifiedDate
 	@Column(name = "fecha_actualizacion")
 	private Date fechaActualizacion;
 	
@@ -67,8 +68,6 @@ public class AtributoSolicitud {
 	private Solicitud solicitud;
 	
 	public void update(AtributoSolicitud n) {
-		this.fechaActualizacion = n.fechaActualizacion;
-		this.fechaCreacion = n.fechaCreacion;
 		this.nombre = n.nombre;
 		this.valor = n.valor;
 	}

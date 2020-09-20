@@ -19,7 +19,7 @@ import com.business.cybord.repositories.ValidacionRepository;
 
 @Service
 public class ValidacionService {
-	
+
 	@Autowired
 	private UsuariosRepository repositoryUsuario;
 	@Autowired
@@ -28,46 +28,51 @@ public class ValidacionService {
 	private SolicitudRepository repositorySol;
 	@Autowired
 	private SolicitudMapper mapper;
-	
-	public List<ValidacionDto> getAllValidaciones(){
+
+	public List<ValidacionDto> getAllValidaciones() {
 		return mapper.ValidacionDtoToValidacion(repositoryValidacion.findAll().stream());
 	}
-	
-	public ValidacionDto crearValidacion(int id_usuario, int id_solicitud,ValidacionDto validacion) {
-		Optional<Solicitud> solicitud = repositorySol.findById(id_solicitud);
-		Optional<Usuario> usuario = repositoryUsuario.findById(id_usuario);
-		if(!solicitud.isPresent() && !usuario.isPresent()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("solicitud id= %d o usuario id=%d no existe", id_solicitud, id_usuario));
-		}else {
+
+	public ValidacionDto getValidacionById(int idUsuario, int idSolicitud, int idValidacion) {
+		Validacion entity = repositoryValidacion
+				.findByIdUsuarioAndIdAndIdSolicitud(idUsuario, idValidacion, idSolicitud)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+						String.format("La validacion id=%d no existe", idValidacion)));
+		return mapper.getDtoFromValidacionesEntity(entity);
+	}
+
+	public ValidacionDto crearValidacion(int idUsuario, int idSolicitud, ValidacionDto validacion) {
+		Optional<Solicitud> solicitud = repositorySol.findById(idSolicitud);
+		Optional<Usuario> usuario = repositoryUsuario.findById(idUsuario);
+		if (!solicitud.isPresent() && !usuario.isPresent()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					String.format("solicitud id= %d o usuario id=%d no existe", idSolicitud, idUsuario));
+		} else {
 			Validacion nueva = repositoryValidacion.save(mapper.getEntityFromValidacionesDto(validacion));
 			return mapper.getDtoFromValidacionesEntity(nueva);
 		}
 	}
-	
-	public ValidacionDto actualizarValidacionById(int idUsuario, int idSolicitud, int idValidacion, ValidacionDto nueva) {
-		Optional<Validacion> validacion = repositoryValidacion.findByIdUsuarioAndIdAndIdSolicitud(idUsuario, idValidacion, idSolicitud);
-		if(validacion.isPresent()) {
+
+	public ValidacionDto actualizarValidacion(int idValidacion, ValidacionDto nueva) {
+		Optional<Validacion> validacion = repositoryValidacion.findById(idValidacion);
+		if (validacion.isPresent()) {
 			validacion.get().update(mapper.getEntityFromValidacionesDto(nueva));
 			return mapper.getDtoFromValidacionesEntity(validacion.get());
-		}else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("la validacion id= %d perteneciente a solicitud id=%d validada por usuario id=%d no existe", idValidacion, idSolicitud, idValidacion));
+		} else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					String.format("la validacion id= %d", idValidacion));
 		}
 	}
-	
-	public ValidacionDto getValidacionById(int id_usuario, int id_solicitud, int id_validacion) {
-		Validacion entity = repositoryValidacion.findByIdUsuarioAndIdAndIdSolicitud(id_usuario, id_validacion, id_solicitud).orElseThrow(
-				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("La validacion id=%d no existe", id_validacion)));
-		return mapper.getDtoFromValidacionesEntity(entity);
-	}
-	
-	public void deleteValidacionById(int id_usuario, int id_solicitud, int id_validacion) {
-		Optional<Validacion> entity = repositoryValidacion.findByIdUsuarioAndIdAndIdSolicitud(id_usuario, id_validacion, id_solicitud);
-		if(entity.isPresent()) {
+
+	public void deleteValidacion(int idValidacion) {
+		Optional<Validacion> entity = repositoryValidacion.findById(idValidacion);
+		if (entity.isPresent()) {
 			repositoryValidacion.delete(entity.get());
-		}else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("La validacion id=%d no existe", id_validacion));
+		} else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					String.format("La validacion id=%d no existe", idValidacion));
 		}
-		
+
 	}
 
 }

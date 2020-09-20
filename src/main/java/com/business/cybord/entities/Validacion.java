@@ -16,6 +16,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -54,7 +55,7 @@ public class Validacion {
 	private Date fechaCreacion;
 	
 	@Temporal(TemporalType.TIMESTAMP)
-	@CreatedDate
+	@LastModifiedDate
 	@Column(name = "fecha_actualizacion")
 	private Date fechaActualizacion;
 	
@@ -64,8 +65,8 @@ public class Validacion {
 	private Solicitud solicitud;
 	
 	public void update(Validacion n) {
-		this.fechaActualizacion = n.fechaActualizacion;
-		this.fechaCreacion = n.fechaCreacion;
+		this.status = n.status;
+		this.tipoValidacion = n.tipoValidacion;
 		this.numeroValidacion = n.numeroValidacion;
 		this.tipoValidacion = n.tipoValidacion;
 	}

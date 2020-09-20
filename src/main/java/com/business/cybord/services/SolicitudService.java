@@ -28,17 +28,17 @@ public class SolicitudService {
 		return mapper.SolicitudDtoToSolicitud(repositorySolicitud.findAll());
 	}
 
-	public List<SolicitudDto> getAllSolicitudes(int id_usuario) {
-		return mapper.SolicitudDtoToSolicitud(repositorySolicitud.findByIdUsuario(id_usuario));
+	public List<SolicitudDto> getAllSolicitudes(int idUsuario) {
+		return mapper.SolicitudDtoToSolicitud(repositorySolicitud.findByIdUsuario(idUsuario));
 	}
 
-	public SolicitudDto getSolicitudById(int id_usuario, int id_solicitud) {
-		Optional<Solicitud> solicitud = repositorySolicitud.findByIdUsuarioAndId(id_usuario, id_solicitud);
+	public SolicitudDto getSolicitudById(int idUsuario, int idSolicitud) {
+		Optional<Solicitud> solicitud = repositorySolicitud.findByIdUsuarioAndId(idUsuario, idSolicitud);
 		if (solicitud.isPresent()) {
 			return mapper.getDtoFromSolicitudEntity(solicitud.get());
 		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					String.format("la solicitud id=%d no existe con el usuario id=%d", id_solicitud, id_usuario));
+					String.format("la solicitud id=%d no existe con el usuario id=%d", idSolicitud, idUsuario));
 		}
 	}
 
@@ -49,18 +49,18 @@ public class SolicitudService {
 		return mapper.getDtoFromSolicitudEntity(nueva);
 	}
 
-	public SolicitudDto actualizarSolicitudbyId(int id_solicitud, SolicitudDto nueva) {
-		Optional<Solicitud> solicitud = repositorySolicitud.findById(id_solicitud);
+	public SolicitudDto actualizarSolicitud(int idSolicitud, SolicitudDto nueva) {
+		Optional<Solicitud> solicitud = repositorySolicitud.findById(idSolicitud);
 		if (solicitud.isPresent()) {
 			solicitud.get().update(mapper.getEntityFromSolicitudDto(nueva));
 			return mapper.getDtoFromSolicitudEntity(solicitud.get());
 		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					String.format("la solicitud id=%d no existe", id_solicitud));
+					String.format("la solicitud id=%d no existe", idSolicitud));
 		}
 	}
 
-	public void deleteSolicitudById(int idSolicitud) {
+	public void deleteSolicitud(int idSolicitud) {
 		Optional<Solicitud> solicitud = repositorySolicitud.findById(idSolicitud);
 		if (solicitud.isPresent()) {
 			repositorySolicitud.delete(solicitud.get());

@@ -29,10 +29,10 @@ public class SolicitudesContoller {
 		return new ResponseEntity<>(service.getAllSolicitudes(), HttpStatus.OK);
 	}
 
-	@GetMapping("/usuarios/{id_usuario}/solicitudes/{id_solicitud}")
-	public ResponseEntity<SolicitudDto> getSolicitudById(@PathVariable Integer id_usuario,
-			@PathVariable Integer id_solicitud) {
-		return new ResponseEntity<>(service.getSolicitudById(id_usuario, id_solicitud), HttpStatus.OK);
+	@GetMapping("/usuarios/{idUsuario}/solicitudes/{idSolicitud}")
+	public ResponseEntity<SolicitudDto> getSolicitudById(@PathVariable Integer idUsuario,
+			@PathVariable Integer idSolicitud) {
+		return new ResponseEntity<>(service.getSolicitudById(idUsuario, idSolicitud), HttpStatus.OK);
 	}
 
 	@PostMapping("/usuarios/{idUsuario}/solicitudes")
@@ -42,14 +42,14 @@ public class SolicitudesContoller {
 	}
 
 	@PutMapping("/solicitudes/{idSolicitud}")
-	public ResponseEntity<SolicitudDto> actualizarSolicitudbyId(@PathVariable Integer idSolicitud,
+	public ResponseEntity<SolicitudDto> actualizarSolicitud(@PathVariable Integer idSolicitud,
 			@RequestBody @Valid SolicitudDto solicitudDto) {
-		return new ResponseEntity<>(service.actualizarSolicitudbyId(idSolicitud, solicitudDto), HttpStatus.OK);
+		return new ResponseEntity<>(service.actualizarSolicitud(idSolicitud, solicitudDto), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/solicitudes/{idSolicitud}")
-	public ResponseEntity<Void> deleteSolicitudById(@PathVariable Integer idSolicitud) {
-		service.deleteSolicitudById(idSolicitud);
+	public ResponseEntity<Void> deleteSolicitud(@PathVariable Integer idSolicitud) {
+		service.deleteSolicitud(idSolicitud);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
