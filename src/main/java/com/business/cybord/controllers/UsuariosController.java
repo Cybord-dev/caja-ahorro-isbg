@@ -47,6 +47,7 @@ public class UsuariosController {
 		return new ResponseEntity<>(service.actualizarUsuario(userDto), HttpStatus.OK);
 	}
 
+	//TODO considerar borra este endpoint pues seria mejor solo desactivar al usuario 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> borrarUsuario(@PathVariable Integer id) {
 		service.borrarUsuario(id);

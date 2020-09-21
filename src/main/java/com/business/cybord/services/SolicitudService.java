@@ -25,11 +25,11 @@ public class SolicitudService {
 	private SolicitudMapper mapper;
 
 	public List<SolicitudDto> getAllSolicitudes() {
-		return mapper.SolicitudDtoToSolicitud(repositorySolicitud.findAll());
+		return mapper.solicitudDtoToSolicitud(repositorySolicitud.findAll());
 	}
 
 	public List<SolicitudDto> getAllSolicitudes(int idUsuario) {
-		return mapper.SolicitudDtoToSolicitud(repositorySolicitud.findByIdUsuario(idUsuario));
+		return mapper.solicitudDtoToSolicitud(repositorySolicitud.findByIdUsuario(idUsuario));
 	}
 
 	public SolicitudDto getSolicitudById(int idUsuario, int idSolicitud) {

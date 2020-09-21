@@ -1,5 +1,6 @@
 package com.business.cybord.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -27,6 +28,11 @@ public class SolicitudesContoller {
 	@GetMapping("/solicitudes")
 	public ResponseEntity<List<SolicitudDto>> getSolicitudByFiltros() {
 		return new ResponseEntity<>(service.getAllSolicitudes(), HttpStatus.OK);
+	}
+	
+	@GetMapping("/usuarios/{idUsuario}/solicitudes")
+	public ResponseEntity<List<SolicitudDto>> crearSolicitud(@PathVariable Integer idUsuario) {
+		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.CREATED);
 	}
 
 	@GetMapping("/usuarios/{idUsuario}/solicitudes/{idSolicitud}")

@@ -24,7 +24,7 @@ public class AtributoSolicitudService {
 	private SolicitudMapper mapper;
 
 	public List<AtributoSolicitudDto> getAllAtributos() {
-		return mapper.AtributoSolicitudDtoToAtributoSolicitud(repository.findAll().stream());
+		return mapper.atributoSolicitudDtoToAtributoSolicitud(repository.findAll().stream());
 	}
 
 	public AtributoSolicitudDto getAtributoSolicitudById(int idUsuario, int idSolicitud, int idAtributo) {

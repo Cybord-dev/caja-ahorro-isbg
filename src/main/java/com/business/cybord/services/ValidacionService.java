@@ -30,7 +30,7 @@ public class ValidacionService {
 	private SolicitudMapper mapper;
 
 	public List<ValidacionDto> getAllValidaciones() {
-		return mapper.ValidacionDtoToValidacion(repositoryValidacion.findAll().stream());
+		return mapper.validacionDtoToValidacion(repositoryValidacion.findAll().stream());
 	}
 
 	public ValidacionDto getValidacionById(int idUsuario, int idSolicitud, int idValidacion) {
