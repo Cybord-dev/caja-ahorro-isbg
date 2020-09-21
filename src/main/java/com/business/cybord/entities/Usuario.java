@@ -20,7 +20,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "usuarios")
@@ -52,20 +51,19 @@ public class Usuario {
 	@LastModifiedDate
 	@Column(name = "fecha_actualizacion")
 	private Date fechaActualizacion;
-	
+
 	@OneToMany(cascade = CascadeType.MERGE)
-	@JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario",  insertable=false, updatable=false)
+	@JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario", insertable = false, updatable = false)
 	private List<DatosUsuario> datosUsuario;
-	
-	@OneToMany(mappedBy="usuario")
-	
-	private List<Rol>roles;
-	
+
 	@OneToMany(mappedBy = "usuario")
-	
+
+	private List<Rol> roles;
+
+	@OneToMany(mappedBy = "usuario")
+
 	private List<Solicitud> solicitudes;
-	
-	
+
 	public int getId() {
 		return id;
 	}
@@ -129,10 +127,6 @@ public class Usuario {
 	public void setDatosUsuario(List<DatosUsuario> datosUsuario) {
 		this.datosUsuario = datosUsuario;
 	}
-	
-	
-	
-	
 
 	public List<Rol> getRoles() {
 		return roles;
@@ -147,11 +141,7 @@ public class Usuario {
 		return "Usuario [id=" + id + ", activo=" + activo + ", nombre=" + nombre + ", email=" + email + ", tipoUsuario="
 				+ tipoUsuario + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
 				+ ", datosUsuario=" + datosUsuario + ", roles=" + roles + ", solicitudes=" + solicitudes
-				+ ", validaciones=" +"]";
+				+ ", validaciones=" + "]";
 	}
 
-
-	
-
-	
 }

@@ -21,7 +21,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "validaciones")
@@ -30,47 +29,47 @@ public class Validacion {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_validacion")
 	private int id;
-	
+
 	@Column(name = "id_usuario")
 	private Integer idUsuario;
-	
+
 	@Column(name = "id_solicitud")
 	private int idSolicitud;
-	
+
 	@NotNull
 	@Column(name = "numero_validacion")
 	private boolean numeroValidacion;
-	
+
 	@NotNull
 	@Column(name = "estatus")
 	private boolean status;
-	
+
 	@NotNull
 	@Column(name = "tipo_validacion")
 	private String tipoValidacion;
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
 	@Column(name = "fecha_creacion")
 	private Date fechaCreacion;
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@LastModifiedDate
 	@Column(name = "fecha_actualizacion")
 	private Date fechaActualizacion;
-	
-	@ManyToOne(optional=false)
-    @JoinColumn(name="id_solicitud", insertable=false, updatable=false)
+
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "id_solicitud", insertable = false, updatable = false)
 	@JsonIgnore
 	private Solicitud solicitud;
-	
+
 	public void update(Validacion n) {
 		this.status = n.status;
 		this.tipoValidacion = n.tipoValidacion;
 		this.numeroValidacion = n.numeroValidacion;
 		this.tipoValidacion = n.tipoValidacion;
 	}
-	
+
 	public int getId() {
 		return id;
 	}
@@ -119,8 +118,6 @@ public class Validacion {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	
-
 	public Solicitud getSolicitud() {
 		return solicitud;
 	}
@@ -145,9 +142,13 @@ public class Validacion {
 		this.idSolicitud = idSolicitud;
 	}
 
+	@Override
+	public String toString() {
+		return "Validacion [id=" + id + ", idUsuario=" + idUsuario + ", idSolicitud=" + idSolicitud
+				+ ", numeroValidacion=" + numeroValidacion + ", status=" + status + ", tipoValidacion=" + tipoValidacion
+				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + ", solicitud="
+				+ solicitud + "]";
+	}
 	
 
-	
-	
-	
 }

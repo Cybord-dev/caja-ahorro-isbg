@@ -14,6 +14,8 @@ import com.business.cybord.models.dtos.ValidacionDto;
 
 @Mapper
 public interface SolicitudMapper {
+	
+
 	SolicitudDto getDtoFromSolicitudEntity(Solicitud dto);
 	Solicitud getEntityFromSolicitudDto(SolicitudDto dto);
 	List<SolicitudDto> SolicitudDtoToSolicitud(List<Solicitud> dto);

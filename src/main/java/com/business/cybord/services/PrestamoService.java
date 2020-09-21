@@ -1,5 +1,4 @@
 package com.business.cybord.services;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -22,11 +21,13 @@ public class PrestamoService {
 	@Autowired
 	private PrestamoMapper mapper;
 
+
 	public List<PrestamoDto> getPrestamosdeUnUsuarioPorSuId(Integer id) {
 		return mapper.getDtosFromEntity(repository.findByIdDeudor(id));
 	}
 
 	public PrestamoDto getPrestamoPorIdPrestamoYIdusuario(Integer idUsuario, Integer idPrestamo) {
+
 		Optional<Prestamo> prestamo = repository.findByIdAndIdDeudor(idPrestamo, idUsuario);
 		if (prestamo.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,

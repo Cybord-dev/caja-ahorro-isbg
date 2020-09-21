@@ -33,7 +33,7 @@ public class RolService {
 		return rolMapper.getDtosFromRolsEntity(result);
 	}
 	
-	public RolDto insertNuevoRol(Integer userId,RolDto roleDto) {
+	public RolDto insertRol(Integer userId,RolDto roleDto) {
 		Usuario entity = repositoryUsuario.findById(userId).orElseThrow(
 				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Usuario no existe %d", userId)));
 		Optional<Rol> rol = repository.findByIdRolAndIdUsuario(userId, roleDto.getId());

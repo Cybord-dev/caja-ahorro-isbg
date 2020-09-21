@@ -8,7 +8,6 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,51 +21,48 @@ import javax.validation.constraints.NotNull;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "Atributos_Solicitud")
 public class AtributoSolicitud {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_atributo")
 	private int id;
-	
+
 	@Column(name = "id_solicitud")
 	private int idSolicitud;
-	
+
 	@NotNull
 	@Column(name = "tipo_atributo")
 	private boolean tipoAtributo;
-	
+
 	@NotNull
 	@Column(name = "nombre")
 	private String nombre;
-	
+
 	@NotNull
 	@Column(name = "valor")
 	private String valor;
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
 	@Column(name = "fecha_creacion")
 	private Date fechaCreacion;
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@LastModifiedDate
 	@Column(name = "fecha_actualizacion")
 	private Date fechaActualizacion;
-	
-	@ManyToOne(optional=false)
-    @JoinColumn(name="id_solicitud", insertable=false, updatable=false)
+
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "id_solicitud", insertable = false, updatable = false)
 	@JsonIgnore
 	private Solicitud solicitud;
-	
+
 	public void update(AtributoSolicitud n) {
 		this.nombre = n.nombre;
 		this.valor = n.valor;
@@ -79,7 +75,7 @@ public class AtributoSolicitud {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
+
 	public boolean isTipoAtributo() {
 		return tipoAtributo;
 	}
@@ -143,9 +139,4 @@ public class AtributoSolicitud {
 				+ ", fechaActualizacion=" + fechaActualizacion + ", solicitud=" + solicitud + "]";
 	}
 
-	
-
-	
-	
-	
 }

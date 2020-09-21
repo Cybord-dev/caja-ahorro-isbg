@@ -21,7 +21,7 @@ import com.business.cybord.services.ValidacionService;
 
 @RestController
 @RequestMapping
-public class ValidacionController {
+public class ValidacionsController {
 	@Autowired
 	private ValidacionService service;
 

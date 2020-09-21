@@ -2,7 +2,6 @@ package com.business.cybord.controllers;
 
 import java.util.List;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,30 +19,32 @@ import com.business.cybord.services.CatalogoPropiedadService;
 
 @RestController
 @RequestMapping("/catalogos")
-public class CatalogoPropiedadController {
+public class CatalogosPropiedadController {
 
 	@Autowired
 	private CatalogoPropiedadService service;
-	
+
 	@GetMapping("/{tipo}")
-	public ResponseEntity<List<CatalogoPropiedadDto>> getCatPropiedadByTipo(@PathVariable String tipo){
+	public ResponseEntity<List<CatalogoPropiedadDto>> getCatPropiedadByTipo(@PathVariable String tipo) {
 		return new ResponseEntity<>(service.getCatPropiedadByTipo(tipo), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/{tipo}/{nombre}")
-	public ResponseEntity<CatalogoPropiedadDto> getCatPropiedadByTipoAndNombre(@PathVariable String tipo, @PathVariable String nombre){
+	public ResponseEntity<CatalogoPropiedadDto> getCatPropiedadByTipoAndNombre(@PathVariable String tipo,
+			@PathVariable String nombre) {
 		return new ResponseEntity<>(service.getCatPropiedadByTipoAndNombre(tipo, nombre), HttpStatus.OK);
 	}
-	
+
 	@PostMapping
-	public ResponseEntity<CatalogoPropiedadDto> createCatalogoPropiedad(@RequestBody @Validated CatalogoPropiedadDto dto){
+	public ResponseEntity<CatalogoPropiedadDto> createCatalogoPropiedad(
+			@RequestBody @Validated CatalogoPropiedadDto dto) {
 		return new ResponseEntity<>(service.createCatalogoPropiedad(dto), HttpStatus.CREATED);
 	}
-	
+
 	@DeleteMapping("/{tipo}/{nombre}")
 	public ResponseEntity<Void> deleteCatalogoByTipoAndNombre(@PathVariable String tipo, @PathVariable String nombre) {
 		service.deleteCatalogoPropiedadByTipoAndNombre(tipo, nombre);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
+
 }

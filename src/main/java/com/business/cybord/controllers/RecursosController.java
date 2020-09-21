@@ -19,25 +19,26 @@ import com.business.cybord.error.InvoiceManagerException;
 
 @RestController
 @RequestMapping("/recursos")
-public class RecursoController {
-	
+public class RecursosController {
+
 	@Autowired
 	private RecursoService service;
-	
+
 	@GetMapping("/tipoRecurso/{tipoRecurso}/tipoArchivo/{tipoArchivo}/referencias/{referencia}")
 	public ResponseEntity<RecursoDto> getRecursos(@PathVariable(name = "tipoRecurso") String tipoRecurso,
-			@PathVariable(name = "tipoArchivo") String tipoArchivo, @PathVariable(name = "referencia") String referencia)
-			throws InvoiceManagerException {
-		return new ResponseEntity<>(service.getRecursoPorTipoRecursoYreferenciaYTipoArchivo(tipoRecurso, referencia, tipoArchivo),
+			@PathVariable(name = "tipoArchivo") String tipoArchivo,
+			@PathVariable(name = "referencia") String referencia) throws InvoiceManagerException {
+		return new ResponseEntity<>(
+				service.getRecursoPorTipoRecursoYreferenciaYTipoArchivo(tipoRecurso, referencia, tipoArchivo),
 				HttpStatus.OK);
 	}
-	
+
 	@PostMapping
 	public ResponseEntity<Void> insertarRecurso(@RequestBody @Valid RecursoDto recurso) {
 		service.insertarRecurso(recurso);
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
-	
+
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> borrarRecurso(@PathVariable Integer id) {
 		service.borrarRecurso(id);

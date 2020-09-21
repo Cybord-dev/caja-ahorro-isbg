@@ -2,19 +2,13 @@ package com.business.cybord.entities;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -27,24 +21,24 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "SALDO_PRESTAMO")
 public class SaldoPrestamo {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_saldo_prestamo")
 	private int id;
-	
+
 	@Column(name = "id_prestamo")
 	private int idPrestamo;
-	
+
 	@Column(name = "tipo")
 	private String tipo;
-	
+
 	@Column(name = "monto")
 	private BigDecimal monto;
-	
+
 	@Column(name = "validado")
 	private Boolean validado;
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
 	@Column(name = "fecha_creacion")
@@ -54,7 +48,6 @@ public class SaldoPrestamo {
 	@LastModifiedDate
 	@Column(name = "fecha_actualizacion")
 	private Date fechaActualizacion;
-	
 
 	public int getId() {
 		return id;
@@ -119,7 +112,4 @@ public class SaldoPrestamo {
 				+ fechaActualizacion + "]";
 	}
 
-
-	
-	
 }

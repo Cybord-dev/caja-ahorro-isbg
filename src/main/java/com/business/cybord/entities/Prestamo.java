@@ -30,19 +30,19 @@ public class Prestamo {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_prestamo")
 	private int id;
-	
+
 	@Column(name = "id_deudor")
 	private int idDeudor;
-	
+
 	@Column(name = "estatus")
 	private Boolean estatus;
-	
+
 	@Column(name = "monto")
 	private BigDecimal monto;
-	
+
 	@Column(name = "fecha_terminacion")
 	private Date fechaTerminacion;
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
 	@Column(name = "fecha_creacion")
@@ -52,9 +52,9 @@ public class Prestamo {
 	@LastModifiedDate
 	@Column(name = "fecha_actualizacion")
 	private Date fechaActualizacion;
-	
+
 	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "id_prestamo", referencedColumnName = "id_prestamo",  insertable=false, updatable=false)
+	@JoinColumn(name = "id_prestamo", referencedColumnName = "id_prestamo", insertable = false, updatable = false)
 	private List<SaldoPrestamo> saldosPrestamo;
 
 	public int getId() {
@@ -120,7 +120,12 @@ public class Prestamo {
 	public void setSaldosPrestamo(List<SaldoPrestamo> saldosPrestamo) {
 		this.saldosPrestamo = saldosPrestamo;
 	}
-	
-	
-	
+
+	@Override
+	public String toString() {
+		return "Prestamo [id=" + id + ", idDeudor=" + idDeudor + ", estatus=" + estatus + ", monto=" + monto
+				+ ", fechaTerminacion=" + fechaTerminacion + ", fechaCreacion=" + fechaCreacion
+				+ ", fechaActualizacion=" + fechaActualizacion + ", saldosPrestamo=" + saldosPrestamo + "]";
+	}
+
 }

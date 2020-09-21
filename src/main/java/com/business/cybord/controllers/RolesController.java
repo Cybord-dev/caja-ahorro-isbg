@@ -18,34 +18,34 @@ import org.springframework.web.bind.annotation.RestController;
 import com.business.cybord.models.dtos.RolDto;
 import com.business.cybord.services.RolService;
 
-
 @RestController
 @RequestMapping
-public class RolController {
-	
+public class RolesController {
+
 	@Autowired
 	private RolService service;
-	
+
 	@GetMapping("/roles")
-	public ResponseEntity<List<RolDto>> getRolesController() {
+	public ResponseEntity<List<RolDto>> getTodoslosRolesController() {
 		return new ResponseEntity<>(service.getRoles(), HttpStatus.OK);
 	}
-	
+
 	@PostMapping("/usuarios/{idUsuario}/roles")
-	public ResponseEntity<RolDto> insertNuevoRolController(@PathVariable Integer idUsuario,@RequestBody @Valid RolDto rolDto) {
-		return new ResponseEntity<>(service.insertNuevoRol(idUsuario,rolDto), HttpStatus.CREATED);
+	public ResponseEntity<RolDto> insertNuevoRolController(@PathVariable Integer idUsuario,
+			@RequestBody @Valid RolDto rolDto) {
+		return new ResponseEntity<>(service.insertRol(idUsuario, rolDto), HttpStatus.CREATED);
 	}
-	
+
 	@GetMapping("/usuarios/{idUsuario}/roles")
 	public ResponseEntity<List<RolDto>> getRolesByUserIdController(@PathVariable Integer idUsuario) {
 		return new ResponseEntity<>(service.getRolesPorUsuarioId(idUsuario), HttpStatus.OK);
 	}
-	
+
 	@DeleteMapping("/usuarios/{idUsuario}/roles/{idRol}")
-	public ResponseEntity<Void> deleteUserRolesController(@PathVariable Integer idRol, @PathVariable Integer idUsuario) {
+	public ResponseEntity<Void> deleteUserRolesController(@PathVariable Integer idRol,
+			@PathVariable Integer idUsuario) {
 		service.borrarRolePorUsuarioIdyIdRol(idUsuario, idRol);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
 
 }
