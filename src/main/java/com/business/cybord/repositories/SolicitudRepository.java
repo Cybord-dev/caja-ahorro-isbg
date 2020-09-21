@@ -11,5 +11,6 @@ import com.business.cybord.entities.Solicitud;
 
 public interface SolicitudRepository extends JpaRepository<Solicitud, Integer>{
 	List<Solicitud> findByIdUsuario(int idU);
+	List<Solicitud> findAll();
 	Optional<Solicitud> findByIdUsuarioAndId(int idU, int id);
 }
