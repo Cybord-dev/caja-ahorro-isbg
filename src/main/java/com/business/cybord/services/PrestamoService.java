@@ -1,4 +1,5 @@
 package com.business.cybord.services;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,9 +27,12 @@ public class PrestamoService {
 	private PrestamoMapper mapper;
 
 	public Page<PrestamoDto> getPrestamosByParams(String nombre, String email,
-			 int page, int size){
+			 Date since, Date to, int page, int size){
+
+		Date start = (since == null) ? new org.joda.time.DateTime().minusYears(1).toDate() : since;
+		Date end = (to == null) ? new Date() : to;
 		Page<Prestamo> result = repository.findAllByParams(String.format("%%%s%%", nombre),
-				String.format("%%%s%%", email),PageRequest.of(page, size, 
+				String.format("%%%s%%", email),start, end,PageRequest.of(page, size, 
 						Sort.by("fechaActualizacion").descending()));		
 		return  new PageImpl<>(mapper.getDtosFromEntity(result.getContent()), result.getPageable(),
 				result.getTotalElements());

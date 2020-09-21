@@ -2,6 +2,8 @@ package com.business.cybord.models.dtos;
 
 import java.math.BigDecimal;
 import java.util.Date;
+
+import com.business.cybord.entities.Usuario;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -16,7 +18,8 @@ public class SaldoAhorroDto {
 	private Boolean validado;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
-
+	private Usuario usuario;
+	
 	public int getId() {
 		return id;
 	}
@@ -71,6 +74,14 @@ public class SaldoAhorroDto {
 
 	public void setFechaActualizacion(Date fechaActualizacion) {
 		this.fechaActualizacion = fechaActualizacion;
+	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
 
 	@Override

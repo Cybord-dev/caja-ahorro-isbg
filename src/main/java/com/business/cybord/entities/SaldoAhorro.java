@@ -8,6 +8,8 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -15,6 +17,8 @@ import javax.persistence.TemporalType;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -48,6 +52,11 @@ public class SaldoAhorro {
 	@Column(name = "fecha_actualizacion")
 	private Date fechaActualizacion;
 
+	@ManyToOne(optional = false)
+	@JsonIgnore
+	@JoinColumn(name = "id_usuario", insertable = false, updatable = false)
+	private Usuario usuario;
+	
 	public int getId() {
 		return id;
 	}
