@@ -1,43 +1,41 @@
 package com.business.cybord.models.dtos;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import com.business.cybord.entities.AtributoSolicitud;
+import com.business.cybord.entities.Validacion;
+
 public class SolicitudDto {
 
-	private Integer id;
-	private Integer idUSer;
-	private String tipoSolicitud;
+	private int id;
+	private Integer idUsuario;
+	private String tipo;
 	private String status;
-	private String currentValidation;
 	private String statusDetalle;
+	private BigDecimal porcentaje;
+	private BigDecimal cantidad;
 	private Date fechaEjecucion;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
-	private List<ValidiacionDto> validaciones;
+	private List<AtributoSolicitud> atributos;
+	private List<Validacion> validaciones;
 
-	public Integer getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	public Integer getIdUSer() {
-		return idUSer;
+	public String getTipo() {
+		return tipo;
 	}
 
-	public void setIdUSer(Integer idUSer) {
-		this.idUSer = idUSer;
-	}
-
-	public String getTipoSolicitud() {
-		return tipoSolicitud;
-	}
-
-	public void setTipoSolicitud(String tipoSolicitud) {
-		this.tipoSolicitud = tipoSolicitud;
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
 	}
 
 	public String getStatus() {
@@ -54,6 +52,22 @@ public class SolicitudDto {
 
 	public void setStatusDetalle(String statusDetalle) {
 		this.statusDetalle = statusDetalle;
+	}
+
+	public BigDecimal getPorcentaje() {
+		return porcentaje;
+	}
+
+	public void setPorcentaje(BigDecimal porcentaje) {
+		this.porcentaje = porcentaje;
+	}
+
+	public BigDecimal getCantidad() {
+		return cantidad;
+	}
+
+	public void setCantidad(BigDecimal cantidad) {
+		this.cantidad = cantidad;
 	}
 
 	public Date getFechaEjecucion() {
@@ -80,28 +94,28 @@ public class SolicitudDto {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	public List<ValidiacionDto> getValidaciones() {
+	public List<AtributoSolicitud> getAtributos() {
+		return atributos;
+	}
+
+	public void setAtributos(List<AtributoSolicitud> atributos) {
+		this.atributos = atributos;
+	}
+
+	public List<Validacion> getValidaciones() {
 		return validaciones;
 	}
 
-	public void setValidaciones(List<ValidiacionDto> validaciones) {
+	public void setValidaciones(List<Validacion> validaciones) {
 		this.validaciones = validaciones;
 	}
 
-	public String getCurrentValidation() {
-		return currentValidation;
+	public Integer getIdUsuario() {
+		return idUsuario;
 	}
 
-	public void setCurrentValidation(String currentValidation) {
-		this.currentValidation = currentValidation;
-	}
-
-	@Override
-	public String toString() {
-		return "SolicitudDto [id=" + id + ", idUSer=" + idUSer + ", tipoSolicitud=" + tipoSolicitud + ", status="
-				+ status + ", currentValidation=" + currentValidation + ", statusDetalle=" + statusDetalle
-				+ ", fechaEjecucion=" + fechaEjecucion + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
-				+ fechaActualizacion + ", validaciones=" + validaciones + "]";
+	public void setIdUsuario(Integer idUsuario) {
+		this.idUsuario = idUsuario;
 	}
 
 }

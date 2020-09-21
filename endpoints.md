@@ -3,12 +3,9 @@
 CATALOGOS
 
 GET /catalogos/{tipo_cat} <-- todo los catalogos de un tipo especifico
-
 GET /catalogos/{tipo_cat}/{nombre} <-- regresa un catalogo especifico
-
-POST /catalogos/{tipo_cat}
-
-PUT /catalogos/{tipo_cat}/{nombre}
+POST /catalogos
+DELETE /catalogos/{tipo_cat}/{nombre}
 
 RESOURCES
 
@@ -24,49 +21,62 @@ GET /usuarios/{id_user}/ahorros/{id_ahorro} <-- ahorro especifico
 
 POST GET /usuarios/{id_user}/ahorros
 
-
-
 GET /usuarios/{id_user}/prestamos  <-- TODOS LOS prestamos DE UN USUARIO
 GET /usuarios/{id_user}/prestamos/{id_ahorro} <-- prestamo especifico
 
 POST GET /usuarios/{id_user}/prestamos
-
-
+GET /usuarios/{id_user}/prestamos/{id_prestamo}/saldos
+GET /usuarios/{id_user}/prestamos/{id_prestamo}/saldos/{id_saldos}
+POST /usuarios/{id_user}/prestamos/{id_prestamo}/saldos
 
 USERS (EL objeto debe de contener informacion de USUARIOS-DEUDOR-AHORRADOR-DATOS-USER)
 
+
+
 CRUD
 
+USUARIOS
+
 GET /usuarios todos los usuarios de la plataforma <-- filtrados dinamicos
- 
 GET /usuarios/{id_user}
-
 POST /usuarios
-
 PUT /usuarios/{id_user} TODO menos las llaves (ID, EMAIL)
-
 DELETE /usuarios/{id_user}
 
 USER_ROLES
 
-GET /usuarios/{id_user}/roles 
+GET     /usuarios/{id_user}/roles 
+POST    /usuarios/{id_user}/roles
+DELETE  /usuarios/{id_user}/roles/{id_role}
 
-POST /usuarios/{id_user}/roles
+SOLICITUDES 
 
-DELETE /usuarios/{id_user}/roles/{id_role}
+-GET    /solicitudes todos los solicitudes de la plataforma <-- filtrados dinamicos
+-GET    /usuarios/{id_user}/solicitudes/{id_solicitud}
+-GET    /usuarios/{id_user}/solicitudes
+-GET    /usuarios/{id_user}/solicitudes/{id_solicitud}
+-POST   /usuarios/{id_user}/solicitudes
+-PUT    /solicitudes/{id_solicitud}
+-DELETE /solicitudes/{id_solicitud}
 
 
-SOLICITUDES (informacion de SOLICITUDES-ATRIBUTOS-VALIDACIONES)
 
-GET /solicitudes todos los solicitudes de la plataforma <-- filtrados dinamicos
- 
-GET /solicitudes/{id_solicitud}
+GET /usuarios/{id_user}/solicitudes/{id_solicitud}/atributos todos los solicitudes de la plataforma <-- filtrados dinamicos
+GET /usuarios/{id_user}/solicitudes/{id_solicitud}/atributos/{id_atributo}
+DELETE /usuarios/{id_user}/solicitudes/{id_solicitud}/atributos/{id_solicitud}
+POST /usuarios/{id_user}/solicitudes/{id_solicitud}/atributos
+PUT /usuarios/{id_user}/solicitudes/{id_solicitud}/atributos/{id_atributos}
 
-DELETE /solicitudes/{id_solicitud}
 
-POST /usuarios/{id_user}/solicitudes
+GET /usuarios/{id_user}/solicitudes/{id_solicitud}/validaciones todos los solicitudes de la plataforma <-- filtrados dinamicos
+GET usuarios/{id_user}/solicitudes/{id_solicitud}/validaciones/{id_validaciones}
+DELETE usuarios/{id_user}/solicitudes/{id_solicitud}/validaciones/{id_validaciones}
+POST usuarios/{id_user}/solicitudes/{id_solicitud}/validaciones
+PUT usuarios/{id_user}/solicitudes/{id_solicitud}/validaciones/{id_validaciones}
 
-PUT /usuarios/{id_user}/solicitudes/{id_solicitud}
+GET /validaciones
+GET /solicitudes
+
 
 
 

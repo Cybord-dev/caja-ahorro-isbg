@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.business.cybord.entities;
 
 import java.util.Date;
@@ -8,7 +5,6 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,34 +19,35 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "Atributos_Solicitud")
-public class AtributoSolicitud {
-	
+@Table(name = "validaciones")
+public class Validacion {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_atributo")
+	@Column(name = "id_validacion")
 	private int id;
+	
+	@Column(name = "id_usuario")
+	private Integer idUsuario;
 	
 	@Column(name = "id_solicitud")
 	private int idSolicitud;
 	
 	@NotNull
-	@Column(name = "tipo_atributo")
-	private boolean tipoAtributo;
+	@Column(name = "numero_validacion")
+	private boolean numeroValidacion;
 	
 	@NotNull
-	@Column(name = "nombre")
-	private String nombre;
+	@Column(name = "estatus")
+	private boolean status;
 	
 	@NotNull
-	@Column(name = "valor")
-	private String valor;
+	@Column(name = "tipo_validacion")
+	private String tipoValidacion;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
@@ -67,11 +64,13 @@ public class AtributoSolicitud {
 	@JsonIgnore
 	private Solicitud solicitud;
 	
-	public void update(AtributoSolicitud n) {
-		this.nombre = n.nombre;
-		this.valor = n.valor;
+	public void update(Validacion n) {
+		this.status = n.status;
+		this.tipoValidacion = n.tipoValidacion;
+		this.numeroValidacion = n.numeroValidacion;
+		this.tipoValidacion = n.tipoValidacion;
 	}
-
+	
 	public int getId() {
 		return id;
 	}
@@ -79,29 +78,29 @@ public class AtributoSolicitud {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
-	public boolean isTipoAtributo() {
-		return tipoAtributo;
+
+	public boolean isNumeroValidacion() {
+		return numeroValidacion;
 	}
 
-	public void setTipoAtributo(boolean tipoAtributo) {
-		this.tipoAtributo = tipoAtributo;
+	public void setNumeroValidacion(boolean numeroValidacion) {
+		this.numeroValidacion = numeroValidacion;
 	}
 
-	public String getNombre() {
-		return nombre;
+	public boolean isStatus() {
+		return status;
 	}
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
+	public void setStatus(boolean status) {
+		this.status = status;
 	}
 
-	public String getValor() {
-		return valor;
+	public String getTipoValidacion() {
+		return tipoValidacion;
 	}
 
-	public void setValor(String valor) {
-		this.valor = valor;
+	public void setTipoValidacion(String tipoValidacion) {
+		this.tipoValidacion = tipoValidacion;
 	}
 
 	public Date getFechaCreacion() {
@@ -120,6 +119,8 @@ public class AtributoSolicitud {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
+	
+
 	public Solicitud getSolicitud() {
 		return solicitud;
 	}
@@ -128,19 +129,20 @@ public class AtributoSolicitud {
 		this.solicitud = solicitud;
 	}
 
+	public Integer getIdUsuario() {
+		return idUsuario;
+	}
+
+	public void setIdUsuario(Integer idUsuario) {
+		this.idUsuario = idUsuario;
+	}
+
 	public int getIdSolicitud() {
 		return idSolicitud;
 	}
 
 	public void setIdSolicitud(int idSolicitud) {
 		this.idSolicitud = idSolicitud;
-	}
-
-	@Override
-	public String toString() {
-		return "AtributoSolicitud [id=" + id + ", idSolicitud=" + idSolicitud + ", tipoAtributo=" + tipoAtributo
-				+ ", nombre=" + nombre + ", valor=" + valor + ", fechaCreacion=" + fechaCreacion
-				+ ", fechaActualizacion=" + fechaActualizacion + ", solicitud=" + solicitud + "]";
 	}
 
 	
