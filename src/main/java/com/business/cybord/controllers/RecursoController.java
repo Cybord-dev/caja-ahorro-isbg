@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.business.cybord.models.dtos.RecursoDto;
 import com.business.cybord.services.RecursoService;
-import com.business.cybord.error.InvoiceManagerException;
 
 @RestController
 @RequestMapping("/recursos")
@@ -26,8 +25,7 @@ public class RecursoController {
 	
 	@GetMapping("/tipoRecurso/{tipoRecurso}/tipoArchivo/{tipoArchivo}/referencias/{referencia}")
 	public ResponseEntity<RecursoDto> getRecursos(@PathVariable(name = "tipoRecurso") String tipoRecurso,
-			@PathVariable(name = "tipoArchivo") String tipoArchivo, @PathVariable(name = "referencia") String referencia)
-			throws InvoiceManagerException {
+			@PathVariable(name = "tipoArchivo") String tipoArchivo, @PathVariable(name = "referencia") String referencia){
 		return new ResponseEntity<>(service.getRecursoPorTipoRecursoYreferenciaYTipoArchivo(tipoRecurso, referencia, tipoArchivo),
 				HttpStatus.OK);
 	}

@@ -8,23 +8,22 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
 import com.business.cybord.models.enums.SolicitudSuitEnum;
+import com.business.cybord.models.error.IsbgServiceException;
 import com.business.cybord.validations.suites.ISuite;
 
 @Component
 public class SuiteManager {
-	
+
 	@Autowired
 	private ConfigurableApplicationContext context;
 
-	public ISuite getSolicitudSuiteByName(String suite){
-		Optional<SolicitudSuitEnum> suiteManager =SolicitudSuitEnum.findBySuite(suite);
+	public ISuite getSolicitudSuite(String suite) throws IsbgServiceException {
+		Optional<SolicitudSuitEnum> suiteManager = SolicitudSuitEnum.findBySuite(suite);
 		if (suiteManager.isPresent()) {
-			return BeanFactoryAnnotationUtils.qualifiedBeanOfType(context.getBeanFactory(),
-					ISuite.class, suiteManager.get().getSuite());
+			return BeanFactoryAnnotationUtils.qualifiedBeanOfType(context.getBeanFactory(), ISuite.class,
+					suiteManager.get().getSuite());
 		}
-		throw new AssociateServiceException(new AssociateServiceErrorMessage(HttpStatus.BAD_REQUEST.value(),
-				RP_INSTANCE_NOT_SUPPORTED, String.format(RP_INSTANCE_NOT_SUPPORTED_BY, rpInstance,
-						AssociateLocalTranslator.class.getName())));
+		throw new IsbgServiceException("El recurso solicitado no existe.", "La solicitud no  existe");
 	}
-	
+
 }

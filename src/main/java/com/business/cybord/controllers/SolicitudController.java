@@ -10,17 +10,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.business.cybord.models.dtos.SolicitudDto;
+import com.business.cybord.models.error.IsbgServiceException;
 import com.business.cybord.services.SolicitudesService;
 
 @RestController
 @RequestMapping("/solicitudes")
 public class SolicitudController {
 
-	@Autowired 
+	@Autowired
 	private SolicitudesService service;
-	
+
 	@PostMapping("/validar")
-	public ResponseEntity<SolicitudDto> validarSolicitud(@RequestBody SolicitudDto dto) throws FiniteStateMachineException {
+	public ResponseEntity<SolicitudDto> validarSolicitud(@RequestBody SolicitudDto dto)
+			throws FiniteStateMachineException, IsbgServiceException {
 		return new ResponseEntity<>(service.validarSolicitud(dto), HttpStatus.OK);
 	}
 }
