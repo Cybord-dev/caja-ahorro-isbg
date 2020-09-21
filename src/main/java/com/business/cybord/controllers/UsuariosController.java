@@ -33,7 +33,7 @@ public class UsuariosController {
 	}
 
 	@GetMapping
-	public ResponseEntity<Page<UsuariosDto>> getAllFacturasByParametros(@RequestParam Map<String, String> parameters) {
+	public ResponseEntity<Page<UsuariosDto>> getUsuariosPorParametrosController(@RequestParam Map<String, String> parameters) {
 		return new ResponseEntity<>(service.getUsuariosPorParametros(parameters), HttpStatus.OK);
 	}
 
