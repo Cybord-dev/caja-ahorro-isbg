@@ -1,7 +1,5 @@
 package com.business.cybord.services;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,14 +24,9 @@ public class PrestamoService {
 
 	@Autowired
 	private PrestamoMapper mapper;
-	
-	private static final Logger log = LoggerFactory.getLogger(UsuarioService.class);
-	
 
 	public Page<PrestamoDto> getPrestamosByParams(String nombre, String email,
 			 int page, int size){
-		log.info("A DEBUG Message  "+nombre);
-		log.info("A DEBUG Message  "+email);
 		Page<Prestamo> result = repository.findAllByParams(String.format("%%%s%%", nombre),
 				String.format("%%%s%%", email),PageRequest.of(page, size, 
 						Sort.by("fechaActualizacion").descending()));		

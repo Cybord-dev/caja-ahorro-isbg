@@ -86,8 +86,6 @@ public class PrestamoDto {
 	public void setSaldosPrestamo(List<SaldoPrestamo> saldosPrestamo) {
 		this.saldosPrestamo = saldosPrestamo;
 	}
-	
-	
 
 	public Usuario getUsuario() {
 		return usuario;
