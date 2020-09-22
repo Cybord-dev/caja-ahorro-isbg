@@ -1,10 +1,13 @@
 package com.business.cybord.controllers;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,21 +17,31 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.business.cybord.models.dtos.SolicitudDto;
 import com.business.cybord.services.SolicitudService;
+
 
 @RestController
 @RequestMapping
 public class SolicitudesContoller {
 	@Autowired
 	private SolicitudService service;
-
+	
 	@GetMapping("/solicitudes")
-	public ResponseEntity<List<SolicitudDto>> getSolicitudByFiltros() {
-		return new ResponseEntity<>(service.getAllSolicitudes(), HttpStatus.OK);
+	public ResponseEntity<Page<SolicitudDto>> getPrestamosByParamsController(
+			@RequestParam(name = "email", required = false) String email,
+			@RequestParam(name = "tipo", required = false) Integer tipo,
+			@RequestParam(name = "estatus", required = false) Integer estatus,
+			@RequestParam(name = "since", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date since,
+			@RequestParam(name = "to", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date to,
+			@RequestParam(name = "page", defaultValue = "0") int page,
+			@RequestParam(name = "size", defaultValue = "10") int size) {
+		return new ResponseEntity<>(service.getSolicitudesByParametros(email, tipo, estatus, page, size, since, to), HttpStatus.OK);
 	}
-
+	
 	@GetMapping("/usuarios/{idUsuario}/solicitudes/{idSolicitud}")
 	public ResponseEntity<SolicitudDto> getSolicitudById(@PathVariable Integer idUsuario,
 			@PathVariable Integer idSolicitud) {

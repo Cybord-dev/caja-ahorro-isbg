@@ -11,8 +11,8 @@ public class SolicitudDto {
 
 	private int id;
 	private Integer idUsuario;
-	private String tipo;
-	private String status;
+	private int tipo;
+	private int estatus;
 	private String statusDetalle;
 	private BigDecimal porcentaje;
 	private BigDecimal cantidad;
@@ -30,20 +30,20 @@ public class SolicitudDto {
 		this.id = id;
 	}
 
-	public String getTipo() {
+	public int getTipo() {
 		return tipo;
 	}
 
-	public void setTipo(String tipo) {
+	public void setTipo(int tipo) {
 		this.tipo = tipo;
 	}
 
-	public String getStatus() {
-		return status;
+	public int getStatus() {
+		return estatus;
 	}
 
-	public void setStatus(String status) {
-		this.status = status;
+	public void setStatus(int status) {
+		this.estatus = status;
 	}
 
 	public String getStatusDetalle() {
