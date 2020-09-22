@@ -31,8 +31,8 @@ public class SaldosAhorroController {
 
 	@PostMapping("/{idUsuario}/ahorros")
 	public ResponseEntity<SaldoAhorroDto> insertSadoAhorro(@PathVariable Integer idUsuario,
-			@RequestBody @Valid SaldoAhorroDto Dto) {
-		return new ResponseEntity<>(service.insertSadoAhorro(idUsuario, Dto), HttpStatus.CREATED);
+			@RequestBody @Valid SaldoAhorroDto dto) {
+		return new ResponseEntity<>(service.insertSadoAhorro(idUsuario, dto), HttpStatus.CREATED);
 	}
 
 	@GetMapping("/{idUsuario}/ahorros/{idAhorro}")

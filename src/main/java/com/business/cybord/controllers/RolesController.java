@@ -41,10 +41,9 @@ public class RolesController {
 		return new ResponseEntity<>(service.getRolesPorUsuarioId(idUsuario), HttpStatus.OK);
 	}
 
-	@DeleteMapping("/usuarios/{idUsuario}/roles/{idRol}")
-	public ResponseEntity<Void> deleteUserRolesController(@PathVariable Integer idRol,
-			@PathVariable Integer idUsuario) {
-		service.borrarRolePorUsuarioIdyIdRol(idUsuario, idRol);
+	@DeleteMapping("/roles/{id}")
+	public ResponseEntity<Void> deleteUserRolesController(@PathVariable Integer id) {
+		service.borrarRolePorId(id);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 

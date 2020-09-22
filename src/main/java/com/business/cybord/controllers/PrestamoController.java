@@ -31,8 +31,8 @@ public class PrestamoController {
 
 	@PostMapping("/{idUsuario}/prestamos")
 	public ResponseEntity<PrestamoDto> insertPrestamo(@PathVariable Integer idUsuario,
-			@RequestBody @Valid PrestamoDto Dto) {
-		return new ResponseEntity<>(service.insertPrestamo(idUsuario, Dto), HttpStatus.CREATED);
+			@RequestBody @Valid PrestamoDto dto) {
+		return new ResponseEntity<>(service.insertPrestamo(idUsuario, dto), HttpStatus.CREATED);
 	}
 
 	@GetMapping("/{idUsuario}/prestamos/{idPrestamo}/saldos/{idSaldo}")

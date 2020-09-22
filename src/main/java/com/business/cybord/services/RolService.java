@@ -12,7 +12,6 @@ import com.business.cybord.entities.Rol;
 import com.business.cybord.entities.Usuario;
 import com.business.cybord.mappers.RolMapper;
 import com.business.cybord.models.dtos.RolDto;
-
 import com.business.cybord.repositories.RolRepository;
 import com.business.cybord.repositories.UsuariosRepository;
 
@@ -52,12 +51,8 @@ public class RolService {
 		return rolMapper.getDtosFromRolsEntity(repository.findByUserId(entity.getId()));
 	}
 	
-	public void borrarRolePorUsuarioIdyIdRol(Integer userId, Integer id) {
-		Usuario entity = repositoryUsuario.findById(userId).orElseThrow(
-				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Usuario no existe %d", userId)));
-		Rol rol = repository.findByIdUsuarioAndId(entity.getId(), id).orElseThrow(
-				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Rol no existe %d", id)));
-		;
+	public void borrarRolePorId(Integer id) {
+		Rol rol = repository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "El rol ya ha sido borrado"));
 		repository.delete(rol);
 	}
 
