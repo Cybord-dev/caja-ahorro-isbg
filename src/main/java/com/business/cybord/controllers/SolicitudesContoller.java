@@ -34,6 +34,11 @@ public class SolicitudesContoller {
 			@PathVariable Integer idSolicitud) {
 		return new ResponseEntity<>(service.getSolicitudById(idUsuario, idSolicitud), HttpStatus.OK);
 	}
+	
+	@GetMapping("/usuarios/{idUsuario}/solicitudes")
+	public ResponseEntity<List<SolicitudDto>> getSolicitudesByIdUsuario(@PathVariable Integer idUsuario) {
+		return new ResponseEntity<>(service.getAllSolicitudes(idUsuario), HttpStatus.OK);
+	}
 
 	@PostMapping("/usuarios/{idUsuario}/solicitudes")
 	public ResponseEntity<SolicitudDto> crearSolicitud(@PathVariable Integer idUsuario,
