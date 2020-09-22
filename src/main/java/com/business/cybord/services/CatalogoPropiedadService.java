@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.business.cybord.entities.CatalogoPropiedad;
 import com.business.cybord.mappers.CatalogoPropiedadMapper;
 import com.business.cybord.models.dtos.CatalogoPropiedadDto;
 import com.business.cybord.repositories.CatalogoPropiedadRepository;
@@ -39,10 +40,10 @@ public class CatalogoPropiedadService {
 		return mapper.getCatDtoFromEntidad(repository.save(mapper.getEntidadFromCatDto(dto)));
 	}
 
-	public void deleteCatalogoPropiedadByTipoAndNombre(String tipo, String nombre) {
-		log.info("borrando CAT_PROPIEDADES de tipo : {} y nombre : {} ", tipo, nombre);
-		CatalogoPropiedadDto entity = getCatPropiedadByTipoAndNombre(tipo, nombre);
-		repository.delete(mapper.getEntidadFromCatDto(entity));
+	public void deleteCatalogoPropiedadById(Integer id) {
+		log.info("borrando CAT_PROPIEDADES con id {} ", id);
+		CatalogoPropiedad entity = repository.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NO_CONTENT, "Propiedad ya borrada"));
+		repository.delete(entity);
 	}
 
 }

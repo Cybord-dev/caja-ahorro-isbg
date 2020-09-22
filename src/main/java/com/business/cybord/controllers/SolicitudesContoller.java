@@ -1,6 +1,5 @@
 package com.business.cybord.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.business.cybord.models.dtos.SolicitudDto;
 import com.business.cybord.services.SolicitudService;
 
@@ -32,13 +32,13 @@ public class SolicitudesContoller {
 	
 	@GetMapping("/usuarios/{idUsuario}/solicitudes")
 	public ResponseEntity<List<SolicitudDto>> crearSolicitud(@PathVariable Integer idUsuario) {
-		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.CREATED);
+		return new ResponseEntity<>(service.getSolicitudByIdUsuario(idUsuario), HttpStatus.CREATED);
 	}
 
 	@GetMapping("/usuarios/{idUsuario}/solicitudes/{idSolicitud}")
 	public ResponseEntity<SolicitudDto> getSolicitudById(@PathVariable Integer idUsuario,
 			@PathVariable Integer idSolicitud) {
-		return new ResponseEntity<>(service.getSolicitudById(idUsuario, idSolicitud), HttpStatus.OK);
+		return new ResponseEntity<>(service.getSolicitudByUsuarioAndId(idUsuario, idSolicitud), HttpStatus.OK);
 	}
 
 	@PostMapping("/usuarios/{idUsuario}/solicitudes")

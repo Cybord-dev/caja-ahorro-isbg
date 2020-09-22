@@ -28,11 +28,12 @@ public class SolicitudService {
 		return mapper.solicitudDtoToSolicitud(repositorySolicitud.findAll());
 	}
 
-	public List<SolicitudDto> getAllSolicitudes(int idUsuario) {
+	public List<SolicitudDto> getSolicitudByIdUsuario(int idUsuario) {
 		return mapper.solicitudDtoToSolicitud(repositorySolicitud.findByIdUsuario(idUsuario));
 	}
+	
 
-	public SolicitudDto getSolicitudById(int idUsuario, int idSolicitud) {
+	public SolicitudDto getSolicitudByUsuarioAndId(int idUsuario, int idSolicitud) {
 		Optional<Solicitud> solicitud = repositorySolicitud.findByIdUsuarioAndId(idUsuario, idSolicitud);
 		if (solicitud.isPresent()) {
 			return mapper.getDtoFromSolicitudEntity(solicitud.get());

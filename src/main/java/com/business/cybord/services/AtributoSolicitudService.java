@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.cybord.entities.AtributoSolicitud;
+import com.business.cybord.entities.Solicitud;
 import com.business.cybord.mappers.SolicitudMapper;
 import com.business.cybord.models.dtos.AtributoSolicitudDto;
 import com.business.cybord.repositories.AtributoSolicitudRepository;
@@ -24,7 +25,11 @@ public class AtributoSolicitudService {
 	private SolicitudMapper mapper;
 
 	public List<AtributoSolicitudDto> getAllAtributos() {
-		return mapper.atributoSolicitudDtoToAtributoSolicitud(repository.findAll().stream());
+		return mapper.atributoSolicitudDtoToAtributoSolicitud(repository.findAll());
+	}
+	
+	public List<AtributoSolicitudDto> getAllAtributosBySolicitud(int idSolicitud) {
+		return mapper.atributoSolicitudDtoToAtributoSolicitud(repository.findByIdSolicitud(idSolicitud));
 	}
 
 	public AtributoSolicitudDto getAtributoSolicitudById(int idUsuario, int idSolicitud, int idAtributo) {
@@ -43,11 +48,12 @@ public class AtributoSolicitudService {
 	}
 
 	public AtributoSolicitudDto createAtributoSolicitud(int idUsuario, int idSolicitud, AtributoSolicitudDto atributo) {
-		repositorySol.findByIdUsuarioAndId(idUsuario, idSolicitud)
+		Solicitud solicitud = repositorySol.findByIdUsuarioAndId(idUsuario, idSolicitud)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 						String.format("la solicitud id= %d del usuario =%d no existe", idSolicitud, idUsuario)));
-		AtributoSolicitud nuevo = repository.save(mapper.getEntityFromAtributoSolicitudDto(atributo));
-		return mapper.getDtoFromAtributoSolicitudEntity(nuevo);
+		AtributoSolicitud attribute = repository.save(mapper.getEntityFromAtributoSolicitudDto(atributo));
+		attribute.setSolicitud(solicitud);
+		return mapper.getDtoFromAtributoSolicitudEntity(attribute);
 	}
 
 	public AtributoSolicitudDto actualizarAtributoSolicitud(int idAtributo, AtributoSolicitudDto nuevo) {

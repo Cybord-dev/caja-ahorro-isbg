@@ -9,19 +9,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.cybord.entities.Solicitud;
-import com.business.cybord.entities.Usuario;
 import com.business.cybord.entities.Validacion;
 import com.business.cybord.mappers.SolicitudMapper;
 import com.business.cybord.models.dtos.ValidacionDto;
 import com.business.cybord.repositories.SolicitudRepository;
-import com.business.cybord.repositories.UsuariosRepository;
 import com.business.cybord.repositories.ValidacionRepository;
 
 @Service
 public class ValidacionService {
 
-	@Autowired
-	private UsuariosRepository repositoryUsuario;
+	
 	@Autowired
 	private ValidacionRepository repositoryValidacion;
 	@Autowired
@@ -30,7 +27,11 @@ public class ValidacionService {
 	private SolicitudMapper mapper;
 
 	public List<ValidacionDto> getAllValidaciones() {
-		return mapper.validacionDtoToValidacion(repositoryValidacion.findAll().stream());
+		return mapper.validacionDtoToValidacion(repositoryValidacion.findAll());
+	}
+	
+	public List<ValidacionDto> getAllValidacionesByIdUsuarioAndIdSolicitud(int idUser,int idSol) {
+		return mapper.validacionDtoToValidacion(repositoryValidacion.findByIdUsuarioAndIdSolicitud(idUser, idSol));
 	}
 
 	public ValidacionDto getValidacionById(int idUsuario, int idSolicitud, int idValidacion) {
@@ -42,15 +43,13 @@ public class ValidacionService {
 	}
 
 	public ValidacionDto crearValidacion(int idUsuario, int idSolicitud, ValidacionDto validacion) {
-		Optional<Solicitud> solicitud = repositorySol.findById(idSolicitud);
-		Optional<Usuario> usuario = repositoryUsuario.findById(idUsuario);
-		if (!solicitud.isPresent() && !usuario.isPresent()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					String.format("solicitud id= %d o usuario id=%d no existe", idSolicitud, idUsuario));
-		} else {
+		Solicitud solicitud = repositorySol.findByIdUsuarioAndId(idUsuario, idSolicitud)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+						String.format("la solicitud id= %d del usuario =%d no existe", idSolicitud, idUsuario)));
+		
 			Validacion nueva = repositoryValidacion.save(mapper.getEntityFromValidacionesDto(validacion));
+			nueva.setSolicitud(solicitud);
 			return mapper.getDtoFromValidacionesEntity(nueva);
-		}
 	}
 
 	public ValidacionDto actualizarValidacion(int idValidacion, ValidacionDto nueva) {
