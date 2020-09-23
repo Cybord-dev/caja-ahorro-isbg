@@ -13,6 +13,6 @@ import com.business.cybord.entities.Validacion;
 @Repository
 public interface ValidacionRepository  extends JpaRepository<Validacion, Integer>{
 	List<Validacion> findBySolicitud(Solicitud dto);
-	List<Validacion> findByIdUsuarioAndIdSolicitud(int u, int id);
-	Optional<Validacion> findByIdUsuarioAndIdAndIdSolicitud(int u, int id, int s);
+	List<Validacion> findByIdSolicitud(int id);
+	Optional<Validacion> findById(int id);
 }

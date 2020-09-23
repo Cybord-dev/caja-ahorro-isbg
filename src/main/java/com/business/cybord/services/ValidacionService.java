@@ -30,13 +30,13 @@ public class ValidacionService {
 		return mapper.validacionDtoToValidacion(repositoryValidacion.findAll());
 	}
 	
-	public List<ValidacionDto> getAllValidacionesByIdUsuarioAndIdSolicitud(int idUser,int idSol) {
-		return mapper.validacionDtoToValidacion(repositoryValidacion.findByIdUsuarioAndIdSolicitud(idUser, idSol));
+	public List<ValidacionDto> getAllValidacionesByIdSolicitud(int idSol) {
+		return mapper.validacionDtoToValidacion(repositoryValidacion.findByIdSolicitud(idSol));
 	}
 
-	public ValidacionDto getValidacionById(int idUsuario, int idSolicitud, int idValidacion) {
+	public ValidacionDto getValidacionById(int idValidacion) {
 		Validacion entity = repositoryValidacion
-				.findByIdUsuarioAndIdAndIdSolicitud(idUsuario, idValidacion, idSolicitud)
+				.findById(idValidacion)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 						String.format("La validacion id=%d no existe", idValidacion)));
 		return mapper.getDtoFromValidacionesEntity(entity);

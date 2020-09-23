@@ -29,17 +29,17 @@ public class ValidacionsController {
 	public ResponseEntity<List<ValidacionDto>> getValidacionById() {
 		return new ResponseEntity<>(service.getAllValidaciones(), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/usuarios/{idUsuario}/solicitudes/{idSolicitud}/validaciones")
-	public ResponseEntity<List<ValidacionDto>> crearValidacion(@PathVariable Integer idUsuario,
+	public ResponseEntity<List<ValidacionDto>> getValidacionByIdSoolicitud(@PathVariable Integer idUsuario,
 			@PathVariable Integer idSolicitud) {
-		return new ResponseEntity<>(service.getAllValidacionesByIdUsuarioAndIdSolicitud(idUsuario, idSolicitud), HttpStatus.OK);
+		return new ResponseEntity<>(service.getAllValidacionesByIdSolicitud(idSolicitud), HttpStatus.OK);
 	}
 
 	@GetMapping("/usuarios/{idUsuario}/solicitudes/{idSolicitud}/validaciones/{idValidacion}")
 	public ResponseEntity<ValidacionDto> getValidacionById(@PathVariable Integer idUsuario,
 			@PathVariable Integer idSolicitud, @PathVariable Integer idValidacion) {
-		return new ResponseEntity<>(service.getValidacionById(idUsuario, idSolicitud, idValidacion), HttpStatus.OK);
+		return new ResponseEntity<>(service.getValidacionById(idValidacion), HttpStatus.OK);
 	}
 
 	@PostMapping("/usuarios/{idUsuario}/solicitudes/{idSolicitud}/validaciones")
