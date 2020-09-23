@@ -18,7 +18,6 @@ import com.business.cybord.repositories.ValidacionRepository;
 @Service
 public class ValidacionService {
 
-	
 	@Autowired
 	private ValidacionRepository repositoryValidacion;
 	@Autowired

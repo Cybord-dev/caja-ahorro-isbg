@@ -5,7 +5,6 @@ import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.MapperConfig;
 import org.mapstruct.ReportingPolicy;
-
 import com.business.cybord.entities.Usuario;
 import com.business.cybord.models.dtos.UsuariosDto;
 

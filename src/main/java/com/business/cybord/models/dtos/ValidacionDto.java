@@ -66,6 +66,7 @@ public class ValidacionDto {
 
 	public void setArea(String area) {
 		this.area = area;
+
 	}
 
 	public Integer getIdSolicitud() {

@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
 import com.business.cybord.entities.CatalogoPropiedad;
 import com.business.cybord.mappers.CatalogoPropiedadMapper;
 import com.business.cybord.models.dtos.CatalogoPropiedadDto;

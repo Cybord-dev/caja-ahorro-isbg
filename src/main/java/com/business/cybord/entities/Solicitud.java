@@ -93,6 +93,7 @@ public class Solicitud {
 		this.porcentaje = n.getPorcentaje();
 		this.status = n.getStatus();
 		this.statusDetalle = n.getStatusDetalle();
+
 	}
 
 	public int getId() {
@@ -125,6 +126,7 @@ public class Solicitud {
 
 	public void setStatusDetalle(String statusDetalle) {
 		this.statusDetalle = statusDetalle;
+
 	}
 
 	public BigDecimal getPorcentaje() {

@@ -7,6 +7,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MapperConfig;
 import org.mapstruct.ReportingPolicy;
 
+
 import com.business.cybord.entities.AtributoSolicitud;
 import com.business.cybord.entities.Solicitud;
 import com.business.cybord.entities.Validacion;
@@ -27,9 +28,9 @@ public interface SolicitudMapper {
 	AtributoSolicitud getEntityFromAtributoSolicitudDto(AtributoSolicitudDto dto);
 	AtributoSolicitudDto getDtoFromAtributoSolicitudEntity(AtributoSolicitud dto);
 	List<AtributoSolicitudDto> atributoSolicitudDtoToAtributoSolicitud(List<AtributoSolicitud> dto);
-	
 	//Validaciones
 	Validacion getEntityFromValidacionesDto(ValidacionDto dto);
 	ValidacionDto getDtoFromValidacionesEntity(Validacion dto);
 	List<ValidacionDto> validacionDtoToValidacion(List<Validacion>dto);
+
 }
