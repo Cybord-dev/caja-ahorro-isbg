@@ -1,9 +1,8 @@
 package com.business.cybord.controllers;
 
-import java.util.Map;
-
+import java.util.ArrayList;
+import java.util.List;
 import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -19,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.business.cybord.models.dtos.UsuariosDto;
 import com.business.cybord.services.UsuarioService;
+import com.business.cybord.util.EnumAtributos;
+import com.business.cybord.util.TipoParametro;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -32,9 +33,19 @@ public class UsuariosController {
 		return new ResponseEntity<>(service.getUserById(id), HttpStatus.OK);
 	}
 
+	@SuppressWarnings("serial")
 	@GetMapping
-	public ResponseEntity<Page<UsuariosDto>> getUsuariosPorParametrosController(@RequestParam Map<String, String> parameters) {
-		return new ResponseEntity<>(service.getUsuariosPorParametros(parameters), HttpStatus.OK);
+	public ResponseEntity<Page<UsuariosDto>> getUsuariosPorParametrosController(		
+			@RequestParam(name = "nombre", defaultValue = "") String nombre,
+			@RequestParam(name = "email", defaultValue = "") String email,
+			@RequestParam(name = "page", defaultValue = "0") String page,
+			@RequestParam(name = "size", defaultValue = "10") String size) {
+		List<TipoParametro> params = new ArrayList<TipoParametro>(){
+			{  
+				 add(new TipoParametro(EnumAtributos.NOMBRE,nombre));
+				 add(new TipoParametro(EnumAtributos.EMAIL,email));
+			}};			
+		return new ResponseEntity<>(service.getUsuariosPorParametros(params, page, size), HttpStatus.OK);
 	}
 
 	@PostMapping
