@@ -1,21 +1,24 @@
 package com.business.cybord.models.dtos;
 
-import java.io.Serializable;
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
+public class AtributoSolicitudDto {
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class UserDto implements Serializable {
-
-	private static final long serialVersionUID = 2329712110850660822L;
 	private int id;
-	private Boolean activo;
+	private int idSolicitud;
+	private boolean tipoAtributo;
 	private String nombre;
+	private String valor;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
+
+	public int getIdSolicitud() {
+		return idSolicitud;
+	}
+
+	public void setIdSolicitud(int idSolicitud) {
+		this.idSolicitud = idSolicitud;
+	}
 
 	public int getId() {
 		return id;
@@ -25,12 +28,12 @@ public class UserDto implements Serializable {
 		this.id = id;
 	}
 
-	public Boolean getActivo() {
-		return activo;
+	public boolean isTipoAtributo() {
+		return tipoAtributo;
 	}
 
-	public void setActivo(Boolean activo) {
-		this.activo = activo;
+	public void setTipoAtributo(boolean tipoAtributo) {
+		this.tipoAtributo = tipoAtributo;
 	}
 
 	public String getNombre() {
@@ -39,6 +42,14 @@ public class UserDto implements Serializable {
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
+	}
+
+	public String getValor() {
+		return valor;
+	}
+
+	public void setValor(String valor) {
+		this.valor = valor;
 	}
 
 	public Date getFechaCreacion() {
@@ -59,7 +70,8 @@ public class UserDto implements Serializable {
 
 	@Override
 	public String toString() {
-		return "UserDto [id=" + id + ", activo=" + activo + ", nombre=" + nombre + ", fechaCreacion=" + fechaCreacion
+		return "AtributoSolicitudDto [id=" + id + ", idSolicitud=" + idSolicitud + ", tipoAtributo=" + tipoAtributo
+				+ ", nombre=" + nombre + ", valor=" + valor + ", fechaCreacion=" + fechaCreacion
 				+ ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
 

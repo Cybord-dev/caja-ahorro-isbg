@@ -1,7 +1,7 @@
 package com.business.cybord.entities;
 
+import java.math.BigDecimal;
 import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -18,28 +18,34 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "USERS")
-public class User {
+@Table(name = "SALDO_AHORRO")
+public class SaldoAhorro {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID_USER")
+	@Column(name = "id_ahorro")
 	private int id;
 
-	@Column(name = "ACTIVO")
-	private Boolean activo;
+	@Column(name = "id_usuario")
+	private int idUsuario;
 
-	@Column(name = "NOMBRE")
-	private String nombre;
+	@Column(name = "tipo")
+	private String tipo;
+
+	@Column(name = "monto")
+	private BigDecimal monto;
+
+	@Column(name = "validado")
+	private Boolean validado;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
-	@Column(name = "FECHA_CREACION")
+	@Column(name = "fecha_creacion")
 	private Date fechaCreacion;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@LastModifiedDate
-	@Column(name = "FECHA_ACTUALIZACION")
+	@Column(name = "fecha_actualizacion")
 	private Date fechaActualizacion;
 
 	public int getId() {
@@ -50,20 +56,36 @@ public class User {
 		this.id = id;
 	}
 
-	public Boolean getActivo() {
-		return activo;
+	public int getIdUsuario() {
+		return idUsuario;
 	}
 
-	public void setActivo(Boolean activo) {
-		this.activo = activo;
+	public void setIdUsuario(int idUsuario) {
+		this.idUsuario = idUsuario;
 	}
 
-	public String getNombre() {
-		return nombre;
+	public String getTipo() {
+		return tipo;
 	}
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
+
+	public BigDecimal getMonto() {
+		return monto;
+	}
+
+	public void setMonto(BigDecimal monto) {
+		this.monto = monto;
+	}
+
+	public Boolean getValidado() {
+		return validado;
+	}
+
+	public void setValidado(Boolean validado) {
+		this.validado = validado;
 	}
 
 	public Date getFechaCreacion() {
@@ -84,8 +106,9 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", activo=" + activo + ", nombre=" + nombre + ", fechaCreacion=" + fechaCreacion
-				+ ", fechaActualizacion=" + fechaActualizacion + "]";
+		return "SaldoAhorro [id=" + id + ", idUsuario=" + idUsuario + ", tipo=" + tipo + ", monto=" + monto
+				+ ", validado=" + validado + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
+				+ fechaActualizacion + "]";
 	}
 
 }
