@@ -5,10 +5,10 @@ import java.util.Date;
 public class ValidacionDto {
 	private int id;
 	private Integer idSolicitud;
-	private Integer idUsuario;
+	private String email;
+	private String area;
 	private boolean numeroValidacion;
 	private boolean status;
-	private String tipoValidacion;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 
@@ -36,14 +36,6 @@ public class ValidacionDto {
 		this.status = status;
 	}
 
-	public String getTipoValidacion() {
-		return tipoValidacion;
-	}
-
-	public void setTipoValidacion(String tipoValidacion) {
-		this.tipoValidacion = tipoValidacion;
-	}
-
 	public Date getFechaCreacion() {
 		return fechaCreacion;
 	}
@@ -60,12 +52,20 @@ public class ValidacionDto {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	public Integer getIdUsuario() {
-		return idUsuario;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setIdUsuario(Integer idUsuario) {
-		this.idUsuario = idUsuario;
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getArea() {
+		return area;
+	}
+
+	public void setArea(String area) {
+		this.area = area;
 	}
 
 	public Integer getIdSolicitud() {
@@ -78,10 +78,9 @@ public class ValidacionDto {
 
 	@Override
 	public String toString() {
-		return "ValidacionDto [id=" + id + ", idSolicitud=" + idSolicitud + ", idUsuario=" + idUsuario
-				+ ", numeroValidacion=" + numeroValidacion + ", status=" + status + ", tipoValidacion=" + tipoValidacion
-				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
+		return "ValidacionDto [id=" + id + ", idSolicitud=" + idSolicitud + ", email=" + email + ", area=" + area
+				+ ", numeroValidacion=" + numeroValidacion + ", status=" + status + ", fechaCreacion=" + fechaCreacion
+				+ ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
-	
 
 }

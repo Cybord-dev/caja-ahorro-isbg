@@ -41,8 +41,6 @@ CREATE TABLE `PRESTAMO` (
   `fecha_actualizacion` timestamp NOT NULL
 );
 
-
-
 CREATE TABLE `DATOS_USER` (
   `id_datos_user` int(11) NOT NULL AUTO_INCREMENT,
   `id_usuario` int(11) NOT NULL,
@@ -89,9 +87,9 @@ CREATE TABLE `VALIDACIONES` (
   `id_validacion` int(11) NOT NULL AUTO_INCREMENT,
   `id_solicitud` int(11) NOT NULL,
   `numero_validacion` tinyint(1) NOT NULL DEFAULT '0',
-  `id_usuario` int(11) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `area` varchar(50) NOT NULL,
   `estatus` tinyint(1) NOT NULL DEFAULT '0',
-  `tipo_validacion` varchar(50) NOT NULL DEFAULT '0',
   `fecha_creacion` timestamp NOT NULL,
   `fecha_actualizacion` timestamp NOT NULL
 );
