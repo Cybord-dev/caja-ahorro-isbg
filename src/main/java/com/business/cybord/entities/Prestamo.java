@@ -12,10 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-<<<<<<< HEAD
-=======
 import javax.persistence.ManyToOne;
->>>>>>> feature/paginados
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -25,11 +22,9 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-<<<<<<< HEAD
-=======
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
->>>>>>> feature/paginados
+
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "PRESTAMO")
@@ -65,14 +60,11 @@ public class Prestamo {
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_prestamo", referencedColumnName = "id_prestamo", insertable = false, updatable = false)
 	private List<SaldoPrestamo> saldosPrestamo;
-<<<<<<< HEAD
-=======
-	
+
 	@ManyToOne(optional = false)
 	@JsonIgnore
 	@JoinColumn(name = "id_deudor", insertable = false, updatable = false)
 	private Usuario usuario;
->>>>>>> feature/paginados
 
 	public int getId() {
 		return id;
@@ -138,8 +130,7 @@ public class Prestamo {
 		this.saldosPrestamo = saldosPrestamo;
 	}
 
-<<<<<<< HEAD
-=======
+
 	public Usuario getUsuario() {
 		return usuario;
 	}
@@ -148,7 +139,7 @@ public class Prestamo {
 		this.usuario = usuario;
 	}
 
->>>>>>> feature/paginados
+	
 	@Override
 	public String toString() {
 		return "Prestamo [id=" + id + ", idDeudor=" + idDeudor + ", estatus=" + estatus + ", monto=" + monto

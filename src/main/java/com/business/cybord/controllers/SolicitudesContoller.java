@@ -26,11 +26,6 @@ import com.business.cybord.services.SolicitudService;
 public class SolicitudesContoller {
 	@Autowired
 	private SolicitudService service;
-
-	@GetMapping("/solicitudes")
-	public ResponseEntity<List<SolicitudDto>> getSolicitudByFiltros() {
-		return new ResponseEntity<>(service.getAllSolicitudes(), HttpStatus.OK);
-	}
 	
 	@GetMapping("/usuarios/{idUsuario}/solicitudes")
 	public ResponseEntity<List<SolicitudDto>> crearSolicitud(@PathVariable Integer idUsuario) {

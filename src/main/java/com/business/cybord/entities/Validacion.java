@@ -144,7 +144,7 @@ public class Validacion {
 	}
 
 	public void setArea(String area) {
-		this.area = area;
+		this.area = area;}
 
 	public Integer getIdUsuario() {
 		return idUsuario;

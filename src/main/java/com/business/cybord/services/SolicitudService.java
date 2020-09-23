@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -57,9 +55,6 @@ public class SolicitudService {
 			int coma = email.indexOf(",");
 			email = email.substring(0, coma);
 		}
-		log.info("Finding solicitudes by EMAIL {}", email);
-		log.info("Finding solicitudes by TIPO {}", tipo);
-		log.info("Finding solicitudes by STATUS {}", estatus);
 		Date inicio = (since == null) ? new DateTime().minusYears(1).toDate() : since;
 		Date fin = (to == null) ? new Date() : to;
 		fin = DateHelper.getMidnight(fin);
@@ -87,7 +82,7 @@ public class SolicitudService {
 			resultado = repositorySolicitud.findByParams( inicio, fin, PageRequest.of(page, size));
 		}
 		
-		return new PageImpl<>(mapper.SolicitudDtoToSolicitud(resultado.getContent()), resultado.getPageable(),resultado.getTotalElements());
+		return new PageImpl<>(mapper.solicitudDtoToSolicitud(resultado.getContent()), resultado.getPageable(),resultado.getTotalElements());
 	    
 	}
 	public SolicitudDto crearSolicitud(int idUsuario, SolicitudDto solicitud) {

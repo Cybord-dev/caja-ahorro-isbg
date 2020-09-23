@@ -2,10 +2,6 @@ package com.business.cybord.entities;
 
 import java.math.BigDecimal;
 import java.util.Date;
-<<<<<<< HEAD
-
-=======
->>>>>>> feature/paginados
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -22,28 +18,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD:src/main/java/com/business/cybord/entities/SaldoAhorro.java
-@Table(name = "SALDO_AHORRO")
-public class SaldoAhorro {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_ahorro")
-	private int id;
-
-	@Column(name = "id_usuario")
-	private int idUsuario;
-
-	@Column(name = "tipo")
-	private String tipo;
-
-	@Column(name = "monto")
-	private BigDecimal monto;
-
-=======
->>>>>>> feature/paginados
 @Table(name = "SALDO_PRESTAMO")
 public class SaldoPrestamo {
 
@@ -61,10 +35,6 @@ public class SaldoPrestamo {
 	@Column(name = "monto")
 	private BigDecimal monto;
 
-<<<<<<< HEAD
-=======
->>>>>>> feature/paginados:src/main/java/com/business/cybord/entities/SaldoPrestamo.java
->>>>>>> feature/paginados
 	@Column(name = "validado")
 	private Boolean validado;
 
@@ -86,27 +56,13 @@ public class SaldoPrestamo {
 		this.id = id;
 	}
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD:src/main/java/com/business/cybord/entities/SaldoAhorro.java
-	public int getIdUsuario() {
-		return idUsuario;
-	}
 
-	public void setIdUsuario(int idUsuario) {
-		this.idUsuario = idUsuario;
-=======
->>>>>>> feature/paginados
 	public int getIdPrestamo() {
 		return idPrestamo;
 	}
 
 	public void setIdPrestamo(int idPrestamo) {
 		this.idPrestamo = idPrestamo;
-<<<<<<< HEAD
-=======
->>>>>>> feature/paginados:src/main/java/com/business/cybord/entities/SaldoPrestamo.java
->>>>>>> feature/paginados
 	}
 
 	public String getTipo() {
@@ -149,19 +105,7 @@ public class SaldoPrestamo {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	@Override
-	public String toString() {
-<<<<<<< HEAD
-		return "SaldoPrestamo [id=" + id + ", idPrestamo=" + idPrestamo + ", tipo=" + tipo + ", monto=" + monto
-=======
-<<<<<<< HEAD:src/main/java/com/business/cybord/entities/SaldoAhorro.java
-		return "SaldoAhorro [id=" + id + ", idUsuario=" + idUsuario + ", tipo=" + tipo + ", monto=" + monto
-=======
-		return "SaldoPrestamo [id=" + id + ", idPrestamo=" + idPrestamo + ", tipo=" + tipo + ", monto=" + monto
->>>>>>> feature/paginados:src/main/java/com/business/cybord/entities/SaldoPrestamo.java
->>>>>>> feature/paginados
-				+ ", validado=" + validado + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
-				+ fechaActualizacion + "]";
-	}
+	
+	
 
 }
