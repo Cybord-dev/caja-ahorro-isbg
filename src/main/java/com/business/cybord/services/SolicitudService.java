@@ -1,9 +1,16 @@
 package com.business.cybord.services;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -13,6 +20,7 @@ import com.business.cybord.mappers.SolicitudMapper;
 import com.business.cybord.models.dtos.SolicitudDto;
 import com.business.cybord.repositories.SolicitudRepository;
 import com.business.cybord.repositories.UsuariosRepository;
+import com.business.cybord.utils.DateHelper;
 
 @Service
 public class SolicitudService {
@@ -23,10 +31,7 @@ public class SolicitudService {
 	private SolicitudRepository repositorySolicitud;
 	@Autowired
 	private SolicitudMapper mapper;
-
-	public List<SolicitudDto> getAllSolicitudes() {
-		return mapper.SolicitudDtoToSolicitud(repositorySolicitud.findAll());
-	}
+	private static final Logger log = LoggerFactory.getLogger(SolicitudService.class);
 
 	public List<SolicitudDto> getAllSolicitudes(int idUsuario) {
 		return mapper.SolicitudDtoToSolicitud(repositorySolicitud.findByIdUsuario(idUsuario));
@@ -40,6 +45,45 @@ public class SolicitudService {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
 					String.format("la solicitud id=%d no existe con el usuario id=%d", idSolicitud, idUsuario));
 		}
+	}
+	
+	public Page<SolicitudDto> getSolicitudesByParametros(String email, Integer tipo, Integer estatus, int page, int size, Date since, Date to){
+		if(email != null) {
+			int coma = email.indexOf(",");
+			email = email.substring(0, coma);
+		}
+		log.info("Finding solicitudes by EMAIL {}", email);
+		log.info("Finding solicitudes by TIPO {}", tipo);
+		log.info("Finding solicitudes by STATUS {}", estatus);
+		Date inicio = (since == null) ? new DateTime().minusYears(1).toDate() : since;
+		Date fin = (to == null) ? new Date() : to;
+		fin = DateHelper.getMidnight(fin);
+		Page<Solicitud> resultado = null;
+		if(email != null) {
+			if(tipo != null) {
+				if(estatus != null) {
+					resultado = repositorySolicitud.findByParams(String.format("%%%s%%", email), tipo,estatus, inicio, fin, PageRequest.of(page, size));
+				}else {
+					resultado = repositorySolicitud.findByParams(String.format("%%%s%%", email), tipo, inicio, fin, PageRequest.of(page, size));
+				}
+			}else {
+				resultado = repositorySolicitud.findByEmail(String.format("%%%s%%", email), inicio, fin, PageRequest.of(page, size));
+			}
+		}else if(tipo != null) {
+			if(estatus != null) {
+				resultado = repositorySolicitud.findByParams( tipo, estatus, inicio, fin, PageRequest.of(page, size));
+			}else {
+				resultado = repositorySolicitud.findByParams( tipo, inicio, fin, PageRequest.of(page, size));
+			}
+			
+		}else if(estatus != null){
+			resultado = repositorySolicitud.findByEstatus( estatus, inicio, fin, PageRequest.of(page, size));
+		}else {
+			resultado = repositorySolicitud.findByParams( inicio, fin, PageRequest.of(page, size));
+		}
+		
+		return new PageImpl<>(mapper.SolicitudDtoToSolicitud(resultado.getContent()), resultado.getPageable(),resultado.getTotalElements());
+	    
 	}
 
 	public SolicitudDto crearSolicitud(int idUsuario, SolicitudDto solicitud) {
@@ -69,6 +113,6 @@ public class SolicitudService {
 					String.format("la solicitud id=%d no existe", idSolicitud));
 		}
 	}
-
+	
 
 }

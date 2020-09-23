@@ -42,15 +42,15 @@ public class Solicitud {
 
 	@NotNull
 	@Column(name = "tipo_solicitud")
-	private String tipo;
+	private int tipo;
 
 	@NotNull
 	@Column(name = "estatus")
-	private String status;
+	private int estatus;
 
 	@NotNull
 	@Column(name = "estatus_detalle")
-	private String statusDetalle;
+	private String estatusDetalle;
 
 	@NotNull
 	@Column(name = "porcentaje")
@@ -91,8 +91,8 @@ public class Solicitud {
 		this.fechaEjecucion = n.getFechaEjecucion();
 		this.cantidad = n.getCantidad();
 		this.porcentaje = n.getPorcentaje();
-		this.status = n.getStatus();
-		this.statusDetalle = n.getStatusDetalle();
+		this.estatus = n.getStatus();
+		this.estatusDetalle = n.getStatusDetalle();
 	}
 
 	public int getId() {
@@ -103,28 +103,28 @@ public class Solicitud {
 		this.id = id;
 	}
 
-	public String getTipo() {
+	public int getTipo() {
 		return tipo;
 	}
 
-	public void setTipo(String tipo) {
+	public void setTipo(int tipo) {
 		this.tipo = tipo;
 	}
 
-	public String getStatus() {
-		return status;
+	public int getStatus() {
+		return estatus;
 	}
 
-	public void setStatus(String status) {
-		this.status = status;
+	public void setStatus(int status) {
+		this.estatus = status;
 	}
 
 	public String getStatusDetalle() {
-		return statusDetalle;
+		return estatusDetalle;
 	}
 
 	public void setStatusDetalle(String statusDetalle) {
-		this.statusDetalle = statusDetalle;
+		this.estatusDetalle = statusDetalle;
 	}
 
 	public BigDecimal getPorcentaje() {
@@ -201,8 +201,8 @@ public class Solicitud {
 
 	@Override
 	public String toString() {
-		return "Solicitud [id=" + id + ", idUsuario=" + idUsuario + ", tipo=" + tipo + ", status=" + status
-				+ ", statusDetalle=" + statusDetalle + ", porcentaje=" + porcentaje + ", cantidad=" + cantidad
+		return "Solicitud [id=" + id + ", idUsuario=" + idUsuario + ", tipo=" + tipo + ", status=" + estatus
+				+ ", statusDetalle=" + estatusDetalle + ", porcentaje=" + porcentaje + ", cantidad=" + cantidad
 				+ ", fechaEjecucion=" + fechaEjecucion + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
 				+ fechaActualizacion + ", usuario=" + usuario + ", atributos=" + atributos + ", validaciones="
 				+ validaciones + "]";
