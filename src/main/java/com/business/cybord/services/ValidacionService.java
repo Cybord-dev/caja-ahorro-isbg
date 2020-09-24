@@ -55,6 +55,7 @@ public class ValidacionService {
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 						String.format("la solicitud id= %d del usuario =%d no existe", idSolicitud, idUsuario))));
 		if (validaEstadoActual(solicitudDto, validacion)) {
+			validacion.setNumeroValidacion(solicitudDto.getValidaciones().size()+1);
 			Validacion nueva = repositoryValidacion.save(mapper.getEntityFromValidacionesDto(validacion));
 			return mapper.getDtoFromValidacionesEntity(nueva);
 		} else {
@@ -74,21 +75,13 @@ public class ValidacionService {
 			ISolicitud solicitud = sfte.getInstance();
 			solicitud.define(solicitudDto.getStatus());
 			solicitudDto.getValidaciones().sort((d1, d2) -> d1.getFechaCreacion().compareTo(d2.getFechaCreacion()));
-			State curentstate = null;
 			for (ValidacionDto validacionDto : solicitudDto.getValidaciones()) {
 				AbstractEvent event = EventFactoryTypeEnum.findByReferenceName(validacionDto.getArea()).getEnumValue()
 						.getInstance(solicitudDto);
 				solicitud.fire(event);
 			}
-			if (curentstate == null) {
-				curentstate = new State("SolicitudCreadaEvent");
-			}
-			if (solicitud.compare(newState)) {
-				solicitud.fire(EventFactoryTypeEnum.findByReferenceName(validacion.getArea()).getEnumValue()
-						.getInstance(solicitudDto));
-				if (solicitud.compare(newState)) {
+			if (newState.equals(solicitud.nextState())) {
 					return true;
-				}
 			}
 			return false;
 		} catch (FiniteStateMachineException e) {

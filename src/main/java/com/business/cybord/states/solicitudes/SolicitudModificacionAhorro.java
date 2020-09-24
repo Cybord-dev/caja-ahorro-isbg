@@ -5,7 +5,9 @@ import org.jeasy.states.api.Event;
 import org.jeasy.states.api.FiniteStateMachineException;
 import org.jeasy.states.api.State;
 
-public class SolicitudModificacionAhorro implements ISolicitud{
+import com.business.cybord.models.error.IsbgServiceException;
+
+public class SolicitudModificacionAhorro implements ISolicitud {
 
 	@Override
 	public void define(String initialState) {
@@ -29,6 +31,12 @@ public class SolicitudModificacionAhorro implements ISolicitud{
 	public boolean compare(State future) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public State nextState() throws IsbgServiceException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
