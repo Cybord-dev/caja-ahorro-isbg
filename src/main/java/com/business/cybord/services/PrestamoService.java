@@ -71,7 +71,6 @@ public class PrestamoService {
 					String.format("Ya existe un prestamo para ese usuario user %d", userId));
 		} else {
 			Prestamo prestamo = mapper.getEntityFromDto(prestamoDto);
-			prestamo.setSaldosPrestamo(prestamoDto.getSaldosPrestamo());
 			return mapper.getDtoFromEntity(repository.save(prestamo));
 		}
 	}

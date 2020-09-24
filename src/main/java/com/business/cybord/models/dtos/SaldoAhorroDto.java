@@ -2,7 +2,8 @@ package com.business.cybord.models.dtos;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import com.business.cybord.entities.Usuario;
+
+import com.business.cybord.models.entities.Usuario;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
