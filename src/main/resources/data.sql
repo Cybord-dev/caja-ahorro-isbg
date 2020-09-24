@@ -21,8 +21,11 @@ INSERT INTO ATRIBUTOS_SOLICITUD(id_atributo,id_solicitud,tipo_atributo,nombre,va
 INSERT INTO VALIDACIONES(id_validacion,id_solicitud,numero_validacion,email,estatus,area,fecha_creacion,fecha_actualizacion) VALUES (1,1,1,'pepe@gmail.com',1,'RecursosHumanos','2020-09-12 00:00:00','2020-09-12 00:00:00');
 INSERT INTO VALIDACIONES(id_validacion,id_solicitud,numero_validacion,email,estatus,area,fecha_creacion,fecha_actualizacion) VALUES (2,2,1,'papirriin@gmail.com',0,'Tesoreria','2020-09-12 00:00:00','2020-09-12 00:00:00');
 
-INSERT INTO DATOS_USER(id_datos_user,id_usuario,tipo_dato,dato,relevancia,fecha_creacion,fecha_actualizacion) VALUES (2,3,'MONTO_AHORRO','221.44',1,'2020-09-12 00:00:00','2020-09-12 00:00:00');
-INSERT INTO DATOS_USER(id_datos_user,id_usuario,tipo_dato,dato,relevancia,fecha_creacion,fecha_actualizacion) VALUES (3,3,'ANTIGUEDAD','2020-02-12 00:00:00',1,'2020-09-12 00:00:00','2020-09-12 00:00:00');
+INSERT INTO DATOS_USER(id_datos_user,id_usuario,tipo_dato,dato,relevancia,fecha_creacion,fecha_actualizacion) VALUES (1,3,'MONTO_AHORRO','221.44',1,'2020-09-12 00:00:00','2020-09-12 00:00:00');
+INSERT INTO DATOS_USER(id_datos_user,id_usuario,tipo_dato,dato,relevancia,fecha_creacion,fecha_actualizacion) VALUES (2,3,'ANTIGUEDAD','2020-02-12 00:00:00',1,'2020-09-12 00:00:00','2020-09-12 00:00:00');
+INSERT INTO DATOS_USER(id_datos_user,id_usuario,tipo_dato,dato,relevancia,fecha_creacion,fecha_actualizacion) VALUES (3,3,'SUELDO','4221.44',1,'2020-09-12 00:00:00','2020-09-12 00:00:00');
+INSERT INTO DATOS_USER(id_datos_user,id_usuario,tipo_dato,dato,relevancia,fecha_creacion,fecha_actualizacion) VALUES (4,3,'NO_EMPLEADO','00345678',1,'2020-09-12 00:00:00','2020-09-12 00:00:00');
+INSERT INTO DATOS_USER(id_datos_user,id_usuario,tipo_dato,dato,relevancia,fecha_creacion,fecha_actualizacion) VALUES (5,3,'OFICINA','Oficina 4',1,'2020-09-12 00:00:00','2020-09-12 00:00:00');
 
 INSERT INTO CAT_ROLES(id_role,nombre) VALUES (1,'ADMINISTRADOR');
 INSERT INTO CAT_ROLES(id_role,nombre) VALUES (2,'SOPORTE');
