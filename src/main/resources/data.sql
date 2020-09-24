@@ -43,9 +43,9 @@ INSERT INTO CAT_ROLES(id_role,nombre) VALUES (4,'CONTABILIDAD');
 INSERT INTO CAT_ROLES(id_role,nombre) VALUES (5,'RECURSOS-HUMANOS');
 INSERT INTO CAT_ROLES(id_role,nombre) VALUES (6,'USUARIO');
 
-INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (1,3,1);
-INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (2,3,2);
-INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (3,3,6);
+INSERT INTO USER_ROLES(id_usuario,id_rol) VALUES (3,1);
+INSERT INTO USER_ROLES(id_usuario,id_rol) VALUES (3,2);
+INSERT INTO USER_ROLES(id_usuario,id_rol) VALUES (3,6);
 
 INSERT INTO SALDO_AHORRO(id_ahorro,id_usuario,tipo,monto,validado,fecha_creacion,fecha_actualizacion) VALUES (1,1,'tipo',22.54,1,'2020-09-12 00:00:00','2020-09-12 00:00:00');
 INSERT INTO SALDO_AHORRO(id_ahorro,id_usuario,tipo,monto,validado,fecha_creacion,fecha_actualizacion) VALUES (2,1,'tipo',93.23,1,'2020-09-12 00:00:00','2020-09-12 00:00:00');

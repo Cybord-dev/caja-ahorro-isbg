@@ -9,6 +9,7 @@ import javax.persistence.Table;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "CAT_ROLES")
@@ -21,12 +22,11 @@ public class RolCat {
 	@Column(name = "nombre")
 	private String nombre;
 
-	@OneToOne(mappedBy = "rolname")
-	private Rol rol;
 
 	public int getId() {
 		return id;
 	}
+
 
 	public void setId(int id) {
 		this.id = id;
@@ -42,7 +42,7 @@ public class RolCat {
 
 	@Override
 	public String toString() {
-		return "RolCat [id=" + id + ", nombre=" + nombre + ", rol=" + rol + "]";
+		return "RolCat [id=" + id + ", nombre=" + nombre  + "]";
 	}
 
 }

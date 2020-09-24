@@ -23,7 +23,7 @@ ALTER TABLE USUARIOS ADD CONSTRAINT USUARIOS_UNIQUE
 UNIQUE (email);
 
 CREATE TABLE `USER_ROLES` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_usuario` int(11) NOT NULL,
   `id_rol` int(11) NOT NULL
 );

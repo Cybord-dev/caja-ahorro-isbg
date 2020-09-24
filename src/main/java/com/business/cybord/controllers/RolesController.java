@@ -30,10 +30,10 @@ public class RolesController {
 		return new ResponseEntity<>(service.getRoles(), HttpStatus.OK);
 	}
 
-	@PostMapping("/usuarios/{idUsuario}/roles")
+	@PostMapping("/usuarios/{idUsuario}/roles/{idRol}")
 	public ResponseEntity<RolDto> insertNuevoRolController(@PathVariable Integer idUsuario,
-			@RequestBody @Valid RolDto rolDto) {
-		return new ResponseEntity<>(service.insertRol(idUsuario, rolDto), HttpStatus.CREATED);
+			@PathVariable Integer idRol) {
+		return new ResponseEntity<>(service.insertRol(idUsuario, idRol), HttpStatus.CREATED);
 	}
 
 	@GetMapping("/usuarios/{idUsuario}/roles")

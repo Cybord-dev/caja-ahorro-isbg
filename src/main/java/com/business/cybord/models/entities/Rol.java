@@ -4,6 +4,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -18,24 +20,29 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public class Rol {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
-
+	
+	@Column(name = "id_rol")
+	private int idRol;
+	
 	@ManyToOne
 	@JoinColumn(name = "id_usuario", nullable = false)
 	private Usuario usuario;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "id_rol", referencedColumnName = "id_role", insertable = false, updatable = false)
+	@JoinColumn(name = "id_rol", referencedColumnName ="id_role", insertable = false, updatable = false)
 	private RolCat rolname;
-
+	
 	public int getId() {
 		return id;
 	}
-
+	
 	public void setId(int id) {
 		this.id = id;
 	}
+
 
 	public Usuario getUsuario() {
 		return usuario;
@@ -43,6 +50,14 @@ public class Rol {
 
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
+	}
+
+	public int getIdRol() {
+		return idRol;
+	}
+
+	public void setIdRol(int idRol) {
+		this.idRol = idRol;
 	}
 
 	public RolCat getRolname() {
@@ -55,7 +70,8 @@ public class Rol {
 
 	@Override
 	public String toString() {
-		return "Rol [id=" + id + ", usuario=" + usuario + ", rolname=" + rolname + "]";
+		return "Rol [id=" + id + ", idRol=" + idRol + ", idUsuario="  + ", usuario=" + usuario + ", rolname="
+				+ rolname + "]";
 	}
 
 }
