@@ -1,8 +1,16 @@
 package com.business.cybord.models.dtos;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ValidacionDto {
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class ValidacionDto implements Serializable {
+
+	private static final long serialVersionUID = -6175800734286104073L;
 	private int id;
 	private Integer idSolicitud;
 	private String email;
@@ -20,7 +28,7 @@ public class ValidacionDto {
 		this.id = id;
 	}
 
-	public Integer isNumeroValidacion() {
+	public Integer getNumeroValidacion() {
 		return numeroValidacion;
 	}
 

@@ -5,6 +5,8 @@ import org.jeasy.states.api.Event;
 import org.jeasy.states.api.FiniteStateMachineException;
 import org.jeasy.states.api.State;
 
+import com.business.cybord.models.error.IsbgServiceException;
+
 public class SolicitudCancelacionAhorro implements ISolicitud {
 
 	@Override
@@ -30,4 +32,9 @@ public class SolicitudCancelacionAhorro implements ISolicitud {
 		return false;
 	}
 
+	@Override
+	public State nextState() throws IsbgServiceException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -61,8 +61,6 @@ CREATE TABLE `SOLICITUDES` (
   `tipo_solicitud` varchar(50) NOT NULL DEFAULT '0',
   `estatus` varchar(200) NOT NULL,
   `estatus_detalle` varchar(200),
-  `porcentaje` decimal(5,2)  NOT NULL,
-  `cantidad` decimal(10,2) NOT NULL,
   `fecha_ejecucion` timestamp NOT NULL,
   `fecha_creacion` timestamp NOT NULL,
   `fecha_actualizacion` timestamp NOT NULL

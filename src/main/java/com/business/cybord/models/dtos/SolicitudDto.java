@@ -1,18 +1,22 @@
 package com.business.cybord.models.dtos;
 
-import java.math.BigDecimal;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class SolicitudDto {
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class SolicitudDto implements Serializable{
+
+	private static final long serialVersionUID = 1437291290675415033L;
 	private int id;
 	private Integer idUsuario;
 	private String tipo;
 	private String status;
 	private String statusDetalle;
-	private BigDecimal porcentaje;
-	private BigDecimal cantidad;
 	private Date fechaEjecucion;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
@@ -49,22 +53,6 @@ public class SolicitudDto {
 
 	public void setStatusDetalle(String statusDetalle) {
 		this.statusDetalle = statusDetalle;
-	}
-
-	public BigDecimal getPorcentaje() {
-		return porcentaje;
-	}
-
-	public void setPorcentaje(BigDecimal porcentaje) {
-		this.porcentaje = porcentaje;
-	}
-
-	public BigDecimal getCantidad() {
-		return cantidad;
-	}
-
-	public void setCantidad(BigDecimal cantidad) {
-		this.cantidad = cantidad;
 	}
 
 	public Date getFechaEjecucion() {
@@ -113,6 +101,14 @@ public class SolicitudDto {
 
 	public void setIdUsuario(Integer idUsuario) {
 		this.idUsuario = idUsuario;
+	}
+
+	@Override
+	public String toString() {
+		return "SolicitudDto [id=" + id + ", idUsuario=" + idUsuario + ", tipo=" + tipo + ", status=" + status
+				+ ", statusDetalle=" + statusDetalle + ", fechaEjecucion=" + fechaEjecucion + ", fechaCreacion="
+				+ fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + ", atributos=" + atributos
+				+ ", validaciones=" + validaciones + "]";
 	}
 
 }

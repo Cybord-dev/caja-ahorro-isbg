@@ -3,13 +3,14 @@ package com.business.cybord.states.events;
 import org.jeasy.states.api.AbstractEvent;
 
 import com.business.cybord.models.dtos.SolicitudDto;
+import com.business.cybord.models.enums.EventFactoryTypeEnum;
 
 public class ValidaContaEvent extends AbstractEvent {
 
 	private SolicitudDto solicitudDto;
 
     public ValidaContaEvent(SolicitudDto solicitudDto) {
-        super("ValidaContaEvent");
+    	super(EventFactoryTypeEnum.VALIDA_CONTA_EVENT.getState());
         this.solicitudDto=solicitudDto;
     }
 
