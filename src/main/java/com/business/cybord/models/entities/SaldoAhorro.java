@@ -1,13 +1,13 @@
-package com.business.cybord.entities;
+package com.business.cybord.models.entities;
 
+import java.math.BigDecimal;
 import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -16,28 +16,27 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "datos_user")
-public class DatosUsuario {
+@Table(name = "SALDO_AHORRO")
+public class SaldoAhorro {
 
 	@Id
-	@Column(name = "id_datos_user")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id_ahorro")
 	private int id;
 
 	@Column(name = "id_usuario")
 	private int idUsuario;
 
-	@Column(name = "tipo_dato")
-	private String tipoDato;
+	@Column(name = "tipo")
+	private String tipo;
 
-	@Column(name = "dato")
-	private String dato;
+	@Column(name = "monto")
+	private BigDecimal monto;
 
-	@Column(name = "relevancia")
-	private boolean relevancia;
+	@Column(name = "validado")
+	private Boolean validado;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
@@ -48,11 +47,6 @@ public class DatosUsuario {
 	@LastModifiedDate
 	@Column(name = "fecha_actualizacion")
 	private Date fechaActualizacion;
-
-	@ManyToOne(optional = false)
-	@JsonIgnore
-	@JoinColumn(name = "id_usuario", insertable = false, updatable = false)
-	private Usuario usuario;
 
 	public int getId() {
 		return id;
@@ -66,32 +60,32 @@ public class DatosUsuario {
 		return idUsuario;
 	}
 
-	public void setIdUsuario(int idUser) {
-		this.idUsuario = idUser;
+	public void setIdUsuario(int idUsuario) {
+		this.idUsuario = idUsuario;
 	}
 
-	public String getTipoDato() {
-		return tipoDato;
+	public String getTipo() {
+		return tipo;
 	}
 
-	public void setTipoDato(String tipoDato) {
-		this.tipoDato = tipoDato;
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
 	}
 
-	public String getDato() {
-		return dato;
+	public BigDecimal getMonto() {
+		return monto;
 	}
 
-	public void setDato(String dato) {
-		this.dato = dato;
+	public void setMonto(BigDecimal monto) {
+		this.monto = monto;
 	}
 
-	public boolean isRelevancia() {
-		return relevancia;
+	public Boolean getValidado() {
+		return validado;
 	}
 
-	public void setRelevancia(boolean relevancia) {
-		this.relevancia = relevancia;
+	public void setValidado(Boolean validado) {
+		this.validado = validado;
 	}
 
 	public Date getFechaCreacion() {
@@ -110,19 +104,11 @@ public class DatosUsuario {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	public Usuario getUsuario() {
-		return usuario;
-	}
-
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
-	}
-
 	@Override
 	public String toString() {
-		return "DatosUsuario [id=" + id + ", tipoDato=" + tipoDato + ", dato=" + dato + ", relevancia=" + relevancia
-				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + ", usuario="
-				+ usuario + "]";
+		return "SaldoAhorro [id=" + id + ", idUsuario=" + idUsuario + ", tipo=" + tipo + ", monto=" + monto
+				+ ", validado=" + validado + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
+				+ fechaActualizacion + "]";
 	}
 
 }

@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.business.cybord.entities.Prestamo;
+import com.business.cybord.models.entities.Prestamo;
 
 
 public interface PrestamoRepository extends JpaRepository<Prestamo, Integer> {

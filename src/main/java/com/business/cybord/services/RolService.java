@@ -8,10 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.business.cybord.entities.Rol;
-import com.business.cybord.entities.Usuario;
 import com.business.cybord.mappers.RolMapper;
 import com.business.cybord.models.dtos.RolDto;
+import com.business.cybord.models.entities.Rol;
+import com.business.cybord.models.entities.Usuario;
 import com.business.cybord.repositories.RolRepository;
 import com.business.cybord.repositories.UsuariosRepository;
 

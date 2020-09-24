@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.business.cybord.entities;
+package com.business.cybord.models.entities;
 
 import java.math.BigDecimal;
 import java.util.Date;

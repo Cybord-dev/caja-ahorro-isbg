@@ -4,9 +4,6 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-import com.business.cybord.entities.AtributoSolicitud;
-import com.business.cybord.entities.Validacion;
-
 public class SolicitudDto {
 
 	private int id;
@@ -19,8 +16,8 @@ public class SolicitudDto {
 	private Date fechaEjecucion;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
-	private List<AtributoSolicitud> atributos;
-	private List<Validacion> validaciones;
+	private List<AtributoSolicitudDto> atributos;
+	private List<ValidacionDto> validaciones;
 
 	public int getId() {
 		return id;
@@ -94,19 +91,19 @@ public class SolicitudDto {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	public List<AtributoSolicitud> getAtributos() {
+	public List<AtributoSolicitudDto> getAtributos() {
 		return atributos;
 	}
 
-	public void setAtributos(List<AtributoSolicitud> atributos) {
+	public void setAtributos(List<AtributoSolicitudDto> atributos) {
 		this.atributos = atributos;
 	}
 
-	public List<Validacion> getValidaciones() {
+	public List<ValidacionDto> getValidaciones() {
 		return validaciones;
 	}
 
-	public void setValidaciones(List<Validacion> validaciones) {
+	public void setValidaciones(List<ValidacionDto> validaciones) {
 		this.validaciones = validaciones;
 	}
 

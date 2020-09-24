@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.business.cybord.models.dtos.SolicitudDto;
+import com.business.cybord.models.error.IsbgServiceException;
 import com.business.cybord.services.SolicitudService;
 
 @RestController
@@ -29,7 +30,7 @@ public class SolicitudesContoller {
 	public ResponseEntity<List<SolicitudDto>> getSolicitudByFiltros() {
 		return new ResponseEntity<>(service.getAllSolicitudes(), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/usuarios/{idUsuario}/solicitudes")
 	public ResponseEntity<List<SolicitudDto>> crearSolicitud(@PathVariable Integer idUsuario) {
 		return new ResponseEntity<>(service.getSolicitudByIdUsuario(idUsuario), HttpStatus.CREATED);
@@ -43,7 +44,7 @@ public class SolicitudesContoller {
 
 	@PostMapping("/usuarios/{idUsuario}/solicitudes")
 	public ResponseEntity<SolicitudDto> crearSolicitud(@PathVariable Integer idUsuario,
-			@RequestBody @Valid SolicitudDto solicitudDto) {
+			@RequestBody @Valid SolicitudDto solicitudDto) throws IsbgServiceException {
 		return new ResponseEntity<>(service.crearSolicitud(idUsuario, solicitudDto), HttpStatus.CREATED);
 	}
 

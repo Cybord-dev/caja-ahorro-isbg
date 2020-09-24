@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.List;
 
-import com.business.cybord.entities.SaldoPrestamo;
+import com.business.cybord.models.entities.SaldoPrestamo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 

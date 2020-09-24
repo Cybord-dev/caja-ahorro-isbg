@@ -10,7 +10,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class DatosUsuarioDto {
 
 	private int id;
-	private int idUsuario;
 	private String tipoDato;
 	private String dato;
 	private boolean relevancia;
@@ -23,14 +22,6 @@ public class DatosUsuarioDto {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public int getIdUsuario() {
-		return idUsuario;
-	}
-
-	public void setIdUsuario(int idUsuario) {
-		this.idUsuario = idUsuario;
 	}
 
 	public String getTipoDato() {
@@ -76,7 +67,7 @@ public class DatosUsuarioDto {
 	@Override
 	public String toString() {
 		return "DatosUsuarioDto [id=" + id + ", tipoDato=" + tipoDato + ", dato=" + dato + ", relevancia=" + relevancia
-				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion +"]";
+				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
 
 }

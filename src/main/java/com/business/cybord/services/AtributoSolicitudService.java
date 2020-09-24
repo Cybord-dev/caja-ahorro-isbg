@@ -8,10 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.business.cybord.entities.AtributoSolicitud;
-import com.business.cybord.entities.Solicitud;
 import com.business.cybord.mappers.SolicitudMapper;
 import com.business.cybord.models.dtos.AtributoSolicitudDto;
+import com.business.cybord.models.entities.AtributoSolicitud;
+import com.business.cybord.models.entities.Solicitud;
 import com.business.cybord.repositories.AtributoSolicitudRepository;
 import com.business.cybord.repositories.SolicitudRepository;
 

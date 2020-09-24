@@ -22,9 +22,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import com.business.cybord.entities.Usuario;
+
 import com.business.cybord.mappers.UsuariosMapper;
 import com.business.cybord.models.dtos.UsuariosDto;
+import com.business.cybord.models.entities.Usuario;
 import com.business.cybord.repositories.DatosUsuarioRepository;
 import com.business.cybord.repositories.UsuariosRepository;
 
@@ -96,7 +97,6 @@ public class UsuarioService {
 		entity.setNombre(usuario.getNombre());
 		entity.setTipoUsuario(usuario.getTipoUsuario());
 		entity.setNombre(usuario.getNombre());
-		entity.setDatosUsuario(usuario.getDatosUsuario());
 		return mapper.getDtoFromUserEntity(repository.save(entity));
 	}
 

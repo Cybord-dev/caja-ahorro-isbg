@@ -1,20 +1,22 @@
 package com.business.cybord.models.error;
 
-public class IsbgServiceException extends Exception{
+public class IsbgServiceException extends Exception {
 
 	private static final long serialVersionUID = 3366814987437305737L;
-	
+
 	private String developerMessage;
-	
-	public IsbgServiceException(String message,String developerMessage) {
+	private int httpStatus;
+
+	public IsbgServiceException(String message, String developerMessage, int httpStatus) {
 		super(message);
-		this.developerMessage=developerMessage;
+		this.developerMessage = developerMessage;
+		this.httpStatus = httpStatus;
 	}
-	
+
 	public IsbgServiceException(String message) {
 		super(message);
 	}
-	
+
 	public String getDeveloperMessage() {
 		return developerMessage;
 	}
@@ -23,11 +25,17 @@ public class IsbgServiceException extends Exception{
 		this.developerMessage = developerMessage;
 	}
 
+	public int getHttpStatus() {
+		return httpStatus;
+	}
+
+	public void setHttpStatus(int httpStatus) {
+		this.httpStatus = httpStatus;
+	}
+
 	@Override
 	public String toString() {
-		return "IsbgServiceError [developerMessage=" + developerMessage + "]";
+		return "IsbgServiceException [developerMessage=" + developerMessage + ", httpStatus=" + httpStatus + "]";
 	}
-	
-	
-	
+
 }

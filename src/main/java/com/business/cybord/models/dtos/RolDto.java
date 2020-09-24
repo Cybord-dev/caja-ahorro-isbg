@@ -1,6 +1,6 @@
 package com.business.cybord.models.dtos;
 
-import com.business.cybord.entities.RolCat;
+import com.business.cybord.models.entities.RolCat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -9,8 +9,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class RolDto {
 
 	private int id;
-	private int idUsuario;
-	private int idRol;
 	private RolCat rolname;
 
 	public int getId() {
@@ -21,13 +19,6 @@ public class RolDto {
 		this.id = id;
 	}
 
-	public int getIdUsuario() {
-		return idUsuario;
-	}
-
-	public void setIdUsuario(int idUsuario) {
-		this.idUsuario = idUsuario;
-	}
 
 	public RolCat getRolname() {
 		return rolname;
@@ -37,17 +28,9 @@ public class RolDto {
 		this.rolname = rolname;
 	}
 
-	public int getIdRol() {
-		return idRol;
-	}
-
-	public void setIdRol(int idRol) {
-		this.idRol = idRol;
-	}
-
 	@Override
 	public String toString() {
-		return "RolDto [id=" + id + ", idUsuario=" + idUsuario + ", idRol=" + idRol + ", rolname=" + rolname + "]";
+		return "RolDto [id=" + id + ", rolname=" + rolname + "]";
 	}
 
 }

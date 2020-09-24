@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import com.business.cybord.entities.DatosUsuario;
-import com.business.cybord.entities.Rol;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -22,8 +20,8 @@ public class UsuariosDto implements Serializable {
 	private String tipoUsuario;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
-	private List<DatosUsuario> datosUsuario;
-	private List<Rol> roles;
+	private List<DatosUsuarioDto> datosUsuario;
+	private List<RolDto> roles;
 
 	public int getId() {
 		return id;
@@ -81,19 +79,19 @@ public class UsuariosDto implements Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	public List<DatosUsuario> getDatosUsuario() {
+	public List<DatosUsuarioDto> getDatosUsuario() {
 		return datosUsuario;
 	}
 
-	public void setDatosUsuario(List<DatosUsuario> datosUsuario) {
+	public void setDatosUsuario(List<DatosUsuarioDto> datosUsuario) {
 		this.datosUsuario = datosUsuario;
 	}
 
-	public List<Rol> getRoles() {
+	public List<RolDto> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(List<Rol> roles) {
+	public void setRoles(List<RolDto> roles) {
 		this.roles = roles;
 	}
 
@@ -101,7 +99,7 @@ public class UsuariosDto implements Serializable {
 	public String toString() {
 		return "UsuariosDto [id=" + id + ", activo=" + activo + ", nombre=" + nombre + ", email=" + email
 				+ ", tipoUsuario=" + tipoUsuario + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
-				+ fechaActualizacion + ", datosUsuario=" + datosUsuario + "]";
+				+ fechaActualizacion + ", datosUsuario=" + datosUsuario + ", roles=" + roles + "]";
 	}
 
 }

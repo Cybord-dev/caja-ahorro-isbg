@@ -5,8 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-
-import com.business.cybord.entities.Solicitud;
+import com.business.cybord.models.entities.Solicitud;
 
 
 public interface SolicitudRepository extends JpaRepository<Solicitud, Integer>{

@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.business.cybord.entities.AtributoSolicitud;
+import com.business.cybord.models.entities.AtributoSolicitud;
 
 @Repository
 public interface AtributoSolicitudRepository extends JpaRepository<AtributoSolicitud, Integer>{

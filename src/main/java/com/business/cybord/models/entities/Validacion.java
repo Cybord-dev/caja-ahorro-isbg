@@ -1,4 +1,4 @@
-package com.business.cybord.entities;
+package com.business.cybord.models.entities;
 
 import java.util.Date;
 
@@ -41,7 +41,7 @@ public class Validacion {
 
 	@NotNull
 	@Column(name = "numero_validacion")
-	private boolean numeroValidacion;
+	private int numeroValidacion;
 
 	@NotNull
 	@Column(name = "estatus")
@@ -75,11 +75,11 @@ public class Validacion {
 		this.id = id;
 	}
 
-	public boolean isNumeroValidacion() {
+	public int isNumeroValidacion() {
 		return numeroValidacion;
 	}
 
-	public void setNumeroValidacion(boolean numeroValidacion) {
+	public void setNumeroValidacion(int numeroValidacion) {
 		this.numeroValidacion = numeroValidacion;
 	}
 

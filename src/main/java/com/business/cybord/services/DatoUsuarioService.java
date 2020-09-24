@@ -6,10 +6,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.business.cybord.entities.DatosUsuario;
-import com.business.cybord.entities.Usuario;
 import com.business.cybord.mappers.DatoUsuarioMapper;
 import com.business.cybord.models.dtos.DatosUsuarioDto;
+import com.business.cybord.models.entities.DatosUsuario;
+import com.business.cybord.models.entities.Usuario;
 import com.business.cybord.repositories.DatosUsuarioRepository;
 import com.business.cybord.repositories.UsuariosRepository;
 
@@ -17,44 +17,42 @@ import com.business.cybord.repositories.UsuariosRepository;
 public class DatoUsuarioService {
 
 	@Autowired
-	private DatosUsuarioRepository datosUsuarioRepository;
+	private DatosUsuarioRepository repository;
 	
 	@Autowired
-	private UsuariosRepository repository;
+	private UsuariosRepository usuariosRepository;
 	
 	@Autowired
 	private DatoUsuarioMapper mapper;
 
-		public DatosUsuarioDto insertarNuevoDatoUsuario(DatosUsuarioDto datosUsuario) {
-			Optional<DatosUsuario> datosusuarioEntity = datosUsuarioRepository
-					.findByTipoDatoAndIdUsuario(datosUsuario.getTipoDato(), datosUsuario.getIdUsuario());
-			if (datosusuarioEntity.isPresent()) {
+		public DatosUsuarioDto insertarNuevoDatoUsuario(DatosUsuarioDto datosUsuario,int idUsuario) {
+			Optional<Usuario> usuario= usuariosRepository.findById(idUsuario);
+			if (usuario.isPresent()) {
+				DatosUsuario datos = repository.save(mapper.getDatosEntityFromDatosUsuarioDto(datosUsuario));
+				datos.setUsuario(usuario.get());
+				return mapper.getDtoFromDatosusuarioEntity(datos);
+			} else {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 						String.format("El dato %s ya existe", datosUsuario.getTipoDato()));
-			} else {
-
-				DatosUsuario datos = datosUsuarioRepository.save(mapper.getDatosEntityFromDatosUsuarioDto(datosUsuario));
-				return mapper.getDtoFromDatosusuarioEntity(datos);
 			}
 		}
 
-		public DatosUsuarioDto actualizarDatoUsuario(int idUsuario, DatosUsuarioDto datosUsuario) {
-			Optional<Usuario> usuario = repository.findById(idUsuario);
-			Optional<DatosUsuario> datosusuarioEntity = datosUsuarioRepository
-					.findByTipoDatoAndIdUsuario(datosUsuario.getTipoDato(), datosUsuario.getIdUsuario());
-			if (datosusuarioEntity.isPresent() && usuario.isPresent()) {
+		public DatosUsuarioDto actualizarDatoUsuario(DatosUsuarioDto datosUsuario,int id) {
+			Optional<DatosUsuario> datosusuarioEntity = repository
+					.findById(id);
+			if (datosusuarioEntity.isPresent()) {
 				datosusuarioEntity.get().setDato(datosUsuario.getDato());
 				datosusuarioEntity.get().setRelevancia(datosUsuario.isRelevancia());
-				return mapper.getDtoFromDatosusuarioEntity(datosUsuarioRepository.save(datosusuarioEntity.get()));
+				return mapper.getDtoFromDatosusuarioEntity(repository.save(datosusuarioEntity.get()));
 			} else
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 						String.format("El dato %s no existe", datosUsuario.getTipoDato()));
 		}
 
 		public void borraDatoUsuario(Integer id) {
-			DatosUsuario entity = datosUsuarioRepository.findById(id).orElseThrow(
+			DatosUsuario entity = repository.findById(id).orElseThrow(
 					() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("El Dato no existe %s", id)));
-			datosUsuarioRepository.delete(entity);
+			repository.delete(entity);
 		}
 
 }
