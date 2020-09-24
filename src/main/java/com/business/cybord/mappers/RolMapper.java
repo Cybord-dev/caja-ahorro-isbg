@@ -6,8 +6,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MapperConfig;
 import org.mapstruct.ReportingPolicy;
 
-import com.business.cybord.entities.Rol;
 import com.business.cybord.models.dtos.RolDto;
+import com.business.cybord.models.entities.Rol;
 
 
 @Mapper

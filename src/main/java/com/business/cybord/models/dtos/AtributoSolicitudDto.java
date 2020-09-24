@@ -6,7 +6,7 @@ public class AtributoSolicitudDto {
 
 	private int id;
 	private int idSolicitud;
-	private boolean tipoAtributo;
+	private String tipoAtributo;
 	private String nombre;
 	private String valor;
 	private Date fechaCreacion;
@@ -28,11 +28,11 @@ public class AtributoSolicitudDto {
 		this.id = id;
 	}
 
-	public boolean isTipoAtributo() {
+	public String getTipoAtributo() {
 		return tipoAtributo;
 	}
 
-	public void setTipoAtributo(boolean tipoAtributo) {
+	public void setTipoAtributo(String tipoAtributo) {
 		this.tipoAtributo = tipoAtributo;
 	}
 

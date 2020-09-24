@@ -6,8 +6,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MapperConfig;
 import org.mapstruct.ReportingPolicy;
 
-import com.business.cybord.entities.CatalogoPropiedad;
 import com.business.cybord.models.dtos.CatalogoPropiedadDto;
+import com.business.cybord.models.entities.CatalogoPropiedad;
 
 @Mapper
 @MapperConfig(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring")

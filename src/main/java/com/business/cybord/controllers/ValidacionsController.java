@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.business.cybord.models.dtos.ValidacionDto;
+import com.business.cybord.models.error.IsbgServiceException;
 import com.business.cybord.services.ValidacionService;
 
 @RestController
@@ -44,7 +45,8 @@ public class ValidacionsController {
 
 	@PostMapping("/usuarios/{idUsuario}/solicitudes/{idSolicitud}/validaciones")
 	public ResponseEntity<ValidacionDto> crearValidacion(@PathVariable Integer idUsuario,
-			@PathVariable Integer idSolicitud, @RequestBody @Valid ValidacionDto validacionDto) {
+			@PathVariable Integer idSolicitud, @RequestBody @Valid ValidacionDto validacionDto)
+			throws IsbgServiceException {
 		return new ResponseEntity<>(service.crearValidacion(idUsuario, idSolicitud, validacionDto), HttpStatus.CREATED);
 	}
 

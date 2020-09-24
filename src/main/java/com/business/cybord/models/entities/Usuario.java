@@ -1,16 +1,14 @@
-package com.business.cybord.entities;
+package com.business.cybord.models.entities;
 
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -52,17 +50,11 @@ public class Usuario {
 	@Column(name = "fecha_actualizacion")
 	private Date fechaActualizacion;
 
-	@OneToMany(cascade = CascadeType.MERGE)
-	@JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario", insertable = false, updatable = false)
+	@OneToMany(mappedBy = "usuario")
 	private List<DatosUsuario> datosUsuario;
 
 	@OneToMany(mappedBy = "usuario")
-
 	private List<Rol> roles;
-
-	@OneToMany(mappedBy = "usuario")
-
-	private List<Solicitud> solicitudes;
 
 	public int getId() {
 		return id;
@@ -140,8 +132,7 @@ public class Usuario {
 	public String toString() {
 		return "Usuario [id=" + id + ", activo=" + activo + ", nombre=" + nombre + ", email=" + email + ", tipoUsuario="
 				+ tipoUsuario + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
-				+ ", datosUsuario=" + datosUsuario + ", roles=" + roles + ", solicitudes=" + solicitudes
-				+ ", validaciones=" + "]";
+				+ ", datosUsuario=" + datosUsuario + ", roles=" + roles + ", validaciones=" + "]";
 	}
 
 }

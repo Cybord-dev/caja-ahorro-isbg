@@ -7,7 +7,7 @@ public class ValidacionDto {
 	private Integer idSolicitud;
 	private String email;
 	private String area;
-	private boolean numeroValidacion;
+	private Integer numeroValidacion;
 	private boolean status;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
@@ -20,11 +20,11 @@ public class ValidacionDto {
 		this.id = id;
 	}
 
-	public boolean isNumeroValidacion() {
+	public Integer isNumeroValidacion() {
 		return numeroValidacion;
 	}
 
-	public void setNumeroValidacion(boolean numeroValidacion) {
+	public void setNumeroValidacion(Integer numeroValidacion) {
 		this.numeroValidacion = numeroValidacion;
 	}
 

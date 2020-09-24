@@ -1,4 +1,4 @@
-package com.business.cybord.entities;
+package com.business.cybord.models.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

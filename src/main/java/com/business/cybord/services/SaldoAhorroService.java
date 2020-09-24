@@ -7,9 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import com.business.cybord.entities.SaldoAhorro;
+
 import com.business.cybord.mappers.SaldoAhorroMapper;
 import com.business.cybord.models.dtos.SaldoAhorroDto;
+import com.business.cybord.models.entities.SaldoAhorro;
 import com.business.cybord.repositories.SaldoAhorroRepository;
 
 @Service

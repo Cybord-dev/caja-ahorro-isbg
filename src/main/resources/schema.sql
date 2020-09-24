@@ -58,9 +58,9 @@ UNIQUE(id_usuario,tipo_dato);
 CREATE TABLE `SOLICITUDES` (
   `id_solicitud` int(11) NOT NULL AUTO_INCREMENT,
   `id_usuario` int(11) NOT NULL,
-  `tipo_solicitud` tinyint(1) NOT NULL DEFAULT '0',
-  `estatus` tinyint(1) NOT NULL DEFAULT '0',
-  `estatus_detalle` varchar(50) NOT NULL,
+  `tipo_solicitud` varchar(50) NOT NULL DEFAULT '0',
+  `estatus` varchar(200) NOT NULL,
+  `estatus_detalle` varchar(200),
   `porcentaje` decimal(5,2)  NOT NULL,
   `cantidad` decimal(10,2) NOT NULL,
   `fecha_ejecucion` timestamp NOT NULL,
@@ -72,7 +72,7 @@ CREATE TABLE `SOLICITUDES` (
 CREATE TABLE `ATRIBUTOS_SOLICITUD` (
   `id_atributo` int(11) NOT NULL AUTO_INCREMENT,
   `id_solicitud` int(11) NOT NULL,
-  `tipo_atributo` tinyint(1) NOT NULL DEFAULT '0',
+  `tipo_atributo` varchar(50) NOT NULL DEFAULT '0',
   `nombre` varchar(50) NOT NULL DEFAULT '0',
   `valor` varchar(100) NOT NULL,
   `fecha_creacion` timestamp NOT NULL,
@@ -80,13 +80,13 @@ CREATE TABLE `ATRIBUTOS_SOLICITUD` (
 );
 
 ALTER TABLE ATRIBUTOS_SOLICITUD ADD CONSTRAINT ATRIBUTOS_SOLICITUD_UNIQUE
-UNIQUE(id_solicitud,tipo_atributo);  
+UNIQUE(id_solicitud,tipo_atributo,nombre);  
 
 
 CREATE TABLE `VALIDACIONES` (
   `id_validacion` int(11) NOT NULL AUTO_INCREMENT,
   `id_solicitud` int(11) NOT NULL,
-  `numero_validacion` tinyint(1) NOT NULL DEFAULT '0',
+  `numero_validacion` int(3) NOT NULL DEFAULT '0',
   `email` varchar(100) NOT NULL,
   `area` varchar(50) NOT NULL,
   `estatus` tinyint(1) NOT NULL DEFAULT '0',

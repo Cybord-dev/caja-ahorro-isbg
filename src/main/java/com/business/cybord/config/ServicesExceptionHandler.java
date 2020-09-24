@@ -13,22 +13,23 @@ import com.business.cybord.models.error.IsbgServiceException;
 public class ServicesExceptionHandler {
 
 	@ExceptionHandler(value = Exception.class)
-	protected ResponseEntity<ResponseStatusException> handleException(Exception ex, WebRequest request) {
-		return new ResponseEntity<>(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), ex),
+	protected ResponseEntity<IsbgServiceException> handleException(Exception ex, WebRequest request) {
+		return new ResponseEntity<>(
+				new IsbgServiceException(ex.getMessage(), ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()),
 				HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ExceptionHandler(value = ResponseStatusException.class)
-	protected ResponseEntity<ResponseStatusException> handleResponseStatusException(ResponseStatusException ex,
+	protected ResponseEntity<IsbgServiceException> handleResponseStatusException(ResponseStatusException ex,
 			WebRequest request) {
-		return new ResponseEntity<>(ex, ex.getStatus());
+		return new ResponseEntity<>(
+				new IsbgServiceException(ex.getMessage(), ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()),
+				ex.getStatus());
 	}
 
 	@ExceptionHandler(value = IsbgServiceException.class)
-	protected ResponseEntity<ResponseStatusException> handleIsbgException(IsbgServiceException ex,
-			WebRequest request) {
-		return new ResponseEntity<>(new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage(), ex),
-				HttpStatus.CONFLICT);
+	protected ResponseEntity<IsbgServiceException> handleIsbgException(IsbgServiceException ex, WebRequest request) {
+		return new ResponseEntity<>(ex, HttpStatus.valueOf(ex.getHttpStatus()));
 	}
 
 }

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.business.cybord.entities;
+package com.business.cybord.models.entities;
 
 import java.util.Date;
 
@@ -21,6 +21,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -38,7 +39,7 @@ public class AtributoSolicitud {
 
 	@NotNull
 	@Column(name = "tipo_atributo")
-	private boolean tipoAtributo;
+	private String tipoAtributo;
 
 	@NotNull
 	@Column(name = "nombre")
@@ -76,11 +77,12 @@ public class AtributoSolicitud {
 		this.id = id;
 	}
 
-	public boolean isTipoAtributo() {
+
+	public String getTipoAtributo() {
 		return tipoAtributo;
 	}
 
-	public void setTipoAtributo(boolean tipoAtributo) {
+	public void setTipoAtributo(String tipoAtributo) {
 		this.tipoAtributo = tipoAtributo;
 	}
 
