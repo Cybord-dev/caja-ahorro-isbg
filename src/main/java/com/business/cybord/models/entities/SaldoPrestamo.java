@@ -2,7 +2,6 @@ package com.business.cybord.models.entities;
 
 import java.math.BigDecimal;
 import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -57,6 +56,7 @@ public class SaldoPrestamo {
 		this.id = id;
 	}
 
+
 	public int getIdPrestamo() {
 		return idPrestamo;
 	}
@@ -105,11 +105,7 @@ public class SaldoPrestamo {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	@Override
-	public String toString() {
-		return "SaldoPrestamo [id=" + id + ", idPrestamo=" + idPrestamo + ", tipo=" + tipo + ", monto=" + monto
-				+ ", validado=" + validado + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
-				+ fechaActualizacion + "]";
-	}
+	
+	
 
 }

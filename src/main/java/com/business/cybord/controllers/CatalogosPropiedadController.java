@@ -41,6 +41,7 @@ public class CatalogosPropiedadController {
 		return new ResponseEntity<>(service.createCatalogoPropiedad(dto), HttpStatus.CREATED);
 	}
 
+
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteCatalogoByTipoAndNombre(@PathVariable Integer id) {
 		service.deleteCatalogoPropiedadById(id);

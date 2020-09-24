@@ -29,7 +29,7 @@ public class AtributoSolicitudController {
 	public ResponseEntity<List<AtributoSolicitudDto>> getSolicitud() {
 		return new ResponseEntity<>(service.getAllAtributos(), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/usuarios/{idUsuario}/solicitudes/{idSolicitud}/atributos")
 	public ResponseEntity<List<AtributoSolicitudDto>> getAtributoSolicitudById(@PathVariable Integer idUsuario,
 			@PathVariable Integer idSolicitud) {

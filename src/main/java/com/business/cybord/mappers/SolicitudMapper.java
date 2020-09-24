@@ -5,7 +5,6 @@ import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.MapperConfig;
 import org.mapstruct.ReportingPolicy;
-
 import com.business.cybord.models.dtos.AtributoSolicitudDto;
 import com.business.cybord.models.dtos.SolicitudDto;
 import com.business.cybord.models.dtos.ValidacionDto;
@@ -25,11 +24,12 @@ public interface SolicitudMapper {
 	//Atributos
 	AtributoSolicitud getEntityFromAtributoSolicitudDto(AtributoSolicitudDto dto);
 	AtributoSolicitudDto getDtoFromAtributoSolicitudEntity(AtributoSolicitud dto);
+
 	List<AtributoSolicitudDto> atributoSolicitudDtoToAtributoSolicitud(List<AtributoSolicitud> entity);
 	List<AtributoSolicitud> getEntitiesFromAtributosSolicitudDto(List<AtributoSolicitudDto> dtos);
-	
 	//Validaciones
 	Validacion getEntityFromValidacionesDto(ValidacionDto dto);
 	ValidacionDto getDtoFromValidacionesEntity(Validacion dto);
 	List<ValidacionDto> validacionDtoToValidacion(List<Validacion>dto);
+
 }

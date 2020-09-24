@@ -30,11 +30,15 @@ public class Validacion {
 	@Column(name = "id_validacion")
 	private int id;
 
+
 	@Column(name = "email")
 	private String email;
 
 	@Column(name = "area")
 	private String area;
+
+	@Column(name = "id_usuario")
+	private Integer idUsuario;
 
 	@Column(name = "id_solicitud")
 	private int idSolicitud;
@@ -46,6 +50,10 @@ public class Validacion {
 	@NotNull
 	@Column(name = "estatus")
 	private boolean status;
+
+	@NotNull
+	@Column(name = "tipo_validacion")
+	private String tipoValidacion;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
@@ -91,6 +99,14 @@ public class Validacion {
 		this.status = status;
 	}
 
+	public String getTipoValidacion() {
+		return tipoValidacion;
+	}
+
+	public void setTipoValidacion(String tipoValidacion) {
+		this.tipoValidacion = tipoValidacion;
+	}
+
 	public Date getFechaCreacion() {
 		return fechaCreacion;
 	}
@@ -128,7 +144,15 @@ public class Validacion {
 	}
 
 	public void setArea(String area) {
-		this.area = area;
+		this.area = area;}
+
+	public Integer getIdUsuario() {
+		return idUsuario;
+	}
+
+	public void setIdUsuario(Integer idUsuario) {
+		this.idUsuario = idUsuario;
+
 	}
 
 	public int getIdSolicitud() {
@@ -141,9 +165,11 @@ public class Validacion {
 
 	@Override
 	public String toString() {
-		return "Validacion [id=" + id + ", email=" + email + ", area=" + area + ", idSolicitud=" + idSolicitud
-				+ ", numeroValidacion=" + numeroValidacion + ", status=" + status + ", fechaCreacion=" + fechaCreacion
-				+ ", fechaActualizacion=" + fechaActualizacion + ", solicitud=" + solicitud + "]";
-	}
 
+		return "Validacion [id=" + id + ", idUsuario=" + idUsuario + ", idSolicitud=" + idSolicitud
+				+ ", numeroValidacion=" + numeroValidacion + ", status=" + status + ", tipoValidacion=" + tipoValidacion
+				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + ", solicitud="
+				+ solicitud + "]";
+	}
+	
 }

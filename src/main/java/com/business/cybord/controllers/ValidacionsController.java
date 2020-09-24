@@ -32,7 +32,7 @@ public class ValidacionsController {
 	}
 
 	@GetMapping("/usuarios/{idUsuario}/solicitudes/{idSolicitud}/validaciones")
-	public ResponseEntity<List<ValidacionDto>> getValidacionByIdSoolicitud(@PathVariable Integer idUsuario,
+	public ResponseEntity<List<ValidacionDto>> getValidacionByIdSolicitud(@PathVariable Integer idUsuario,
 			@PathVariable Integer idSolicitud) {
 		return new ResponseEntity<>(service.getAllValidacionesByIdSolicitud(idSolicitud), HttpStatus.OK);
 	}

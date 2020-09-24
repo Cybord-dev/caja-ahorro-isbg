@@ -46,7 +46,7 @@ public class Solicitud {
 
 	@NotNull
 	@Column(name = "estatus")
-	private String status;
+	private String estatus;
 
 	@NotNull
 	@Column(name = "estatus_detalle")
@@ -91,8 +91,9 @@ public class Solicitud {
 		this.fechaEjecucion = n.getFechaEjecucion();
 		this.cantidad = n.getCantidad();
 		this.porcentaje = n.getPorcentaje();
-		this.status = n.getStatus();
+		this.estatus = n.getStatus();
 		this.statusDetalle = n.getStatusDetalle();
+
 	}
 
 	public int getId() {
@@ -112,11 +113,11 @@ public class Solicitud {
 	}
 
 	public String getStatus() {
-		return status;
+		return estatus;
 	}
 
 	public void setStatus(String status) {
-		this.status = status;
+		this.estatus = status;
 	}
 
 	public String getStatusDetalle() {
@@ -125,6 +126,7 @@ public class Solicitud {
 
 	public void setStatusDetalle(String statusDetalle) {
 		this.statusDetalle = statusDetalle;
+
 	}
 
 	public BigDecimal getPorcentaje() {
@@ -201,7 +203,7 @@ public class Solicitud {
 
 	@Override
 	public String toString() {
-		return "Solicitud [id=" + id + ", idUsuario=" + idUsuario + ", tipo=" + tipo + ", status=" + status
+		return "Solicitud [id=" + id + ", idUsuario=" + idUsuario + ", tipo=" + tipo + ", status=" + estatus
 				+ ", statusDetalle=" + statusDetalle + ", porcentaje=" + porcentaje + ", cantidad=" + cantidad
 				+ ", fechaEjecucion=" + fechaEjecucion + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
 				+ fechaActualizacion + ", usuario=" + usuario + ", atributos=" + atributos + ", validaciones="

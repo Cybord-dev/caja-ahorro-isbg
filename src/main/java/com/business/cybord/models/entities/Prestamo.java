@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -20,6 +21,9 @@ import javax.persistence.TemporalType;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -56,6 +60,11 @@ public class Prestamo {
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_prestamo", referencedColumnName = "id_prestamo", insertable = false, updatable = false)
 	private List<SaldoPrestamo> saldosPrestamo;
+
+	@ManyToOne(optional = false)
+	@JsonIgnore
+	@JoinColumn(name = "id_deudor", insertable = false, updatable = false)
+	private Usuario usuario;
 
 	public int getId() {
 		return id;
@@ -121,6 +130,16 @@ public class Prestamo {
 		this.saldosPrestamo = saldosPrestamo;
 	}
 
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+
+	
 	@Override
 	public String toString() {
 		return "Prestamo [id=" + id + ", idDeudor=" + idDeudor + ", estatus=" + estatus + ", monto=" + monto

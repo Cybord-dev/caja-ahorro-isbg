@@ -3,7 +3,6 @@ package com.business.cybord.models.dtos;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.List;
-
 import com.business.cybord.models.entities.SaldoPrestamo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -20,6 +19,8 @@ public class PrestamoDto {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private List<SaldoPrestamo> saldosPrestamo;
+	private Usuario usuario;
+
 
 	public int getId() {
 		return id;
@@ -83,6 +84,14 @@ public class PrestamoDto {
 
 	public void setSaldosPrestamo(List<SaldoPrestamo> saldosPrestamo) {
 		this.saldosPrestamo = saldosPrestamo;
+	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
 
 	@Override
