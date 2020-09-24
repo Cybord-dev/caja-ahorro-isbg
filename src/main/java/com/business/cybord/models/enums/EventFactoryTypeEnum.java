@@ -2,9 +2,9 @@ package com.business.cybord.models.enums;
 
 public enum EventFactoryTypeEnum {
 
-	SOLIICITUD_CREADA(null, "System","SolicitudCreadaEvent"),
-	VALIDA_RH(EventFactoryEnum.VALIDA_RH_EVENT, "RecursosHumanos","ValidaRhEvent"),
-	VALIDA_CONTA_EVENT(EventFactoryEnum.VALIDA_CONTA_EVENT, "Contabilidad","ValidaContaEvent");
+	SOLICITUD_CREADA(EventFactoryEnum.SOLICIITUD_CREADA, "System","Solicitud"),
+	VALIDA_RH(EventFactoryEnum.VALIDA_RH_EVENT, "RecursosHumanos","ValidacionRH"),
+	VALIDA_CONTA_EVENT(EventFactoryEnum.VALIDA_CONTA_EVENT, "Contabilidad","ValdiacionConta");
 	
 
 	private EventFactoryEnum enumValue;

@@ -2,9 +2,9 @@ package com.business.cybord.models.enums;
 
 public enum SolicitudFactoryTypeEnum {
 
-	SOLICITUD_AHORRO(SolicitudFactoryEnum.SOLICITUD_AHORRO, "SolicitudAhorro", "SolicitudCreadaEvent",
+	SOLICITUD_AHORRO(SolicitudFactoryEnum.SOLICITUD_AHORRO, "SOLICITUD_AHORRO", "SolicitudCreadaEvent",
 			"ValidaContaEvent"),
-	SOLICITUD_CANCELACION_AHORRO(SolicitudFactoryEnum.SOLICITUD_CANCELACION_AHORRO, "SolicitudCancelacionAhorro",
+	SOLICITUD_CANCELACION_AHORRO(SolicitudFactoryEnum.SOLICITUD_CANCELACION_AHORRO, "SOLICITUD_CANCELACION_AHORRO",
 			"SolicitudCreadaEvent", "ValidaContaEvent");
 
 	private SolicitudFactoryEnum enumValue;

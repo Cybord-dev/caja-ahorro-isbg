@@ -3,7 +3,6 @@
  */
 package com.business.cybord.models.entities;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -52,14 +51,6 @@ public class Solicitud {
 	@Column(name = "estatus_detalle")
 	private String statusDetalle;
 
-	@NotNull
-	@Column(name = "porcentaje")
-	private BigDecimal porcentaje;
-
-	@NotNull
-	@Column(name = "cantidad")
-	private BigDecimal cantidad;
-
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "fecha_ejecucion")
 	private Date fechaEjecucion;
@@ -89,8 +80,6 @@ public class Solicitud {
 
 	public void update(Solicitud n) {
 		this.fechaEjecucion = n.getFechaEjecucion();
-		this.cantidad = n.getCantidad();
-		this.porcentaje = n.getPorcentaje();
 		this.status = n.getStatus();
 		this.statusDetalle = n.getStatusDetalle();
 	}
@@ -125,22 +114,6 @@ public class Solicitud {
 
 	public void setStatusDetalle(String statusDetalle) {
 		this.statusDetalle = statusDetalle;
-	}
-
-	public BigDecimal getPorcentaje() {
-		return porcentaje;
-	}
-
-	public void setPorcentaje(BigDecimal porcentaje) {
-		this.porcentaje = porcentaje;
-	}
-
-	public BigDecimal getCantidad() {
-		return cantidad;
-	}
-
-	public void setCantidad(BigDecimal cantidad) {
-		this.cantidad = cantidad;
 	}
 
 	public Date getFechaEjecucion() {
@@ -202,10 +175,9 @@ public class Solicitud {
 	@Override
 	public String toString() {
 		return "Solicitud [id=" + id + ", idUsuario=" + idUsuario + ", tipo=" + tipo + ", status=" + status
-				+ ", statusDetalle=" + statusDetalle + ", porcentaje=" + porcentaje + ", cantidad=" + cantidad
-				+ ", fechaEjecucion=" + fechaEjecucion + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
-				+ fechaActualizacion + ", usuario=" + usuario + ", atributos=" + atributos + ", validaciones="
-				+ validaciones + "]";
+				+ ", statusDetalle=" + statusDetalle + ", fechaEjecucion=" + fechaEjecucion + ", fechaCreacion="
+				+ fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + ", usuario=" + usuario + ", atributos="
+				+ atributos + ", validaciones=" + validaciones + "]";
 	}
 
 }

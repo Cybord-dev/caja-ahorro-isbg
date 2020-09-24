@@ -75,7 +75,7 @@ public class Validacion {
 		this.id = id;
 	}
 
-	public int isNumeroValidacion() {
+	public int getNumeroValidacion() {
 		return numeroValidacion;
 	}
 

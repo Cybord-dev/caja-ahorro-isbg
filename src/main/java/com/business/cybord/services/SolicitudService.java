@@ -13,12 +13,15 @@ import com.business.cybord.mappers.SolicitudMapper;
 import com.business.cybord.models.dtos.AtributoSolicitudDto;
 import com.business.cybord.models.dtos.SolicitudDto;
 import com.business.cybord.models.entities.Solicitud;
+import com.business.cybord.models.enums.SolicitudFactoryEnum;
+import com.business.cybord.models.enums.SolicitudFactoryTypeEnum;
 import com.business.cybord.models.error.IsbgServiceException;
 import com.business.cybord.repositories.AtributoSolicitudRepository;
 import com.business.cybord.repositories.SolicitudRepository;
 import com.business.cybord.repositories.UsuariosRepository;
 import com.business.cybord.rules.suites.ISuite;
 import com.business.cybord.rules.utils.SuiteManager;
+import com.business.cybord.states.solicitudes.ISolicitud;
 
 import org.jeasy.rules.api.Facts;
 import org.jeasy.rules.api.RulesEngine;
@@ -57,13 +60,17 @@ public class SolicitudService {
 		}
 	}
 
-	public SolicitudDto crearSolicitud(int idUsuario, SolicitudDto solicitud) throws IsbgServiceException {
+	public SolicitudDto crearSolicitud(int idUsuario, SolicitudDto solicitudDto) throws IsbgServiceException {
 		repositoryUsuario.findById(idUsuario).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 				String.format("el usuario id= %d no existe", idUsuario)));
-		executeRules(solicitud);
-		Solicitud nueva = repositorySolicitud.save(mapper.getEntityFromSolicitudDto(solicitud));
+		executeRules(solicitudDto);
+		SolicitudFactoryEnum sfte = SolicitudFactoryTypeEnum.findByReferenceName(solicitudDto.getTipo())
+				.getEnumValue();
+		ISolicitud solicitud = sfte.getInstance();
+		solicitudDto.setStatus(solicitud.nextState().getName());
+		Solicitud nueva = repositorySolicitud.save(mapper.getEntityFromSolicitudDto(solicitudDto));
 		nueva.setAtributos(new ArrayList<>());
-		for (AtributoSolicitudDto att : solicitud.getAtributos()) {
+		for (AtributoSolicitudDto att : solicitudDto.getAtributos()) {
 			att.setIdSolicitud(nueva.getId());
 			nueva.getAtributos().add(atributoSolicitudRepository.save(mapper.getEntityFromAtributoSolicitudDto(att)));
 		}

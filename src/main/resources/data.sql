@@ -6,14 +6,14 @@ INSERT INTO USUARIOS(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(1,'pab
 INSERT INTO USUARIOS(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(2,'juanito','tortas34@.com',1,'INTERNO');
 INSERT INTO USUARIOS(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(3,'culochi','test@test.com',1,'INTERNO');
 
-INSERT INTO SOLICITUDES(id_solicitud,id_usuario, tipo_solicitud, estatus, estatus_detalle, porcentaje, cantidad, fecha_ejecucion, fecha_creacion, fecha_actualizacion) 
-VALUES(1, 1,'SOLICITUD_AHORRO','RecursosHumanos',null, 10.10, 1500.00, '2020-09-12 00:00:00','2020-09-12 00:00:00','2020-09-12 00:00:00');
+INSERT INTO SOLICITUDES(id_solicitud,id_usuario, tipo_solicitud, estatus, estatus_detalle, fecha_ejecucion, fecha_creacion, fecha_actualizacion) 
+VALUES(1, 1,'SOLICITUD_AHORRO','RecursosHumanos',null, '2020-09-12 00:00:00','2020-09-12 00:00:00','2020-09-12 00:00:00');
 
-INSERT INTO SOLICITUDES(id_solicitud,id_usuario, tipo_solicitud, estatus, estatus_detalle, porcentaje, cantidad, fecha_ejecucion, fecha_creacion, fecha_actualizacion) 
-VALUES(2, 2,'SOLICITUD_AHORRO','RecursosHumanos',null, 10.10, 1500.00, '2020-09-12 00:00:00','2020-09-12 00:00:00','2020-09-12 00:00:00');
+INSERT INTO SOLICITUDES(id_solicitud,id_usuario, tipo_solicitud, estatus, estatus_detalle, fecha_ejecucion, fecha_creacion, fecha_actualizacion) 
+VALUES(2, 2,'SOLICITUD_AHORRO','RecursosHumanos',null, '2020-09-12 00:00:00','2020-09-12 00:00:00','2020-09-12 00:00:00');
 
-INSERT INTO SOLICITUDES(id_solicitud,id_usuario, tipo_solicitud, estatus, estatus_detalle, porcentaje, cantidad, fecha_ejecucion, fecha_creacion, fecha_actualizacion) 
-VALUES(3, 3, 1,0,'SOLICITUD_AHORRO', 10.10, 1500.00, '2020-09-19 12:00:00','2020-09-19 00:00:00','2020-09-12 00:00:00');
+INSERT INTO SOLICITUDES(id_solicitud,id_usuario, tipo_solicitud, estatus, estatus_detalle, fecha_ejecucion, fecha_creacion, fecha_actualizacion) 
+VALUES(3, 3,'SOLICITUD_AHORRO','RecursosHumanos',null,'2020-09-19 12:00:00','2020-09-19 00:00:00','2020-09-12 00:00:00');
 
 INSERT INTO ATRIBUTOS_SOLICITUD(id_atributo,id_solicitud,tipo_atributo,nombre,valor,fecha_creacion,fecha_actualizacion) VALUES (1,1,1,'PORCENTAJE_AHORRO','10.5','2020-09-12 00:00:00','2020-09-12 00:00:00');
 INSERT INTO ATRIBUTOS_SOLICITUD(id_atributo,id_solicitud,tipo_atributo,nombre,valor,fecha_creacion,fecha_actualizacion) VALUES (2,1,2,'FECHA_INGRESO','2020-09-12 00:00:00','2020-09-12 01:00:00','2020-09-12 01:00:00');
@@ -31,7 +31,7 @@ INSERT INTO CAT_ROLES(id_role,nombre) VALUES (4,'CONTABILIDAD');
 INSERT INTO CAT_ROLES(id_role,nombre) VALUES (5,'RECURSOS-HUMANOS');
 INSERT INTO CAT_ROLES(id_role,nombre) VALUES (6,'USUARIO');
 
-INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (1,3,1);
+INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (1,1,1);
 INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (2,3,2);
 INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (3,3,6);
 

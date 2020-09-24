@@ -5,6 +5,8 @@ import org.jeasy.states.api.Event;
 import org.jeasy.states.api.FiniteStateMachineException;
 import org.jeasy.states.api.State;
 
+import com.business.cybord.models.error.IsbgServiceException;
+
 public class SolicitudRetiroAnticipado implements ISolicitud {
 
 	@Override
@@ -29,6 +31,12 @@ public class SolicitudRetiroAnticipado implements ISolicitud {
 	public boolean compare(State future) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public State nextState() throws IsbgServiceException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
