@@ -3,6 +3,9 @@ package com.business.cybord.controllers;
 import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -33,18 +36,21 @@ public class UsuariosController {
 		return new ResponseEntity<>(service.getUserById(id), HttpStatus.OK);
 	}
 
-
+	
 	@SuppressWarnings("serial")
 	@GetMapping
 	public ResponseEntity<Page<UsuariosDto>> getUsuariosPorParametrosController(		
-			@RequestParam(name = "nombre", defaultValue = "") String nombre,
-			@RequestParam(name = "email", defaultValue = "") String email,
+			@RequestParam(name = "nombre",  defaultValue = "") String nombre,
+			@RequestParam(name = "email",  defaultValue = "") String email,
+			@RequestParam(name = "estatus", defaultValue = "") String estatus,
 			@RequestParam(name = "page", defaultValue = "0") String page,
 			@RequestParam(name = "size", defaultValue = "10") String size) {
+		
 		List<TipoParametro> params = new ArrayList<TipoParametro>(){
 			{  
 				 add(new TipoParametro(EnumAtributos.NOMBRE,nombre));
 				 add(new TipoParametro(EnumAtributos.EMAIL,email));
+				 add(new TipoParametro(EnumAtributos.ESTATUS,estatus));
 			}};			
 		return new ResponseEntity<>(service.getUsuariosPorParametros(params, page, size), HttpStatus.OK);
 	}

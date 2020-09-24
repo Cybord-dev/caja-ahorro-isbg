@@ -2,7 +2,7 @@ package com.business.cybord.util;
 
 public enum EnumAtributos {
 
-	NOMBRE("String", "nombre"), EMAIL("String", "email"), TIPOUSUARIO("String", "tipoUsuario"), FECHA("Date", "fechaCreacion");
+	NOMBRE("String", "nombre"), EMAIL("String", "email"), TIPOUSUARIO("String", "tipoUsuario"), FECHA("Date", "fechaCreacion"), ESTATUS("Boolean","activo");
 
 	private String tipo;
 	private String nameValue;

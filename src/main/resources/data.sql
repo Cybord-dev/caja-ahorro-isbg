@@ -2,9 +2,21 @@ INSERT INTO CAT_PROPIEDADES(id_atributo,tipo,nombre,valor) VALUES (1,'ESTADO','S
 INSERT INTO CAT_PROPIEDADES(id_atributo,tipo,nombre,valor) VALUES (2,'ESTADO','VALIDACION RH','1');
 INSERT INTO CAT_PROPIEDADES(id_atributo,tipo,nombre,valor) VALUES (3,'ESTADO','VALIDACION CONTABILIDAD','2');
 
-INSERT INTO USUARIOS(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(1,'pablito','tortas23@.com',1,'INTERNO');
-INSERT INTO USUARIOS(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(2,'juanito','tortas34@.com',1,'INTERNO');
-INSERT INTO USUARIOS(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(3,'culochi','test@test.com',1,'INTERNO');
+INSERT INTO USUARIOS(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(1,'pablito','tqortas23@.com',1,'INTERNO');
+INSERT INTO USUARIOS(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(2,'juanito','towrtas34@.com',1,'INTERNO');
+INSERT INTO USUARIOS(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(3,'culochi','teset@test.com',1,'INTERNO');
+INSERT INTO USUARIOS(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(4,'pablito','tortras23@.com',1,'INTERNO');
+INSERT INTO USUARIOS(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(5,'juanito','tortyas34@.com',1,'INTERNO');
+INSERT INTO USUARIOS(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(6,'culochi','tesit@test.com',1,'INTERNO');
+INSERT INTO USUARIOS(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(7,'pablito','taortas23@.com',1,'INTERNO');
+INSERT INTO USUARIOS(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(8,'juanito','tzortas34@.com',1,'INTERNO');
+INSERT INTO USUARIOS(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(9,'culochi','txest@test.com',1,'INTERNO');
+INSERT INTO USUARIOS(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(10,'pablito','tvortas23@.com',1,'INTERNO');
+INSERT INTO USUARIOS(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(11,'juanito','tnmortas34@.com',1,'INTERNO');
+INSERT INTO USUARIOS(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(12,'culochi','temst@test.com',1,'INTERNO');
+INSERT INTO USUARIOS(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(13,'pablito','tohrtas23@.com',1,'INTERNO');
+INSERT INTO USUARIOS(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(14,'juanito','torttas34@.com',1,'INTERNO');
+INSERT INTO USUARIOS(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(15,'culochi','te5st@test.com',1,'INTERNO');
 
 INSERT INTO SOLICITUDES(id_solicitud,id_usuario, tipo_solicitud, estatus, estatus_detalle, porcentaje, cantidad, fecha_ejecucion, fecha_creacion, fecha_actualizacion) 
 VALUES(1, 1, 1,1,'SOLICITUD_AHORRO', 10.10, 1500.00, '2020-09-12 00:00:00','2020-09-12 00:00:00','2020-09-12 00:00:00');
