@@ -1,9 +1,16 @@
 package com.business.cybord.models.dtos;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class AtributoSolicitudDto {
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class AtributoSolicitudDto  implements Serializable{
+
+	private static final long serialVersionUID = 8122962151434766782L;
 	private int id;
 	private int idSolicitud;
 	private String tipoAtributo;

@@ -1,5 +1,6 @@
 package com.business.cybord.models.dtos;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -7,8 +8,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SaldoPrestamoDto {
+public class SaldoPrestamoDto implements Serializable{
 
+	private static final long serialVersionUID = -2216085691198955917L;
 	private int id;
 	private int idPrestamo;
 	private String tipo;

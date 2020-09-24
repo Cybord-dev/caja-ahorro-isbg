@@ -13,6 +13,7 @@ import com.business.cybord.mappers.SolicitudMapper;
 import com.business.cybord.models.dtos.AtributoSolicitudDto;
 import com.business.cybord.models.dtos.SolicitudDto;
 import com.business.cybord.models.entities.Solicitud;
+import com.business.cybord.models.enums.EventFactoryTypeEnum;
 import com.business.cybord.models.error.IsbgServiceException;
 import com.business.cybord.repositories.AtributoSolicitudRepository;
 import com.business.cybord.repositories.SolicitudRepository;
@@ -61,6 +62,7 @@ public class SolicitudService {
 		repositoryUsuario.findById(idUsuario).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 				String.format("el usuario id= %d no existe", idUsuario)));
 		executeRules(solicitud);
+		solicitud.setStatus(EventFactoryTypeEnum.SOLICITUD_CREADA.getState());
 		Solicitud nueva = repositorySolicitud.save(mapper.getEntityFromSolicitudDto(solicitud));
 		nueva.setAtributos(new ArrayList<>());
 		for (AtributoSolicitudDto att : solicitud.getAtributos()) {

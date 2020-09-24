@@ -25,7 +25,7 @@ public class SolicitudAhorro implements ISolicitud {
 	private Set<Transition> transitions;
 
 	public SolicitudAhorro() {
-		State creada = new State(EventFactoryTypeEnum.SOLIICITUD_CREADA.getState());
+		State creada = new State(EventFactoryTypeEnum.SOLICITUD_CREADA.getState());
 		State validaRh = new State(EventFactoryTypeEnum.VALIDA_RH.getState());
 		State validaConta = new State(EventFactoryTypeEnum.VALIDA_RH.getState());
 		states = new HashSet<>();

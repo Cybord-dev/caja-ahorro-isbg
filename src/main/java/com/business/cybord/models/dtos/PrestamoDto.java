@@ -1,5 +1,6 @@
 package com.business.cybord.models.dtos;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.List;
@@ -10,8 +11,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PrestamoDto {
+public class PrestamoDto implements Serializable{
 
+	private static final long serialVersionUID = -4411000742264499694L;
 	private int id;
 	private int idDeudor;
 	private Boolean estatus;
