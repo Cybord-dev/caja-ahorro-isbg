@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.cybord.models.dtos.RecursoDto;
-import com.business.cybord.repositories.RecursoRepositoryJDBC;
+import com.business.cybord.repositories.dao.RecursoRepositoryJDBC;
 @Service
 public class RecursoService {
 	

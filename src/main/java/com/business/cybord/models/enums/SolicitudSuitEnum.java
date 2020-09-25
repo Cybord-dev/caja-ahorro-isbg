@@ -5,9 +5,9 @@ import java.util.Optional;
 public enum SolicitudSuitEnum {
 
 	SOLICITUD_AHORRO_SUITE("SolicitudAhorro"),
-	CANCELACION_AHORRO_SUITE("CancelacionAhorroSuite"),
-	MODIFICACION_AHORRO_SUITE("ModificacionAhorroSuite"),
-	RETIRO_PARCIAL_AHORRO_SUITE("RetiroParcialAhorroSuite");
+	CANCELACION_AHORRO_SUITE("CancelacionAhorro"),
+	MODIFICACION_AHORRO_SUITE("ModificacionAhorro"),
+	RETIRO_PARCIAL_AHORRO_SUITE("RetiroParcialAhorro");
 
 	private String suite;
 

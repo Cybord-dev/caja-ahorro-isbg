@@ -1,4 +1,4 @@
-package com.business.cybord.extractor;
+package com.business.cybord.utils.extractor;
 
 import java.nio.charset.StandardCharsets;
 import java.sql.ResultSet;
