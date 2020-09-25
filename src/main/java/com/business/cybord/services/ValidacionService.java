@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.business.cybord.mappers.SolicitudMapper;
 import com.business.cybord.models.dtos.SolicitudDto;
 import com.business.cybord.models.dtos.ValidacionDto;
+import com.business.cybord.models.entities.Solicitud;
 import com.business.cybord.models.entities.Validacion;
 import com.business.cybord.models.enums.EventFactoryTypeEnum;
 import com.business.cybord.models.enums.SolicitudFactoryEnum;
@@ -50,14 +51,17 @@ public class ValidacionService {
 
 	public ValidacionDto crearValidacion(int idUsuario, int idSolicitud, ValidacionDto validacion)
 			throws IsbgServiceException {
-		SolicitudDto solicitudDto = mapper.getDtoFromSolicitudEntity(repositorySol
-				.findByIdUsuarioAndId(idUsuario, idSolicitud)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-						String.format("la solicitud id= %d del usuario =%d no existe", idSolicitud, idUsuario))));
+		Solicitud sol=repositorySol
+		.findByIdUsuarioAndId(idUsuario, idSolicitud).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+				String.format("la solicitud id= %d del usuario =%d no existe", idSolicitud, idUsuario)));
+		SolicitudDto solicitudDto = mapper.getDtoFromSolicitudEntity(sol);
 		if (validaEstadoActual(solicitudDto, validacion)) {
 			validacion.setNumeroValidacion(solicitudDto.getValidaciones().size() + 1);
-			Validacion nueva = repositoryValidacion.save(mapper.getEntityFromValidacionesDto(validacion));
-			return mapper.getDtoFromValidacionesEntity(nueva);
+			Validacion val=mapper.getEntityFromValidacionesDto(validacion);
+			val.setSolicitud(sol);
+			
+			
+			return mapper.getDtoFromValidacionesEntity(repositoryValidacion.save(val));
 		} else {
 			throw new IsbgServiceException(
 					String.format("El estado %s no es el siguiente en el flujo %s", validacion.getArea(),
