@@ -135,7 +135,7 @@ public class Usuario {
 	public String toString() {
 		return "Usuario [id=" + id + ", activo=" + activo + ", nombre=" + nombre + ", email=" + email + ", tipoUsuario="
 				+ tipoUsuario + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
-				+ ", datosUsuario=" + datosUsuario + ", roles=" + roles + ", validaciones=" + "]";
+				+ ", datosUsuario=" + datosUsuario + ", roles=" + roles + "]";
 	}
 	
 	public static void main(String[] args) {

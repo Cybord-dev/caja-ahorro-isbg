@@ -57,6 +57,10 @@ public class UsuarioService {
 						predicates.add(
 								criteriaBuilder.and(criteriaBuilder.like(root.get(i), "%" + parameters.get(i) + "%")));
 				}
+				
+				 if(parameters.get("estatus")!=null) {
+					 predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("activo"),Integer.parseInt(parameters.get("estatus")))));
+				 }
 				return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
 		};
