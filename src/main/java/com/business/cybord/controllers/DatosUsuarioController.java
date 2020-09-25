@@ -27,7 +27,7 @@ public class DatosUsuarioController {
 		return new ResponseEntity<>(service.insertarNuevoDatoUsuario(datousuarioDto,idUsuario), HttpStatus.CREATED);
 	}
 
-	@PutMapping("/datos/{id}")
+	@PutMapping("/usuarios/{id}/datos")
 	public ResponseEntity<DatosUsuarioDto> actualizarDatoUsuario(@RequestBody @Valid DatosUsuarioDto datousuarioDto,
 			@PathVariable Integer id) {
 		return new ResponseEntity<>(service.actualizarDatoUsuario(datousuarioDto,id), HttpStatus.OK);
