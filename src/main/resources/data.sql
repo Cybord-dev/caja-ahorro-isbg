@@ -27,16 +27,22 @@ INSERT INTO DATOS_USER(id_datos_user,id_usuario,tipo_dato,dato,relevancia,fecha_
 INSERT INTO DATOS_USER(id_datos_user,id_usuario,tipo_dato,dato,relevancia,fecha_creacion,fecha_actualizacion) VALUES (4,3,'NO_EMPLEADO','00345678',1,'2020-09-12 00:00:00','2020-09-12 00:00:00');
 INSERT INTO DATOS_USER(id_datos_user,id_usuario,tipo_dato,dato,relevancia,fecha_creacion,fecha_actualizacion) VALUES (5,3,'OFICINA','Oficina 4',1,'2020-09-12 00:00:00','2020-09-12 00:00:00');
 
-INSERT INTO CAT_ROLES(id_role,nombre) VALUES (1,'ADMINISTRADOR');
-INSERT INTO CAT_ROLES(id_role,nombre) VALUES (2,'SOPORTE');
+INSERT INTO CAT_ROLES(id_role,nombre) VALUES (1,'USUARIO');
+INSERT INTO CAT_ROLES(id_role,nombre) VALUES (2,'RECURSOS_HUMANOS');
 INSERT INTO CAT_ROLES(id_role,nombre) VALUES (3,'TESORERIA');
 INSERT INTO CAT_ROLES(id_role,nombre) VALUES (4,'CONTABILIDAD');
-INSERT INTO CAT_ROLES(id_role,nombre) VALUES (5,'RECURSOS-HUMANOS');
-INSERT INTO CAT_ROLES(id_role,nombre) VALUES (6,'USUARIO');
+INSERT INTO CAT_ROLES(id_role,nombre) VALUES (5,'GERENCIA');
+INSERT INTO CAT_ROLES(id_role,nombre) VALUES (6,'ADMINISTRACION');
 
 INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (1,1,1);
-INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (2,3,2);
-INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (3,3,6);
+INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (2,1,2);
+INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (3,1,3);
+INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (4,2,1);
+INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (5,2,2);
+INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (6,2,3);
+INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (7,2,4);
+INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (8,3,1);
+INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (9,3,2);
 
 INSERT INTO SALDO_AHORRO(id_ahorro,id_usuario,tipo,monto,validado,fecha_creacion,fecha_actualizacion) VALUES (1,1,'tipo',22.54,1,'2020-09-12 00:00:00','2020-09-12 00:00:00');
 INSERT INTO SALDO_AHORRO(id_ahorro,id_usuario,tipo,monto,validado,fecha_creacion,fecha_actualizacion) VALUES (2,1,'tipo',93.23,1,'2020-09-12 00:00:00','2020-09-12 00:00:00');
