@@ -26,7 +26,7 @@ public class UsuariosMapperDecorator implements UsuariosMapper {
 			List<String> roles = entity.getRoles().stream().map(a -> a.getRolname().getNombre())
 					.collect(Collectors.toList());
 			dto.setRoles(roles);
-    } 
+		}
 		return dto;
 	}
 
