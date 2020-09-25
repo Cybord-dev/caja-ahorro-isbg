@@ -89,14 +89,13 @@ public class UsuarioService {
 		}
 	}
 
-	public UsuariosDto actualizarUsuario(UsuariosDto usuario) {
-		Usuario entity = repository.findByEmail(usuario.getEmail())
+	public UsuariosDto actualizarUsuario(UsuariosDto usuario,int id) {
+		Usuario entity = repository.findById(id)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 						String.format("El usuario %s no existe.", usuario.getEmail())));
 		entity.setActivo(usuario.getActivo());
 		entity.setNombre(usuario.getNombre());
 		entity.setTipoUsuario(usuario.getTipoUsuario());
-		entity.setNombre(usuario.getNombre());
 		return mapper.getDtoFromUserEntity(repository.save(entity));
 	}
 

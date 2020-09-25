@@ -20,6 +20,7 @@ import com.business.cybord.models.dtos.AtributoSolicitudDto;
 import com.business.cybord.models.dtos.SolicitudDto;
 import com.business.cybord.models.dtos.composed.UserSolicitudDto;
 import com.business.cybord.models.entities.Solicitud;
+import com.business.cybord.models.entities.Usuario;
 import com.business.cybord.models.enums.SolicitudFactoryEnum;
 import com.business.cybord.models.enums.SolicitudFactoryTypeEnum;
 import com.business.cybord.models.error.IsbgServiceException;
@@ -30,7 +31,6 @@ import com.business.cybord.repositories.dao.SolicitudDao;
 import com.business.cybord.rules.suites.ISuite;
 import com.business.cybord.rules.utils.SuiteManager;
 import com.business.cybord.states.solicitudes.ISolicitud;
-
 
 @Service
 public class SolicitudService {
@@ -51,8 +51,8 @@ public class SolicitudService {
 	private SolicitudDao solicitudDao;
 
 	public Page<UserSolicitudDto> getAllSolicitudes(Map<String, String> parameters) {
-		int page = (parameters.get("page")==null)?0:Integer.valueOf(parameters.get("page"));
-		int size = (parameters.get("size")==null)?10:Integer.valueOf(parameters.get("size"));
+		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
+		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
 		return solicitudDao.findAll(PageRequest.of(page, size, Sort.by("fechaActualizacion")));
 	}
 
@@ -71,8 +71,9 @@ public class SolicitudService {
 	}
 
 	public SolicitudDto crearSolicitud(int idUsuario, SolicitudDto solicitudDto) throws IsbgServiceException {
-		repositoryUsuario.findById(idUsuario).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-				String.format("el usuario id= %d no existe", idUsuario)));
+		Usuario usuario = repositoryUsuario.findById(idUsuario)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+						String.format("el usuario id= %d no existe", idUsuario)));
 		executeRules(solicitudDto);
 		SolicitudFactoryEnum sfte = SolicitudFactoryTypeEnum.findByReferenceName(solicitudDto.getTipo())
 				.orElseThrow(() -> new IsbgServiceException(
@@ -81,8 +82,11 @@ public class SolicitudService {
 				.getEnumValue();
 		ISolicitud solicitud = sfte.getInstance();
 		solicitudDto.setStatus(solicitud.nextState().getName());
-		Solicitud nueva = repositorySolicitud.save(mapper.getEntityFromSolicitudDto(solicitudDto));
+		Solicitud nueva = mapper.getEntityFromSolicitudDto(solicitudDto);
+		nueva.setUsuario(usuario);
+		nueva = repositorySolicitud.save(nueva);
 		nueva.setAtributos(new ArrayList<>());
+
 		for (AtributoSolicitudDto att : solicitudDto.getAtributos()) {
 			att.setIdSolicitud(nueva.getId());
 			nueva.getAtributos().add(atributoSolicitudRepository.save(mapper.getEntityFromAtributoSolicitudDto(att)));
@@ -123,6 +127,5 @@ public class SolicitudService {
 					String.format("la solicitud id=%d no existe", idSolicitud));
 		}
 	}
-	
 
 }
