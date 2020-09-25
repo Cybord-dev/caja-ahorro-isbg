@@ -21,7 +21,7 @@ public class UsuariosDto implements Serializable {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private List<DatosUsuarioDto> datosUsuario;
-	private List<RolDto> roles;
+	private List<String> roles;
 
 	public int getId() {
 		return id;
@@ -87,11 +87,11 @@ public class UsuariosDto implements Serializable {
 		this.datosUsuario = datosUsuario;
 	}
 
-	public List<RolDto> getRoles() {
+	public List<String> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(List<RolDto> roles) {
+	public void setRoles(List<String> roles) {
 		this.roles = roles;
 	}
 

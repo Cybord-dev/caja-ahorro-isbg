@@ -10,13 +10,13 @@ import org.springframework.stereotype.Repository;
 
 import com.business.cybord.models.entities.Usuario;
 
-
 @Repository
-public interface UsuariosRepository  extends JpaRepository<Usuario, Integer>,JpaSpecificationExecutor<Usuario> {
-	
+public interface UsuariosRepository extends JpaRepository<Usuario, Integer>, JpaSpecificationExecutor<Usuario> {
+
+	Optional<Usuario> findById(int id);
 
 	Optional<Usuario> findByEmail(String email);
 
-	public Page<Usuario> findAll(Pageable pageable);
+	Page<Usuario> findAll(Pageable pageable);
 
 }

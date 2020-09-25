@@ -1,18 +1,16 @@
 package com.business.cybord.services;
 
 import java.util.ArrayList;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import com.healthmarketscience.sqlbuilder.dbspec.Column;
 import org.jeasy.rules.api.Facts;
 import org.jeasy.rules.api.RulesEngine;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -32,10 +30,6 @@ import com.business.cybord.repositories.dao.SolicitudDao;
 import com.business.cybord.rules.suites.ISuite;
 import com.business.cybord.rules.utils.SuiteManager;
 import com.business.cybord.states.solicitudes.ISolicitud;
-import com.healthmarketscience.sqlbuilder.Condition;
-import com.healthmarketscience.sqlbuilder.SelectQuery;
-import com.healthmarketscience.sqlbuilder.dbspec.Join;
-import com.healthmarketscience.sqlbuilder.dbspec.Table;
 
 
 @Service

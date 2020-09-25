@@ -20,4 +20,7 @@ public interface RolRepository extends JpaRepository<Rol, Integer> {
 	
 	@Query("select e from Rol e where e.usuario.id = :idUsuario")
 	public List<Rol> findByUserId(@Param("idUsuario") Integer idUsuario);
+	
+	@Query("select e from Rol e where e.rolname.nombre = :name and e.usuario.id = :idUsuario")
+	public Optional<Rol> findByIdRolNameAndIdUsuario( @Param("name") String name, @Param("idUsuario") Integer idUsuario); 
 }

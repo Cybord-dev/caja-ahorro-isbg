@@ -4,6 +4,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -19,6 +21,7 @@ public class Rol {
 
 	@Id
 	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
 	@ManyToOne
@@ -26,7 +29,7 @@ public class Rol {
 	private Usuario usuario;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "id_rol", referencedColumnName = "id_role", insertable = false, updatable = false)
+	@JoinColumn(name = "id_rol")
 	private RolCat rolname;
 
 	public int getId() {
