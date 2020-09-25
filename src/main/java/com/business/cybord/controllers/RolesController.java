@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.business.cybord.models.dtos.RolCatDto;
 import com.business.cybord.models.dtos.RolDto;
 import com.business.cybord.services.RolService;
 
@@ -32,8 +33,8 @@ public class RolesController {
 
 	@PostMapping("/usuarios/{idUsuario}/roles")
 	public ResponseEntity<RolDto> insertNuevoRolController(@PathVariable Integer idUsuario,
-			@RequestBody @Valid RolDto rolDto) {
-		return new ResponseEntity<>(service.insertRol(idUsuario, rolDto), HttpStatus.CREATED);
+			@RequestBody @Valid RolCatDto rolCatDto) {
+		return new ResponseEntity<>(service.insertRol(idUsuario, rolCatDto), HttpStatus.CREATED);
 	}
 
 	@GetMapping("/usuarios/{idUsuario}/roles")
@@ -41,9 +42,9 @@ public class RolesController {
 		return new ResponseEntity<>(service.getRolesPorUsuarioId(idUsuario), HttpStatus.OK);
 	}
 
-	@DeleteMapping("/roles/{id}")
-	public ResponseEntity<Void> deleteUserRolesController(@PathVariable Integer id) {
-		service.borrarRolePorId(id);
+	@DeleteMapping("/usuarios/{idUsuario}/roles/{nombre}")
+	public ResponseEntity<Void> deleteUserRolesController(@PathVariable Integer idUsuario,@PathVariable String nombre) {
+		service.borrarRolePorNombre(idUsuario,nombre);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 

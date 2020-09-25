@@ -27,12 +27,12 @@ INSERT INTO DATOS_USER(id_datos_user,id_usuario,tipo_dato,dato,relevancia,fecha_
 INSERT INTO DATOS_USER(id_datos_user,id_usuario,tipo_dato,dato,relevancia,fecha_creacion,fecha_actualizacion) VALUES (4,3,'NO_EMPLEADO','00345678',1,'2020-09-12 00:00:00','2020-09-12 00:00:00');
 INSERT INTO DATOS_USER(id_datos_user,id_usuario,tipo_dato,dato,relevancia,fecha_creacion,fecha_actualizacion) VALUES (5,3,'OFICINA','Oficina 4',1,'2020-09-12 00:00:00','2020-09-12 00:00:00');
 
-INSERT INTO CAT_ROLES(id_role,nombre) VALUES (1,'USUARIO');
-INSERT INTO CAT_ROLES(id_role,nombre) VALUES (2,'RECURSOS_HUMANOS');
-INSERT INTO CAT_ROLES(id_role,nombre) VALUES (3,'TESORERIA');
-INSERT INTO CAT_ROLES(id_role,nombre) VALUES (4,'CONTABILIDAD');
-INSERT INTO CAT_ROLES(id_role,nombre) VALUES (5,'GERENCIA');
-INSERT INTO CAT_ROLES(id_role,nombre) VALUES (6,'ADMINISTRACION');
+INSERT INTO CAT_ROLES(id_rol,nombre) VALUES (1,'USUARIO');
+INSERT INTO CAT_ROLES(id_rol,nombre) VALUES (2,'RECURSOS_HUMANOS');
+INSERT INTO CAT_ROLES(id_rol,nombre) VALUES (3,'TESORERIA');
+INSERT INTO CAT_ROLES(id_rol,nombre) VALUES (4,'CONTABILIDAD');
+INSERT INTO CAT_ROLES(id_rol,nombre) VALUES (5,'GERENCIA');
+INSERT INTO CAT_ROLES(id_rol,nombre) VALUES (6,'ADMINISTRACION');
 
 INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (1,1,1);
 INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (2,1,2);

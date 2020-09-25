@@ -2,17 +2,16 @@ package com.business.cybord.models.dtos;
 
 import java.io.Serializable;
 
-import com.business.cybord.models.entities.RolCat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RolDto implements Serializable{
+public class RolDto implements Serializable {
 
 	private static final long serialVersionUID = -8142648497651338494L;
 	private int id;
-	private RolCat rolname;
+	private RolCatDto rolname;
 
 	public int getId() {
 		return id;
@@ -22,12 +21,11 @@ public class RolDto implements Serializable{
 		this.id = id;
 	}
 
-
-	public RolCat getRolname() {
+	public RolCatDto getRolname() {
 		return rolname;
 	}
 
-	public void setRolname(RolCat rolname) {
+	public void setRolname(RolCatDto rolname) {
 		this.rolname = rolname;
 	}
 
