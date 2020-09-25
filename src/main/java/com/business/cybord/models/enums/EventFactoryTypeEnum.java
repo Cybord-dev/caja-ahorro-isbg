@@ -1,5 +1,7 @@
 package com.business.cybord.models.enums;
 
+import java.util.Optional;
+
 public enum EventFactoryTypeEnum {
 
 	SOLICITUD_CREADA(EventFactoryEnum.SOLICIITUD_CREADA, "System","Solicitud"),
@@ -32,12 +34,12 @@ public enum EventFactoryTypeEnum {
 	}
 
 
-	public static EventFactoryTypeEnum findByReferenceName(String referenceName) {
+	public static Optional<EventFactoryTypeEnum> findByReferenceName(String referenceName) {
 		for (EventFactoryTypeEnum v : values()) {
 			if (v.getReferenceName().equals(referenceName)) {
-				return v;
+				return Optional.of(v);
 			}
 		}
-		return null;
+		return Optional.empty();
 	}
 }

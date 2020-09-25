@@ -1,4 +1,4 @@
-package com.business.cybord.repositories;
+package com.business.cybord.repositories.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,8 +13,8 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.support.SqlLobValue;
 import org.springframework.stereotype.Repository;
 
-import com.business.cybord.extractor.RecursoRsExtractor;
 import com.business.cybord.models.dtos.RecursoDto;
+import com.business.cybord.utils.extractor.RecursoRsExtractor;
 
 
 @Repository

@@ -36,9 +36,6 @@ public class Solicitud {
 	@Column(name = "id_solicitud")
 	private int id;
 
-	@Column(name = "id_usuario")
-	private Integer idUsuario;
-
 	@NotNull
 	@Column(name = "tipo_solicitud")
 	private String tipo;
@@ -164,17 +161,10 @@ public class Solicitud {
 		this.validaciones = validaciones;
 	}
 
-	public Integer getIdUsuario() {
-		return idUsuario;
-	}
-
-	public void setIdUsuario(Integer idUsuario) {
-		this.idUsuario = idUsuario;
-	}
 
 	@Override
 	public String toString() {
-		return "Solicitud [id=" + id + ", idUsuario=" + idUsuario + ", tipo=" + tipo + ", status=" + status
+		return "Solicitud [id=" + id  + ", tipo=" + tipo + ", status=" + status
 				+ ", statusDetalle=" + statusDetalle + ", fechaEjecucion=" + fechaEjecucion + ", fechaCreacion="
 				+ fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + ", usuario=" + usuario + ", atributos="
 				+ atributos + ", validaciones=" + validaciones + "]";

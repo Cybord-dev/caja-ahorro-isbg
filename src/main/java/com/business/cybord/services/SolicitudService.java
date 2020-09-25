@@ -1,9 +1,17 @@
 package com.business.cybord.services;
 
 import java.util.ArrayList;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+import com.healthmarketscience.sqlbuilder.dbspec.Column;
+import org.jeasy.rules.api.Facts;
+import org.jeasy.rules.api.RulesEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -12,6 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.business.cybord.mappers.SolicitudMapper;
 import com.business.cybord.models.dtos.AtributoSolicitudDto;
 import com.business.cybord.models.dtos.SolicitudDto;
+import com.business.cybord.models.dtos.composed.UserSolicitudDto;
 import com.business.cybord.models.entities.Solicitud;
 import com.business.cybord.models.enums.SolicitudFactoryEnum;
 import com.business.cybord.models.enums.SolicitudFactoryTypeEnum;
@@ -19,12 +28,15 @@ import com.business.cybord.models.error.IsbgServiceException;
 import com.business.cybord.repositories.AtributoSolicitudRepository;
 import com.business.cybord.repositories.SolicitudRepository;
 import com.business.cybord.repositories.UsuariosRepository;
+import com.business.cybord.repositories.dao.SolicitudDao;
 import com.business.cybord.rules.suites.ISuite;
 import com.business.cybord.rules.utils.SuiteManager;
 import com.business.cybord.states.solicitudes.ISolicitud;
+import com.healthmarketscience.sqlbuilder.Condition;
+import com.healthmarketscience.sqlbuilder.SelectQuery;
+import com.healthmarketscience.sqlbuilder.dbspec.Join;
+import com.healthmarketscience.sqlbuilder.dbspec.Table;
 
-import org.jeasy.rules.api.Facts;
-import org.jeasy.rules.api.RulesEngine;
 
 @Service
 public class SolicitudService {
@@ -40,14 +52,18 @@ public class SolicitudService {
 	@Autowired
 	private SuiteManager suiteManager;
 	@Autowired
-	protected RulesEngine rulesEngine;
+	private RulesEngine rulesEngine;
+	@Autowired
+	private SolicitudDao solicitudDao;
 
-	public List<SolicitudDto> getAllSolicitudes() {
-		return mapper.solicitudDtoToSolicitud(repositorySolicitud.findAll());
+	public Page<UserSolicitudDto> getAllSolicitudes(Map<String, String> parameters) {
+		int page = (parameters.get("page")==null)?0:Integer.valueOf(parameters.get("page"));
+		int size = (parameters.get("size")==null)?10:Integer.valueOf(parameters.get("size"));
+		return solicitudDao.findAll(PageRequest.of(page, size, Sort.by("fechaActualizacion")));
 	}
 
 	public List<SolicitudDto> getSolicitudByIdUsuario(int idUsuario) {
-		return mapper.solicitudDtoToSolicitud(repositorySolicitud.findByIdUsuario(idUsuario));
+		return mapper.solicitudDtoToSolicitud(repositorySolicitud.findUsuario(idUsuario));
 	}
 
 	public SolicitudDto getSolicitudByUsuarioAndId(int idUsuario, int idSolicitud) {
@@ -65,6 +81,9 @@ public class SolicitudService {
 				String.format("el usuario id= %d no existe", idUsuario)));
 		executeRules(solicitudDto);
 		SolicitudFactoryEnum sfte = SolicitudFactoryTypeEnum.findByReferenceName(solicitudDto.getTipo())
+				.orElseThrow(() -> new IsbgServiceException(
+						String.format("Tipo de solicitud %s no existe", solicitudDto.getTipo()),
+						"No existe el tipo de soliciitud", HttpStatus.CONFLICT.value()))
 				.getEnumValue();
 		ISolicitud solicitud = sfte.getInstance();
 		solicitudDto.setStatus(solicitud.nextState().getName());
@@ -110,5 +129,6 @@ public class SolicitudService {
 					String.format("la solicitud id=%d no existe", idSolicitud));
 		}
 	}
+	
 
 }

@@ -1,10 +1,12 @@
 package com.business.cybord.models.enums;
 
+import java.util.Optional;
+
 public enum SolicitudFactoryTypeEnum {
 
-	SOLICITUD_AHORRO(SolicitudFactoryEnum.SOLICITUD_AHORRO, "SOLICITUD_AHORRO", "SolicitudCreadaEvent",
+	SOLICITUD_AHORRO(SolicitudFactoryEnum.SOLICITUD_AHORRO, "SolicitudAhorro", "SolicitudCreadaEvent",
 			"ValidaContaEvent"),
-	SOLICITUD_CANCELACION_AHORRO(SolicitudFactoryEnum.SOLICITUD_CANCELACION_AHORRO, "SOLICITUD_CANCELACION_AHORRO",
+	SOLICITUD_CANCELACION_AHORRO(SolicitudFactoryEnum.SOLICITUD_CANCELACION_AHORRO, "CancelacionAhorro",
 			"SolicitudCreadaEvent", "ValidaContaEvent");
 
 	private SolicitudFactoryEnum enumValue;
@@ -35,12 +37,12 @@ public enum SolicitudFactoryTypeEnum {
 		return referenceName;
 	}
 
-	public static SolicitudFactoryTypeEnum findByReferenceName(String referenceName) {
+	public static Optional<SolicitudFactoryTypeEnum> findByReferenceName(String referenceName) {
 		for (SolicitudFactoryTypeEnum v : values()) {
 			if (v.getReferenceName().equals(referenceName)) {
-				return v;
+				return Optional.of(v);
 			}
 		}
-		return null;
+		return Optional.empty();
 	}
 }

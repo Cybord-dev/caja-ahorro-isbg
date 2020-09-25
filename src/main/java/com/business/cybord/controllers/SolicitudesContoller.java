@@ -1,10 +1,12 @@
 package com.business.cybord.controllers;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,9 +16,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.business.cybord.models.dtos.SolicitudDto;
+import com.business.cybord.models.dtos.composed.UserSolicitudDto;
 import com.business.cybord.models.error.IsbgServiceException;
 import com.business.cybord.services.SolicitudService;
 
@@ -27,8 +31,8 @@ public class SolicitudesContoller {
 	private SolicitudService service;
 
 	@GetMapping("/solicitudes")
-	public ResponseEntity<List<SolicitudDto>> getSolicitudByFiltros() {
-		return new ResponseEntity<>(service.getAllSolicitudes(), HttpStatus.OK);
+	public ResponseEntity<Page<UserSolicitudDto>> getSolicitudByFiltros(@RequestParam Map<String, String> parameters) {
+		return new ResponseEntity<>(service.getAllSolicitudes(parameters), HttpStatus.OK);
 	}
 
 	@GetMapping("/usuarios/{idUsuario}/solicitudes")

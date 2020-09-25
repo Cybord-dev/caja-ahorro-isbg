@@ -55,7 +55,7 @@ public class ValidacionService {
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 						String.format("la solicitud id= %d del usuario =%d no existe", idSolicitud, idUsuario))));
 		if (validaEstadoActual(solicitudDto, validacion)) {
-			validacion.setNumeroValidacion(solicitudDto.getValidaciones().size()+1);
+			validacion.setNumeroValidacion(solicitudDto.getValidaciones().size() + 1);
 			Validacion nueva = repositoryValidacion.save(mapper.getEntityFromValidacionesDto(validacion));
 			return mapper.getDtoFromValidacionesEntity(nueva);
 		} else {
@@ -70,18 +70,28 @@ public class ValidacionService {
 	public boolean validaEstadoActual(SolicitudDto solicitudDto, ValidacionDto validacion) throws IsbgServiceException {
 		try {
 			SolicitudFactoryEnum sfte = SolicitudFactoryTypeEnum.findByReferenceName(solicitudDto.getTipo())
+					.orElseThrow(() -> new IsbgServiceException(
+							String.format("Tipo de solicitud %s no existe", solicitudDto.getTipo()),
+							"No existe el tipo de soliciitud", HttpStatus.CONFLICT.value()))
 					.getEnumValue();
-			State newState = new State(EventFactoryTypeEnum.findByReferenceName(validacion.getArea()).getState());
+			State newState = new State(EventFactoryTypeEnum.findByReferenceName(validacion.getArea())
+					.orElseThrow(
+							() -> new IsbgServiceException(String.format("Evento %s no existe", validacion.getArea()),
+									"No existe el evento", HttpStatus.CONFLICT.value()))
+					.getState());
 			ISolicitud solicitud = sfte.getInstance();
 			solicitud.define(solicitudDto.getStatus());
 			solicitudDto.getValidaciones().sort((d1, d2) -> d1.getFechaCreacion().compareTo(d2.getFechaCreacion()));
 			for (ValidacionDto validacionDto : solicitudDto.getValidaciones()) {
-				AbstractEvent event = EventFactoryTypeEnum.findByReferenceName(validacionDto.getArea()).getEnumValue()
-						.getInstance(solicitudDto);
+				AbstractEvent event = EventFactoryTypeEnum.findByReferenceName(validacionDto.getArea())
+						.orElseThrow(() -> new IsbgServiceException(
+								String.format("Evento %s no existe", validacion.getArea()), "No existe el evento",
+								HttpStatus.CONFLICT.value()))
+						.getEnumValue().getInstance(solicitudDto);
 				solicitud.fire(event);
 			}
 			if (newState.equals(solicitud.nextState())) {
-					return true;
+				return true;
 			}
 			return false;
 		} catch (FiniteStateMachineException e) {
