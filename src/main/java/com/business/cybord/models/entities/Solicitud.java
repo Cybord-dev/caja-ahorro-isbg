@@ -63,7 +63,7 @@ public class Solicitud {
 	private Date fechaActualizacion;
 
 	@ManyToOne(optional = false)
-	@JoinColumn(name = "id_usuario", insertable = false, updatable = false)
+	@JoinColumn(name = "id_usuario")
 	@JsonIgnore
 	private Usuario usuario;
 

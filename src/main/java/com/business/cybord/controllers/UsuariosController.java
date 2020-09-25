@@ -42,12 +42,14 @@ public class UsuariosController {
 		return new ResponseEntity<>(service.insertarNuevoUsuario(usuarioDto), HttpStatus.CREATED);
 	}
 
-	@PutMapping
-	public ResponseEntity<UsuariosDto> actualizarUsuario(@RequestBody @Valid UsuariosDto userDto) {
-		return new ResponseEntity<>(service.actualizarUsuario(userDto), HttpStatus.OK);
+	@PutMapping("/{id}")
+	public ResponseEntity<UsuariosDto> actualizarUsuario(@RequestBody @Valid UsuariosDto userDto,
+			@PathVariable Integer id) {
+		return new ResponseEntity<>(service.actualizarUsuario(userDto,id), HttpStatus.OK);
 	}
 
-	//TODO considerar borra este endpoint pues seria mejor solo desactivar al usuario 
+	// TODO considerar borra este endpoint pues seria mejor solo desactivar al
+	// usuario
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> borrarUsuario(@PathVariable Integer id) {
 		service.borrarUsuario(id);

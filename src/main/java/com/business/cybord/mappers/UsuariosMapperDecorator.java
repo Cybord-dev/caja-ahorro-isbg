@@ -22,9 +22,11 @@ public class UsuariosMapperDecorator implements UsuariosMapper {
 	@Override
 	public UsuariosDto getDtoFromUserEntity(Usuario entity) {
 		UsuariosDto dto = delegate.getDtoFromUserEntity(entity);
-		List<String> roles = entity.getRoles().stream().map(a -> a.getRolname().getNombre())
-				.collect(Collectors.toList());
-		dto.setRoles(roles);
+		if (entity.getRoles() != null) {
+			List<String> roles = entity.getRoles().stream().map(a -> a.getRolname().getNombre())
+					.collect(Collectors.toList());
+			dto.setRoles(roles);
+		}
 		return dto;
 	}
 
