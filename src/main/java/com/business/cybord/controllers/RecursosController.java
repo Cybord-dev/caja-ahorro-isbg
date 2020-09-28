@@ -17,7 +17,7 @@ import com.business.cybord.models.dtos.RecursoDto;
 import com.business.cybord.services.RecursoService;
 
 @RestController
-@RequestMapping("/recursos")
+@RequestMapping("/api/v1/recursos")
 public class RecursosController {
 
 	@Autowired

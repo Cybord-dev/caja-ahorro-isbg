@@ -25,7 +25,7 @@ import com.business.cybord.models.error.IsbgServiceException;
 import com.business.cybord.services.SolicitudService;
 
 @RestController
-@RequestMapping
+@RequestMapping("/api/v1")
 public class SolicitudesContoller {
 	@Autowired
 	private SolicitudService service;

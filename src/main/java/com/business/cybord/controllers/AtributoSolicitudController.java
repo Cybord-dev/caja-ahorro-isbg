@@ -20,7 +20,7 @@ import com.business.cybord.models.dtos.AtributoSolicitudDto;
 import com.business.cybord.services.AtributoSolicitudService;
 
 @RestController
-@RequestMapping
+@RequestMapping("/api/v1")
 public class AtributoSolicitudController {
 	@Autowired
 	private AtributoSolicitudService service;

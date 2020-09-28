@@ -98,6 +98,19 @@
 			<artifactId>sqlbuilder</artifactId>
 			<version>3.0.1</version>
 		</dependency>
+		<!-- google oauth -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-oauth2-client</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-oauth2-jose</artifactId>
+		</dependency>
 	</dependencies>
 
 
@@ -107,7 +120,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<mainClass>com.business.cybord.services.ServicesApplication</mainClass>
+					<mainClass>com.business.cybord.ServicesApplication</mainClass>
 				</configuration>
 			</plugin>
 			<plugin>

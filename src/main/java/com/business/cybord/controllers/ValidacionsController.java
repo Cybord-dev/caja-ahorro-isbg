@@ -21,7 +21,7 @@ import com.business.cybord.models.error.IsbgServiceException;
 import com.business.cybord.services.ValidacionService;
 
 @RestController
-@RequestMapping
+@RequestMapping("/api/v1")
 public class ValidacionsController {
 	@Autowired
 	private ValidacionService service;
