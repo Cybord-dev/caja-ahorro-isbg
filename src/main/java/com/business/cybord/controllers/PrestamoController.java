@@ -18,7 +18,7 @@ import com.business.cybord.models.dtos.PrestamoDto;
 import com.business.cybord.services.PrestamoService;
 
 @RestController
-@RequestMapping("/usuarios")
+@RequestMapping("/api/v1/usuarios")
 public class PrestamoController {
 
 	@Autowired

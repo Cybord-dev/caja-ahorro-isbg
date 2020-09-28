@@ -1,0 +1,31 @@
+server:
+  port: 8080
+spring:
+  profiles:
+    active: "dev"
+  datasource:
+    url: jdbc:h2:~/test;DB_CLOSE_DELAY=-1
+    username: sa
+    driver-class-name: org.h2.Driver
+    password: 
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 821564819362-i74glsh0fobf9je7j5p51skrago06h8t.apps.googleusercontent.com
+            client-secret: UeLCKfI_-p-l9bMOCFxc-EEj
+          
+  main:
+    banner-mode: "off"
+  resources:
+    static-locations: 
+    - classpath:/static/

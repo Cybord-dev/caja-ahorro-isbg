@@ -21,7 +21,7 @@ import com.business.cybord.models.dtos.UsuariosDto;
 import com.business.cybord.services.UsuarioService;
 
 @RestController
-@RequestMapping("/usuarios")
+@RequestMapping("/api/v1/usuarios")
 public class UsuariosController {
 
 	@Autowired

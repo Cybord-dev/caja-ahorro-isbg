@@ -20,7 +20,7 @@ import com.business.cybord.models.dtos.RolDto;
 import com.business.cybord.services.RolService;
 
 @RestController
-@RequestMapping
+@RequestMapping("/api/v1")
 public class RolesController {
 
 	@Autowired

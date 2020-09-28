@@ -18,7 +18,7 @@ import com.business.cybord.models.dtos.SaldoAhorroDto;
 import com.business.cybord.services.SaldoAhorroService;
 
 @RestController
-@RequestMapping("/usuarios")
+@RequestMapping("/api/v1/usuarios")
 public class SaldosAhorroController {
 
 	@Autowired

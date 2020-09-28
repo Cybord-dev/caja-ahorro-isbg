@@ -18,7 +18,7 @@ import com.business.cybord.models.dtos.CatalogoPropiedadDto;
 import com.business.cybord.services.CatalogoPropiedadService;
 
 @RestController
-@RequestMapping("/catalogos")
+@RequestMapping("/api/v1/catalogos")
 public class CatalogosPropiedadController {
 
 	@Autowired
