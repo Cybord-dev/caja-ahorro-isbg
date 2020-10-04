@@ -23,7 +23,7 @@ public class ServicesExceptionHandler {
 	protected ResponseEntity<IsbgServiceException> handleResponseStatusException(ResponseStatusException ex,
 			WebRequest request) {
 		return new ResponseEntity<>(
-				new IsbgServiceException(ex.getMessage(), ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()),
+				new IsbgServiceException(ex.getReason(),ex.getMessage(), ex.getStatus().value()),
 				ex.getStatus());
 	}
 

@@ -2,7 +2,7 @@ INSERT INTO CAT_PROPIEDADES(id_atributo,tipo,nombre,valor) VALUES (1,'ESTADO','S
 INSERT INTO CAT_PROPIEDADES(id_atributo,tipo,nombre,valor) VALUES (2,'ESTADO','VALIDACION RH','1');
 INSERT INTO CAT_PROPIEDADES(id_atributo,tipo,nombre,valor) VALUES (3,'ESTADO','VALIDACION CONTABILIDAD','2');
 
-INSERT INTO USUARIOS(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(1,'Jose Miguel Ramirez Valerio','tortas23@.com',1,'INTERNO');
+INSERT INTO USUARIOS(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(1,'Edgar Payaso Morales','edanpicon@gmail.com',1,'INTERNO');
 INSERT INTO USUARIOS(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(2,'Luis Mario Rodriguez Hernandez','tortas34@.com',1,'INTERNO');
 INSERT INTO USUARIOS(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(3,'Mario de la Olla Alvarez','test@test.com',1,'INTERNO');
 INSERT INTO USUARIOS(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(4,'Lluvia de Jade Zubillaga','lluvia@test.com',1,'INTERNO');
@@ -56,9 +56,19 @@ INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (15,5,6);
 INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (16,7,1);
 INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (17,7,2);
 
-INSERT INTO SALDO_AHORRO(id_ahorro,id_usuario,tipo,monto,validado,fecha_creacion,fecha_actualizacion) VALUES (1,1,'tipo',22.54,1,'2020-07-12 00:00:00','2020-09-12 00:00:00');
-INSERT INTO SALDO_AHORRO(id_ahorro,id_usuario,tipo,monto,validado,fecha_creacion,fecha_actualizacion) VALUES (2,1,'tipo',93.23,1,'2020-08-12 00:00:00','2020-09-12 00:00:00');
-INSERT INTO SALDO_AHORRO(id_ahorro,id_usuario,tipo,monto,validado,fecha_creacion,fecha_actualizacion) VALUES (3,1,'tipo',43.13,1,'2020-09-12 00:00:00','2020-09-12 00:00:00');
+INSERT INTO SALDO_AHORRO(id_ahorro,id_usuario,tipo,monto,validado,fecha_creacion,fecha_actualizacion) VALUES (1,1,'ahorro',22.54,1,'2020-08-15 00:00:00','2020-09-12 00:00:00');
+INSERT INTO SALDO_AHORRO(id_ahorro,id_usuario,tipo,monto,validado,fecha_creacion,fecha_actualizacion) VALUES (2,1,'ahorro',93.23,1,'2020-08-31 00:00:00','2020-09-12 00:00:00');
+INSERT INTO SALDO_AHORRO(id_ahorro,id_usuario,tipo,monto,validado,fecha_creacion,fecha_actualizacion) VALUES (3,1,'ahorro',43.13,1,'2020-09-15 00:00:00','2020-09-12 00:00:00');
+INSERT INTO SALDO_AHORRO(id_ahorro,id_usuario,tipo,monto,validado,fecha_creacion,fecha_actualizacion) VALUES (4,1,'ahorro',22.54,1,'2020-09-30 00:00:00','2020-09-12 00:00:00');
+INSERT INTO SALDO_AHORRO(id_ahorro,id_usuario,tipo,monto,validado,fecha_creacion,fecha_actualizacion) VALUES (5,1,'deposito',93.23,1,'2020-10-11 00:00:00','2020-09-12 00:00:00');
+INSERT INTO SALDO_AHORRO(id_ahorro,id_usuario,tipo,monto,validado,fecha_creacion,fecha_actualizacion) VALUES (6,1,'ahorro',43.13,1,'2020-10-15 00:00:00','2020-09-12 00:00:00');
+
+INSERT INTO SALDO_AHORRO(id_ahorro,id_usuario,tipo,monto,validado,fecha_creacion,fecha_actualizacion) VALUES (7,5,'ahorro',220.54,1,'2020-08-15 00:00:00','2020-09-12 00:00:00');
+INSERT INTO SALDO_AHORRO(id_ahorro,id_usuario,tipo,monto,validado,fecha_creacion,fecha_actualizacion) VALUES (8,5,'ahorro',220.23,1,'2020-08-31 00:00:00','2020-09-12 00:00:00');
+INSERT INTO SALDO_AHORRO(id_ahorro,id_usuario,tipo,monto,validado,fecha_creacion,fecha_actualizacion) VALUES (9,5,'ahorro',245.13,1,'2020-09-15 00:00:00','2020-09-12 00:00:00');
+INSERT INTO SALDO_AHORRO(id_ahorro,id_usuario,tipo,monto,validado,fecha_creacion,fecha_actualizacion) VALUES (10,5,'retiro',-560.54,1,'2020-09-30 00:00:00','2020-09-12 00:00:00');
+INSERT INTO SALDO_AHORRO(id_ahorro,id_usuario,tipo,monto,validado,fecha_creacion,fecha_actualizacion) VALUES (11,5,'deposito',130.23,1,'2020-10-11 00:00:00','2020-09-12 00:00:00');
+INSERT INTO SALDO_AHORRO(id_ahorro,id_usuario,tipo,monto,validado,fecha_creacion,fecha_actualizacion) VALUES (12,5,'ahorro',243.13,1,'2020-10-15 00:00:00','2020-09-12 00:00:00');
 
 INSERT INTO PRESTAMO(id_prestamo,id_deudor,estatus,monto,fecha_terminacion,fecha_creacion,fecha_actualizacion) VALUES (1,3,1,13.13,'2020-09-12 00:00:00','2020-09-12 00:00:00','2020-09-12 00:00:00');
 INSERT INTO PRESTAMO(id_prestamo,id_deudor,estatus,monto,fecha_terminacion,fecha_creacion,fecha_actualizacion) VALUES (2,2,1,23.13,'2020-09-12 00:00:00','2020-09-12 00:00:00','2020-09-12 00:00:00');
