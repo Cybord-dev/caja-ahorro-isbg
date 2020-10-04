@@ -1,12 +1,14 @@
 package com.business.cybord.mappers;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.business.cybord.models.dtos.UserInfoDto;
 import com.business.cybord.models.dtos.UsuarioDto;
+import com.business.cybord.models.entities.DatosUsuario;
 import com.business.cybord.models.entities.Usuario;
 
 public class UsuarioMapperDecorator implements UsuariosMapper {
@@ -28,6 +30,10 @@ public class UsuarioMapperDecorator implements UsuariosMapper {
 					.collect(Collectors.toList());
 			dto.setRoles(roles);
 		}
+		if(entity.getDatosUsuario() !=null) {
+			dto.setDatosUsuario(entity.getDatosUsuario().stream().collect(Collectors.toMap(DatosUsuario::getTipoDato, DatosUsuario::getDato)));
+		}
+		
 		return dto;
 	}
 

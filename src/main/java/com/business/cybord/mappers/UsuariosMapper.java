@@ -14,14 +14,17 @@ import com.business.cybord.models.entities.Usuario;
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 @DecoratedWith(UsuarioMapperDecorator.class)
 public interface UsuariosMapper {
+
 	@Mapping(target = "roles", ignore = true)
+	@Mapping(target = "datosUsuario", ignore = true)
 	Usuario getEntityFromUserDto(UsuarioDto dto);
 
 	@Mapping(target = "roles", ignore = true)
+	@Mapping(target = "datosUsuario", ignore = true)
 	UsuarioDto getDtoFromUserEntity(Usuario dto);
 
 	List<UsuarioDto> getUsuariosDtoFromEntities(List<Usuario> entities);
-	
+
 	@Mapping(target = "roles", ignore = true)
 	UserInfoDto getUserInfoFromUsuario(Usuario entity);
 

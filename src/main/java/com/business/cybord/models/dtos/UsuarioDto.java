@@ -3,6 +3,7 @@ package com.business.cybord.models.dtos;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -20,7 +21,7 @@ public class UsuarioDto implements Serializable {
 	private String tipoUsuario;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
-	private List<DatosUsuarioDto> datosUsuario;
+	private Map<String, String> datosUsuario;
 	private List<String> roles;
 
 	public int getId() {
@@ -79,11 +80,11 @@ public class UsuarioDto implements Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	public List<DatosUsuarioDto> getDatosUsuario() {
+	public Map<String, String> getDatosUsuario() {
 		return datosUsuario;
 	}
 
-	public void setDatosUsuario(List<DatosUsuarioDto> datosUsuario) {
+	public void setDatosUsuario(Map<String, String> datosUsuario) {
 		this.datosUsuario = datosUsuario;
 	}
 
