@@ -8,6 +8,7 @@ INSERT INTO USUARIOS(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(3,'Mar
 INSERT INTO USUARIOS(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(4,'Lluvia de Jade Zubillaga','lluvia@test.com',1,'INTERNO');
 INSERT INTO USUARIOS(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(5,'Ruben Alvarez Morales','rubens.mncrft@gmail.com',1,'INTERNO');
 INSERT INTO USUARIOS(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(6,'Eddy Gomez Rosales','edcgamer@gmail.com',1,'INTERNO');
+INSERT INTO USUARIOS(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(7,'Eddieson Cortes','eddietiend@gmail.com',1,'INTERNO');
 
 INSERT INTO SOLICITUDES(id_solicitud,id_usuario, tipo_solicitud, estatus, estatus_detalle, fecha_ejecucion, fecha_creacion, fecha_actualizacion) 
 VALUES(1, 1,'SolicitudAhorro','ValdiacionConta',null, '2020-09-12 00:00:00','2020-09-12 00:00:00','2020-09-12 00:00:00');
@@ -52,9 +53,11 @@ INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (12,5,3);
 INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (13,5,4);
 INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (14,5,5);
 INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (15,5,6);
+INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (16,7,1);
+INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (17,7,2);
 
-INSERT INTO SALDO_AHORRO(id_ahorro,id_usuario,tipo,monto,validado,fecha_creacion,fecha_actualizacion) VALUES (1,1,'tipo',22.54,1,'2020-09-12 00:00:00','2020-09-12 00:00:00');
-INSERT INTO SALDO_AHORRO(id_ahorro,id_usuario,tipo,monto,validado,fecha_creacion,fecha_actualizacion) VALUES (2,1,'tipo',93.23,1,'2020-09-12 00:00:00','2020-09-12 00:00:00');
+INSERT INTO SALDO_AHORRO(id_ahorro,id_usuario,tipo,monto,validado,fecha_creacion,fecha_actualizacion) VALUES (1,1,'tipo',22.54,1,'2020-07-12 00:00:00','2020-09-12 00:00:00');
+INSERT INTO SALDO_AHORRO(id_ahorro,id_usuario,tipo,monto,validado,fecha_creacion,fecha_actualizacion) VALUES (2,1,'tipo',93.23,1,'2020-08-12 00:00:00','2020-09-12 00:00:00');
 INSERT INTO SALDO_AHORRO(id_ahorro,id_usuario,tipo,monto,validado,fecha_creacion,fecha_actualizacion) VALUES (3,1,'tipo',43.13,1,'2020-09-12 00:00:00','2020-09-12 00:00:00');
 
 INSERT INTO PRESTAMO(id_prestamo,id_deudor,estatus,monto,fecha_terminacion,fecha_creacion,fecha_actualizacion) VALUES (1,3,1,13.13,'2020-09-12 00:00:00','2020-09-12 00:00:00','2020-09-12 00:00:00');
