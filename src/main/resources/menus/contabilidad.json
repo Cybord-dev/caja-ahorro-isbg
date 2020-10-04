@@ -1,0 +1,32 @@
+{
+    "name":"Contabilidad",
+    "url": "/contabilidad",
+    "icon": "icon-briefcase",
+    "children": [
+      {
+        "name": "Altas y bajas",
+        "url": "/contabilidad/usuarios",
+        "icon": "icon-user-unfollow"
+      },
+      {
+        "name": "Aprobación ahorro",
+        "url": "/contabilidad/validaciones",
+        "icon": "icon-check"
+      },
+      {
+        "name": "Historico validaciones",
+        "url": "/contabilidad/historico",
+        "icon": "icon-list"
+      },
+      {
+        "name": "Conciliacion",
+        "url": "/contabilidad/conciliacion",
+        "icon": "icon-calculator"
+      },
+      {
+        "name": "Carga ahorro externos",
+        "url": "/contabilidad/carga-ahorro",
+        "icon": "icon-globe"
+      }
+    ]
+  }

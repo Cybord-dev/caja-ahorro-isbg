@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UsuariosDto implements Serializable {
+public class UsuarioDto implements Serializable {
 
 	private static final long serialVersionUID = 2329712110850660822L;
 

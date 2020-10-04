@@ -6,6 +6,8 @@ INSERT INTO USUARIOS(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(1,'Jos
 INSERT INTO USUARIOS(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(2,'Luis Mario Rodriguez Hernandez','tortas34@.com',1,'INTERNO');
 INSERT INTO USUARIOS(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(3,'Mario de la Olla Alvarez','test@test.com',1,'INTERNO');
 INSERT INTO USUARIOS(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(4,'Lluvia de Jade Zubillaga','lluvia@test.com',1,'INTERNO');
+INSERT INTO USUARIOS(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(5,'Ruben Alvarez Morales','rubens.mncrft@gmail.com',1,'INTERNO');
+INSERT INTO USUARIOS(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(6,'Eddy Gomez Rosales','edcgamer@gmail.com',1,'INTERNO');
 
 INSERT INTO SOLICITUDES(id_solicitud,id_usuario, tipo_solicitud, estatus, estatus_detalle, fecha_ejecucion, fecha_creacion, fecha_actualizacion) 
 VALUES(1, 1,'SolicitudAhorro','ValdiacionConta',null, '2020-09-12 00:00:00','2020-09-12 00:00:00','2020-09-12 00:00:00');
@@ -44,6 +46,12 @@ INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (6,2,3);
 INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (7,2,4);
 INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (8,3,1);
 INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (9,3,2);
+INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (10,5,1);
+INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (11,5,2);
+INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (12,5,3);
+INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (13,5,4);
+INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (14,5,5);
+INSERT INTO USER_ROLES(id,id_usuario,id_rol) VALUES (15,5,6);
 
 INSERT INTO SALDO_AHORRO(id_ahorro,id_usuario,tipo,monto,validado,fecha_creacion,fecha_actualizacion) VALUES (1,1,'tipo',22.54,1,'2020-09-12 00:00:00','2020-09-12 00:00:00');
 INSERT INTO SALDO_AHORRO(id_ahorro,id_usuario,tipo,monto,validado,fecha_creacion,fecha_actualizacion) VALUES (2,1,'tipo',93.23,1,'2020-09-12 00:00:00','2020-09-12 00:00:00');

@@ -1,0 +1,17 @@
+{
+    "name": "Gerencia",
+    "url": "/gerencia",
+    "icon": "icon-user-follow",
+   "children": [
+      {
+        "name": "Aprobación ahorro",
+        "url": "/gerencia/validaciones",
+        "icon": "icon-check"
+      },
+      {
+        "name": "Historico validaciones",
+        "url": "/gerencia/historico",
+        "icon": "icon-list"
+      }
+    ]
+  }
