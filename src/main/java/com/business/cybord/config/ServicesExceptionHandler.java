@@ -15,7 +15,7 @@ public class ServicesExceptionHandler {
 	@ExceptionHandler(value = Exception.class)
 	protected ResponseEntity<IsbgServiceException> handleException(Exception ex, WebRequest request) {
 		return new ResponseEntity<>(
-				new IsbgServiceException(ex.getMessage(), ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()),
+				new IsbgServiceException("Ooops algo salio mal, si el error persiste hazlonos saber.", ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()),
 				HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 

@@ -13,18 +13,19 @@ import org.jeasy.rules.annotation.Rule;
 
 import com.business.cybord.models.dtos.SolicitudDto;
 
-@Rule(name = "FechaInicioAhorroRule", description = "Se valida la fecha minia de ahorro")
+@Rule(name = "FechaInicioAhorroRule", description = "Se valida la fecha minima de ahorro")
 public class FechaInicioAhorroRule {
 
 	@Condition
 	public boolean condition(@Fact("solicitud") SolicitudDto solicitudDto, @Fact("results") List<String> results) {
-		LocalDate endDate = LocalDate.now();
-		endDate = endDate.withMonth(Month.SEPTEMBER.getValue()).withDayOfMonth(1);
-		if (solicitudDto.getFechaEjecucion()
-				.before(Date.from(endDate.atStartOfDay(ZoneId.systemDefault()).toInstant()))) {
-			return false;
-		}
-		return true;
+		LocalDate endDate = LocalDate.now().withMonth(Month.SEPTEMBER.getValue()).withDayOfMonth(1);
+
+		// TODO uncomment this rule when the code was ready on production
+		//		if (solicitudDto.getFechaEjecucion()
+//				.before(Date.from(endDate.atStartOfDay(ZoneId.systemDefault()).toInstant()))) {
+//			return false;
+//		}
+		return false;
 	}
 
 	@Action
