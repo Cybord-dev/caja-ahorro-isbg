@@ -42,6 +42,8 @@ public class SolicitudModificacionAhorro implements ISolicitud {
 		states.add(creada);
 		states.add(validaRh);
 		states.add(validaConta);
+		states.add(validAdmin);
+		states.add(finalizada);
 
 		Transition validacionRh = new TransitionBuilder().name(EventFactoryTypeEnum.VALIDA_RH.getState())
 				.sourceState(creada).eventType(ValidaRhEvent.class).eventHandler(new ValidacionRh())
@@ -66,8 +68,7 @@ public class SolicitudModificacionAhorro implements ISolicitud {
 		transitions.add(solicitudFinalizada);
 
 		State state = new State(EventFactoryTypeEnum.SOLICITUD_CREADA.getState());
-		turnstileStateMachine = new FiniteStateMachineBuilder(states, state).registerTransitions(transitions)
-				.registerFinalState(finalizada).build();
+		turnstileStateMachine = new FiniteStateMachineBuilder(states, state).registerTransitions(transitions).build();
 	}
 
 	@Override
