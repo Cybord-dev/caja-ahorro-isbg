@@ -1,0 +1,22 @@
+{
+    "name": "Administracion",
+    "url": "/administracion",
+    "icon": "icon-speedometer",
+   "children": [
+      {
+        "name": "Administracion roles",
+        "url": "/administracion/usuarios",
+        "icon": "icon-user-unfollow"
+      },
+      {
+        "name": "Aprobación ahorro",
+        "url": "/administracion/validaciones",
+        "icon": "icon-check"
+      },
+      {
+        "name": "Historico validaciones",
+        "url": "/administracion/historico",
+        "icon": "icon-list"
+      }
+    ]
+  }

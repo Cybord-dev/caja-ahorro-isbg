@@ -301,6 +301,8 @@ THE SOFTWARE.
 ng2-charts
 ISC
 
+ngx-bootstrap/alert
+
 ngx-bootstrap/buttons
 
 ngx-bootstrap/chronos

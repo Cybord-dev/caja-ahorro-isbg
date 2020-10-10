@@ -1,0 +1,17 @@
+{
+	"name": "Tesoreria",
+	"url": "/tesoreria",
+	"icon": "icon-credit-card",
+	"children": [
+		{
+			"name": "Aprobación ahorro",
+			"url": "/tesoreria/validaciones",
+			"icon": "icon-check"
+		},
+		{
+			"name": "Historico validaciones",
+			"url": "/tesoreria/historico",
+			"icon": "icon-list"
+		}
+	]
+ }

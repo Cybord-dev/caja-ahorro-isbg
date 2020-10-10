@@ -1,0 +1,17 @@
+{
+   "name": "Usuario",
+   "url": "/usuarios",
+   "icon": "icon-user",
+   "children": [
+      {
+        "name": "Historico ahorro",
+        "url": "/usuarios/reportes",
+        "icon": "icon-chart"
+      },
+      {
+        "name":"Trámites Ahorro",
+        "url": "/usuarios/tramites",
+        "icon": "icon-doc"
+      }
+    ]
+}

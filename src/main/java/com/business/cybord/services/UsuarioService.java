@@ -1,5 +1,7 @@
 package com.business.cybord.services;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,14 +22,19 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.cybord.mappers.UsuariosMapper;
-import com.business.cybord.models.dtos.UsuariosDto;
+import com.business.cybord.models.dtos.MenuItem;
+import com.business.cybord.models.dtos.UserInfoDto;
+import com.business.cybord.models.dtos.UsuarioDto;
 import com.business.cybord.models.entities.Usuario;
 import com.business.cybord.repositories.DatosUsuarioRepository;
 import com.business.cybord.repositories.UsuariosRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class UsuarioService {
@@ -40,6 +47,9 @@ public class UsuarioService {
 
 	@Autowired
 	private DatosUsuarioRepository datosUsuarioRepository;
+	
+	
+	private ObjectMapper objMapper = new ObjectMapper();
 
 	private static final Logger log = LoggerFactory.getLogger(UsuarioService.class);
 
@@ -66,7 +76,7 @@ public class UsuarioService {
 		};
 	}
 
-	public Page<UsuariosDto> getUsuariosPorParametros(Map<String, String> parameters) {
+	public Page<UsuarioDto> getUsuariosPorParametros(Map<String, String> parameters) {
 		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
 		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
 		Page<Usuario> result = repository.findAll(buildSearchFilters(parameters),
@@ -75,14 +85,14 @@ public class UsuarioService {
 				result.getTotalElements());
 	}
 
-	public UsuariosDto getUserById(Integer id) {
+	public UsuarioDto getUserById(Integer id) {
 		log.info("Buscando usuario con id : {}", id);
 		Usuario entity = repository.findById(id).orElseThrow(
 				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("user no existe %d", id)));
 		return mapper.getDtoFromUserEntity(entity);
 	}
 
-	public UsuariosDto insertarNuevoUsuario(UsuariosDto usuario) {
+	public UsuarioDto insertarNuevoUsuario(UsuarioDto usuario) {
 		Optional<Usuario> entity = repository.findByEmail(usuario.getEmail());
 		if (entity.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
@@ -93,7 +103,7 @@ public class UsuarioService {
 		}
 	}
 
-	public UsuariosDto actualizarUsuario(UsuariosDto usuario,int id) {
+	public UsuarioDto actualizarUsuario(UsuarioDto usuario,int id) {
 		Usuario entity = repository.findById(id)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 						String.format("El usuario %s no existe.", usuario.getEmail())));
@@ -108,6 +118,42 @@ public class UsuarioService {
 				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("El Usuario no existe %d", id)));
 		datosUsuarioRepository.findByIdUsuario(id).stream().forEach(a -> datosUsuarioRepository.delete(a));
 		repository.delete(entity);
+	}
+	
+	public UserInfoDto getUserInfo(Authentication auth){
+		OidcUser oidcUser =(OidcUser)auth.getPrincipal();
+		if(oidcUser!=null && oidcUser.getAttributes()!=null && oidcUser.getEmail()!=null) {
+			log.info("Looking roles from : {}", oidcUser.getEmail());
+			Usuario usuario = repository.findByEmail(oidcUser.getEmail())
+					.orElseThrow(()-> new ResponseStatusException(HttpStatus.UNAUTHORIZED, String.format("%s no se encuentra registrado en la plataforma",oidcUser.getEmail())));
+			
+			UserInfoDto userInfo = mapper.getUserInfoFromUsuario(usuario);
+			userInfo.setUrlImagenPerfil(oidcUser.getAttributes().get("picture").toString());
+			List<MenuItem> menu = new ArrayList<>();
+			for (String role : userInfo.getRoles()) {
+				menu.add(getMenuFromResource(role.toLowerCase()));
+			}
+			userInfo.setMenu(menu);
+			return userInfo;
+		}
+		log.error("Usuario sin credenciales intenta acceder a la plataforma.");
+		throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, String.format("%s no es un usuario autorizado", "anonymous"));
+	}
+	
+	
+	private MenuItem getMenuFromResource(String fileName) {
+		try {
+		InputStream is = Thread.currentThread().getContextClassLoader()
+				.getResourceAsStream(String.format("menus/%s.json", fileName));
+		if (is != null) {
+			return objMapper.readValue(is, MenuItem.class);
+		} else {
+			log.error("menus/{}.json not found.", fileName);
+			return new MenuItem();
+		}
+		}catch (IOException e) {
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,e.getMessage());
+		}
 	}
 
 	

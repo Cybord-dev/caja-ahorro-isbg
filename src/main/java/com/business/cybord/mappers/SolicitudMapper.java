@@ -3,7 +3,6 @@ package com.business.cybord.mappers;
 import java.util.List;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.MapperConfig;
 import org.mapstruct.ReportingPolicy;
 
 import com.business.cybord.models.dtos.AtributoSolicitudDto;
@@ -13,8 +12,7 @@ import com.business.cybord.models.entities.AtributoSolicitud;
 import com.business.cybord.models.entities.Solicitud;
 import com.business.cybord.models.entities.Validacion;
 
-@Mapper
-@MapperConfig(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring")
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring")
 public interface SolicitudMapper {
 	
 

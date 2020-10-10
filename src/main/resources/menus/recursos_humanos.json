@@ -1,0 +1,27 @@
+{
+    "name": "Recursos Humanos",
+    "url": "/recursos-humanos",
+    "icon": "icon-people",
+    "children": [
+      {
+        "name": "Altas y bajas",
+        "url": "/recursos-humanos/usuarios",
+        "icon": "icon-user-unfollow"
+      },
+      {
+        "name": "Aprobación ahorro",
+        "url": "/recursos-humanos/validaciones",
+        "icon": "icon-check"
+      },
+      {
+        "name": "Historico validaciones",
+        "url": "/recursos-humanos/historico",
+        "icon": "icon-list"
+      },
+      {
+        "name": "Conciliación informacion",
+        "url": "/recursos-humanos/conciliacion",
+        "icon": "icon-cloud-upload"
+      }
+    ]
+  }

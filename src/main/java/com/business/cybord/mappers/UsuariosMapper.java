@@ -5,19 +5,27 @@ import java.util.List;
 import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 
-import com.business.cybord.models.dtos.UsuariosDto;
+import com.business.cybord.models.dtos.UserInfoDto;
+import com.business.cybord.models.dtos.UsuarioDto;
 import com.business.cybord.models.entities.Usuario;
 
-@Mapper
-@DecoratedWith(UsuariosMapperDecorator.class)
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@DecoratedWith(UsuarioMapperDecorator.class)
 public interface UsuariosMapper {
-	@Mapping(target = "roles", ignore = true)
-	Usuario getEntityFromUserDto(UsuariosDto dto);
 
 	@Mapping(target = "roles", ignore = true)
-	UsuariosDto getDtoFromUserEntity(Usuario dto);
+	@Mapping(target = "datosUsuario", ignore = true)
+	Usuario getEntityFromUserDto(UsuarioDto dto);
 
-	List<UsuariosDto> getUsuariosDtoFromEntities(List<Usuario> entities);
+	@Mapping(target = "roles", ignore = true)
+	@Mapping(target = "datosUsuario", ignore = true)
+	UsuarioDto getDtoFromUserEntity(Usuario dto);
+
+	List<UsuarioDto> getUsuariosDtoFromEntities(List<Usuario> entities);
+
+	@Mapping(target = "roles", ignore = true)
+	UserInfoDto getUserInfoFromUsuario(Usuario entity);
 
 }
