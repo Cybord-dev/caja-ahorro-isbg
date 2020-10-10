@@ -59,8 +59,6 @@ public class ValidacionService {
 			validacion.setNumeroValidacion(solicitudDto.getValidaciones().size() + 1);
 			Validacion val=mapper.getEntityFromValidacionesDto(validacion);
 			val.setSolicitud(sol);
-			
-			
 			return mapper.getDtoFromValidacionesEntity(repositoryValidacion.save(val));
 		} else {
 			throw new IsbgServiceException(

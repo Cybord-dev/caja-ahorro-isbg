@@ -19,8 +19,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "validaciones")
@@ -35,9 +33,6 @@ public class Validacion {
 
 	@Column(name = "area")
 	private String area;
-
-	@Column(name = "id_solicitud")
-	private int idSolicitud;
 
 	@NotNull
 	@Column(name = "numero_validacion")
@@ -58,8 +53,7 @@ public class Validacion {
 	private Date fechaActualizacion;
 
 	@ManyToOne(optional = false)
-	@JoinColumn(name = "id_solicitud", insertable = false, updatable = false)
-	@JsonIgnore
+	@JoinColumn(name = "id_solicitud", referencedColumnName = "id_solicitud")
 	private Solicitud solicitud;
 
 	public void update(Validacion n) {
@@ -131,19 +125,11 @@ public class Validacion {
 		this.area = area;
 	}
 
-	public int getIdSolicitud() {
-		return idSolicitud;
-	}
-
-	public void setIdSolicitud(int idSolicitud) {
-		this.idSolicitud = idSolicitud;
-	}
-
 	@Override
 	public String toString() {
-		return "Validacion [id=" + id + ", email=" + email + ", area=" + area + ", idSolicitud=" + idSolicitud
-				+ ", numeroValidacion=" + numeroValidacion + ", status=" + status + ", fechaCreacion=" + fechaCreacion
-				+ ", fechaActualizacion=" + fechaActualizacion + ", solicitud=" + solicitud + "]";
+		return "Validacion [id=" + id + ", email=" + email + ", area=" + area + ", numeroValidacion=" + numeroValidacion
+				+ ", status=" + status + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
+				+ fechaActualizacion + ", solicitud=" + solicitud + "]";
 	}
 
 }

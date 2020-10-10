@@ -70,7 +70,6 @@ CREATE TABLE `SOLICITUDES` (
 CREATE TABLE `ATRIBUTOS_SOLICITUD` (
   `id_atributo` int(11) NOT NULL AUTO_INCREMENT,
   `id_solicitud` int(11) NOT NULL,
-  `tipo_atributo` varchar(50) NOT NULL DEFAULT '0',
   `nombre` varchar(50) NOT NULL DEFAULT '0',
   `valor` varchar(100) NOT NULL,
   `fecha_creacion` timestamp NOT NULL,
@@ -78,7 +77,7 @@ CREATE TABLE `ATRIBUTOS_SOLICITUD` (
 );
 
 ALTER TABLE ATRIBUTOS_SOLICITUD ADD CONSTRAINT ATRIBUTOS_SOLICITUD_UNIQUE
-UNIQUE(id_solicitud,tipo_atributo,nombre);  
+UNIQUE(id_solicitud,nombre);  
 
 
 CREATE TABLE `VALIDACIONES` (

@@ -8,24 +8,15 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AtributoSolicitudDto  implements Serializable{
+public class AtributoSolicitudDto implements Serializable {
 
 	private static final long serialVersionUID = 8122962151434766782L;
 	private int id;
-	private int idSolicitud;
-	private String tipoAtributo;
 	private String nombre;
 	private String valor;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 
-	public int getIdSolicitud() {
-		return idSolicitud;
-	}
-
-	public void setIdSolicitud(int idSolicitud) {
-		this.idSolicitud = idSolicitud;
-	}
 
 	public int getId() {
 		return id;
@@ -33,14 +24,6 @@ public class AtributoSolicitudDto  implements Serializable{
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public String getTipoAtributo() {
-		return tipoAtributo;
-	}
-
-	public void setTipoAtributo(String tipoAtributo) {
-		this.tipoAtributo = tipoAtributo;
 	}
 
 	public String getNombre() {
@@ -77,9 +60,8 @@ public class AtributoSolicitudDto  implements Serializable{
 
 	@Override
 	public String toString() {
-		return "AtributoSolicitudDto [id=" + id + ", idSolicitud=" + idSolicitud + ", tipoAtributo=" + tipoAtributo
-				+ ", nombre=" + nombre + ", valor=" + valor + ", fechaCreacion=" + fechaCreacion
-				+ ", fechaActualizacion=" + fechaActualizacion + "]";
+		return "AtributoSolicitudDto [id=" + id + ", nombre=" + nombre + ", valor=" + valor + ", fechaCreacion="
+				+ fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
 
 }

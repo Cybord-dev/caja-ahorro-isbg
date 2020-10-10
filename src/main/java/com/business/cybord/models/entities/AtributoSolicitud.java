@@ -22,8 +22,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "Atributos_Solicitud")
@@ -33,13 +31,6 @@ public class AtributoSolicitud {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_atributo")
 	private int id;
-
-	@Column(name = "id_solicitud")
-	private int idSolicitud;
-
-	@NotNull
-	@Column(name = "tipo_atributo")
-	private String tipoAtributo;
 
 	@NotNull
 	@Column(name = "nombre")
@@ -59,9 +50,8 @@ public class AtributoSolicitud {
 	@Column(name = "fecha_actualizacion")
 	private Date fechaActualizacion;
 
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "id_solicitud", insertable = false, updatable = false)
-	@JsonIgnore
+	@ManyToOne
+	@JoinColumn(name = "id_solicitud", referencedColumnName = "id_solicitud")
 	private Solicitud solicitud;
 
 	public void update(AtributoSolicitud n) {
@@ -75,15 +65,6 @@ public class AtributoSolicitud {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-
-	public String getTipoAtributo() {
-		return tipoAtributo;
-	}
-
-	public void setTipoAtributo(String tipoAtributo) {
-		this.tipoAtributo = tipoAtributo;
 	}
 
 	public String getNombre() {
@@ -126,19 +107,10 @@ public class AtributoSolicitud {
 		this.solicitud = solicitud;
 	}
 
-	public int getIdSolicitud() {
-		return idSolicitud;
-	}
-
-	public void setIdSolicitud(int idSolicitud) {
-		this.idSolicitud = idSolicitud;
-	}
-
 	@Override
 	public String toString() {
-		return "AtributoSolicitud [id=" + id + ", idSolicitud=" + idSolicitud + ", tipoAtributo=" + tipoAtributo
-				+ ", nombre=" + nombre + ", valor=" + valor + ", fechaCreacion=" + fechaCreacion
-				+ ", fechaActualizacion=" + fechaActualizacion + ", solicitud=" + solicitud + "]";
+		return "AtributoSolicitud [id=" + id + ", nombre=" + nombre + ", valor=" + valor + ", fechaCreacion="
+				+ fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + ", solicitud=" + solicitud + "]";
 	}
 
 }
