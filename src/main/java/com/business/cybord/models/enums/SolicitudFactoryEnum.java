@@ -3,6 +3,8 @@ package com.business.cybord.models.enums;
 import com.business.cybord.states.solicitudes.ISolicitud;
 import com.business.cybord.states.solicitudes.SolicitudAhorro;
 import com.business.cybord.states.solicitudes.SolicitudCancelacionAhorro;
+import com.business.cybord.states.solicitudes.SolicitudModificacionAhorro;
+import com.business.cybord.states.solicitudes.SolicitudRetiroAnticipado;
 
 public enum SolicitudFactoryEnum {
 
@@ -21,7 +23,23 @@ public enum SolicitudFactoryEnum {
 			return new SolicitudCancelacionAhorro();
 		}
 
-	};
+	},
+	SOLICITUD_RETIRO_PARCIAL_AHORRO {
+
+		@Override
+		public SolicitudRetiroAnticipado getInstance() {
+			return new SolicitudRetiroAnticipado();
+		}
+
+	},
+	SOLICITUD_MODIFICACION_AHORRO {
+
+		@Override
+		public SolicitudModificacionAhorro getInstance() {
+			return new SolicitudModificacionAhorro();
+		}
+
+	},;
 
 	public abstract ISolicitud getInstance();
 

@@ -16,12 +16,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 import org.springframework.web.server.ResponseStatusException;
 
-
-
 @Component
-public class AuthenticationFilter extends GenericFilterBean{
-	
-	
+public class AuthenticationFilter extends GenericFilterBean {
+
 	private static final Logger log = LoggerFactory.getLogger(AuthenticationFilter.class);
 
 	@Override

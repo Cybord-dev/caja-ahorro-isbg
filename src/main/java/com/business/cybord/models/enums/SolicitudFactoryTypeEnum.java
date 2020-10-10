@@ -7,6 +7,10 @@ public enum SolicitudFactoryTypeEnum {
 	SOLICITUD_AHORRO(SolicitudFactoryEnum.SOLICITUD_AHORRO, "SolicitudAhorro", "SolicitudCreadaEvent",
 			"ValidaContaEvent"),
 	SOLICITUD_CANCELACION_AHORRO(SolicitudFactoryEnum.SOLICITUD_CANCELACION_AHORRO, "CancelacionAhorro",
+			"SolicitudCreadaEvent", "ValidaContaEvent"),
+	SOLICITUD_RETIRO_PARCIAL_AHORRO(SolicitudFactoryEnum.SOLICITUD_RETIRO_PARCIAL_AHORRO, "RetiroParcialAhorro",
+			"SolicitudCreadaEvent", "ValidaContaEvent"),
+	SOLICITUD_MODIFICACION_AHORRO(SolicitudFactoryEnum.SOLICITUD_MODIFICACION_AHORRO, "ModificacionAhorro",
 			"SolicitudCreadaEvent", "ValidaContaEvent");
 
 	private SolicitudFactoryEnum enumValue;
