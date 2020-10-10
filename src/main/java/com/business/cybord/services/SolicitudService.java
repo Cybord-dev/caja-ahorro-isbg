@@ -19,6 +19,7 @@ import com.business.cybord.mappers.SolicitudMapper;
 import com.business.cybord.models.dtos.AtributoSolicitudDto;
 import com.business.cybord.models.dtos.SolicitudDto;
 import com.business.cybord.models.dtos.composed.UserSolicitudDto;
+import com.business.cybord.models.entities.AtributoSolicitud;
 import com.business.cybord.models.entities.Solicitud;
 import com.business.cybord.models.entities.Usuario;
 import com.business.cybord.models.enums.SolicitudFactoryEnum;
@@ -88,8 +89,9 @@ public class SolicitudService {
 		nueva.setAtributos(new ArrayList<>());
 
 		for (AtributoSolicitudDto att : solicitudDto.getAtributos()) {
-			att.setIdSolicitud(nueva.getId());
-			nueva.getAtributos().add(atributoSolicitudRepository.save(mapper.getEntityFromAtributoSolicitudDto(att)));
+			AtributoSolicitud as=mapper.getEntityFromAtributoSolicitudDto(att);
+			as.setSolicitud(nueva);
+			nueva.getAtributos().add(atributoSolicitudRepository.save(as));
 		}
 		return mapper.getDtoFromSolicitudEntity(nueva);
 	}

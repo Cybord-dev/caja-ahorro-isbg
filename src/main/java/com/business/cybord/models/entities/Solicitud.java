@@ -24,8 +24,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "Solicitudes")
@@ -64,15 +62,12 @@ public class Solicitud {
 
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "id_usuario")
-	@JsonIgnore
 	private Usuario usuario;
 
 	@OneToMany(mappedBy = "solicitud")
-	@JsonIgnore
 	private List<AtributoSolicitud> atributos;
 
 	@OneToMany(mappedBy = "solicitud")
-	@JsonIgnore
 	private List<Validacion> validaciones;
 
 	public void update(Solicitud n) {

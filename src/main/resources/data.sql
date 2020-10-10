@@ -19,8 +19,8 @@ VALUES(2, 2,'SolicitudAhorro','ValdiacionConta',null, '2020-09-12 00:00:00','202
 INSERT INTO SOLICITUDES(id_solicitud,id_usuario, tipo_solicitud, estatus, estatus_detalle, fecha_ejecucion, fecha_creacion, fecha_actualizacion) 
 VALUES(3, 3,'SolicitudAhorro','ValdiacionConta',null,'2020-09-19 12:00:00','2020-09-19 00:00:00','2020-09-12 00:00:00');
 
-INSERT INTO ATRIBUTOS_SOLICITUD(id_atributo,id_solicitud,tipo_atributo,nombre,valor,fecha_creacion,fecha_actualizacion) VALUES (1,1,1,'PORCENTAJE_AHORRO','10.5','2020-09-12 00:00:00','2020-09-12 00:00:00');
-INSERT INTO ATRIBUTOS_SOLICITUD(id_atributo,id_solicitud,tipo_atributo,nombre,valor,fecha_creacion,fecha_actualizacion) VALUES (2,1,2,'FECHA_INGRESO','2020-09-12 00:00:00','2020-09-12 01:00:00','2020-09-12 01:00:00');
+INSERT INTO ATRIBUTOS_SOLICITUD(id_atributo,id_solicitud,nombre,valor,fecha_creacion,fecha_actualizacion) VALUES (1,1,1,'10.5','2020-09-12 00:00:00','2020-09-12 00:00:00');
+INSERT INTO ATRIBUTOS_SOLICITUD(id_atributo,id_solicitud,nombre,valor,fecha_creacion,fecha_actualizacion) VALUES (2,1,2,'2020-09-12 00:00:00','2020-09-12 01:00:00','2020-09-12 01:00:00');
 
 INSERT INTO VALIDACIONES(id_validacion,id_solicitud,numero_validacion,email,estatus,area,fecha_creacion,fecha_actualizacion) VALUES (1,1,1,'pepe@gmail.com',1,'RecursosHumanos','2020-09-12 00:00:00','2020-09-12 00:00:00');
 INSERT INTO VALIDACIONES(id_validacion,id_solicitud,numero_validacion,email,estatus,area,fecha_creacion,fecha_actualizacion) VALUES (2,2,1,'papirriin@gmail.com',0,'Tesoreria','2020-09-12 00:00:00','2020-09-12 00:00:00');

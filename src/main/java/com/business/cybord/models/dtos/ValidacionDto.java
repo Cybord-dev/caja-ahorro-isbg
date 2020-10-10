@@ -12,7 +12,7 @@ public class ValidacionDto implements Serializable {
 
 	private static final long serialVersionUID = -6175800734286104073L;
 	private int id;
-	private Integer idSolicitud;
+	private int idSolicitud;
 	private String email;
 	private String area;
 	private Integer numeroValidacion;
@@ -76,11 +76,11 @@ public class ValidacionDto implements Serializable {
 		this.area = area;
 	}
 
-	public Integer getIdSolicitud() {
+	public int getIdSolicitud() {
 		return idSolicitud;
 	}
 
-	public void setIdSolicitud(Integer idSolicitud) {
+	public void setIdSolicitud(int idSolicitud) {
 		this.idSolicitud = idSolicitud;
 	}
 
