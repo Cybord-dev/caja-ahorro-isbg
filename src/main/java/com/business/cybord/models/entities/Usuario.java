@@ -1,9 +1,7 @@
 package com.business.cybord.models.entities;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -136,18 +134,6 @@ public class Usuario {
 		return "Usuario [id=" + id + ", activo=" + activo + ", nombre=" + nombre + ", email=" + email + ", tipoUsuario="
 				+ tipoUsuario + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
 				+ ", datosUsuario=" + datosUsuario + ", roles=" + roles + "]";
-	}
-	
-	public static void main(String[] args) {
-		List<Rol> roles= new ArrayList<Rol>();
-		Rol rol= new Rol();
-		RolCat rolCat= new RolCat();
-		rolCat.setNombre("culo");
-		rol.setRolname(rolCat);
-		roles.add(rol);
-		
-		List<String> as=roles.stream().map(a->a.getRolname().getNombre()).collect(Collectors.toList());
-		System.out.println(as);
 	}
 
 }
