@@ -53,6 +53,16 @@ public class AtributoSolicitud {
 	@ManyToOne
 	@JoinColumn(name = "id_solicitud", referencedColumnName = "id_solicitud")
 	private Solicitud solicitud;
+	
+	public AtributoSolicitud() {
+
+	}
+
+	public AtributoSolicitud(String nombre,String valor) {
+		super();
+		this.nombre = nombre;
+		this.valor = valor;
+	}
 
 	public void update(AtributoSolicitud n) {
 		this.nombre = n.nombre;

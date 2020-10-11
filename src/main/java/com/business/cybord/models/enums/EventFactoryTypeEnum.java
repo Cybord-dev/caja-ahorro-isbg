@@ -4,13 +4,13 @@ import java.util.Optional;
 
 public enum EventFactoryTypeEnum {
 
-	SOLICITUD_CREADA(EventFactoryEnum.SOLICITUD_CREADA, "Systema","Solicitud"),
-	VALIDA_RH(EventFactoryEnum.VALIDA_RH_EVENT, "RecursosHumanos","ValidacionRH"),
-	VALIDA_CONTA_EVENT(EventFactoryEnum.VALIDA_CONTA_EVENT, "Contabilidad","ValdiacionConta"),
-	VALIDA_TESO(EventFactoryEnum.VALIDA_TESO_EVENT, "Tesoreria","ValidaTeso"),
-	VALIDA_ADMIN(EventFactoryEnum.VALIDA_ADMIN_EVENT, "Administracion","ValidaAdmin"),
-	VALIDA_GERENCIA(EventFactoryEnum.VALIDA_GERENCIA_EVENT, "Gerencia","ValidaGerencia"),
-	SOLICITUD_TERMINADA(EventFactoryEnum.SOLICITUD_TERMINADA, "Systema","Solicitud"),;
+	SOLICITUD_CREADA(EventFactoryEnum.SOLICITUD_CREADA, "sistema","Solicitud"),
+	VALIDA_RH(EventFactoryEnum.VALIDA_RH_EVENT, "recursos-humanos","ValidacionRH"),
+	VALIDA_CONTA_EVENT(EventFactoryEnum.VALIDA_CONTA_EVENT, "contabilidad","ValdiacionConta"),
+	VALIDA_TESO(EventFactoryEnum.VALIDA_TESO_EVENT, "tesoreria","ValidaTeso"),
+	VALIDA_ADMIN(EventFactoryEnum.VALIDA_ADMIN_EVENT, "administracion","ValidaAdmin"),
+	VALIDA_GERENCIA(EventFactoryEnum.VALIDA_GERENCIA_EVENT, "gerencia","ValidaGerencia"),
+	SOLICITUD_TERMINADA(EventFactoryEnum.SOLICITUD_TERMINADA, "sistema","Solicitud"),;
 	
 
 	private EventFactoryEnum enumValue;

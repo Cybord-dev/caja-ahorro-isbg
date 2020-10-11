@@ -3,6 +3,7 @@ package com.business.cybord.mappers;
 import java.util.List;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
 import com.business.cybord.models.dtos.AtributoSolicitudDto;
@@ -16,9 +17,14 @@ import com.business.cybord.models.entities.Validacion;
 public interface SolicitudMapper {
 	
 
+	@Mapping(target="idUsuario",source="usuario.id")
+	@Mapping(target="atributos",expression="java(dto.getAttributesAsMap())")
 	SolicitudDto getDtoFromSolicitudEntity(Solicitud dto);
-	Solicitud getEntityFromSolicitudDto(SolicitudDto dto);
 	List<SolicitudDto> solicitudDtoToSolicitud(List<Solicitud> dto);
+	
+	@Mapping(target="atributos",expression="java(dto.getAttributesAsList())")
+	Solicitud getEntityFromSolicitudDto(SolicitudDto dto);
+	
 	
 	//Atributos
 	AtributoSolicitud getEntityFromAtributoSolicitudDto(AtributoSolicitudDto dto);
