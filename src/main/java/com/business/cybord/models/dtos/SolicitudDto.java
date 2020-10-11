@@ -3,7 +3,10 @@ package com.business.cybord.models.dtos;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.business.cybord.models.entities.AtributoSolicitud;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -20,8 +23,13 @@ public class SolicitudDto implements Serializable{
 	private Date fechaEjecucion;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
-	private List<AtributoSolicitudDto> atributos;
+	private Map<String,String> atributos;
 	private List<ValidacionDto> validaciones;
+	
+	
+	public List<AtributoSolicitud> getAttributesAsList(){
+		return atributos.entrySet().stream().map(e-> new AtributoSolicitud(e.getKey(),e.getValue())).collect(Collectors.toList());
+	}
 
 	public int getId() {
 		return id;
@@ -78,12 +86,12 @@ public class SolicitudDto implements Serializable{
 	public void setFechaActualizacion(Date fechaActualizacion) {
 		this.fechaActualizacion = fechaActualizacion;
 	}
-
-	public List<AtributoSolicitudDto> getAtributos() {
+	
+	public Map<String, String> getAtributos() {
 		return atributos;
 	}
 
-	public void setAtributos(List<AtributoSolicitudDto> atributos) {
+	public void setAtributos(Map<String, String> atributos) {
 		this.atributos = atributos;
 	}
 

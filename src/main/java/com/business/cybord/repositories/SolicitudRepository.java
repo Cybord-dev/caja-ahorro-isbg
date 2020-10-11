@@ -21,5 +21,6 @@ public interface SolicitudRepository extends JpaRepository<Solicitud, Integer>,J
 
 	@Query("select s from Solicitud as s where s.usuario.id=:idU and s.id=:id ")
 	Optional<Solicitud> findByIdUsuarioAndId(int idU, int id);
+	
 
 }

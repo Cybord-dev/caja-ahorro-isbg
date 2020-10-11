@@ -5,6 +5,8 @@ package com.business.cybord.models.entities;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -74,6 +76,10 @@ public class Solicitud {
 		this.fechaEjecucion = n.getFechaEjecucion();
 		this.status = n.getStatus();
 		this.statusDetalle = n.getStatusDetalle();
+	}
+	
+	public Map<String, String> getAttributesAsMap(){
+		return atributos.stream().collect(Collectors.toMap(AtributoSolicitud::getNombre, AtributoSolicitud::getValor));
 	}
 
 	public int getId() {

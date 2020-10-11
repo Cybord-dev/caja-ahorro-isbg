@@ -34,6 +34,11 @@ public class SolicitudesContoller {
 	public ResponseEntity<Page<UserSolicitudDto>> getSolicitudByFiltros(@RequestParam Map<String, String> parameters) {
 		return new ResponseEntity<>(service.getAllSolicitudes(parameters), HttpStatus.OK);
 	}
+	
+	@GetMapping("/solicitudes/{idSolicitud}")
+	public ResponseEntity<SolicitudDto> getSolicitudById(@PathVariable Integer idSolicitud) {
+		return new ResponseEntity<>(service.findSolicitudById(idSolicitud), HttpStatus.OK);
+	}
 
 	@GetMapping("/usuarios/{idUsuario}/solicitudes")
 	public ResponseEntity<List<SolicitudDto>> crearSolicitud(@PathVariable Integer idUsuario) {

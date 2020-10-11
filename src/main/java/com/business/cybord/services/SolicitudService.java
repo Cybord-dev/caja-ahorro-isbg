@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.cybord.mappers.SolicitudMapper;
-import com.business.cybord.models.dtos.AtributoSolicitudDto;
 import com.business.cybord.models.dtos.SolicitudDto;
 import com.business.cybord.models.dtos.composed.UserSolicitudDto;
 import com.business.cybord.models.entities.AtributoSolicitud;
@@ -70,6 +69,16 @@ public class SolicitudService {
 					String.format("la solicitud id=%d no existe con el usuario id=%d", idSolicitud, idUsuario));
 		}
 	}
+	
+	public SolicitudDto findSolicitudById(int idSolicitud) {
+		Optional<Solicitud> solicitud = repositorySolicitud.findById(idSolicitud);
+		if (solicitud.isPresent()) {
+			return mapper.getDtoFromSolicitudEntity(solicitud.get());
+		} else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					String.format("la solicitud id=%d no existe.", idSolicitud));
+		}
+	}
 
 	public SolicitudDto crearSolicitud(int idUsuario, SolicitudDto solicitudDto) throws IsbgServiceException {
 		Usuario usuario = repositoryUsuario.findById(idUsuario)
@@ -88,10 +97,9 @@ public class SolicitudService {
 		nueva = repositorySolicitud.save(nueva);
 		nueva.setAtributos(new ArrayList<>());
 
-		for (AtributoSolicitudDto att : solicitudDto.getAtributos()) {
-			AtributoSolicitud as=mapper.getEntityFromAtributoSolicitudDto(att);
-			as.setSolicitud(nueva);
-			nueva.getAtributos().add(atributoSolicitudRepository.save(as));
+		for (AtributoSolicitud att : solicitudDto.getAttributesAsList()) {
+			att.setSolicitud(nueva);
+			nueva.getAtributos().add(atributoSolicitudRepository.save(att));
 		}
 		return mapper.getDtoFromSolicitudEntity(nueva);
 	}
