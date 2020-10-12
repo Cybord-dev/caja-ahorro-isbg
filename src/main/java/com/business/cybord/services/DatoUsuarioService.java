@@ -45,15 +45,14 @@ public class DatoUsuarioService {
 
 	}
 
-	public DatosUsuarioDto actualizarDatoUsuario(DatosUsuarioDto datosUsuario, int idUsuario) {
-		Optional<DatosUsuario> dato = repository.findByTipoDatoAndIdUsuario(datosUsuario.getTipoDato(), idUsuario);
-		if (dato.isPresent()) {
-			dato.get().setDato(datosUsuario.getDato());
-			dato.get().setRelevancia(datosUsuario.isRelevancia());
-			return mapper.getDtoFromDatosusuarioEntity(repository.save(dato.get()));
-		} else
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					String.format("El dato %s no existe", datosUsuario.getTipoDato()));
+	public DatosUsuarioDto actualizarDatoUsuario(int idUsuario, String tipoDato, DatosUsuarioDto datosUsuario) {
+		DatosUsuario dato = repository.findByTipoDatoAndIdUsuario(tipoDato, idUsuario)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+						String.format("El dato %s no existe", datosUsuario.getTipoDato())));
+		dato.setDato(datosUsuario.getDato());
+		dato.setRelevancia(datosUsuario.isRelevancia());
+		return mapper.getDtoFromDatosusuarioEntity(repository.save(dato));
+
 	}
 
 	public void borraDatoUsuario(Integer id) {
