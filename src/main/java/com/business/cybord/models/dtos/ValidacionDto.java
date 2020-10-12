@@ -17,6 +17,7 @@ public class ValidacionDto implements Serializable {
 	private String area;
 	private Integer numeroValidacion;
 	private boolean status;
+	private String statusDesc;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 
@@ -80,6 +81,14 @@ public class ValidacionDto implements Serializable {
 		return idSolicitud;
 	}
 
+	public String getStatusDesc() {
+		return statusDesc;
+	}
+
+	public void setStatusDesc(String statusDesc) {
+		this.statusDesc = statusDesc;
+	}
+
 	public void setIdSolicitud(int idSolicitud) {
 		this.idSolicitud = idSolicitud;
 	}
@@ -87,8 +96,8 @@ public class ValidacionDto implements Serializable {
 	@Override
 	public String toString() {
 		return "ValidacionDto [id=" + id + ", idSolicitud=" + idSolicitud + ", email=" + email + ", area=" + area
-				+ ", numeroValidacion=" + numeroValidacion + ", status=" + status + ", fechaCreacion=" + fechaCreacion
-				+ ", fechaActualizacion=" + fechaActualizacion + "]";
+				+ ", numeroValidacion=" + numeroValidacion + ", status=" + status + ", statusDesc=" + statusDesc
+				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
 
 }

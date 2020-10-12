@@ -42,6 +42,9 @@ public class Validacion {
 	@Column(name = "estatus")
 	private boolean status;
 
+	@Column(name = "estatus_desc")
+	private String statusDesc;
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
 	@Column(name = "fecha_creacion")
@@ -125,11 +128,19 @@ public class Validacion {
 		this.area = area;
 	}
 
+	public String isStatusDesc() {
+		return statusDesc;
+	}
+
+	public void setStatusDesc(String statusDesc) {
+		this.statusDesc = statusDesc;
+	}
+
 	@Override
 	public String toString() {
 		return "Validacion [id=" + id + ", email=" + email + ", area=" + area + ", numeroValidacion=" + numeroValidacion
-				+ ", status=" + status + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
-				+ fechaActualizacion + ", solicitud=" + solicitud + "]";
+				+ ", status=" + status + ", statusDesc=" + statusDesc + ", fechaCreacion=" + fechaCreacion
+				+ ", fechaActualizacion=" + fechaActualizacion + ", solicitud=" + solicitud + "]";
 	}
 
 }

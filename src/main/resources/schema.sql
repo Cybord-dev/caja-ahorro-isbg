@@ -87,6 +87,7 @@ CREATE TABLE `VALIDACIONES` (
   `email` varchar(100) NOT NULL,
   `area` varchar(50) NOT NULL,
   `estatus` tinyint(1) NOT NULL DEFAULT '0',
+  `estatus_desc` varchar(200),
   `fecha_creacion` timestamp NOT NULL,
   `fecha_actualizacion` timestamp NOT NULL
 );

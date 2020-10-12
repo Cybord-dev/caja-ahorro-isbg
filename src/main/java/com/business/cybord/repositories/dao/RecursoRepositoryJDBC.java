@@ -23,13 +23,13 @@ public class RecursoRepositoryJDBC {
 	@Autowired
 	private JdbcTemplate invoiceManagerTemplate;
 	
-	private static final String BUSCAR_RECURSO_POR_TIPO_RECURSO_Y_TIPO_ARCHIVO_Y_REFERENCIA = "SELECT * FROM RECURSOS WHERE 1=1 AND TIPO_ARCHIVO= ? AND REFERENCIA = ? AND TIPO_RECURSO = ? ";
+	private static final String BUSCAR_RECURSO_POR_TIPO_RECURSO_Y_TIPO_ARCHIVO_Y_REFERENCIA = "SELECT * FROM recursos WHERE 1=1 AND TIPO_ARCHIVO= ? AND REFERENCIA = ? AND TIPO_RECURSO = ? ";
 
-	private static final String BORRAR_RECURSO_POR_TIPO_RECURSO_Y_TIPO_ARCHIVO_Y_REFERENCIA = "DELETE FROM RECURSOS WHERE TIPO_RECURSO = ? AND TIPO_ARCHIVO= ? AND REFERENCIA = ?";
+	private static final String BORRAR_RECURSO_POR_TIPO_RECURSO_Y_TIPO_ARCHIVO_Y_REFERENCIA = "DELETE FROM recursos WHERE TIPO_RECURSO = ? AND TIPO_ARCHIVO= ? AND REFERENCIA = ?";
 	
-	private static final String BORRAR_RECURSO_POR_ID = "DELETE FROM RECURSOS WHERE id_recurso= ?";
+	private static final String BORRAR_RECURSO_POR_ID = "DELETE FROM recursos WHERE id_recurso= ?";
 
-	private static final String INSERTAR_RECURSO = "INSERT INTO RECURSOS (REFERENCIA, TIPO_ARCHIVO, TIPO_RECURSO, DATO, FECHA_CREACION) VALUES(?,?,?,?,?)";
+	private static final String INSERTAR_RECURSO = "INSERT INTO recursos (REFERENCIA, TIPO_ARCHIVO, TIPO_RECURSO, DATO, FECHA_CREACION) VALUES(?,?,?,?,?)";
 
 	public Optional<RecursoDto> findResourceFileByResourceTypeAndReference(String tipoRecurso, String referencia, String tipoArchivo) {
 		return invoiceManagerTemplate.query(new PreparedStatementCreator() {
