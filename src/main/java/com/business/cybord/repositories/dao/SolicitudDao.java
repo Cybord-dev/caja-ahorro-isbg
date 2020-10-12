@@ -24,9 +24,9 @@ public class SolicitudDao {
 
 	public Page<UserSolicitudDto> findAll(Pageable pageable) {
 		String querySql = "SELECT a.id_solicitud,b.id_usuario,b.nombre,a.tipo_solicitud "
-				+ "FROM SOLICITUDES a,USUARIOS b " + "WHERE a.id_usuario = b.id_usuario " + "LIMIT "
+				+ "FROM solicitudes a,usuarios b " + "WHERE a.id_usuario = b.id_usuario " + "LIMIT "
 				+ pageable.getPageSize() + " " + "OFFSET " + pageable.getOffset();
-		String rowCountSql = "SELECT count(1) AS row_count " + "FROM SOLICITUDES a,USUARIOS b "
+		String rowCountSql = "SELECT count(1) AS row_count " + "FROM solicitudes a,usuarios b "
 				+ "WHERE a.id_usuario = b.id_usuario ";
 		int total = jdbcTemplate.queryForObject(rowCountSql, new Object[] {}, (rs, rowNum) -> rs.getInt(1));
 

@@ -1,8 +1,16 @@
 server:
   port: 80
+  
 spring:
   profiles:
-    active: "dev"
+    active: "local"
+  main:
+    banner-mode: "off"
+    
+---
+      
+spring:
+  profiles: local
   datasource:
     url: jdbc:h2:~/test;DB_CLOSE_DELAY=-1
     username: sa
@@ -16,6 +24,7 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: none
+      
   security:
     oauth2:
       client:
@@ -28,4 +37,66 @@ spring:
     banner-mode: "off"
   resources:
     static-locations: 
-    - classpath:/static/
+    - classpath:/static/ 
+ 
+---    
+    
+spring:
+  profiles: dev
+  datasource:
+        url: jdbc:mysql://3.101.6.199:3306/caja_isbg
+        username: caja_isbg
+        password: hola123
+        driverClassName: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none      
+      
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 821564819362-i74glsh0fobf9je7j5p51skrago06h8t.apps.googleusercontent.com
+            client-secret: UeLCKfI_-p-l9bMOCFxc-EEj
+          
+  main:
+    banner-mode: "off"
+  resources:
+    static-locations: 
+    - classpath:/static/   
+    
+---    
+    
+spring:
+  profiles: stg
+  datasource:
+        url: jdbc:mysql://localhost:3306/caja_isbg
+        username: caja_isbg
+        password: hola123
+        driverClassName: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none      
+      
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 821564819362-i74glsh0fobf9je7j5p51skrago06h8t.apps.googleusercontent.com
+            client-secret: UeLCKfI_-p-l9bMOCFxc-EEj
+          
+  main:
+    banner-mode: "off"
+  resources:
+    static-locations: 
+    - classpath:/static/ 
+    
+ 
+
+
+
+

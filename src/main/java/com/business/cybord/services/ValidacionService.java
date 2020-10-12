@@ -51,25 +51,27 @@ public class ValidacionService {
 
 	public ValidacionDto crearValidacion(int idUsuario, int idSolicitud, ValidacionDto validacion)
 			throws IsbgServiceException {
-		Solicitud sol=repositorySol
-		.findByIdUsuarioAndId(idUsuario, idSolicitud).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-				String.format("la solicitud id= %d del usuario =%d no existe", idSolicitud, idUsuario)));
-		SolicitudDto solicitudDto = mapper.getDtoFromSolicitudEntity(sol);
-		if (validaEstadoActual(solicitudDto, validacion)) {
+		Solicitud sol = repositorySol.findByIdUsuarioAndId(idUsuario, idSolicitud)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+						String.format("la solicitud id= %d del usuario =%d no existe", idSolicitud, idUsuario)));
+		if (validacion.isStatus()) {
+			SolicitudDto solicitudDto = mapper.getDtoFromSolicitudEntity(sol);
+			sol.setStatus(validaEstadoActual(solicitudDto, validacion));
+			repositorySol.save(sol);
 			validacion.setNumeroValidacion(solicitudDto.getValidaciones().size() + 1);
-			Validacion val=mapper.getEntityFromValidacionesDto(validacion);
+			Validacion val = mapper.getEntityFromValidacionesDto(validacion);
 			val.setSolicitud(sol);
 			return mapper.getDtoFromValidacionesEntity(repositoryValidacion.save(val));
 		} else {
-			throw new IsbgServiceException(
-					String.format("El estado %s no es el siguiente en el flujo %s", validacion.getArea(),
-							solicitudDto.getTipo()),
-					"Error validando el estado de la solicitud", HttpStatus.CONFLICT.value());
+			sol.setStatus("Rechazada");
+			sol.setStatusDetalle(validacion.getStatusDesc());
+			repositorySol.save(sol);
+			return validacion;
 		}
 
 	}
 
-	public boolean validaEstadoActual(SolicitudDto solicitudDto, ValidacionDto validacion) throws IsbgServiceException {
+	public String validaEstadoActual(SolicitudDto solicitudDto, ValidacionDto validacion) throws IsbgServiceException {
 		try {
 			SolicitudFactoryEnum sfte = SolicitudFactoryTypeEnum.findByReferenceName(solicitudDto.getTipo())
 					.orElseThrow(() -> new IsbgServiceException(
@@ -93,9 +95,12 @@ public class ValidacionService {
 				solicitud.fire(event);
 			}
 			if (newState.equals(solicitud.nextState())) {
-				return true;
+				return solicitud.nextState().getName();
 			}
-			return false;
+			throw new IsbgServiceException(
+					String.format("El estado %s no es el siguiente en el flujo %s", validacion.getArea(),
+							solicitudDto.getTipo()),
+					"Error validando el estado de la solicitud", HttpStatus.CONFLICT.value());
 		} catch (FiniteStateMachineException e) {
 			throw new IsbgServiceException("Error validando el estado de la solicitud", e.getMessage(),
 					HttpStatus.CONFLICT.value());
