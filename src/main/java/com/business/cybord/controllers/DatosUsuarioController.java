@@ -29,10 +29,10 @@ public class DatosUsuarioController {
 		return new ResponseEntity<>(service.insertarNuevoDatoUsuario(datousuarioDto,idUsuario), HttpStatus.CREATED);
 	}
 
-	@PutMapping("/usuarios/{id}/datos")
+	@PutMapping("/usuarios/{id}/datos/{tipoDato}")
 	public ResponseEntity<DatosUsuarioDto> actualizarDatoUsuario(@RequestBody @Valid DatosUsuarioDto datousuarioDto,
-			@PathVariable Integer id) {
-		return new ResponseEntity<>(service.actualizarDatoUsuario(datousuarioDto,id), HttpStatus.OK);
+			@PathVariable Integer id,@PathVariable String tipoDato) {
+		return new ResponseEntity<>(service.actualizarDatoUsuario(id,tipoDato,datousuarioDto), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/datos/{id}")
