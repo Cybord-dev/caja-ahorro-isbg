@@ -74,11 +74,13 @@ public class SolicitudDao {
 		solicitudes.addColumn("tipo_solicitud", "String", null);
 		solicitudes.addColumn("estatus", "String", null);
 		usuarios.addColumn("nombre", "String", null);
+		usuarios.addColumn("id_usuario", "String", null);
 		usuarios.addColumn("tipo_usuario", "String", null);
 		usuarios.addColumn("no_empleado", "String", null);
 
 		SelectQuery selectStoresByParams = new SelectQuery().addFromTable(solicitudes)
-				.addColumns(solicitudes.findColumns("id_solicitud")).addColumns(solicitudes.findColumns("estatus"))
+				.addColumns(solicitudes.findColumns("id_solicitud"))
+				.addColumns(solicitudes.findColumns("id_usuario")).addColumns(solicitudes.findColumns("estatus"))
 				.addColumns(usuarios.findColumns("no_empleado")).addColumns(usuarios.findColumns("nombre"))
 				.addColumns(solicitudes.findColumns("fecha_creacion")).addColumns(solicitudes.findColumns("fecha_ejecucion"))
 				.addColumns(usuarios.findColumns("tipo_usuario")).addColumns(usuarios.findColumns("id_usuario"))

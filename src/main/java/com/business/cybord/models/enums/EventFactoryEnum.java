@@ -4,6 +4,7 @@ import org.jeasy.states.api.AbstractEvent;
 
 import com.business.cybord.models.dtos.SolicitudDto;
 import com.business.cybord.states.events.SolicitudCreadaEvent;
+import com.business.cybord.states.events.SolicitudFinalizadaEvent;
 import com.business.cybord.states.events.ValidaAdminEvent;
 import com.business.cybord.states.events.ValidaContaEvent;
 import com.business.cybord.states.events.ValidaGerenciaEvent;
@@ -64,7 +65,7 @@ public enum EventFactoryEnum {
 
 		@Override
 		public AbstractEvent getInstance(SolicitudDto dto) {
-			return new ValidaGerenciaEvent(dto);
+			return new SolicitudFinalizadaEvent(dto);
 		}
 
 	};

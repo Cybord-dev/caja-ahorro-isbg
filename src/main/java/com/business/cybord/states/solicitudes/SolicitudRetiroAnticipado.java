@@ -16,14 +16,16 @@ import org.springframework.http.HttpStatus;
 import com.business.cybord.models.dtos.SolicitudDto;
 import com.business.cybord.models.enums.EventFactoryTypeEnum;
 import com.business.cybord.models.error.IsbgServiceException;
-import com.business.cybord.states.ValidacionAdmin;
 import com.business.cybord.states.ValidacionConta;
 import com.business.cybord.states.ValidacionFinalizada;
+import com.business.cybord.states.ValidacionGerencia;
 import com.business.cybord.states.ValidacionRh;
+import com.business.cybord.states.ValidacionTesoreria;
 import com.business.cybord.states.events.SolicitudFinalizadaEvent;
-import com.business.cybord.states.events.ValidaAdminEvent;
 import com.business.cybord.states.events.ValidaContaEvent;
+import com.business.cybord.states.events.ValidaGerenciaEvent;
 import com.business.cybord.states.events.ValidaRhEvent;
+import com.business.cybord.states.events.ValidaTesoEvent;
 
 public class SolicitudRetiroAnticipado implements ISolicitud {
 
@@ -35,14 +37,18 @@ public class SolicitudRetiroAnticipado implements ISolicitud {
 		State creada = new State(EventFactoryTypeEnum.SOLICITUD_CREADA.getState());
 		State validaRh = new State(EventFactoryTypeEnum.VALIDA_RH.getState());
 		State validaConta = new State(EventFactoryTypeEnum.VALIDA_CONTA_EVENT.getState());
-		State validAdmin = new State(EventFactoryTypeEnum.VALIDA_ADMIN.getState());
+		State validaGerencia = new State(EventFactoryTypeEnum.VALIDA_GERENCIA.getState());
+		State validaGerencia2 = new State(EventFactoryTypeEnum.VALIDA_GERENCIA2.getState());
+		State validaTso = new State(EventFactoryTypeEnum.VALIDA_TESO.getState());
 		State finalizada = new State(EventFactoryTypeEnum.SOLICITUD_TERMINADA.getState());
 		states = new HashSet<>();
 		transitions = new HashSet<>();
 		states.add(creada);
 		states.add(validaRh);
 		states.add(validaConta);
-		states.add(validAdmin);
+		states.add(validaGerencia);
+		states.add(validaGerencia2);
+		states.add(validaTso);
 		states.add(finalizada);
 
 		Transition validacionRh = new TransitionBuilder().name(EventFactoryTypeEnum.VALIDA_RH.getState())
@@ -53,18 +59,28 @@ public class SolicitudRetiroAnticipado implements ISolicitud {
 				.sourceState(validaRh).eventType(ValidaContaEvent.class).eventHandler(new ValidacionConta())
 				.targetState(validaConta).build();
 
-		Transition validacionAdmin = new TransitionBuilder().name(EventFactoryTypeEnum.VALIDA_ADMIN.getState())
-				.sourceState(validaConta).eventType(ValidaAdminEvent.class).eventHandler(new ValidacionAdmin())
-				.targetState(validAdmin).build();
+		Transition validacionGerncia = new TransitionBuilder().name(EventFactoryTypeEnum.VALIDA_GERENCIA.getState())
+				.sourceState(validaConta).eventType(ValidaGerenciaEvent.class).eventHandler(new ValidacionGerencia())
+				.targetState(validaGerencia).build();
+
+		Transition validacionAdmin = new TransitionBuilder().name(EventFactoryTypeEnum.VALIDA_TESO.getState())
+				.sourceState(validaGerencia).eventType(ValidaTesoEvent.class).eventHandler(new ValidacionTesoreria())
+				.targetState(validaTso).build();
+
+		Transition validacionGernci2 = new TransitionBuilder().name(EventFactoryTypeEnum.VALIDA_GERENCIA.getState())
+				.sourceState(validaTso).eventType(ValidaGerenciaEvent.class).eventHandler(new ValidacionGerencia())
+				.targetState(validaGerencia2).build();
 
 		Transition solicitudFinalizada = new TransitionBuilder()
-				.name(EventFactoryTypeEnum.SOLICITUD_TERMINADA.getState()).sourceState(validAdmin)
+				.name(EventFactoryTypeEnum.SOLICITUD_TERMINADA.getState()).sourceState(validaGerencia2)
 				.eventType(SolicitudFinalizadaEvent.class).eventHandler(new ValidacionFinalizada())
 				.targetState(finalizada).build();
 
 		transitions.add(validacionRh);
 		transitions.add(validacionConta);
+		transitions.add(validacionGerncia);
 		transitions.add(validacionAdmin);
+		transitions.add(validacionGernci2);
 		transitions.add(solicitudFinalizada);
 
 		State state = new State(EventFactoryTypeEnum.SOLICITUD_CREADA.getState());
