@@ -2,13 +2,13 @@ INSERT INTO cat_propiedades(id_atributo,tipo,nombre,valor) VALUES (1,'ESTADO','S
 INSERT INTO cat_propiedades(id_atributo,tipo,nombre,valor) VALUES (2,'ESTADO','VALIDACION RH','1');
 INSERT INTO cat_propiedades(id_atributo,tipo,nombre,valor) VALUES (3,'ESTADO','VALIDACION CONTABILIDAD','2');
 
-INSERT INTO usuarios(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(1,'Edgar Payaso Morales','edanpicon34567@gmail.com',1,'INTERNO');
-INSERT INTO usuarios(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(2,'Luis Mario Rodriguez Hernandez','tortas34@.com',1,'INTERNO');
-INSERT INTO usuarios(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(3,'Mario de la Olla Alvarez','test@test.com',1,'INTERNO');
-INSERT INTO usuarios(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(4,'Lluvia de Jade Zubillaga','lluvia@test.com',1,'INTERNO');
-INSERT INTO usuarios(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(5,'Ruben Alvarez Morales','rubens.mncrft@gmail.com',1,'INTERNO');
-INSERT INTO usuarios(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(6,'Eddy Gomez Rosales','edcgamer@gmail.com',1,'INTERNO');
-INSERT INTO usuarios(id_usuario,nombre,email,estatus,tipo_usuario) VALUES(7,'Eddieson Cortes','eddietiend@gmail.com',1,'INTERNO');
+INSERT INTO usuarios(id_usuario,noEmpleado,nombre,email,estatus,tipo_usuario) VALUES(1,'1','Edgar Payaso Morales','edanpicon34567@gmail.com',1,'INTERNO');
+INSERT INTO usuarios(id_usuario,noEmpleado,nombre,email,estatus,tipo_usuario) VALUES(2,'2','Luis Mario Rodriguez Hernandez','tortas34@.com',1,'INTERNO');
+INSERT INTO usuarios(id_usuario,noEmpleado,nombre,email,estatus,tipo_usuario) VALUES(3,'3','Mario de la Olla Alvarez','test@test.com',1,'INTERNO');
+INSERT INTO usuarios(id_usuario,noEmpleado,nombre,email,estatus,tipo_usuario) VALUES(4,'4','Lluvia de Jade Zubillaga','lluvia@test.com',1,'INTERNO');
+INSERT INTO usuarios(id_usuario,noEmpleado,nombre,email,estatus,tipo_usuario) VALUES(5,'5','Ruben Alvarez Morales','rubens.mncrft@gmail.com',1,'INTERNO');
+INSERT INTO usuarios(id_usuario,noEmpleado,nombre,email,estatus,tipo_usuario) VALUES(6,'6','Eddy Gomez Rosales','edcgamer@gmail.com',1,'INTERNO');
+INSERT INTO usuarios(id_usuario,noEmpleado,nombre,email,estatus,tipo_usuario) VALUES(7,'7','Eddieson Cortes','eddietiend@gmail.com',1,'INTERNO');
 
 INSERT INTO solicitudes(id_solicitud,id_usuario, tipo_solicitud, estatus, estatus_detalle, fecha_ejecucion, fecha_creacion, fecha_actualizacion) 
 VALUES(1, 1,'SolicitudAhorro','ValdiacionConta',null, '2020-09-12 00:00:00','2020-09-12 00:00:00','2020-09-12 00:00:00');
