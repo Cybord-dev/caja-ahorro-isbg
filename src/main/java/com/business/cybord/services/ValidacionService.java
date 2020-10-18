@@ -63,10 +63,14 @@ public class ValidacionService {
 			val.setSolicitud(sol);
 			return mapper.getDtoFromValidacionesEntity(repositoryValidacion.save(val));
 		} else {
+			SolicitudDto solicitudDto = mapper.getDtoFromSolicitudEntity(sol);
 			sol.setStatus("Rechazada");
 			sol.setStatusDetalle(validacion.getStatusDesc());
 			repositorySol.save(sol);
-			return validacion;
+			Validacion val = mapper.getEntityFromValidacionesDto(validacion);
+			val.setSolicitud(sol);
+			validacion.setNumeroValidacion(solicitudDto.getValidaciones().size() + 1);
+			return mapper.getDtoFromValidacionesEntity(repositoryValidacion.save(val));
 		}
 
 	}

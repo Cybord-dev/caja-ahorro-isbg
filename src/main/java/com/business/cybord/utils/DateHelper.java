@@ -16,4 +16,11 @@ public class DateHelper {
 		cal.set(Calendar.SECOND, 59);
 		return cal.getTime();
 	}
+	
+	public Date addOneDay(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.DATE, 1);
+		return cal.getTime();
+	}
 }

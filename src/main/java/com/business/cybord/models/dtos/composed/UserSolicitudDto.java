@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class UserSolicitudDto {
 
-	private int idSolicitud;
+	private int noEmpleado;
 	private int idUser;
 	private String nombre;
 	private String tipo;
@@ -12,12 +12,12 @@ public class UserSolicitudDto {
 	private String tipoUsuario;
 	private String statusSolicitud;
 
-	public int getIdSolicitud() {
-		return idSolicitud;
+	public int getNoEmpleado() {
+		return noEmpleado;
 	}
 
-	public void setIdSolicitud(int idSolicitud) {
-		this.idSolicitud = idSolicitud;
+	public void setNoEmpleado(int noEmpleado) {
+		this.noEmpleado = noEmpleado;
 	}
 
 	public int getIdUser() {
@@ -66,6 +66,13 @@ public class UserSolicitudDto {
 
 	public void setStatusSolicitud(String statusSolicitud) {
 		this.statusSolicitud = statusSolicitud;
+	}
+
+	@Override
+	public String toString() {
+		return "UserSolicitudDto [noEmpleado=" + noEmpleado + ", idUser=" + idUser + ", nombre=" + nombre + ", tipo="
+				+ tipo + ", fechaSolicitud=" + fechaSolicitud + ", tipoUsuario=" + tipoUsuario + ", statusSolicitud="
+				+ statusSolicitud + "]";
 	}
 
 }

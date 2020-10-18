@@ -18,34 +18,36 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 
 @Component
-@Profile({"!local"})
+@Profile({ "!local" })
 public class AuthenticationFilter extends GenericFilterBean {
 
 	private static final String ANONYMOUS_USER = "anonymousUser";
-	
+
 	private static final Logger log = LoggerFactory.getLogger(AuthenticationFilter.class);
-	
+
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
 			throws IOException, ServletException {
-		HttpServletRequest  req = (HttpServletRequest) request;
+
+		HttpServletRequest req = (HttpServletRequest) request;
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		
-		if(!ANONYMOUS_USER.equals(principal.toString())) {
-			OidcUser oidcUser = (OidcUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			if(oidcUser!=null && oidcUser.getAttributes()!=null && oidcUser.getEmail()!=null) {
-				log.debug("{} is requesting {}?{} from {}", oidcUser.getEmail(),req.getRequestURL(),req.getQueryString(),request.getRemoteAddr());
+
+		if (!ANONYMOUS_USER.equals(principal.toString())) {
+			OidcUser oidcUser = (OidcUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			if (oidcUser != null && oidcUser.getAttributes() != null && oidcUser.getEmail() != null) {
+				log.debug("{} is requesting {}?{} from {}", oidcUser.getEmail(), req.getRequestURL(),
+						req.getQueryString(), request.getRemoteAddr());
 				filterChain.doFilter(request, response);
-			}else {
-				HttpServletResponse resp=(HttpServletResponse) response;
+			} else {
+				HttpServletResponse resp = (HttpServletResponse) response;
 				resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Session invalida.");
 				filterChain.doFilter(request, response);
 			}
-		}else {
-			HttpServletResponse resp=(HttpServletResponse) response;
+		} else {
+			HttpServletResponse resp = (HttpServletResponse) response;
 			resp.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Usuario no autorizado.");
-			filterChain.doFilter(request, response);	
+			filterChain.doFilter(request, response);
 		}
-		
+
 	}
 }
