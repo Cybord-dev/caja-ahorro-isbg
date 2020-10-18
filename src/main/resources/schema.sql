@@ -1,26 +1,35 @@
+DROP TABLE cat_roles;
+DROP TABLE usuarios;
+DROP TABLE user_roles;
+DROP TABLE prestamo;
+DROP TABLE datos_user;
+DROP TABLE solicitudes;
+DROP TABLE atributos_solicitud;
+DROP TABLE validaciones;
+DROP TABLE cat_propiedades;
+DROP TABLE saldo_ahorro;
+DROP TABLE saldo_prestamo;
+DROP TABLE recursos;
 
-CREATE TABLE `cat_roles` (
+
+CREATE TABLE IF NOT EXISTS `cat_roles` (
   `id_rol` int(11) NOT NULL AUTO_INCREMENT UNIQUE,
-  `nombre` varchar(45) NOT NULL
+  `nombre` varchar(45) NOT NULL UNIQUE
 );
 
-ALTER TABLE cat_roles ADD CONSTRAINT CAT_ROLES_UNIQUE
-UNIQUE (nombre);
 
-CREATE TABLE `usuarios` (
+CREATE TABLE IF NOT EXISTS `usuarios` (
   `id_usuario` int(11) NOT NULL AUTO_INCREMENT UNIQUE,
   `nombre` varchar(100) NOT NULL,
-  `email` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL UNIQUE,
   `estatus` tinyint(1) NOT NULL DEFAULT '0',
-   noEmpleado varchar(5),
+  `no_empleado` varchar(15),
   `tipo_usuario` varchar(20),
   `fecha_creacion` timestamp,
   `fecha_actualizacion` timestamp
 );
-ALTER TABLE usuarios ADD CONSTRAINT USUARIOS_UNIQUE
-UNIQUE (email);
 
-CREATE TABLE `user_roles` (
+CREATE TABLE IF NOT EXISTS `user_roles` (
   `id` int(11) NOT NULL AUTO_INCREMENT UNIQUE,
   `id_usuario` int(11) NOT NULL,
   `id_rol` int(11) NOT NULL
@@ -29,7 +38,7 @@ CREATE TABLE `user_roles` (
 ALTER TABLE user_roles ADD CONSTRAINT USER_ROLES_UNIQUE
 UNIQUE (id_usuario,id_rol);  
 
-CREATE TABLE `prestamo` (
+CREATE TABLE IF NOT EXISTS `prestamo` (
   `id_prestamo` int(11) NOT NULL AUTO_INCREMENT UNIQUE,
   `id_deudor` int(11) NOT NULL,
   `estatus` tinyint(1) NOT NULL DEFAULT '0',
@@ -39,7 +48,7 @@ CREATE TABLE `prestamo` (
   `fecha_actualizacion` timestamp NOT NULL
 );
 
-CREATE TABLE `datos_user` (
+CREATE TABLE IF NOT EXISTS `datos_user` (
   `id_datos_user` int(11) NOT NULL AUTO_INCREMENT UNIQUE,
   `id_usuario` int(11) NOT NULL,
   `tipo_dato` varchar(50) NOT NULL,
@@ -53,7 +62,7 @@ ALTER TABLE datos_user ADD CONSTRAINT DATOS_USER_ROLES_UNIQUE
 UNIQUE(id_usuario,tipo_dato);  
 
 
-CREATE TABLE `solicitudes` (
+CREATE TABLE IF NOT EXISTS `solicitudes` (
   `id_solicitud` int(11) NOT NULL AUTO_INCREMENT UNIQUE,
   `id_usuario` int(11) NOT NULL,
   `tipo_solicitud` varchar(50) NOT NULL DEFAULT '0',
@@ -65,7 +74,7 @@ CREATE TABLE `solicitudes` (
 );
 
 
-CREATE TABLE `atributos_solicitud` (
+CREATE TABLE IF NOT EXISTS `atributos_solicitud` (
   `id_atributo` int(11) NOT NULL AUTO_INCREMENT UNIQUE,
   `id_solicitud` int(11) NOT NULL,
   `nombre` varchar(50) NOT NULL DEFAULT '0',
@@ -78,7 +87,7 @@ ALTER TABLE atributos_solicitud ADD CONSTRAINT ATRIBUTOS_SOLICITUD_UNIQUE
 UNIQUE(id_solicitud,nombre);  
 
 
-CREATE TABLE `validaciones` (
+CREATE TABLE IF NOT EXISTS `validaciones` (
   `id_validacion` int(11) NOT NULL AUTO_INCREMENT UNIQUE,
   `id_solicitud` int(11) NOT NULL,
   `numero_validacion` int(3) NOT NULL DEFAULT '0',
@@ -93,14 +102,14 @@ CREATE TABLE `validaciones` (
 ALTER TABLE validaciones ADD CONSTRAINT VALIDACIONES_UNIQUE
 UNIQUE(id_solicitud,numero_validacion);  
 
-CREATE TABLE `cat_propiedades` (
+CREATE TABLE IF NOT EXISTS `cat_propiedades` (
   `id_atributo` int(11) NOT NULL AUTO_INCREMENT UNIQUE,
   `tipo` varchar(50) NOT NULL,
   `nombre` varchar(50) NOT NULL,
   `valor` varchar(100) NOT NULL
 );
 
-CREATE TABLE `saldo_ahorro` (
+CREATE TABLE IF NOT EXISTS `saldo_ahorro` (
   `id_ahorro` int(11) NOT NULL AUTO_INCREMENT UNIQUE,
   `id_usuario` int(11) NOT NULL,
   `tipo` varchar(50) NOT NULL,
@@ -111,7 +120,7 @@ CREATE TABLE `saldo_ahorro` (
 );
 
 
-CREATE TABLE `saldo_prestamo` (
+CREATE TABLE IF NOT EXISTS `saldo_prestamo` (
   `id_saldo_prestamo` int(11) NOT NULL AUTO_INCREMENT UNIQUE,
   `id_prestamo` int(11) NOT NULL,
   `tipo` varchar(50) NOT NULL,
@@ -121,7 +130,7 @@ CREATE TABLE `saldo_prestamo` (
   `fecha_actualizacion` timestamp NOT NULL
 );
 
-CREATE TABLE `recursos` (
+CREATE TABLE IF NOT EXISTS `recursos` (
   `id_recurso` int(11) NOT NULL AUTO_INCREMENT UNIQUE,
   `referencia` varchar(45) NOT NULL,
   `tipo_archivo` varchar(32) NOT NULL,
