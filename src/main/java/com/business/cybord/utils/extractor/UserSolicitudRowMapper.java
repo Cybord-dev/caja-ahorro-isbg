@@ -18,10 +18,10 @@ public class UserSolicitudRowMapper implements RowMapper<UserSolicitudDto> {
 		//result.setIdUser(rs.getInt("id_usuario")); TODO Add this column
 		result.setNombre(rs.getString("nombre"));
 		result.setTipo(rs.getString("tipo_solicitud"));
-		result.setFechaSolicitud(rs.getDate("fecha_creacion"));
+		result.setFechaCreacion(rs.getDate("fecha_creacion"));
 		result.setFechaEjecucion(rs.getDate("fecha_ejecucion"));
 		result.setTipoUsuario(rs.getString("tipo_usuario"));
-		result.setStatusSolicitud(rs.getString("estatus"));
+		result.setStatus(rs.getString("estatus"));
 		
 		return result;
 	}
