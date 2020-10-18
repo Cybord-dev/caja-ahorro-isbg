@@ -12,6 +12,7 @@ CREATE TABLE `usuarios` (
   `nombre` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
   `estatus` tinyint(1) NOT NULL DEFAULT '0',
+   noEmpleado varchar(5),
   `tipo_usuario` varchar(20),
   `fecha_creacion` timestamp,
   `fecha_actualizacion` timestamp

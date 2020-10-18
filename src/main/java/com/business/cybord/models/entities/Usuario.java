@@ -18,7 +18,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "usuarios")
@@ -34,6 +33,9 @@ public class Usuario {
 
 	@Column(name = "nombre")
 	private String nombre;
+
+	@Column(name = "no_empleado")
+	private String noEmpleado;
 
 	@Column(name = "email")
 	private String email;
@@ -129,11 +131,20 @@ public class Usuario {
 		this.roles = roles;
 	}
 
+	public String getNoEmpleado() {
+		return noEmpleado;
+	}
+
+	public void setNoEmpleado(String noEmpleado) {
+		this.noEmpleado = noEmpleado;
+	}
+
 	@Override
 	public String toString() {
-		return "Usuario [id=" + id + ", activo=" + activo + ", nombre=" + nombre + ", email=" + email + ", tipoUsuario="
-				+ tipoUsuario + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
-				+ ", datosUsuario=" + datosUsuario + ", roles=" + roles + "]";
+		return "Usuario [id=" + id + ", activo=" + activo + ", nombre=" + nombre + ", noEmpleado=" + noEmpleado
+				+ ", email=" + email + ", tipoUsuario=" + tipoUsuario + ", fechaCreacion=" + fechaCreacion
+				+ ", fechaActualizacion=" + fechaActualizacion + ", datosUsuario=" + datosUsuario + ", roles=" + roles
+				+ "]";
 	}
 
 }
