@@ -18,6 +18,7 @@ public class UsuarioDto implements Serializable {
 	private Boolean activo;
 	private String nombre;
 	private String email;
+	private String noEmpleado;
 	private String tipoUsuario;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
@@ -96,11 +97,20 @@ public class UsuarioDto implements Serializable {
 		this.roles = roles;
 	}
 
+	public String getNoEmpleado() {
+		return noEmpleado;
+	}
+
+	public void setNoEmpleado(String noEmpleado) {
+		this.noEmpleado = noEmpleado;
+	}
+
 	@Override
 	public String toString() {
-		return "UsuariosDto [id=" + id + ", activo=" + activo + ", nombre=" + nombre + ", email=" + email
-				+ ", tipoUsuario=" + tipoUsuario + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
-				+ fechaActualizacion + ", datosUsuario=" + datosUsuario + ", roles=" + roles + "]";
+		return "UsuarioDto [id=" + id + ", activo=" + activo + ", nombre=" + nombre + ", email=" + email
+				+ ", noEmpleado=" + noEmpleado + ", tipoUsuario=" + tipoUsuario + ", fechaCreacion=" + fechaCreacion
+				+ ", fechaActualizacion=" + fechaActualizacion + ", datosUsuario=" + datosUsuario + ", roles=" + roles
+				+ "]";
 	}
 
 }
