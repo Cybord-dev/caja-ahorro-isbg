@@ -24,15 +24,15 @@ public class AuthenticationFilter extends GenericFilterBean {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
 			throws IOException, ServletException {
-		HttpServletRequest  req = (HttpServletRequest) request;
-		OidcUser oidcUser = (OidcUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if(oidcUser!=null && oidcUser.getAttributes()!=null && oidcUser.getEmail()!=null) {
-			log.debug("{} is requesting {}?{} from {}", oidcUser.getEmail(),req.getRequestURL(),req.getQueryString(),request.getRemoteAddr());
+//		HttpServletRequest  req = (HttpServletRequest) request;
+//		OidcUser oidcUser = (OidcUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//		if(oidcUser!=null && oidcUser.getAttributes()!=null && oidcUser.getEmail()!=null) {
+//			log.debug("{} is requesting {}?{} from {}", oidcUser.getEmail(),req.getRequestURL(),req.getQueryString(),request.getRemoteAddr());
 			filterChain.doFilter(request, response);	
-		}else {
-			log.error("Unauhtorized request {}?{} from {}",req.getRequestURL(),req.getQueryString(),request.getRemoteAddr());
-			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Session invalida o usuario no autorizado.");
-		}
+//		}else {
+//			log.error("Unauhtorized request {}?{} from {}",req.getRequestURL(),req.getQueryString(),request.getRemoteAddr());
+//			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Session invalida o usuario no autorizado.");
+//		}
 	}
 
 }

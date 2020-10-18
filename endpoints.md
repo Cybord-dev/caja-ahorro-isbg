@@ -59,6 +59,27 @@ SOLICITUDES
 -PUT    /solicitudes/{id_solicitud}
 -DELETE /solicitudes/{id_solicitud}
 
+-GET SOLICITUDES PAGINADAS
+
+    +TODAS
+    api/v1/solicitudesS
+    +POR TIPO SOLICITUD
+    api/v1/solicitudes?tipoSolicitud=SolicitudAhorro
+    +POR NOMBRE
+    api/v1/solicitudes?nombre=Edgar
+    +POR NO EMPLEADO
+    api/v1/solicitudes?noEmpleado=7
+    +POR TIPO USUARIO
+    api/v1/solicitudes?tipoUsuario=INTERNO
+    +POR ESTATUS
+    api/v1/solicitudes?estatus=Rechazada
+    +POR FECHA INICIO
+    api/v1/solicitudes?since=2020-09-18
+    +POR FECHA FINAL
+    api/v1/solicitudes?to=Rechazada
+    +PAGES
+    api/v1/solicitudes?&page=0&size=1
+
 
 
 GET /usuarios/{id_user}/solicitudes/{id_solicitud}/atributos todos los solicitudes de la plataforma <-- filtrados dinamicos

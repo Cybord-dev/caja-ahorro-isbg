@@ -16,11 +16,15 @@ public class UserSolicitudExtractor implements ResultSetExtractor<List<UserSolic
 		List<UserSolicitudDto> registros = new ArrayList<>();
 		while (rs.next()) {
 			UserSolicitudDto result = new UserSolicitudDto();
-			result.setIdSolicitud(rs.getInt("id_solicitud"));
+			result.setNoEmpleado(rs.getInt("no_empleado"));
 			result.setIdUser(rs.getInt("id_solicitud"));
 			result.setNombre(rs.getString("nombre"));
 			result.setTipo(rs.getString("tipo_solicitud"));
+			result.setFechaSolicitud(rs.getDate("fecha_creacion"));
+			result.setTipoUsuario(rs.getString("tipo_usuario"));
+			result.setStatusSolicitud(rs.getString("estatus"));
 			registros.add(result);
+			
 		}
 		return registros;
 	}
