@@ -72,9 +72,9 @@ spring:
 spring:
   profiles: stg
   datasource:
-        url: jdbc:mysql://localhost:3306/caja_isbg
-        username: caja_isbg
-        password: hola123
+        url: jdbc:mysql://isbg.ckqz4zbtwhi3.us-west-1.rds.amazonaws.com:3306/isbg
+        username: master
+        password: 51g35ISBG
         driverClassName: com.mysql.cj.jdbc.Driver
   jpa:
     show-sql: true

@@ -42,7 +42,7 @@ public class SolicitudesContoller {
 
 	@GetMapping("/usuarios/{idUsuario}/solicitudes")
 	public ResponseEntity<List<SolicitudDto>> crearSolicitud(@PathVariable Integer idUsuario) {
-		return new ResponseEntity<>(service.getSolicitudByIdUsuario(idUsuario), HttpStatus.CREATED);
+		return new ResponseEntity<>(service.getSolicitudByIdUsuario(idUsuario), HttpStatus.OK);
 	}
 
 	@GetMapping("/usuarios/{idUsuario}/solicitudes/{idSolicitud}")
