@@ -1,16 +1,29 @@
 package com.business.cybord.models.dtos.composed;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class UserSolicitudDto {
+public class UserSolicitudDto implements Serializable {
 
+	private static final long serialVersionUID = 4223586331591210264L;
+
+	private int id;
 	private int noEmpleado;
-	private int idUser;
+	private int idUsuario;
 	private String nombre;
 	private String tipo;
-	private Date fechaSolicitud;
+	private Date fechaEjecucion;
+	private Date fechaCreacion;
 	private String tipoUsuario;
-	private String statusSolicitud;
+	private String status;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public int getNoEmpleado() {
 		return noEmpleado;
@@ -20,12 +33,12 @@ public class UserSolicitudDto {
 		this.noEmpleado = noEmpleado;
 	}
 
-	public int getIdUser() {
-		return idUser;
+	public int getIdUsuario() {
+		return idUsuario;
 	}
 
-	public void setIdUser(int idUser) {
-		this.idUser = idUser;
+	public void setIdUsuario(int idUsuario) {
+		this.idUsuario = idUsuario;
 	}
 
 	public String getNombre() {
@@ -44,12 +57,20 @@ public class UserSolicitudDto {
 		this.tipo = tipo;
 	}
 
-	public Date getFechaSolicitud() {
-		return fechaSolicitud;
+	public Date getFechaEjecucion() {
+		return fechaEjecucion;
 	}
 
-	public void setFechaSolicitud(Date fechaSolicitud) {
-		this.fechaSolicitud = fechaSolicitud;
+	public void setFechaEjecucion(Date fechaEjecucion) {
+		this.fechaEjecucion = fechaEjecucion;
+	}
+
+	public Date getFechaCreacion() {
+		return fechaCreacion;
+	}
+
+	public void setFechaCreacion(Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
 	}
 
 	public String getTipoUsuario() {
@@ -60,19 +81,19 @@ public class UserSolicitudDto {
 		this.tipoUsuario = tipoUsuario;
 	}
 
-	public String getStatusSolicitud() {
-		return statusSolicitud;
+	public String getStatus() {
+		return status;
 	}
 
-	public void setStatusSolicitud(String statusSolicitud) {
-		this.statusSolicitud = statusSolicitud;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	@Override
 	public String toString() {
-		return "UserSolicitudDto [noEmpleado=" + noEmpleado + ", idUser=" + idUser + ", nombre=" + nombre + ", tipo="
-				+ tipo + ", fechaSolicitud=" + fechaSolicitud + ", tipoUsuario=" + tipoUsuario + ", statusSolicitud="
-				+ statusSolicitud + "]";
+		return "UserSolicitudDto [id=" + id + ", noEmpleado=" + noEmpleado + ", idUsuario=" + idUsuario + ", nombre="
+				+ nombre + ", tipo=" + tipo + ", fechaEjecucion=" + fechaEjecucion + ", fechaCreacion=" + fechaCreacion
+				+ ", tipoUsuario=" + tipoUsuario + ", status=" + status + "]";
 	}
 
 }
