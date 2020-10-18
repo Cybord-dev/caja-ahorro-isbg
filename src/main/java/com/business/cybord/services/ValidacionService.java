@@ -82,11 +82,17 @@ public class ValidacionService {
 							String.format("Tipo de solicitud %s no existe", solicitudDto.getTipo()),
 							"No existe el tipo de soliciitud", HttpStatus.CONFLICT.value()))
 					.getEnumValue();
+			if (solicitudDto.getValidaciones().stream()
+					.anyMatch(a -> a.getArea().equals(EventFactoryTypeEnum.VALIDA_GERENCIA.getReferenceName())
+							&& validacion.getArea().equals(EventFactoryTypeEnum.VALIDA_GERENCIA.getReferenceName()))) {
+				validacion.setArea(EventFactoryTypeEnum.VALIDA_GERENCIA2.getReferenceName());
+			}
 			State newState = new State(EventFactoryTypeEnum.findByReferenceName(validacion.getArea())
 					.orElseThrow(
 							() -> new IsbgServiceException(String.format("Evento %s no existe", validacion.getArea()),
 									"No existe el evento", HttpStatus.CONFLICT.value()))
 					.getState());
+			
 			ISolicitud solicitud = sfte.getInstance();
 			solicitud.define(solicitudDto.getStatus());
 			solicitudDto.getValidaciones().sort((d1, d2) -> d1.getFechaCreacion().compareTo(d2.getFechaCreacion()));
