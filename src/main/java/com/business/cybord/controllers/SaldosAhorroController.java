@@ -15,27 +15,33 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.business.cybord.models.dtos.SaldoAhorroDto;
+import com.business.cybord.models.dtos.composed.ReporteSaldosDto;
 import com.business.cybord.services.SaldoAhorroService;
 
 @RestController
-@RequestMapping("/api/v1/usuarios")
+@RequestMapping("/api/v1")
 public class SaldosAhorroController {
 
 	@Autowired
 	private SaldoAhorroService service;
 
-	@GetMapping("/{idUsuario}/ahorros")
+	@GetMapping("/saldosAhorro")
+	public ResponseEntity<List<ReporteSaldosDto>> getSaldosAhorrosCurrentCaja() {
+		return new ResponseEntity<>(service.getSaldosAhorrosCurrentCaja(), HttpStatus.OK);
+	}
+
+	@GetMapping("/usuarios/{idUsuario}/ahorros")
 	public ResponseEntity<List<SaldoAhorroDto>> getSaldosAhorroDeUnUsuarioPorSuId(@PathVariable Integer idUsuario) {
 		return new ResponseEntity<>(service.getSaldosAhorroDeUnUsuarioPorSuId(idUsuario), HttpStatus.OK);
 	}
 
-	@PostMapping("/{idUsuario}/ahorros")
+	@PostMapping("/usuarios/{idUsuario}/ahorros")
 	public ResponseEntity<SaldoAhorroDto> insertSadoAhorro(@PathVariable Integer idUsuario,
 			@RequestBody @Valid SaldoAhorroDto dto) {
 		return new ResponseEntity<>(service.insertSadoAhorro(idUsuario, dto), HttpStatus.CREATED);
 	}
 
-	@GetMapping("/{idUsuario}/ahorros/{idAhorro}")
+	@GetMapping("/usuarios/{idUsuario}/ahorros/{idAhorro}")
 	public ResponseEntity<SaldoAhorroDto> getSaldoAhorroPorIdYIdusuario(@PathVariable Integer idUsuario,
 			@PathVariable Integer idAhorro) {
 		return new ResponseEntity<>(service.getSaldoAhorroPorIdYIdusuario(idUsuario, idAhorro), HttpStatus.OK);

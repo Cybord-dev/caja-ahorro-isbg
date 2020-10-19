@@ -80,11 +80,12 @@ public class ValidacionDao {
 		validiacion.addColumn("email", "String", null);
 		validiacion.addColumn("estatus", "String", null);
 		validiacion.addColumn("estatus_desc", "String", null);
+		validiacion.addColumn("area", "String", null);
 		usuarios.addColumn("nombre", "String", null);
 		usuarios.addColumn("id_usuario", "String", null);
 		usuarios.addColumn("tipo_usuario", "caca", null);
 		usuarios.addColumn("no_empleado", "String", null);
-		solicitudes.addColumn("fecha_ejecucion","String",null);
+		solicitudes.addColumn("fecha_ejecucion", "String", null);
 		solicitudes.addColumn("id_solicitud", "String", null);
 		solicitudes.addColumn("tipo_solicitud", "String", null);
 		solicitudes.addColumn("estatus", "String", null);
@@ -94,17 +95,12 @@ public class ValidacionDao {
 						BinaryCondition.equalTo(joinColumnA, joinColumnA2))
 				.addJoin(SelectQuery.JoinType.INNER, solicitudes, usuarios,
 						BinaryCondition.equalTo(joinColumnB, joinColumnB2))
-				.addColumns(validiacion.findColumns("id_validacion"))
-				.addColumns(validiacion.findColumns("email"))
-				.addColumns(validiacion.findColumns("estatus"))
-				.addColumns(validiacion.findColumns("estatus_desc"))
-				.addColumns(validiacion.findColumns("fecha_creacion"))
-				.addColumns(usuarios.findColumns("no_empleado"))
-				.addColumns(usuarios.findColumns("nombre"))
-				.addColumns(usuarios.findColumns("tipo_usuario"))
-				.addColumns(usuarios.findColumns("id_usuario"))
-				.addColumns(solicitudes.findColumns("id_solicitud"))
-				.addColumns(solicitudes.findColumns("estatus"))
+				.addColumns(validiacion.findColumns("id_validacion")).addColumns(validiacion.findColumns("email"))
+				.addColumns(validiacion.findColumns("estatus")).addColumns(validiacion.findColumns("estatus_desc"))
+				.addColumns(validiacion.findColumns("fecha_creacion")).addColumns(validiacion.findColumns("area"))
+				.addColumns(usuarios.findColumns("no_empleado")).addColumns(usuarios.findColumns("nombre"))
+				.addColumns(usuarios.findColumns("tipo_usuario")).addColumns(usuarios.findColumns("id_usuario"))
+				.addColumns(solicitudes.findColumns("id_solicitud")).addColumns(solicitudes.findColumns("estatus"))
 				.addColumns(solicitudes.findColumns("tipo_solicitud"))
 				.addColumns(solicitudes.findColumns("fecha_ejecucion"))
 				.addCondition(BinaryCondition.greaterThanOrEq(validiacion.findColumn("fecha_creacion"), since))
@@ -136,11 +132,11 @@ public class ValidacionDao {
 			if (parameters.containsKey(sol.getParamName())) {
 				if (sol.isLikeable()) {
 					validiacion.addColumn(sol.getFieldName(), "String", null);
-					selectByParams.addCondition(BinaryCondition.like(usuarios.addColumn(sol.getFieldName()),
+					selectByParams.addCondition(BinaryCondition.like(validiacion.addColumn(sol.getFieldName()),
 							"%" + parameters.get(sol.getParamName()) + "%"));
 				} else {
-					usuarios.addColumn(sol.getFieldName(), "String", null);
-					selectByParams.addCondition(BinaryCondition.equalTo(usuarios.addColumn(sol.getFieldName()),
+					validiacion.addColumn(sol.getFieldName(), "String", null);
+					selectByParams.addCondition(BinaryCondition.equalTo(validiacion.addColumn(sol.getFieldName()),
 							parameters.get(sol.getParamName())));
 				}
 			}
@@ -201,11 +197,11 @@ public class ValidacionDao {
 			if (parameters.containsKey(sol.getParamName())) {
 				if (sol.isLikeable()) {
 					validiacion.addColumn(sol.getFieldName(), "String", null);
-					selectByParams.addCondition(BinaryCondition.like(usuarios.addColumn(sol.getFieldName()),
+					selectByParams.addCondition(BinaryCondition.like(validiacion.addColumn(sol.getFieldName()),
 							"%" + parameters.get(sol.getParamName()) + "%"));
 				} else {
-					usuarios.addColumn(sol.getFieldName(), "String", null);
-					selectByParams.addCondition(BinaryCondition.equalTo(usuarios.addColumn(sol.getFieldName()),
+					validiacion.addColumn(sol.getFieldName(), "String", null);
+					selectByParams.addCondition(BinaryCondition.equalTo(validiacion.addColumn(sol.getFieldName()),
 							parameters.get(sol.getParamName())));
 				}
 			}

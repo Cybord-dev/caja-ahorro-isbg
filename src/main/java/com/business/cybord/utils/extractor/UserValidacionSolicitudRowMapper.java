@@ -9,7 +9,6 @@ import com.business.cybord.models.dtos.composed.UserValidacionSolicitudDto;
 
 public class UserValidacionSolicitudRowMapper implements RowMapper<UserValidacionSolicitudDto> {
 
-
 	@Override
 	public UserValidacionSolicitudDto mapRow(ResultSet rs, int rowNum) throws SQLException {
 		UserValidacionSolicitudDto result = new UserValidacionSolicitudDto();
@@ -17,6 +16,7 @@ public class UserValidacionSolicitudRowMapper implements RowMapper<UserValidacio
 		result.setId(rs.getInt("id_solicitud"));
 		result.setIdUsuario(rs.getInt("id_usuario"));
 		result.setNombre(rs.getString("nombre"));
+		result.setArea(rs.getString("area"));
 		result.setTipo(rs.getString("tipo_solicitud"));
 		result.setFechaCreacion(rs.getDate("fecha_creacion"));
 		result.setTipoUsuario(rs.getString("tipo_usuario"));

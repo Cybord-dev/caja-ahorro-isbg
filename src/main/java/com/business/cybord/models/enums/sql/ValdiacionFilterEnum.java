@@ -4,7 +4,7 @@ public enum ValdiacionFilterEnum {
 
 	CORREO("email", "email", true),
 	AREA("area", "area", false),
-	ESTATUS("estatus", "estatus", false);
+	ESTATUS("status", "estatus", false);
 
 	private String paramName;
 	private String fieldName;
