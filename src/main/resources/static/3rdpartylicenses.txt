@@ -343,6 +343,8 @@ ngx-bootstrap/dropdown
 
 ngx-bootstrap/mini-ngrx
 
+ngx-bootstrap/modal
+
 ngx-bootstrap/positioning
 
 ngx-bootstrap/tabs
