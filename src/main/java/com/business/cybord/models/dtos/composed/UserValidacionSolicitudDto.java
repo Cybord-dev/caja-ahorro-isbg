@@ -12,6 +12,7 @@ public class UserValidacionSolicitudDto implements Serializable {
 	private Date fechaCreacion;
 	private String aprobada;
 	private String detalle;
+	private String area;
 
 	private int noEmpleado;
 	private int idUsuario;
@@ -127,12 +128,20 @@ public class UserValidacionSolicitudDto implements Serializable {
 		this.aprobada = aprobada;
 	}
 
+	public String getArea() {
+		return area;
+	}
+
+	public void setArea(String area) {
+		this.area = area;
+	}
+
 	@Override
 	public String toString() {
 		return "UserValidacionSolicitudDto [id=" + id + ", validador=" + validador + ", fechaCreacion=" + fechaCreacion
-				+ ", aprobada=" + aprobada + ", detalle=" + detalle + ", noEmpleado=" + noEmpleado + ", idUsuario="
-				+ idUsuario + ", nombre=" + nombre + ", tipoUsuario=" + tipoUsuario + ", idSolicitud=" + idSolicitud
-				+ ", tipo=" + tipo + ", fechaEjecucion=" + fechaEjecucion + ", status=" + status + "]";
+				+ ", aprobada=" + aprobada + ", detalle=" + detalle + ", area=" + area + ", noEmpleado=" + noEmpleado
+				+ ", idUsuario=" + idUsuario + ", nombre=" + nombre + ", tipoUsuario=" + tipoUsuario + ", idSolicitud="
+				+ idSolicitud + ", tipo=" + tipo + ", fechaEjecucion=" + fechaEjecucion + ", status=" + status + "]";
 	}
 
 }
