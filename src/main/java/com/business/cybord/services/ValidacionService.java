@@ -1,12 +1,16 @@
 package com.business.cybord.services;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.jeasy.states.api.AbstractEvent;
 import org.jeasy.states.api.FiniteStateMachineException;
 import org.jeasy.states.api.State;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -14,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.business.cybord.mappers.SolicitudMapper;
 import com.business.cybord.models.dtos.SolicitudDto;
 import com.business.cybord.models.dtos.ValidacionDto;
+import com.business.cybord.models.dtos.composed.UserValidacionSolicitudDto;
 import com.business.cybord.models.entities.Solicitud;
 import com.business.cybord.models.entities.Validacion;
 import com.business.cybord.models.enums.EventFactoryTypeEnum;
@@ -22,6 +27,7 @@ import com.business.cybord.models.enums.SolicitudFactoryTypeEnum;
 import com.business.cybord.models.error.IsbgServiceException;
 import com.business.cybord.repositories.SolicitudRepository;
 import com.business.cybord.repositories.ValidacionRepository;
+import com.business.cybord.repositories.dao.ValidacionDao;
 import com.business.cybord.states.solicitudes.ISolicitud;
 
 @Service
@@ -33,9 +39,13 @@ public class ValidacionService {
 	private SolicitudRepository repositorySol;
 	@Autowired
 	private SolicitudMapper mapper;
+	@Autowired
+	private ValidacionDao validacionDao;
 
-	public List<ValidacionDto> getAllValidaciones() {
-		return mapper.validacionDtoToValidacion(repositoryValidacion.findAll());
+	public Page<UserValidacionSolicitudDto> getAllValidaciones(Map<String, String> parameters) {
+		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
+		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
+		return validacionDao.findAll(parameters,PageRequest.of(page, size, Sort.by("fechaActualizacion")));
 	}
 
 	public List<ValidacionDto> getAllValidacionesByIdSolicitud(int idSol) {
