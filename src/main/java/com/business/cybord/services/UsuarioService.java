@@ -110,6 +110,7 @@ public class UsuarioService {
 		entity.setActivo(usuario.getActivo());
 		entity.setNombre(usuario.getNombre());
 		entity.setTipoUsuario(usuario.getTipoUsuario());
+		entity.setNoEmpleado(usuario.getNoEmpleado());
 		return mapper.getDtoFromUserEntity(repository.save(entity));
 	}
 
