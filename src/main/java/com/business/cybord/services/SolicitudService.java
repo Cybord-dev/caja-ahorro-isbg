@@ -16,7 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.cybord.mappers.SolicitudMapper;
+import com.business.cybord.mappers.UsuariosMapper;
 import com.business.cybord.models.dtos.SolicitudDto;
+import com.business.cybord.models.dtos.UsuarioDto;
 import com.business.cybord.models.dtos.composed.UserSolicitudDto;
 import com.business.cybord.models.entities.AtributoSolicitud;
 import com.business.cybord.models.entities.Solicitud;
@@ -43,6 +45,8 @@ public class SolicitudService {
 	private AtributoSolicitudRepository atributoSolicitudRepository;
 	@Autowired
 	private SolicitudMapper mapper;
+	@Autowired
+	private UsuariosMapper usuariosMapper;
 	@Autowired
 	private SuiteManager suiteManager;
 	@Autowired
@@ -84,7 +88,7 @@ public class SolicitudService {
 		Usuario usuario = repositoryUsuario.findById(idUsuario)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 						String.format("el usuario id= %d no existe", idUsuario)));
-		executeRules(solicitudDto);
+		executeRules(solicitudDto,usuariosMapper.getDtoFromUserEntity(usuario));
 		SolicitudFactoryEnum sfte = SolicitudFactoryTypeEnum.findByReferenceName(solicitudDto.getTipo())
 				.orElseThrow(() -> new IsbgServiceException(
 						String.format("Tipo de solicitud %s no existe", solicitudDto.getTipo()),
@@ -104,11 +108,12 @@ public class SolicitudService {
 		return mapper.getDtoFromSolicitudEntity(nueva);
 	}
 
-	private void executeRules(SolicitudDto solicitudDto) throws IsbgServiceException {
+	private void executeRules(SolicitudDto solicitudDto,UsuarioDto usuarioDto) throws IsbgServiceException {
 		ISuite suite = suiteManager.getSolicitudSuite(solicitudDto.getTipo());
 		Facts facts = new Facts();
 		List<String> results = new ArrayList<>();
 		facts.put("solicitud", solicitudDto);
+		facts.put("usuario", usuarioDto);
 		facts.put("results", results);
 		rulesEngine.fire(suite.getSuite(), facts);
 		if (!results.isEmpty()) {

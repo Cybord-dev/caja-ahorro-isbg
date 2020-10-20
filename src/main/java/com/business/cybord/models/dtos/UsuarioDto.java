@@ -18,6 +18,7 @@ public class UsuarioDto implements Serializable {
 	private Boolean activo;
 	private String nombre;
 	private String email;
+	private Boolean ahorrador;
 	private String noEmpleado;
 	private String tipoUsuario;
 	private Date fechaCreacion;
@@ -103,6 +104,15 @@ public class UsuarioDto implements Serializable {
 
 	public void setNoEmpleado(String noEmpleado) {
 		this.noEmpleado = noEmpleado;
+	}
+
+	
+	public Boolean isAhorrador() {
+		return ahorrador;
+	}
+
+	public void setAhorrador(Boolean ahorrador) {
+		this.ahorrador = ahorrador;
 	}
 
 	@Override

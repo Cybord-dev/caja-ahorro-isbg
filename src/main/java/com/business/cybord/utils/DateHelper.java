@@ -23,4 +23,11 @@ public class DateHelper {
 		cal.add(Calendar.DATE, 1);
 		return cal.getTime();
 	}
+	
+	public Date addDays(Date date,int days) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.DATE, days);
+		return cal.getTime();
+	}
 }

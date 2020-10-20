@@ -28,6 +28,7 @@ import com.business.cybord.models.error.IsbgServiceException;
 import com.business.cybord.repositories.SolicitudRepository;
 import com.business.cybord.repositories.ValidacionRepository;
 import com.business.cybord.repositories.dao.ValidacionDao;
+import com.business.cybord.services.executors.SolicitudExecutorManager;
 import com.business.cybord.states.solicitudes.ISolicitud;
 
 @Service
@@ -41,6 +42,8 @@ public class ValidacionService {
 	private SolicitudMapper mapper;
 	@Autowired
 	private ValidacionDao validacionDao;
+	@Autowired
+	private SolicitudExecutorManager solicitudExecutorManager;
 
 	public Page<UserValidacionSolicitudDto> getAllValidaciones(Map<String, String> parameters) {
 		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
@@ -67,10 +70,11 @@ public class ValidacionService {
 		if (validacion.isStatus()) {
 			SolicitudDto solicitudDto = mapper.getDtoFromSolicitudEntity(sol);
 			sol.setStatus(validaEstadoActual(solicitudDto, validacion));
-			repositorySol.save(sol);
+			solicitudDto=mapper.getDtoFromSolicitudEntity(repositorySol.save(sol));
 			validacion.setNumeroValidacion(solicitudDto.getValidaciones().size() + 1);
 			Validacion val = mapper.getEntityFromValidacionesDto(validacion);
 			val.setSolicitud(sol);
+			solicitudExecutorManager.getSolicitudExecutor(solicitudDto.getTipo()).execute(solicitudDto);
 			return mapper.getDtoFromValidacionesEntity(repositoryValidacion.save(val));
 		} else {
 			SolicitudDto solicitudDto = mapper.getDtoFromSolicitudEntity(sol);
