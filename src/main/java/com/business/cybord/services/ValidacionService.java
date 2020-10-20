@@ -48,7 +48,7 @@ public class ValidacionService {
 	public Page<UserValidacionSolicitudDto> getAllValidaciones(Map<String, String> parameters) {
 		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
 		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
-		return validacionDao.findAll(parameters,PageRequest.of(page, size, Sort.by("fechaActualizacion")));
+		return validacionDao.findAll(parameters, PageRequest.of(page, size, Sort.by("fechaActualizacion")));
 	}
 
 	public List<ValidacionDto> getAllValidacionesByIdSolicitud(int idSol) {
@@ -70,12 +70,13 @@ public class ValidacionService {
 		if (validacion.isStatus()) {
 			SolicitudDto solicitudDto = mapper.getDtoFromSolicitudEntity(sol);
 			sol.setStatus(validaEstadoActual(solicitudDto, validacion));
-			solicitudDto=mapper.getDtoFromSolicitudEntity(repositorySol.save(sol));
+			solicitudDto = mapper.getDtoFromSolicitudEntity(repositorySol.save(sol));
 			validacion.setNumeroValidacion(solicitudDto.getValidaciones().size() + 1);
 			Validacion val = mapper.getEntityFromValidacionesDto(validacion);
 			val.setSolicitud(sol);
-			solicitudExecutorManager.getSolicitudExecutor(solicitudDto.getTipo()).execute(solicitudDto);
-			return mapper.getDtoFromValidacionesEntity(repositoryValidacion.save(val));
+			validacion = mapper.getDtoFromValidacionesEntity(repositoryValidacion.save(val));
+			solicitudExecutorManager.getSolicitudExecutor(solicitudDto.getTipo()).execute(solicitudDto, validacion);
+			return validacion;
 		} else {
 			SolicitudDto solicitudDto = mapper.getDtoFromSolicitudEntity(sol);
 			sol.setStatus("Rechazada");
@@ -84,6 +85,7 @@ public class ValidacionService {
 			Validacion val = mapper.getEntityFromValidacionesDto(validacion);
 			val.setSolicitud(sol);
 			validacion.setNumeroValidacion(solicitudDto.getValidaciones().size() + 1);
+			solicitudExecutorManager.getSolicitudExecutor(solicitudDto.getTipo()).rechazo(solicitudDto, validacion);
 			return mapper.getDtoFromValidacionesEntity(repositoryValidacion.save(val));
 		}
 
@@ -106,7 +108,7 @@ public class ValidacionService {
 							() -> new IsbgServiceException(String.format("Evento %s no existe", validacion.getArea()),
 									"No existe el evento", HttpStatus.CONFLICT.value()))
 					.getState());
-			
+
 			ISolicitud solicitud = sfte.getInstance();
 			solicitud.define(solicitudDto.getStatus());
 			solicitudDto.getValidaciones().sort((d1, d2) -> d1.getFechaCreacion().compareTo(d2.getFechaCreacion()));
