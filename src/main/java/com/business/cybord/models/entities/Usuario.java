@@ -40,6 +40,9 @@ public class Usuario {
 	@Column(name = "email")
 	private String email;
 
+	@Column(name = "ahorrador")
+	private Boolean ahorrador;
+
 	@Column(name = "tipo_usuario")
 	private String tipoUsuario;
 
@@ -139,12 +142,20 @@ public class Usuario {
 		this.noEmpleado = noEmpleado;
 	}
 
+	public Boolean getAhorrador() {
+		return ahorrador;
+	}
+
+	public void setAhorrador(Boolean ahorrador) {
+		this.ahorrador = ahorrador;
+	}
+
 	@Override
 	public String toString() {
 		return "Usuario [id=" + id + ", activo=" + activo + ", nombre=" + nombre + ", noEmpleado=" + noEmpleado
-				+ ", email=" + email + ", tipoUsuario=" + tipoUsuario + ", fechaCreacion=" + fechaCreacion
-				+ ", fechaActualizacion=" + fechaActualizacion + ", datosUsuario=" + datosUsuario + ", roles=" + roles
-				+ "]";
+				+ ", email=" + email + ", ahorrador=" + ahorrador + ", tipoUsuario=" + tipoUsuario + ", fechaCreacion="
+				+ fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + ", datosUsuario=" + datosUsuario
+				+ ", roles=" + roles + "]";
 	}
 
 }

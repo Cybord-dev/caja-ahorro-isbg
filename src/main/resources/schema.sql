@@ -17,12 +17,12 @@ CREATE TABLE IF NOT EXISTS `cat_roles` (
   `nombre` varchar(45) NOT NULL UNIQUE
 );
 
-
 CREATE TABLE IF NOT EXISTS `usuarios` (
   `id_usuario` int(11) NOT NULL AUTO_INCREMENT UNIQUE,
   `nombre` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL UNIQUE,
   `estatus` tinyint(1) NOT NULL DEFAULT '0',
+  `ahorrador` tinyint(1) NOT NULL DEFAULT '0',
   `no_empleado` varchar(15),
   `tipo_usuario` varchar(20),
   `fecha_creacion` timestamp,

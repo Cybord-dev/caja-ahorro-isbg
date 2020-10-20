@@ -4,6 +4,7 @@ import org.jeasy.rules.api.Rules;
 
 import com.business.cybord.rules.validations.FechaInicioAhorroRule;
 import com.business.cybord.rules.validations.MontoMinimoAhorroRule;
+import com.business.cybord.rules.validations.SoyAhorradorRule;
 
 public class SolicitudAhorroSuite implements ISuite {
 
@@ -12,6 +13,7 @@ public class SolicitudAhorroSuite implements ISuite {
 	public SolicitudAhorroSuite() {
 		rules.register(new MontoMinimoAhorroRule());
 		rules.register(new FechaInicioAhorroRule());
+		rules.register(new SoyAhorradorRule());
 	}
 
 	@Override

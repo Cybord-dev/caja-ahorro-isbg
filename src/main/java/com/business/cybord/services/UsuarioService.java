@@ -141,7 +141,6 @@ public class UsuarioService {
 		throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, String.format("%s no es un usuario autorizado", "anonymous"));
 	}
 	
-	
 	private MenuItem getMenuFromResource(String fileName) {
 		try {
 		InputStream is = Thread.currentThread().getContextClassLoader()

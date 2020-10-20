@@ -1,6 +1,5 @@
 package com.business.cybord.models.entities;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -28,7 +27,7 @@ public class Rol {
 	@JoinColumn(name = "id_usuario", nullable = false)
 	private Usuario usuario;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne
 	@JoinColumn(name = "id_rol")
 	private RolCat rolname;
 
