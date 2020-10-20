@@ -2,6 +2,8 @@ package com.business.cybord.services;
 
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -25,7 +27,8 @@ public class DatoUsuarioService {
 
 	@Autowired
 	private DatoUsuarioMapper mapper;
-
+	
+	private static final Logger log = LoggerFactory.getLogger(UsuarioService.class);
 	public DatosUsuarioDto insertarNuevoDatoUsuario(DatosUsuarioDto datosUsuario, Integer idUsuario) {
 		Usuario usuario = usuariosRepository.findById(idUsuario)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -46,12 +49,15 @@ public class DatoUsuarioService {
 	}
 
 	public DatosUsuarioDto actualizarDatoUsuario(int idUsuario, String tipoDato, DatosUsuarioDto datosUsuario) {
-		DatosUsuario dato = repository.findByTipoDatoAndIdUsuario(tipoDato, idUsuario)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
-						String.format("El dato %s no existe", datosUsuario.getTipoDato())));
-		dato.setDato(datosUsuario.getDato());
-		dato.setRelevancia(datosUsuario.isRelevancia());
-		return mapper.getDtoFromDatosusuarioEntity(repository.save(dato));
+		Optional<DatosUsuario> dato = repository.findByTipoDatoAndIdUsuario(tipoDato, idUsuario);
+		if(!dato.isPresent()) {
+			return insertarNuevoDatoUsuario(datosUsuario, idUsuario);
+		}else {
+			dato.get().setDato(datosUsuario.getDato());
+			dato.get().setRelevancia(datosUsuario.isRelevancia());
+			return mapper.getDtoFromDatosusuarioEntity(repository.save(dato.get()));
+		}
+		
 
 	}
 
