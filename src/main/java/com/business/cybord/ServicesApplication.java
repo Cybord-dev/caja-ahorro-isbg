@@ -11,6 +11,7 @@ import com.business.cybord.rules.suites.CancelacionAhorroSuite;
 import com.business.cybord.rules.suites.ModificacionAhorroSuite;
 import com.business.cybord.rules.suites.RetiroParcialAhorroSuite;
 import com.business.cybord.rules.suites.SolicitudAhorroSuite;
+import com.business.cybord.utils.helper.MailHelper;
 
 @SpringBootApplication
 public class ServicesApplication {
@@ -43,6 +44,12 @@ public class ServicesApplication {
 		return new RetiroParcialAhorroSuite();
 	}
 
+	
+	@Bean
+	public MailHelper getMailHelper() {
+		return new MailHelper();
+	}
+	
 	@Bean
 	public RulesEngine getRulesEngine() {
 		return new DefaultRulesEngine();
