@@ -4,7 +4,7 @@
     "icon": "icon-user-follow",
    "children": [
       {
-        "name": "Aprobación ahorro",
+        "name": "Aprobaciónes",
         "url": "/gerencia/validaciones",
         "icon": "icon-check"
       },
