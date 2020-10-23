@@ -21,7 +21,7 @@ import com.business.cybord.services.MailService;
 import com.business.cybord.services.SaldoAhorroService;
 
 @Service
-@Qualifier("RetiroParcialAhorroSuiteExecutor")
+@Qualifier("RetiroParcialAhorroExecutor")
 public class SolicitudRetiroParcialExecutor implements SolicitudExecutor {
 
 	@Autowired
@@ -50,14 +50,14 @@ public class SolicitudRetiroParcialExecutor implements SolicitudExecutor {
 							new BigDecimal(atributo.getValor()).multiply(new BigDecimal(-1)), true));
 			mailService.sentEmail(usuario.getEmail(),
 					String.format("Notificacion de finalizacion de la solicitud:%s", solicitudDto.getTipo()),
-					String.format("Hola %s,\nSe completo  tu solicitud numero:%d del tipo %s ", usuario.getNombre(),
-							solicitudDto.getId(), solicitudDto.getTipo()));
+					String.format("Hola %s,\n\nSe completo  tu solicitud con el folio %d del tipo %s y el monto %s \n\nSaludos.", usuario.getNombre(),
+							solicitudDto.getId(), solicitudDto.getTipo(),atributo.getValor()));
 		} else {
 			mailService.sentEmail(usuario.getEmail(),
 					String.format("Notificacion de autorizacion de la solicitud:%s", solicitudDto.getTipo()),
 					String.format(
-							"Hola %s,\nSe realizo la validacion para tu solicitud numero:%d del tipo %s en el area %s",
-							usuario.getNombre(), solicitudDto.getId(), solicitudDto.getTipo(),
+							"Hola %s,\n\nSe realizo la validacion numero  %d para tu solicitud con el folio:%d del tipo %s en el area %s \n\nSaludos.",
+							usuario.getNombre(), validacionDto.getNumeroValidacion(),solicitudDto.getId(), solicitudDto.getTipo(),
 							validacionDto.getArea()));
 		}
 	}
@@ -71,8 +71,9 @@ public class SolicitudRetiroParcialExecutor implements SolicitudExecutor {
 		mailService.sentEmail(usuario.getEmail(),
 				String.format("Notificacion de rechazo de la solicitud: %s ", solicitudDto.getTipo()),
 				String.format(
-						"Hola %s,\nNo se completo tu solicitud numero:%d del tipo %s en el area %s por el motivo %s",
+						"Hola %s,\n\nNo se completo tu solicitud con el follio %d del tipo %s en el area %s por el motivo %s\n\nSaludos.",
 						usuario.getNombre(), solicitudDto.getId(), solicitudDto.getTipo(), validacionDto.getArea(),
-						solicitudDto.getStatusDetalle()));
+						validacionDto.getStatusDesc()));
 	}
+
 }

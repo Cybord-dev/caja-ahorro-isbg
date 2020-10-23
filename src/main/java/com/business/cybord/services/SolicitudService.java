@@ -1,6 +1,9 @@
 package com.business.cybord.services;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -25,6 +28,7 @@ import com.business.cybord.models.entities.Solicitud;
 import com.business.cybord.models.entities.Usuario;
 import com.business.cybord.models.enums.SolicitudFactoryEnum;
 import com.business.cybord.models.enums.SolicitudFactoryTypeEnum;
+import com.business.cybord.models.enums.TipoAtributoSolicitudEnum;
 import com.business.cybord.models.error.IsbgServiceException;
 import com.business.cybord.repositories.AtributoSolicitudRepository;
 import com.business.cybord.repositories.SolicitudRepository;
@@ -54,10 +58,12 @@ public class SolicitudService {
 	@Autowired
 	private SolicitudDao solicitudDao;
 
+	DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+
 	public Page<UserSolicitudDto> getAllSolicitudes(Map<String, String> parameters) {
 		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
 		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
-		return solicitudDao.findAll(parameters,PageRequest.of(page, size, Sort.by("fechaActualizacion")));
+		return solicitudDao.findAll(parameters, PageRequest.of(page, size, Sort.by("fechaActualizacion")));
 	}
 
 	public List<SolicitudDto> getSolicitudByIdUsuario(int idUsuario) {
@@ -73,7 +79,7 @@ public class SolicitudService {
 					String.format("la solicitud id=%d no existe con el usuario id=%d", idSolicitud, idUsuario));
 		}
 	}
-	
+
 	public SolicitudDto findSolicitudById(int idSolicitud) {
 		Optional<Solicitud> solicitud = repositorySolicitud.findById(idSolicitud);
 		if (solicitud.isPresent()) {
@@ -88,12 +94,19 @@ public class SolicitudService {
 		Usuario usuario = repositoryUsuario.findById(idUsuario)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 						String.format("el usuario id= %d no existe", idUsuario)));
-		executeRules(solicitudDto,usuariosMapper.getDtoFromUserEntity(usuario));
+		executeRules(solicitudDto, usuariosMapper.getDtoFromUserEntity(usuario));
 		SolicitudFactoryEnum sfte = SolicitudFactoryTypeEnum.findByReferenceName(solicitudDto.getTipo())
 				.orElseThrow(() -> new IsbgServiceException(
 						String.format("Tipo de solicitud %s no existe", solicitudDto.getTipo()),
 						"No existe el tipo de soliciitud", HttpStatus.CONFLICT.value()))
 				.getEnumValue();
+//		TODO: cambiar a algoritmos de la semana
+		if (solicitudDto.getFechaEjecucion() == null) {
+			solicitudDto.setFechaEjecucion(new Date());
+		}
+		if (solicitudDto.getAtributos().containsKey(TipoAtributoSolicitudEnum.FECHA.name())) {
+			solicitudDto.getAtributos().put(TipoAtributoSolicitudEnum.FECHA.name(), dateFormat.format(new Date()));
+		}
 		ISolicitud solicitud = sfte.getInstance();
 		solicitudDto.setStatus(solicitud.nextState().getName());
 		Solicitud nueva = mapper.getEntityFromSolicitudDto(solicitudDto);
@@ -108,7 +121,7 @@ public class SolicitudService {
 		return mapper.getDtoFromSolicitudEntity(nueva);
 	}
 
-	private void executeRules(SolicitudDto solicitudDto,UsuarioDto usuarioDto) throws IsbgServiceException {
+	private void executeRules(SolicitudDto solicitudDto, UsuarioDto usuarioDto) throws IsbgServiceException {
 		ISuite suite = suiteManager.getSolicitudSuite(solicitudDto.getTipo());
 		Facts facts = new Facts();
 		List<String> results = new ArrayList<>();

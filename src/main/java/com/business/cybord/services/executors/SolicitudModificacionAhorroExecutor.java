@@ -43,7 +43,7 @@ public class SolicitudModificacionAhorroExecutor implements SolicitudExecutor {
 						HttpStatus.CONFLICT.value()));
 		if (solicitudDto.getStatus().equals(EventFactoryTypeEnum.SOLICITUD_TERMINADA.getState())) {
 			DatosUsuario dato = usuario.getDatosUsuario().stream()
-					.filter(a -> a.getTipoDato().equals(TipoAtributoUsuarioEnum.SUELDO.name())).findFirst()
+					.filter(a -> a.getTipoDato().equals(TipoAtributoUsuarioEnum.AHORRO.name())).findFirst()
 					.orElseThrow(() -> new IsbgServiceException("Error actualizando daatos en solicitud ahorro",
 							String.format("El usuario  %d no tiene sueldo", solicitudDto.getIdUsuario()),
 							HttpStatus.CONFLICT.value()));
@@ -53,18 +53,18 @@ public class SolicitudModificacionAhorroExecutor implements SolicitudExecutor {
 							String.format("El usuario  %d no existe", solicitudDto.getIdUsuario()),
 							HttpStatus.CONFLICT.value()));
 			dato.setDato(atributo.getValor());
-			datoUsuarioService.actualizarDatoUsuario(atributo.getId(), atributo.getNombre(),
+			datoUsuarioService.actualizarDatoUsuario(usuario.getId(), dato.getTipoDato(),
 					datoUsuarioMapper.getDtoFromDatosusuarioEntity(dato));
 			mailService.sentEmail(usuario.getEmail(),
 					String.format("Notificacion de finalizacion de la solicitud:%s", solicitudDto.getTipo()),
-					String.format("Hola %s,\nSe completo  tu solicitud numero:%d del tipo %s  por la cantidad %s", usuario.getNombre(),
+					String.format("Hola %s,\n\nSe completo  tu solicitud con el folio %d del tipo %s por la cantidad %s \n\nSaludos.", usuario.getNombre(),
 							solicitudDto.getId(), solicitudDto.getTipo(),atributo.getValor()));
 		} else {
 			mailService.sentEmail(usuario.getEmail(),
 					String.format("Notificacion de autorizacion de la solicitud:%s", solicitudDto.getTipo()),
 					String.format(
-							"Hola %s,\nSe realizo la validacion para tu solicitud numero:%d del tipo %s en el area %s",
-							usuario.getNombre(), solicitudDto.getId(), solicitudDto.getTipo(),
+							"Hola %s,\n\nSe realizo la validacion numero  %d para tu solicitud con el folio:%d del tipo %s en el area %s \n\nSaludos.",
+							usuario.getNombre(), validacionDto.getNumeroValidacion(),solicitudDto.getId(), solicitudDto.getTipo(),
 							validacionDto.getArea()));
 		}
 	}
@@ -78,8 +78,9 @@ public class SolicitudModificacionAhorroExecutor implements SolicitudExecutor {
 		mailService.sentEmail(usuario.getEmail(),
 				String.format("Notificacion de rechazo de la solicitud: %s ", solicitudDto.getTipo()),
 				String.format(
-						"Hola %s,\nNo se completo tu solicitud numero:%d del tipo %s en el area %s por el motivo %s",
+						"Hola %s,\n\nNo se completo tu solicitud con el follio %d del tipo %s en el area %s por el motivo %s\n\nSaludos.",
 						usuario.getNombre(), solicitudDto.getId(), solicitudDto.getTipo(), validacionDto.getArea(),
-						solicitudDto.getStatusDetalle()));
+						validacionDto.getStatusDesc()));
 	}
+
 }

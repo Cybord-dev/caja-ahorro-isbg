@@ -39,7 +39,7 @@ public class ServicesApplication {
 	}
 	
 	@Bean
-	@Qualifier("RetiroParcialAhorroSuite")
+	@Qualifier("RetiroParcialAhorro")
 	public RetiroParcialAhorroSuite getRetiroParcialAhorroSuite() {
 		return new RetiroParcialAhorroSuite();
 	}
