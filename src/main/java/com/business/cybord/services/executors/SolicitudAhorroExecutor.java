@@ -18,10 +18,10 @@ import com.business.cybord.services.MailService;
 public class SolicitudAhorroExecutor implements SolicitudExecutor {
 
 	@Autowired
-	private UsuariosRepository repositoryUsuario;
+	protected UsuariosRepository repositoryUsuario;
 
 	@Autowired
-	private MailService mailService;
+	protected MailService mailService;
 
 	@Override
 	public void execute(SolicitudDto solicitudDto, ValidacionDto validacionDto) throws IsbgServiceException {
@@ -34,12 +34,15 @@ public class SolicitudAhorroExecutor implements SolicitudExecutor {
 			repositoryUsuario.save(usuario);
 			mailService.sentEmail(usuario.getEmail(),
 					String.format("Notificacion de finalizacion de la solicitud:%s", solicitudDto.getTipo()),
-					String.format("Se completo la solicitud %s ", solicitudDto.getTipo()));
+					String.format("Hola %s,\nSe completo  tu solicitud numero:%d del tipo %s ", usuario.getNombre(),
+							solicitudDto.getId(), solicitudDto.getTipo()));
 		} else {
 			mailService.sentEmail(usuario.getEmail(),
 					String.format("Notificacion de autorizacion de la solicitud:%s", solicitudDto.getTipo()),
-					String.format("Se realizo la validacion no %d para la solicitud %s del area %s",
-							validacionDto.getNumeroValidacion(), solicitudDto.getTipo(), validacionDto.getArea()));
+					String.format(
+							"Hola %s,\nSe realizo la validacion para tu solicitud numero:%d del tipo %s en el area %s",
+							usuario.getNombre(), solicitudDto.getId(), solicitudDto.getTipo(),
+							validacionDto.getArea()));
 		}
 	}
 
@@ -50,9 +53,11 @@ public class SolicitudAhorroExecutor implements SolicitudExecutor {
 						String.format("El usuario  %d no existe", solicitudDto.getIdUsuario()),
 						HttpStatus.CONFLICT.value()));
 		mailService.sentEmail(usuario.getEmail(),
-				String.format("Notificacion de rechazo de la solicitud:%s", solicitudDto.getTipo()),
-				String.format("No se completo la solicitud solicitud %s en el area %s", solicitudDto.getTipo(),
-						validacionDto.getArea()));
+				String.format("Notificacion de rechazo de la solicitud: %s ", solicitudDto.getTipo()),
+				String.format(
+						"Hola %s,\nNo se completo tu solicitud numero:%d del tipo %s en el area %s por el motivo %s",
+						usuario.getNombre(), solicitudDto.getId(), solicitudDto.getTipo(), validacionDto.getArea(),
+						solicitudDto.getStatusDetalle()));
 	}
 
 }
