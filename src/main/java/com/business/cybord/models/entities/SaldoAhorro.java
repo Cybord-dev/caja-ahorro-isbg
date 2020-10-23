@@ -48,6 +48,18 @@ public class SaldoAhorro {
 	@Column(name = "fecha_actualizacion")
 	private Date fechaActualizacion;
 
+	public SaldoAhorro() {
+		super();
+	}
+
+	public SaldoAhorro(int idUsuario, String tipo, BigDecimal monto, Boolean validado) {
+		super();
+		this.idUsuario = idUsuario;
+		this.tipo = tipo;
+		this.monto = monto;
+		this.validado = validado;
+	}
+
 	public int getId() {
 		return id;
 	}

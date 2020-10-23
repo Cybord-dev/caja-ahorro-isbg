@@ -31,11 +31,11 @@ public class SaldoAhorroService {
 		return reportesSaldosDao.getReportesBySaldos();
 	}
 
-	public List<SaldoAhorroDto> getSaldosAhorroDeUnUsuarioPorSuId(Integer id) {
+	public List<SaldoAhorroDto> getSaldosAhorroByUsuario(Integer id) {
 		return mapper.getDtosFromEntity(respository.findByIdUsuario(id));
 	}
 
-	public SaldoAhorroDto getSaldoAhorroPorIdYIdusuario(Integer idUsuario, Integer idSaldo) {
+	public SaldoAhorroDto getSaldoAhorroByIdAndIdUsuario(Integer idUsuario, Integer idSaldo) {
 		Optional<SaldoAhorro> saldoAhorro = respository.findByIdUsuarioAndId(idUsuario, idSaldo);
 		if (saldoAhorro.isPresent()) {
 			return mapper.getDtoFromEntity(saldoAhorro.get());

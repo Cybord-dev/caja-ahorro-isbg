@@ -32,7 +32,7 @@ public class SaldosAhorroController {
 
 	@GetMapping("/usuarios/{idUsuario}/ahorros")
 	public ResponseEntity<List<SaldoAhorroDto>> getSaldosAhorroDeUnUsuarioPorSuId(@PathVariable Integer idUsuario) {
-		return new ResponseEntity<>(service.getSaldosAhorroDeUnUsuarioPorSuId(idUsuario), HttpStatus.OK);
+		return new ResponseEntity<>(service.getSaldosAhorroByUsuario(idUsuario), HttpStatus.OK);
 	}
 
 	@PostMapping("/usuarios/{idUsuario}/ahorros")
@@ -44,7 +44,7 @@ public class SaldosAhorroController {
 	@GetMapping("/usuarios/{idUsuario}/ahorros/{idAhorro}")
 	public ResponseEntity<SaldoAhorroDto> getSaldoAhorroPorIdYIdusuario(@PathVariable Integer idUsuario,
 			@PathVariable Integer idAhorro) {
-		return new ResponseEntity<>(service.getSaldoAhorroPorIdYIdusuario(idUsuario, idAhorro), HttpStatus.OK);
+		return new ResponseEntity<>(service.getSaldoAhorroByIdAndIdUsuario(idUsuario, idAhorro), HttpStatus.OK);
 	}
 
 }

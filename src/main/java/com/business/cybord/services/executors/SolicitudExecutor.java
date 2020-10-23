@@ -7,6 +7,6 @@ import com.business.cybord.models.error.IsbgServiceException;
 public interface SolicitudExecutor {
 
 	void execute(SolicitudDto solicitudDtos, ValidacionDto validacionDto) throws IsbgServiceException;
-	void rechazo(SolicitudDto solicitudDto, ValidacionDto validacionDto) throws IsbgServiceException;
-
+	void rechazo(SolicitudDto solicitudDtos, ValidacionDto validacionDto) throws IsbgServiceException;
+	
 }

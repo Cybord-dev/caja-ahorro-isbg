@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DatosUsuarioDto implements Serializable{
+public class DatosUsuarioDto implements Serializable {
 
 	private static final long serialVersionUID = -7341927275399580063L;
 	private int id;
@@ -17,6 +17,17 @@ public class DatosUsuarioDto implements Serializable{
 	private boolean relevancia;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
+
+	public DatosUsuarioDto(String tipoDato, String dato, boolean relevancia) {
+		super();
+		this.tipoDato = tipoDato;
+		this.dato = dato;
+		this.relevancia = relevancia;
+	}
+
+	public DatosUsuarioDto() {
+		super();
+	}
 
 	public int getId() {
 		return id;

@@ -7,10 +7,10 @@ public enum EventFactoryTypeEnum {
 	SOLICITUD_CREADA(EventFactoryEnum.SOLICITUD_CREADA, "sistema","Solicitud"),
 	VALIDA_RH(EventFactoryEnum.VALIDA_RH_EVENT, "recursos-humanos","ValidacionRH"),
 	VALIDA_CONTA_EVENT(EventFactoryEnum.VALIDA_CONTA_EVENT, "contabilidad","ValdiacionConta"),
-	VALIDA_TESO(EventFactoryEnum.VALIDA_TESO_EVENT, "tesoreria","ValidaTeso"),
+	VALIDA_TESO(EventFactoryEnum.VALIDA_TESO_EVENT, "tesoreria","ValidacionTeso"),
 	VALIDA_ADMIN(EventFactoryEnum.VALIDA_ADMIN_EVENT, "administracion","ValidaAdmin"),
-	VALIDA_GERENCIA2(EventFactoryEnum.VALIDA_GERENCIA_EVENT, "gerencia2","ValidaGerencia2"),
-	VALIDA_GERENCIA(EventFactoryEnum.VALIDA_GERENCIA_EVENT, "gerencia","ValidaGerencia"),
+	VALIDA_GERENCIA2(EventFactoryEnum.VALIDA_GERENCIA_EVENT, "gerencia2","ValidacionGerencia2"),
+	VALIDA_GERENCIA(EventFactoryEnum.VALIDA_GERENCIA_EVENT, "gerencia","ValidacionGerencia"),
 	SOLICITUD_TERMINADA(EventFactoryEnum.SOLICITUD_TERMINADA, "sistema","Finalizada");
 	
 
