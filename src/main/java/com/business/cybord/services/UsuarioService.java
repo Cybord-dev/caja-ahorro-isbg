@@ -47,8 +47,7 @@ public class UsuarioService {
 
 	@Autowired
 	private DatosUsuarioRepository datosUsuarioRepository;
-	
-	
+
 	private ObjectMapper objMapper = new ObjectMapper();
 
 	private static final Logger log = LoggerFactory.getLogger(UsuarioService.class);
@@ -67,10 +66,11 @@ public class UsuarioService {
 						predicates.add(
 								criteriaBuilder.and(criteriaBuilder.like(root.get(i), "%" + parameters.get(i) + "%")));
 				}
-				
-				 if(parameters.get("estatus")!=null) {
-					 predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("activo"),Integer.parseInt(parameters.get("estatus")))));
-				 }
+
+				if (parameters.get("estatus") != null) {
+					predicates.add(criteriaBuilder.and(
+							criteriaBuilder.equal(root.get("activo"), Integer.parseInt(parameters.get("estatus")))));
+				}
 				return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
 		};
@@ -103,10 +103,9 @@ public class UsuarioService {
 		}
 	}
 
-	public UsuarioDto actualizarUsuario(UsuarioDto usuario,int id) {
-		Usuario entity = repository.findById(id)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-						String.format("El usuario %s no existe.", usuario.getEmail())));
+	public UsuarioDto actualizarUsuario(UsuarioDto usuario, int id) {
+		Usuario entity = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+				String.format("El usuario %s no existe.", usuario.getEmail())));
 		entity.setActivo(usuario.getActivo());
 		entity.setNombre(usuario.getNombre());
 		entity.setTipoUsuario(usuario.getTipoUsuario());
@@ -120,61 +119,42 @@ public class UsuarioService {
 		datosUsuarioRepository.findByIdUsuario(id).stream().forEach(a -> datosUsuarioRepository.delete(a));
 		repository.delete(entity);
 	}
-	
-//	public UserInfoDto getUserInfo(Authentication auth){
-//		OidcUser oidcUser =(OidcUser)auth.getPrincipal();
-//		if(oidcUser!=null && oidcUser.getAttributes()!=null && oidcUser.getEmail()!=null) {
-//			log.info("Looking roles from : {}", oidcUser.getEmail());
-//			Usuario usuario = repository.findByEmail(oidcUser.getEmail())
-//					.orElseThrow(()-> new ResponseStatusException(HttpStatus.UNAUTHORIZED, String.format("%s no se encuentra registrado en la plataforma",oidcUser.getEmail())));
-//			
-//			UserInfoDto userInfo = mapper.getUserInfoFromUsuario(usuario);
-//			userInfo.setUrlImagenPerfil(oidcUser.getAttributes().get("picture").toString());
-//			List<MenuItem> menu = new ArrayList<>();
-//			for (String role : userInfo.getRoles()) {
-//				menu.add(getMenuFromResource(role.toLowerCase()));
-//			}
-//			userInfo.setMenu(menu);
-//			return userInfo;
-//		}
-//		log.error("Usuario sin credenciales intenta acceder a la plataforma.");
-//		throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, String.format("%s no es un usuario autorizado", "anonymous"));
-//	}
-//	
-	public UserInfoDto getUserInfo(Authentication auth){
-		// OidcUser oidcUser =(OidcUser)auth.getPrincipal();
-		// if(oidcUser!=null && oidcUser.getAttributes()!=null && oidcUser.getEmail()!=null) {
-		// log.info("Looking roles from : {}", oidcUser.getEmail());
-		// Usuario usuario = repository.findByEmail(oidcUser.getEmail())
-		// .orElseThrow(()-> new ResponseStatusException(HttpStatus.UNAUTHORIZED, String.format("%s no se encuentra registrado en la plataforma",oidcUser.getEmail())));
-		Usuario usuario = repository.findByEmail("edcgamer@gmail.com")
-		.orElseThrow(()-> new ResponseStatusException(HttpStatus.UNAUTHORIZED, String.format("%s no se encuentra registrado en la plataforma","edcgamer@gmail.com")));
-		UserInfoDto userInfo = mapper.getUserInfoFromUsuario(usuario);
-		List<MenuItem> menu = new ArrayList<>();
-		for (String role : userInfo.getRoles()) {
-		menu.add(getMenuFromResource(role.toLowerCase()));
+
+	public UserInfoDto getUserInfo(Authentication auth) {
+		OidcUser oidcUser = (OidcUser) auth.getPrincipal();
+		if (oidcUser != null && oidcUser.getAttributes() != null && oidcUser.getEmail() != null) {
+			log.info("Looking roles from : {}", oidcUser.getEmail());
+			Usuario usuario = repository.findByEmail(oidcUser.getEmail())
+					.orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+							String.format("%s no se encuentra registrado en la plataforma", oidcUser.getEmail())));
+
+			UserInfoDto userInfo = mapper.getUserInfoFromUsuario(usuario);
+			userInfo.setUrlImagenPerfil(oidcUser.getAttributes().get("picture").toString());
+			List<MenuItem> menu = new ArrayList<>();
+			for (String role : userInfo.getRoles()) {
+				menu.add(getMenuFromResource(role.toLowerCase()));
+			}
+			userInfo.setMenu(menu);
+			return userInfo;
 		}
-		userInfo.setMenu(menu);
-		return userInfo;
-		// }
-		// log.error("Usuario sin credenciales intenta acceder a la plataforma.");
-		// throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, String.format("%s no es un usuario autorizado", "anonymous"));
-		}
+		log.error("Usuario sin credenciales intenta acceder a la plataforma.");
+		throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+				String.format("%s no es un usuario autorizado", "anonymous"));
+	}
 
 	private MenuItem getMenuFromResource(String fileName) {
 		try {
-		InputStream is = Thread.currentThread().getContextClassLoader()
-				.getResourceAsStream(String.format("menus/%s.json", fileName));
-		if (is != null) {
-			return objMapper.readValue(is, MenuItem.class);
-		} else {
-			log.error("menus/{}.json not found.", fileName);
-			return new MenuItem();
-		}
-		}catch (IOException e) {
-			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,e.getMessage());
+			InputStream is = Thread.currentThread().getContextClassLoader()
+					.getResourceAsStream(String.format("menus/%s.json", fileName));
+			if (is != null) {
+				return objMapper.readValue(is, MenuItem.class);
+			} else {
+				log.error("menus/{}.json not found.", fileName);
+				return new MenuItem();
+			}
+		} catch (IOException e) {
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
 		}
 	}
 
-	
 }
