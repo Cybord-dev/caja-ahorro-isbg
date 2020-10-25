@@ -57,4 +57,15 @@ public class SaldoAhorroService {
 		}
 	}
 
+	public List<SaldoAhorroDto> insertBulk(List<SaldoAhorroDto> saldos, String cargador) {
+		List<SaldoAhorro> ahorros = mapper.getEntitysFromDtos(saldos);
+		if (saldos != null && !saldos.isEmpty()) {
+			ahorros.forEach(a->a.setSolicitante(cargador));
+			ahorros=respository.saveAll(ahorros);
+		} else {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Esta vacia la lista");
+		}
+		return mapper.getDtosFromEntity(ahorros);
+	}
+
 }

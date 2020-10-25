@@ -115,6 +115,7 @@ CREATE TABLE IF NOT EXISTS `saldo_ahorro` (
   `tipo` varchar(50) NOT NULL,
   `monto` decimal(10,2) NOT NULL,
   `validado` tinyint(1) NOT NULL DEFAULT '0',
+  `solicitante` varchar(200) ,
   `fecha_creacion` timestamp NOT NULL,
   `fecha_actualizacion` timestamp NOT NULL
 );
