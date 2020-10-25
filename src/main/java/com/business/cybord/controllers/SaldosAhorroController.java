@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.business.cybord.models.dtos.SaldoAhorroDto;
@@ -45,6 +46,12 @@ public class SaldosAhorroController {
 	public ResponseEntity<SaldoAhorroDto> getSaldoAhorroPorIdYIdusuario(@PathVariable Integer idUsuario,
 			@PathVariable Integer idAhorro) {
 		return new ResponseEntity<>(service.getSaldoAhorroByIdAndIdUsuario(idUsuario, idAhorro), HttpStatus.OK);
+	}
+
+	@PostMapping("/ahorros/bulk")
+	public ResponseEntity<List<SaldoAhorroDto>> inserrtBulk(@RequestBody @Valid List<SaldoAhorroDto> dtos,
+			@RequestParam String solicitante) {
+		return new ResponseEntity<>(service.insertBulk(dtos, solicitante), HttpStatus.CREATED);
 	}
 
 }
