@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -57,15 +59,21 @@ public class SaldoAhorroService {
 		}
 	}
 
-	public List<SaldoAhorroDto> insertBulk(List<SaldoAhorroDto> saldos, String cargador) {
+	public List<SaldoAhorroDto> insertBulk(List<SaldoAhorroDto> saldos, Authentication authentication) {
 		List<SaldoAhorro> ahorros = mapper.getEntitysFromDtos(saldos);
-		if (saldos != null && !saldos.isEmpty()) {
-			ahorros.forEach(a->a.setSolicitante(cargador));
-			ahorros=respository.saveAll(ahorros);
-		} else {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Esta vacia la lista");
+		OidcUser oidcUser =(OidcUser)authentication.getPrincipal();
+		if(oidcUser!=null && oidcUser.getAttributes()!=null && oidcUser.getEmail()!=null) {
+			if (saldos != null && !saldos.isEmpty()) {
+				ahorros.forEach(a->a.setSolicitante(oidcUser.getEmail()));
+				ahorros=respository.saveAll(ahorros);
+			} else {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Esta vacia la lista");
+			}
+			return mapper.getDtosFromEntity(ahorros);
+		}else {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, "No estaas logeado");
 		}
-		return mapper.getDtosFromEntity(ahorros);
+		
 	}
 
 }

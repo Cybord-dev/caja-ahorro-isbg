@@ -7,6 +7,10 @@ GET /catalogos/{tipo_cat}/{nombre} <-- regresa un catalogo especifico
 POST /catalogos
 DELETE /catalogos/{tipo_cat}/{nombre}
 
+#### OFICINA
+
+GET /catalogos/oficina
+
 # RESOURCES
 
 GET ID  /recursos/1

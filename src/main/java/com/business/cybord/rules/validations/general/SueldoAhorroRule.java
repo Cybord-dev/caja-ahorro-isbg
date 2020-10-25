@@ -29,7 +29,7 @@ public class SueldoAhorroRule {
 
 	@Action
 	public void execute(@Fact("results") List<String> results) {
-		results.add("El usurio no cumple con los valores de sueldo");
+		results.add("El usuario no cumple con los valores de sueldo");
 	}
 
 }

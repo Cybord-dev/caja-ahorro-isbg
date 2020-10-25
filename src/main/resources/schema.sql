@@ -7,6 +7,7 @@ DROP TABLE solicitudes;
 DROP TABLE atributos_solicitud;
 DROP TABLE validaciones;
 DROP TABLE cat_propiedades;
+DROP TABLE cat_oficina;
 DROP TABLE saldo_ahorro;
 DROP TABLE saldo_prestamo;
 DROP TABLE recursos;
@@ -138,6 +139,12 @@ CREATE TABLE IF NOT EXISTS `recursos` (
   `tipo_recurso` varchar(32) NOT NULL,
   `dato` blob(45) NOT NULL,
   `fecha_creacion` timestamp NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS `cat_oficina` (
+  `id` int(11) NOT NULL AUTO_INCREMENT UNIQUE,
+  `oficina` varchar(200) NOT NULL,
+  `tipo` varchar(200) NOT NULL
 );
 
 ALTER TABLE recursos ADD CONSTRAINT RECURSOS_UNIQUE
