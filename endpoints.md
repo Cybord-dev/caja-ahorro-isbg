@@ -63,7 +63,7 @@ DELETE  /usuarios/{id_user}/roles/{id_role}
 -GET SOLICITUDES PAGINADAS
 
     +TODAS
-    api/v1/solicitudesS
+    api/v1/solicitudes
     +POR TIPO SOLICITUD
     api/v1/solicitudes?tipoSolicitud=SolicitudAhorro
     +POR NOMBRE
@@ -140,3 +140,23 @@ PRESTAMO & AHORRADOR & DEUDOR PENDIENTES
 
 ### REPORTE SALDO AHORO
 GET api/v1/saldosAhorro
+
+### paginados 
+-GET SOLICITUDES PAGINADAS
+
+    +TODAS
+    api/v1/saldosAhorro
+    +POR TIPO 
+    api/v1/solicitudes?tipo=retiro
+    +POR NOMBRE
+    api/v1/solicitudes?nombre=Edgar
+    +POR NO EMPLEADO
+    api/v1/solicitudes?noEmpleado=7
+    +POR TIPO USUARIO
+    api/v1/solicitudes?tipoUsuario=INTERNO
+    +POR FECHA INICIO
+    api/v1/solicitudes?since=2020-09-18
+    +POR FECHA FINAL
+    api/v1/solicitudes?to=Rechazada
+    +PAGES
+    api/v1/solicitudes?&page=0&size=1
