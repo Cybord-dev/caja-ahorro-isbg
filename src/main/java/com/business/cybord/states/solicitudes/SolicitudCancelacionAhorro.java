@@ -38,7 +38,6 @@ public class SolicitudCancelacionAhorro implements ISolicitud {
 		State validaRh = new State(EventFactoryTypeEnum.VALIDA_RH.getState());
 		State validaConta = new State(EventFactoryTypeEnum.VALIDA_CONTA_EVENT.getState());
 		State validaGerencia = new State(EventFactoryTypeEnum.VALIDA_GERENCIA.getState());
-		State validaGerencia2 = new State(EventFactoryTypeEnum.VALIDA_GERENCIA2.getState());
 		State validaTso = new State(EventFactoryTypeEnum.VALIDA_TESO.getState());
 		State finalizada = new State(EventFactoryTypeEnum.SOLICITUD_TERMINADA.getState());
 		states = new HashSet<>();
@@ -47,7 +46,6 @@ public class SolicitudCancelacionAhorro implements ISolicitud {
 		states.add(validaRh);
 		states.add(validaConta);
 		states.add(validaGerencia);
-		states.add(validaGerencia2);
 		states.add(validaTso);
 		states.add(finalizada);
 
@@ -67,12 +65,9 @@ public class SolicitudCancelacionAhorro implements ISolicitud {
 				.sourceState(validaGerencia).eventType(ValidaTesoEvent.class).eventHandler(new ValidacionTesoreria())
 				.targetState(validaTso).build();
 
-		Transition validacionGernci2 = new TransitionBuilder().name(EventFactoryTypeEnum.VALIDA_GERENCIA.getState())
-				.sourceState(validaTso).eventType(ValidaGerenciaEvent.class).eventHandler(new ValidacionGerencia())
-				.targetState(validaGerencia2).build();
 
 		Transition solicitudFinalizada = new TransitionBuilder()
-				.name(EventFactoryTypeEnum.SOLICITUD_TERMINADA.getState()).sourceState(validaGerencia2)
+				.name(EventFactoryTypeEnum.SOLICITUD_TERMINADA.getState()).sourceState(validaTso)
 				.eventType(SolicitudFinalizadaEvent.class).eventHandler(new ValidacionFinalizada())
 				.targetState(finalizada).build();
 
@@ -80,7 +75,6 @@ public class SolicitudCancelacionAhorro implements ISolicitud {
 		transitions.add(validacionConta);
 		transitions.add(validacionGerncia);
 		transitions.add(validacionAdmin);
-		transitions.add(validacionGernci2);
 		transitions.add(solicitudFinalizada);
 
 		State state = new State(EventFactoryTypeEnum.SOLICITUD_CREADA.getState());

@@ -21,7 +21,7 @@ public class NoSoyAhorradorRule {
 
 	@Action
 	public void execute(@Fact("results") List<String> results) {
-		results.add("El usurio no es ahorrador");
+		results.add("El usuario no es ahorrador");
 	}
 
 }
