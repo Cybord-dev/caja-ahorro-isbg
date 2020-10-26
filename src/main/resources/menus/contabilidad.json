@@ -2,6 +2,7 @@
     "name":"Contabilidad",
     "url": "/contabilidad",
     "icon": "icon-briefcase",
+    "variant": "success",
     "children": [
       {
         "name": "Altas y bajas",
@@ -27,6 +28,11 @@
         "name": "Carga ahorro externos",
         "url": "/contabilidad/carga-ahorro",
         "icon": "icon-globe"
+      },
+      {
+        "name": "Reportes de ahorro",
+        "url": "/contabilidad/reportes-ahorro",
+        "icon": "icon-wallet"
       }
     ]
   }

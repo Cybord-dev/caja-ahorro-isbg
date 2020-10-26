@@ -18,10 +18,16 @@ public class MenuItem implements Serializable {
 	private String name;
 	private String icon;
 	private String url;
+	private String variant;
+	private Boolean title;
 	private List<MenuItem> children;
 	
+	public MenuItem() {}
 	
-	
+	public MenuItem(String name, Boolean title) {
+		this.name = name;
+		this.title = title;
+	}
 	public String getName() {
 		return name;
 	}
@@ -40,14 +46,29 @@ public class MenuItem implements Serializable {
 	public void setUrl(String url) {
 		this.url = url;
 	}
+	public String getVariant() {
+		return variant;
+	}
+	public void setVariant(String variant) {
+		this.variant = variant;
+	}
+	public Boolean getTitle() {
+		return title;
+	}
+	public void setTitle(Boolean title) {
+		this.title = title;
+	}
 	public List<MenuItem> getChildren() {
 		return children;
 	}
 	public void setChildren(List<MenuItem> children) {
 		this.children = children;
 	}
+
 	@Override
 	public String toString() {
-		return "MenuItem [name=" + name + ", icon=" + icon + ", url=" + url + ", children=" + children + "]";
+		return "MenuItem [name=" + name + ", icon=" + icon + ", url=" + url + ", variant=" + variant + ", title="
+				+ title + ", children=" + children + "]";
 	}
+	
 }

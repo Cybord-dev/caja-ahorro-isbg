@@ -132,7 +132,7 @@ public class UsuarioService {
 			userInfo.setUrlImagenPerfil(oidcUser.getAttributes().get("picture").toString());
 			List<MenuItem> menu = new ArrayList<>();
 			for (String role : userInfo.getRoles()) {
-				menu.add(getMenuFromResource(role.toLowerCase()));
+				menu.addAll(getMenuFromResource(role.toLowerCase()));
 			}
 			userInfo.setMenu(menu);
 			return userInfo;
@@ -142,16 +142,16 @@ public class UsuarioService {
 				String.format("%s no es un usuario autorizado", "anonymous"));
 	}
 
-	private MenuItem getMenuFromResource(String fileName) {
+	private List<MenuItem> getMenuFromResource(String fileName) {
 		try {
+			List<MenuItem> menu = new ArrayList<>();
+			menu.add(new MenuItem(fileName, true));
 			InputStream is = Thread.currentThread().getContextClassLoader()
 					.getResourceAsStream(String.format("menus/%s.json", fileName));
 			if (is != null) {
-				return objMapper.readValue(is, MenuItem.class);
-			} else {
-				log.error("menus/{}.json not found.", fileName);
-				return new MenuItem();
+				menu.add(objMapper.readValue(is, MenuItem.class));
 			}
+			return menu;
 		} catch (IOException e) {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
 		}
