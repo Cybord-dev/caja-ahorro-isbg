@@ -120,49 +120,28 @@ public class UsuarioService {
 		repository.delete(entity);
 	}
 
-//	public UserInfoDto getUserInfo(Authentication auth) {
-//		OidcUser oidcUser = (OidcUser) auth.getPrincipal();
-//		if (oidcUser != null && oidcUser.getAttributes() != null && oidcUser.getEmail() != null) {
-//			log.info("Looking roles from : {}", oidcUser.getEmail());
-//			Usuario usuario = repository.findByEmail(oidcUser.getEmail())
-//					.orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED,
-//							String.format("%s no se encuentra registrado en la plataforma", oidcUser.getEmail())));
-//
-//			UserInfoDto userInfo = mapper.getUserInfoFromUsuario(usuario);
-//			userInfo.setUrlImagenPerfil(oidcUser.getAttributes().get("picture").toString());
-//			List<MenuItem> menu = new ArrayList<>();
-//			for (String role : userInfo.getRoles()) {
-//				menu.addAll(getMenuFromResource(role.toLowerCase()));
-//			}
-//			userInfo.setMenu(menu);
-//			return userInfo;
-//		}
-//		log.error("Usuario sin credenciales intenta acceder a la plataforma.");
-//		throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
-//				String.format("%s no es un usuario autorizado", "anonymous"));
-//	}
+	public UserInfoDto getUserInfo(Authentication auth) {
+		OidcUser oidcUser = (OidcUser) auth.getPrincipal();
+		if (oidcUser != null && oidcUser.getAttributes() != null && oidcUser.getEmail() != null) {
+			log.info("Looking roles from : {}", oidcUser.getEmail());
+			Usuario usuario = repository.findByEmail(oidcUser.getEmail())
+					.orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+							String.format("%s no se encuentra registrado en la plataforma", oidcUser.getEmail())));
 
-	public UserInfoDto getUserInfo(Authentication auth){
-		// OidcUser oidcUser =(OidcUser)auth.getPrincipal();
-		// if(oidcUser!=null && oidcUser.getAttributes()!=null && oidcUser.getEmail()!=null) {
-		// log.info("Looking roles from : {}", oidcUser.getEmail());
-		// Usuario usuario = repository.findByEmail(oidcUser.getEmail())
-		// .orElseThrow(()-> new ResponseStatusException(HttpStatus.UNAUTHORIZED, String.format("%s no se encuentra registrado en la plataforma",oidcUser.getEmail())));
-		Usuario usuario = repository.findByEmail("edcgamer@gmail.com")
-		.orElseThrow(()-> new ResponseStatusException(HttpStatus.UNAUTHORIZED, String.format("%s no se encuentra registrado en la plataforma","edcgamer@gmail.com")));
-		UserInfoDto userInfo = mapper.getUserInfoFromUsuario(usuario);
-		List<MenuItem> menu = new ArrayList<>();
-		for (String role : userInfo.getRoles()) {
-			menu.addAll(getMenuFromResource(role.toLowerCase()));
+			UserInfoDto userInfo = mapper.getUserInfoFromUsuario(usuario);
+			userInfo.setUrlImagenPerfil(oidcUser.getAttributes().get("picture").toString());
+			List<MenuItem> menu = new ArrayList<>();
+			for (String role : userInfo.getRoles()) {
+				menu.addAll(getMenuFromResource(role.toLowerCase()));
+			}
+			userInfo.setMenu(menu);
+			return userInfo;
 		}
-		userInfo.setMenu(menu);
-		return userInfo;
-		// }
-		// log.error("Usuario sin credenciales intenta acceder a la plataforma.");
-		// throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, String.format("%s no es un usuario autorizado", "anonymous"));
-		}
+		log.error("Usuario sin credenciales intenta acceder a la plataforma.");
+		throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+				String.format("%s no es un usuario autorizado", "anonymous"));
+	}
 
-	
 	private List<MenuItem> getMenuFromResource(String fileName) {
 		try {
 			List<MenuItem> menu = new ArrayList<>();
