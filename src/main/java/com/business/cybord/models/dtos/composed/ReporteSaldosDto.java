@@ -12,6 +12,7 @@ public class ReporteSaldosDto implements Serializable {
 	private BigDecimal monto;
 	private String ahorrador;
 	private Integer noEmpleado;
+	private String origen;
 	private String tipoEmpleado;
 
 	public String getTipo() {
@@ -62,10 +63,18 @@ public class ReporteSaldosDto implements Serializable {
 		this.tipoEmpleado = tipoEmpleado;
 	}
 
+	public String getOrigen() {
+		return origen;
+	}
+
+	public void setOrigen(String origen) {
+		this.origen = origen;
+	}
+
 	@Override
 	public String toString() {
 		return "ReporteSaldosDto [tipo=" + tipo + ", fecha=" + fecha + ", monto=" + monto + ", ahorrador=" + ahorrador
-				+ ", noEmpleado=" + noEmpleado + ", tipoEmpleado=" + tipoEmpleado + "]";
+				+ ", noEmpleado=" + noEmpleado + ", origen=" + origen + ", tipoEmpleado=" + tipoEmpleado + "]";
 	}
 
 }

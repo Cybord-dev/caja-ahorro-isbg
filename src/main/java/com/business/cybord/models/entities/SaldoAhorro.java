@@ -37,9 +37,9 @@ public class SaldoAhorro {
 
 	@Column(name = "validado")
 	private Boolean validado;
-	
-	@Column(name = "solicitante")
-	private String solicitante;
+
+	@Column(name = "origen")
+	private String origen;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
@@ -118,20 +118,19 @@ public class SaldoAhorro {
 	public void setFechaActualizacion(Date fechaActualizacion) {
 		this.fechaActualizacion = fechaActualizacion;
 	}
-	
 
-	public String getSolicitante() {
-		return solicitante;
+	public String getOrigen() {
+		return origen;
 	}
 
-	public void setSolicitante(String solicitante) {
-		this.solicitante = solicitante;
+	public void setOrigen(String origen) {
+		this.origen = origen;
 	}
 
 	@Override
 	public String toString() {
 		return "SaldoAhorro [id=" + id + ", idUsuario=" + idUsuario + ", tipo=" + tipo + ", monto=" + monto
-				+ ", validado=" + validado + ", solicitante=" + solicitante + ", fechaCreacion=" + fechaCreacion
+				+ ", validado=" + validado + ", origen=" + origen + ", fechaCreacion=" + fechaCreacion
 				+ ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
 
