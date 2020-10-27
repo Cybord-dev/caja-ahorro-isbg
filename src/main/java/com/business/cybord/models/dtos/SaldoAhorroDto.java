@@ -16,7 +16,7 @@ public class SaldoAhorroDto implements Serializable {
 	private String tipo;
 	private BigDecimal monto;
 	private Boolean validado;
-	private String solicitante;
+	private String origen;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 
@@ -87,18 +87,18 @@ public class SaldoAhorroDto implements Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	public String getSolicitante() {
-		return solicitante;
+	public String getOrigen() {
+		return origen;
 	}
 
-	public void setSolicitante(String solicitante) {
-		this.solicitante = solicitante;
+	public void setOrigen(String origen) {
+		this.origen = origen;
 	}
 
 	@Override
 	public String toString() {
 		return "SaldoAhorroDto [id=" + id + ", idUsuario=" + idUsuario + ", tipo=" + tipo + ", monto=" + monto
-				+ ", validado=" + validado + ", solicitante=" + solicitante + ", fechaCreacion=" + fechaCreacion
+				+ ", validado=" + validado + ", origen=" + origen + ", fechaCreacion=" + fechaCreacion
 				+ ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
 

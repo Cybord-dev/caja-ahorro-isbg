@@ -70,7 +70,7 @@ public class SaldoAhorroService {
 		OidcUser oidcUser =(OidcUser)authentication.getPrincipal();
 		if(oidcUser!=null && oidcUser.getAttributes()!=null && oidcUser.getEmail()!=null) {
 			if (saldos != null && !saldos.isEmpty()) {
-				ahorros.forEach(a->a.setSolicitante(oidcUser.getEmail()));
+				ahorros.forEach(a->a.setOrigen(oidcUser.getEmail()));
 				ahorros=respository.saveAll(ahorros);
 			} else {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Esta vacia la lista");
