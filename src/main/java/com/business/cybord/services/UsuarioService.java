@@ -60,7 +60,7 @@ public class UsuarioService {
 			@Override
 			public Predicate toPredicate(Root<Usuario> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
 				List<Predicate> predicates = new ArrayList<>();
-				List<String> filtros = Arrays.asList(new String[] { "nombre", "email", "tipoUsuario" });
+				List<String> filtros = Arrays.asList(new String[] { "nombre", "email", "tipoUsuario"});
 				for (String i : filtros) {
 					if (parameters.get(i) != null)
 						predicates.add(
@@ -70,6 +70,10 @@ public class UsuarioService {
 				if (parameters.get("estatus") != null) {
 					predicates.add(criteriaBuilder.and(
 							criteriaBuilder.equal(root.get("activo"), Integer.parseInt(parameters.get("estatus")))));
+				}
+				if (parameters.get("noEmpleado") != null) {
+					predicates.add(criteriaBuilder.and(
+							criteriaBuilder.equal(root.get("noEmpleado"), parameters.get("noEmpleado"))));
 				}
 				return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
@@ -148,6 +152,7 @@ public class UsuarioService {
 		throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
 				String.format("%s no es un usuario autorizado", "anonymous"));
 	}
+
 
 	private List<MenuItem> getMenuFromResource(String fileName) {
 		try {
