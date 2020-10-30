@@ -40,7 +40,7 @@ public class UsuariosController {
 	public ResponseEntity<UsuarioDto> getUserById(@PathVariable Integer id) {
 		return new ResponseEntity<>(service.getUserById(id), HttpStatus.OK);
 	}
-
+	
 	@GetMapping
 	public ResponseEntity<Page<UsuarioDto>> getAllFacturasByParametros(@RequestParam Map<String, String> parameters) {
 		return new ResponseEntity<>(service.getUsuariosPorParametros(parameters), HttpStatus.OK);
