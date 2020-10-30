@@ -4,14 +4,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +47,9 @@ public class UsuarioService {
 
 	@Autowired
 	private UsuariosMapper mapper;
+	
+	@Autowired
+	private DownloaderService reportService;
 
 	@Autowired
 	private DatosUsuarioRepository datosUsuarioRepository;
@@ -87,6 +93,26 @@ public class UsuarioService {
 				PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
 		return new PageImpl<>(mapper.getUsuariosDtoFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
+	}
+	
+	public void descargaReporteUsuarios(Map<String, String> parameters,HttpServletResponse response) throws IOException {
+		parameters.put("page", "0");
+		parameters.put("size", "10000");
+		Page<UsuarioDto> userPage = getUsuariosPorParametros(parameters);
+		
+		List<Map<String, String>> data = userPage.getContent().stream().map(u -> {
+			Map<String, String> map = new HashMap<>();
+			map.put("NO EMPLEADO", u.getNoEmpleado());
+			map.put("NOMBRE", u.getNombre());
+			map.put("TIPO", u.getTipoUsuario());
+			map.put("ACTIVO", u.getActivo()?"SI":"NO");
+			map.put("EMAIL", u.getEmail());
+			//map.put("SUELDO", u.getDatosUsuario().get("SUELDO"));
+			return map;
+		}).collect(Collectors.toList());
+		
+		reportService.generateExcelReport(data, "Usuarios", response);
+		
 	}
 
 	public UsuarioDto getUserById(Integer id) {
