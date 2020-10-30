@@ -14,6 +14,8 @@ import com.business.cybord.models.entities.Usuario;
 public interface UsuariosRepository extends JpaRepository<Usuario, Integer>, JpaSpecificationExecutor<Usuario> {
 
 	Optional<Usuario> findById(int id);
+	
+	Optional<Usuario> findByNoEmpleado(int id);
 
 	Optional<Usuario> findByEmail(String email);
 

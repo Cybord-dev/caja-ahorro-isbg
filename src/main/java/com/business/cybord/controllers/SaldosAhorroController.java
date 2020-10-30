@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.business.cybord.models.dtos.SaldoAhorroDto;
+import com.business.cybord.models.dtos.composed.ConciliaSaldoDto;
+import com.business.cybord.models.dtos.composed.ConciliadorReportDto;
 import com.business.cybord.models.dtos.composed.ReporteSaldosDto;
 import com.business.cybord.services.SaldoAhorroService;
 
@@ -56,6 +58,12 @@ public class SaldosAhorroController {
 	public ResponseEntity<List<SaldoAhorroDto>> inserrtBulk(@RequestBody @Valid List<SaldoAhorroDto> dtos,
 			Authentication authentication) {
 		return new ResponseEntity<>(service.insertBulk(dtos, authentication), HttpStatus.CREATED);
+	}
+	
+	@PostMapping("/ahorros/conciliador")
+	public ResponseEntity<ConciliadorReportDto> conciliarAhorros(@RequestBody @Valid List<ConciliaSaldoDto> dtos,
+			Authentication authentication) {
+		return new ResponseEntity<>(service.conciliarAhorros(dtos, authentication), HttpStatus.CREATED);
 	}
 
 }

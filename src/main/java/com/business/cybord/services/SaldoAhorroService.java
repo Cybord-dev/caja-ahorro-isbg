@@ -1,8 +1,11 @@
 package com.business.cybord.services;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,8 +19,12 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.business.cybord.mappers.SaldoAhorroMapper;
 import com.business.cybord.models.dtos.SaldoAhorroDto;
+import com.business.cybord.models.dtos.UsuarioDto;
+import com.business.cybord.models.dtos.composed.ConciliaSaldoDto;
+import com.business.cybord.models.dtos.composed.ConciliadorReportDto;
 import com.business.cybord.models.dtos.composed.ReporteSaldosDto;
 import com.business.cybord.models.entities.SaldoAhorro;
+import com.business.cybord.models.enums.TipoAtributoUsuarioEnum;
 import com.business.cybord.repositories.SaldoAhorroRepository;
 import com.business.cybord.repositories.dao.ReportesSaldosDao;
 
@@ -33,10 +40,13 @@ public class SaldoAhorroService {
 	@Autowired
 	private ReportesSaldosDao reportesSaldosDao;
 
+	@Autowired
+	private UsuarioService usuarioService;
+
 	public Page<ReporteSaldosDto> getSaldosAhorrosCurrentCaja(Map<String, String> parameters) {
 		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
 		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
-		return reportesSaldosDao.findAll(parameters,PageRequest.of(page, size, Sort.by("fechaActualizacion")));
+		return reportesSaldosDao.findAll(parameters, PageRequest.of(page, size, Sort.by("fechaActualizacion")));
 	}
 
 	public List<SaldoAhorroDto> getSaldosAhorroByUsuario(Integer id) {
@@ -67,19 +77,68 @@ public class SaldoAhorroService {
 
 	public List<SaldoAhorroDto> insertBulk(List<SaldoAhorroDto> saldos, Authentication authentication) {
 		List<SaldoAhorro> ahorros = mapper.getEntitysFromDtos(saldos);
-		OidcUser oidcUser =(OidcUser)authentication.getPrincipal();
-		if(oidcUser!=null && oidcUser.getAttributes()!=null && oidcUser.getEmail()!=null) {
+		OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
+		if (oidcUser != null && oidcUser.getAttributes() != null && oidcUser.getEmail() != null) {
 			if (saldos != null && !saldos.isEmpty()) {
-				ahorros.forEach(a->a.setOrigen(oidcUser.getEmail()));
-				ahorros=respository.saveAll(ahorros);
+				ahorros.forEach(a -> a.setOrigen(oidcUser.getEmail()));
+				ahorros = respository.saveAll(ahorros);
 			} else {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Esta vacia la lista");
 			}
 			return mapper.getDtosFromEntity(ahorros);
-		}else {
+		} else {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, "No estaas logeado");
 		}
+
+	}
+
+	public ConciliadorReportDto conciliarAhorros(List<ConciliaSaldoDto> ahorros, Authentication authentication) {
+		ConciliadorReportDto report = new ConciliadorReportDto();
+
+		// posibles ahorros
+		conciliacion(report, ahorros.stream().filter(a -> a.getValidado()).collect(Collectors.toList()));
 		
+		//errores
+		for (ConciliaSaldoDto csd : ahorros.stream().filter(a -> a.getValidado()).collect(Collectors.toList())) {
+			report.addError(csd);
+		}
+		conciliacion(report, ahorros.stream().filter(a -> a.getValidado()).collect(Collectors.toList()));
+
+		Map<String, String> parameters= new HashMap<>();
+		parameters.put(key, value);
+		return report;
+	}
+
+	private void conciliacion(ConciliadorReportDto report, List<ConciliaSaldoDto> ahorros) {
+//		getSaldosAhorrosCurrentCaja(parameters)
+		for (ConciliaSaldoDto csd : ahorros) {
+			try {
+				UsuarioDto usuarioDto = usuarioService.getUserByNoEmpleado(csd.getIdUsuario());
+				if (!usuarioDto.isAhorrador()) {
+					csd.setObservaciones("El Empleado no esta dado de alta como ahorrador");
+					report.addError(csd);
+				}
+				if (usuarioDto.getDatosUsuario() != null && !usuarioDto.getDatosUsuario().isEmpty()
+						&& !usuarioDto.getDatosUsuario().containsKey(TipoAtributoUsuarioEnum.AHORRO.name())) {
+					csd.setObservaciones("El Empleado no tiene bien configurado su monto de ahorro");
+					report.addError(csd);
+				} else {
+					String ahorro = usuarioDto.getDatosUsuario().get(TipoAtributoUsuarioEnum.AHORRO.name());
+					BigDecimal a = new BigDecimal(ahorro);
+					if (a.equals(csd.getSaldo())) {
+						report.addcorrecto(csd);
+						respository.
+					} else {
+						csd.setObservaciones("Incosistencia en el monto de ahorro");
+						report.addError(csd);
+					}
+				}
+			} catch (ResponseStatusException e) {
+				csd.setObservaciones(e.getMessage());
+				report.addError(csd);
+			}
+
+		}
 	}
 
 }
