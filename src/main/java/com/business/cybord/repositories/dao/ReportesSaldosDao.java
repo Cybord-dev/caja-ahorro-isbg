@@ -22,9 +22,12 @@ import org.springframework.stereotype.Repository;
 
 import com.business.cybord.models.Constants.SqlConstants;
 import com.business.cybord.models.dtos.composed.ReporteSaldosDto;
+import com.business.cybord.models.dtos.composed.SaldoAhorroCajaDto;
 import com.business.cybord.models.enums.sql.SaldoAhorroFilterEnum;
 import com.business.cybord.models.enums.sql.UsuariosFilterEnum;
 import com.business.cybord.utils.extractor.ReporteSaldosRowMapper;
+import com.business.cybord.utils.extractor.SaldoAhorroCajaAgrupadoRowMapper;
+import com.business.cybord.utils.extractor.SaldoAhorroCajaRowMapper;
 import com.business.cybord.utils.helper.DateHelper;
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
 import com.healthmarketscience.sqlbuilder.FunctionCall;
@@ -43,7 +46,34 @@ public class ReportesSaldosDao {
 	private DateFormat dateFormat = new SimpleDateFormat(SqlConstants.DATE_FORMAT);
 	private DateHelper dh = new DateHelper();
 
+	private static final String AHORRO_CAJA_POR_TIPO_ANUAL = "SELECT"
+			+ "	SUM(monto) as monto, tipo,MONTH(fecha_creacion) as mes  " + "FROM saldo_ahorro " + "where 1=1 "
+			+ "	AND YEAR(fecha_creacion)=YEAR(CURDATE()) " + "group by " + "	tipo, MONTH(fecha_creacion);";
+	
+	private static final String AHORRO_CAJA_POR_TIPO_ANUAL_AGRUPADO = "SELECT SUM(monto) monto , tipo " + 
+			"FROM saldo_ahorro where YEAR(fecha_creacion)=YEAR(CURDATE()) group by tipo;";
+
 	private static final Logger log = LoggerFactory.getLogger(ReportesSaldosDao.class);
+
+	public List<SaldoAhorroCajaDto> getAhorrosCajaAnual() {
+		return jdbcTemplate.query(new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+				PreparedStatement ps = con.prepareStatement(AHORRO_CAJA_POR_TIPO_ANUAL);
+				return ps;
+			}
+		}, new SaldoAhorroCajaRowMapper());
+	}
+	
+	public List<SaldoAhorroCajaDto> getAhorrosCajaAnualAgrupado() {
+		return jdbcTemplate.query(new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+				PreparedStatement ps = con.prepareStatement(AHORRO_CAJA_POR_TIPO_ANUAL_AGRUPADO);
+				return ps;
+			}
+		}, new SaldoAhorroCajaAgrupadoRowMapper());
+	}
 
 	public Page<ReporteSaldosDto> findAll(Map<String, String> parameters, Pageable pageable) {
 		int total = jdbcTemplate.queryForObject(solicitudCount(parameters), new Object[] {},
@@ -79,7 +109,8 @@ public class ReportesSaldosDao {
 		SelectQuery selectStoresByParams = new SelectQuery().addFromTable(saldoAhorro)
 				.addColumns(saldoAhorro.findColumns("fecha_creacion")).addColumns(saldoAhorro.findColumns("monto"))
 				.addColumns(saldoAhorro.findColumns("tipo")).addColumns(usuarios.findColumns("tipo_usuario"))
-				.addColumns(usuarios.findColumns("no_empleado")).addColumns(saldoAhorro.findColumns("origen")).addColumns(usuarios.findColumns("nombre"))
+				.addColumns(usuarios.findColumns("no_empleado")).addColumns(saldoAhorro.findColumns("origen"))
+				.addColumns(usuarios.findColumns("nombre"))
 				.addJoin(SelectQuery.JoinType.INNER, saldoAhorro, usuarios, BinaryCondition.equalTo(columnA, columnB))
 				.addCondition(BinaryCondition.greaterThanOrEq(saldoAhorro.findColumn("fecha_creacion"), since))
 				.addCondition(BinaryCondition.lessThanOrEq(saldoAhorro.findColumn("fecha_creacion"), to));

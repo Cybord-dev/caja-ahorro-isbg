@@ -21,7 +21,7 @@ import com.business.cybord.utils.extractor.RecursoRsExtractor;
 public class RecursoRepositoryJDBC {
 
 	@Autowired
-	private JdbcTemplate invoiceManagerTemplate;
+	private JdbcTemplate jdbcTemplate;
 	
 	private static final String BUSCAR_RECURSO_POR_TIPO_RECURSO_Y_TIPO_ARCHIVO_Y_REFERENCIA = "SELECT * FROM recursos WHERE 1=1 AND TIPO_ARCHIVO= ? AND REFERENCIA = ? AND TIPO_RECURSO = ? ";
 
@@ -32,7 +32,7 @@ public class RecursoRepositoryJDBC {
 	private static final String INSERTAR_RECURSO = "INSERT INTO recursos (REFERENCIA, TIPO_ARCHIVO, TIPO_RECURSO, DATO, FECHA_CREACION) VALUES(?,?,?,?,?)";
 
 	public Optional<RecursoDto> findResourceFileByResourceTypeAndReference(String tipoRecurso, String referencia, String tipoArchivo) {
-		return invoiceManagerTemplate.query(new PreparedStatementCreator() {
+		return jdbcTemplate.query(new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 				PreparedStatement ps = con.prepareStatement(BUSCAR_RECURSO_POR_TIPO_RECURSO_Y_TIPO_ARCHIVO_Y_REFERENCIA);
@@ -46,7 +46,7 @@ public class RecursoRepositoryJDBC {
 	}
 	
 	public int deleteResourceFileByResourceTypeAndReference(String resource, String fileType, String reference) {
-		return invoiceManagerTemplate.update(new PreparedStatementCreator() {
+		return jdbcTemplate.update(new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 				PreparedStatement ps = con.prepareStatement(BORRAR_RECURSO_POR_TIPO_RECURSO_Y_TIPO_ARCHIVO_Y_REFERENCIA);
@@ -59,7 +59,7 @@ public class RecursoRepositoryJDBC {
 	}
 	
 	public int borrarRecursoPorId(int id) {
-		return invoiceManagerTemplate.update(new PreparedStatementCreator() {
+		return jdbcTemplate.update(new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 				PreparedStatement ps = con.prepareStatement(BORRAR_RECURSO_POR_ID);
@@ -70,7 +70,7 @@ public class RecursoRepositoryJDBC {
 	}
 	
 	public int insertarRecurso(RecursoDto dto) {
-		return invoiceManagerTemplate.update(INSERTAR_RECURSO,
+		return jdbcTemplate.update(INSERTAR_RECURSO,
 				new Object[] { dto.getReferencia(), dto.getTipoArchivo(), dto.getTipoRecurso(),
 						new SqlLobValue(dto.getDato().getBytes()), new Timestamp(System.currentTimeMillis()) },
 				new int[] { Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.BLOB, Types.TIMESTAMP });

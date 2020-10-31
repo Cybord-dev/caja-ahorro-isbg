@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.business.cybord.models.dtos.SaldoAhorroDto;
 import com.business.cybord.models.dtos.composed.ReporteSaldosDto;
+import com.business.cybord.models.dtos.composed.SaldoAhorroCajaDto;
 import com.business.cybord.services.SaldoAhorroService;
 
 @RestController
@@ -33,6 +34,16 @@ public class SaldosAhorroController {
 	public ResponseEntity<Page<ReporteSaldosDto>> getSaldosAhorrosCurrentCaja(
 			@RequestParam Map<String, String> parameters) {
 		return new ResponseEntity<>(service.getSaldosAhorrosCurrentCaja(parameters), HttpStatus.OK);
+	}
+
+	@GetMapping("/saldosAhorro/anual")
+	public ResponseEntity<List<SaldoAhorroCajaDto>> getSaldosAhorrosCurrentCajaAnual() {
+		return new ResponseEntity<>(service.getSaldosAhorrosCurrentCajaAnual(), HttpStatus.OK);
+	}
+	
+	@GetMapping("/saldosAhorro/anual/agrupado")
+	public ResponseEntity<List<SaldoAhorroCajaDto>> getSaldosAhorrosCurrentCajaAnualAgrupado() {
+		return new ResponseEntity<>(service.getSaldosAhorrosCurrentCajaAnualAgrupado(), HttpStatus.OK);
 	}
 
 	@GetMapping("/usuarios/{idUsuario}/ahorros")
@@ -57,6 +68,5 @@ public class SaldosAhorroController {
 			Authentication authentication) {
 		return new ResponseEntity<>(service.insertBulk(dtos, authentication), HttpStatus.CREATED);
 	}
-	
 
 }

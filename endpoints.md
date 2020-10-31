@@ -140,6 +140,8 @@ PRESTAMO & AHORRADOR & DEUDOR PENDIENTES
 
 ### REPORTE SALDO AHORO
 GET api/v1/saldosAhorro
+GET api/v1/saldosAhorro/anual
+GET api/v1/saldosAhorro/anual/agrupado
 
 ### paginados 
 -GET SOLICITUDES PAGINADAS
