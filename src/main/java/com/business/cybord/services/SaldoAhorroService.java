@@ -17,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.business.cybord.mappers.SaldoAhorroMapper;
 import com.business.cybord.models.dtos.SaldoAhorroDto;
 import com.business.cybord.models.dtos.composed.ReporteSaldosDto;
+import com.business.cybord.models.dtos.composed.SaldoAhorroCajaDto;
 import com.business.cybord.models.entities.SaldoAhorro;
 import com.business.cybord.repositories.SaldoAhorroRepository;
 import com.business.cybord.repositories.dao.ReportesSaldosDao;
@@ -33,12 +34,20 @@ public class SaldoAhorroService {
 	@Autowired
 	private ReportesSaldosDao reportesSaldosDao;
 
-
 	public Page<ReporteSaldosDto> getSaldosAhorrosCurrentCaja(Map<String, String> parameters) {
 		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
 		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
 		return reportesSaldosDao.findAll(parameters, PageRequest.of(page, size, Sort.by("fechaActualizacion")));
 	}
+
+	public List<SaldoAhorroCajaDto> getSaldosAhorrosCurrentCajaAnual() {
+		return reportesSaldosDao.getAhorrosCajaAnual();
+	}
+	
+	public List<SaldoAhorroCajaDto> getSaldosAhorrosCurrentCajaAnualAgrupado() {
+		return reportesSaldosDao.getAhorrosCajaAnualAgrupado();
+	}
+
 
 	public List<SaldoAhorroDto> getSaldosAhorroByUsuario(Integer id) {
 		return mapper.getDtosFromEntity(respository.findByIdUsuario(id));
@@ -82,7 +91,5 @@ public class SaldoAhorroService {
 		}
 
 	}
-
-	
 
 }
