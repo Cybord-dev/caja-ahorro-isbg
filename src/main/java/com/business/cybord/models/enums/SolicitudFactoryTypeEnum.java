@@ -4,25 +4,36 @@ import java.util.Optional;
 
 public enum SolicitudFactoryTypeEnum {
 
-	SOLICITUD_AHORRO(SolicitudFactoryEnum.SOLICITUD_AHORRO, "SolicitudAhorro", "SolicitudCreadaEvent",
-			"ValidaContaEvent"),
-	SOLICITUD_CANCELACION_AHORRO(SolicitudFactoryEnum.SOLICITUD_CANCELACION_AHORRO, "CancelacionAhorro",
-			"SolicitudCreadaEvent", "ValidaContaEvent"),
-	SOLICITUD_RETIRO_PARCIAL_AHORRO(SolicitudFactoryEnum.SOLICITUD_RETIRO_PARCIAL_AHORRO, "RetiroParcialAhorro",
-			"SolicitudCreadaEvent", "ValidaContaEvent"),
-	SOLICITUD_MODIFICACION_AHORRO(SolicitudFactoryEnum.SOLICITUD_MODIFICACION_AHORRO, "ModificacionAhorro",
-			"SolicitudCreadaEvent", "ValidaContaEvent");
+	SOLICITUD_AHORRO_INTERNO(SolicitudFactoryEnum.SOLICITUD_AHORRO_INTERNO, "SolicitudAhorro", "SolicitudCreadaEvent",
+			"ValidaContaEvent","INTERNO"),
+	SOLICITUD_AHORRO_EXTERNO(SolicitudFactoryEnum.SOLICITUD_AHORRO_EXTERNO, "SolicitudAhorro", "SolicitudCreadaEvent",
+			"ValidaContaEvent","EXTERNO"),
+	SOLICITUD_CANCELACION_AHORRO_INTERNO(SolicitudFactoryEnum.SOLICITUD_CANCELACION_AHORRO_INTERNO, "CancelacionAhorro",
+			"SolicitudCreadaEvent", "ValidaContaEvent","INTERNO"),
+	SOLICITUD_CANCELACION_AHORRO_EXTERNO(SolicitudFactoryEnum.SOLICITUD_CANCELACION_AHORRO_EXTERNO, "CancelacionAhorro",
+			"SolicitudCreadaEvent", "ValidaContaEvent","EXTERNO"),
+	SOLICITUD_RETIRO_PARCIAL_AHORRO_INTERNO(SolicitudFactoryEnum.SOLICITUD_RETIRO_PARCIAL_AHORRO_INTERNO, "RetiroParcialAhorro",
+			"SolicitudCreadaEvent", "ValidaContaEvent","INTERNO"),
+	SOLICITUD_RETIRO_PARCIAL_AHORRO_EXTERNO(SolicitudFactoryEnum.SOLICITUD_RETIRO_PARCIAL_AHORRO_EXTERNO, "RetiroParcialAhorro",
+			"SolicitudCreadaEvent", "ValidaContaEvent","EXTERNO"),
+	SOLICITUD_MODIFICACION_AHORRO_INTERNO(SolicitudFactoryEnum.SOLICITUD_MODIFICACION_AHORRO, "ModificacionAhorro",
+			"SolicitudCreadaEvent", "ValidaContaEvent","INTERNO"),
+	SOLICITUD_MODIFICACION_AHORRO_EXTENO(SolicitudFactoryEnum.SOLICITUD_MODIFICACION_AHORRO, "ModificacionAhorro",
+			"SolicitudCreadaEvent", "ValidaContaEvent","EXTERNO");
 
 	private SolicitudFactoryEnum enumValue;
 	private String referenceName;
+	private String tipo;
 	private String initState;
 	private String finalState;
 
-	private SolicitudFactoryTypeEnum(SolicitudFactoryEnum enumValue,String referenceName, String initState, String finalState) {
+	private SolicitudFactoryTypeEnum(SolicitudFactoryEnum enumValue, String referenceName, String initState,
+			String finalState, String tipo) {
 		this.enumValue = enumValue;
-		this.referenceName=referenceName;
+		this.referenceName = referenceName;
 		this.initState = initState;
 		this.finalState = finalState;
+		this.tipo = tipo;
 	}
 
 	public SolicitudFactoryEnum getEnumValue() {
@@ -41,9 +52,13 @@ public enum SolicitudFactoryTypeEnum {
 		return referenceName;
 	}
 
-	public static Optional<SolicitudFactoryTypeEnum> findByReferenceName(String referenceName) {
+	public String getTipo() {
+		return tipo;
+	}
+
+	public static Optional<SolicitudFactoryTypeEnum> findByReferenceName(String referenceName, String tipo) {
 		for (SolicitudFactoryTypeEnum v : values()) {
-			if (v.getReferenceName().equals(referenceName)) {
+			if (v.getReferenceName().equals(referenceName)&&v.getTipo().equals(tipo)) {
 				return Optional.of(v);
 			}
 		}

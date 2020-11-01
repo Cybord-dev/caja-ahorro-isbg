@@ -95,7 +95,8 @@ public class SolicitudService {
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 						String.format("el usuario id= %d no existe", idUsuario)));
 		executeRules(solicitudDto, usuariosMapper.getDtoFromUserEntity(usuario));
-		SolicitudFactoryEnum sfte = SolicitudFactoryTypeEnum.findByReferenceName(solicitudDto.getTipo())
+		SolicitudFactoryEnum sfte = SolicitudFactoryTypeEnum
+				.findByReferenceName(solicitudDto.getTipo(), usuario.getTipoUsuario())
 				.orElseThrow(() -> new IsbgServiceException(
 						String.format("Tipo de solicitud %s no existe", solicitudDto.getTipo()),
 						"No existe el tipo de soliciitud", HttpStatus.CONFLICT.value()))

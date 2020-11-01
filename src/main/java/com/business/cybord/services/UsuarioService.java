@@ -152,7 +152,7 @@ public class UsuarioService {
 		throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
 				String.format("%s no es un usuario autorizado", "anonymous"));
 	}
-
+	
 	private List<MenuItem> getMenuFromResource(String fileName) {
 		try {
 			List<MenuItem> menu = new ArrayList<>();

@@ -17,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.business.cybord.mappers.SolicitudMapper;
 import com.business.cybord.models.dtos.SolicitudDto;
+import com.business.cybord.models.dtos.UsuarioDto;
 import com.business.cybord.models.dtos.ValidacionDto;
 import com.business.cybord.models.dtos.composed.UserValidacionSolicitudDto;
 import com.business.cybord.models.entities.Solicitud;
@@ -38,6 +39,8 @@ public class ValidacionService {
 	private ValidacionRepository repositoryValidacion;
 	@Autowired
 	private SolicitudRepository repositorySol;
+	@Autowired
+	private UsuarioService usuarioService;
 	@Autowired
 	private SolicitudMapper mapper;
 	@Autowired
@@ -90,19 +93,22 @@ public class ValidacionService {
 		}
 
 	}
+	
+//	public boolean specialConditino(SolicitudDto solicitudDto, ValidacionDto validacion) {
+//		if(solicitudDto.getTipo().equals(SolicitudFactoryTypeEnum.SOLICITUD_RETIRO_PARCIAL_AHORRO_EXTERNO.getReferenceName()))
+//		
+//		return false;
+//	}
 
 	public String validaEstadoActual(SolicitudDto solicitudDto, ValidacionDto validacion) throws IsbgServiceException {
 		try {
-			SolicitudFactoryEnum sfte = SolicitudFactoryTypeEnum.findByReferenceName(solicitudDto.getTipo())
+			UsuarioDto usuario = usuarioService.getUserById(solicitudDto.getIdUsuario());
+			SolicitudFactoryEnum sfte = SolicitudFactoryTypeEnum
+					.findByReferenceName(solicitudDto.getTipo(), usuario.getTipoUsuario())
 					.orElseThrow(() -> new IsbgServiceException(
 							String.format("Tipo de solicitud %s no existe", solicitudDto.getTipo()),
 							"No existe el tipo de soliciitud", HttpStatus.CONFLICT.value()))
 					.getEnumValue();
-			if (solicitudDto.getValidaciones().stream()
-					.anyMatch(a -> a.getArea().equals(EventFactoryTypeEnum.VALIDA_GERENCIA.getReferenceName())
-							&& validacion.getArea().equals(EventFactoryTypeEnum.VALIDA_GERENCIA.getReferenceName()))) {
-				validacion.setArea(EventFactoryTypeEnum.VALIDA_GERENCIA2.getReferenceName());
-			}
 			State newState = new State(EventFactoryTypeEnum.findByReferenceName(validacion.getArea())
 					.orElseThrow(
 							() -> new IsbgServiceException(String.format("Evento %s no existe", validacion.getArea()),
@@ -120,7 +126,8 @@ public class ValidacionService {
 						.getEnumValue().getInstance(solicitudDto);
 				solicitud.fire(event);
 			}
-			if (newState.equals(solicitud.nextState())) {
+			State stado=solicitud.nextState();
+			if (newState.equals(stado)) {
 				return solicitud.nextState().getName();
 			}
 			throw new IsbgServiceException(
@@ -152,7 +159,6 @@ public class ValidacionService {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
 					String.format("La validacion id=%d no existe", idValidacion));
 		}
-
 	}
 
 }

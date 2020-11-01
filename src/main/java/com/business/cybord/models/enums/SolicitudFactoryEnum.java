@@ -1,34 +1,60 @@
 package com.business.cybord.models.enums;
 
 import com.business.cybord.states.solicitudes.ISolicitud;
-import com.business.cybord.states.solicitudes.SolicitudAhorro;
-import com.business.cybord.states.solicitudes.SolicitudCancelacionAhorro;
+import com.business.cybord.states.solicitudes.SolicitudAhorroExterna;
+import com.business.cybord.states.solicitudes.SolicitudAhorroInterna;
+import com.business.cybord.states.solicitudes.SolicitudCancelacionAhorroExterno;
+import com.business.cybord.states.solicitudes.SolicitudCancelacionAhorroInterno;
 import com.business.cybord.states.solicitudes.SolicitudModificacionAhorro;
-import com.business.cybord.states.solicitudes.SolicitudRetiroAnticipado;
+import com.business.cybord.states.solicitudes.SolicitudRetiroAnticipadoInterno;
 
 public enum SolicitudFactoryEnum {
 
-	SOLICITUD_AHORRO {
+	SOLICITUD_AHORRO_INTERNO {
 
 		@Override
-		public SolicitudAhorro getInstance() {
-			return new SolicitudAhorro();
+		public SolicitudAhorroInterna getInstance() {
+			return new SolicitudAhorroInterna();
 		}
 
 	},
-	SOLICITUD_CANCELACION_AHORRO {
+	SOLICITUD_AHORRO_EXTERNO {
 
 		@Override
-		public SolicitudCancelacionAhorro getInstance() {
-			return new SolicitudCancelacionAhorro();
+		public SolicitudAhorroExterna getInstance() {
+			return new SolicitudAhorroExterna();
 		}
 
 	},
-	SOLICITUD_RETIRO_PARCIAL_AHORRO {
+	SOLICITUD_CANCELACION_AHORRO_INTERNO {
 
 		@Override
-		public SolicitudRetiroAnticipado getInstance() {
-			return new SolicitudRetiroAnticipado();
+		public SolicitudCancelacionAhorroInterno getInstance() {
+			return new SolicitudCancelacionAhorroInterno();
+		}
+
+	},
+	SOLICITUD_CANCELACION_AHORRO_EXTERNO {
+
+		@Override
+		public SolicitudCancelacionAhorroExterno getInstance() {
+			return new SolicitudCancelacionAhorroExterno();
+		}
+
+	},
+	SOLICITUD_RETIRO_PARCIAL_AHORRO_INTERNO {
+
+		@Override
+		public SolicitudRetiroAnticipadoInterno getInstance() {
+			return new SolicitudRetiroAnticipadoInterno();
+		}
+
+	},
+	SOLICITUD_RETIRO_PARCIAL_AHORRO_EXTERNO {
+
+		@Override
+		public SolicitudRetiroAnticipadoInterno getInstance() {
+			return new SolicitudRetiroAnticipadoInterno();
 		}
 
 	},

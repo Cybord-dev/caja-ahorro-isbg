@@ -61,6 +61,14 @@ public enum EventFactoryEnum {
 		}
 
 	},
+	VALIDA_DIRECCION_EVENT {
+
+		@Override
+		public AbstractEvent getInstance(SolicitudDto dto) {
+			return new ValidaGerenciaEvent(dto);
+		}
+
+	},
 	SOLICITUD_TERMINADA {
 
 		@Override
