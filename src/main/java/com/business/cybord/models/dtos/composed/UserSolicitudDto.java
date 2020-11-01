@@ -3,6 +3,11 @@ package com.business.cybord.models.dtos.composed;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserSolicitudDto implements Serializable {
 
 	private static final long serialVersionUID = 4223586331591210264L;
