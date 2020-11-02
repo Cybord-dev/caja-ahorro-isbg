@@ -84,13 +84,14 @@ public class SaldoAhorroService {
 		}
 	}
 
-	public ConciliadorReportDto conciliarAhorros(List<ConciliaSaldoDto> ahorros, int days,
+	public ConciliadorReportDto conciliarAhorros(List<ConciliaSaldoDto> ahorros,Optional<Integer> days,
 			Authentication authentication) throws IsbgServiceException {
+		
 		ConciliadorReportDto report = new ConciliadorReportDto();
 		if (ahorros != null && !ahorros.isEmpty()) {
+			int day = !days.isPresent()? 8 : days.get();
 			conciliacion(report, ahorros);
-			days = days == 0 ? 8 : days;
-			List<SaldoAhorroDto> saldos = reportesSaldosDao.getAhorrosInternosLastDays(days);
+			List<SaldoAhorroDto> saldos = reportesSaldosDao.getAhorrosInternosLastDays(day);
 			validacionAhorro(report, saldos, authentication);
 			return report;
 		} else {

@@ -99,7 +99,7 @@ public class UsuarioService {
 	public UsuarioDto getUserByNoEmpleado(String id) {
 		log.info("Buscando usuario con id : {}", id);
 		Usuario entity = repository.findByNoEmpleado(id).orElseThrow(
-				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("user no existe %d", id)));
+				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("user no existe %s", id)));
 		return mapper.getDtoFromUserEntity(entity);
 	}
 

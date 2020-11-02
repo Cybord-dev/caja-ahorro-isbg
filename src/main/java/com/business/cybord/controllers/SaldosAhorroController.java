@@ -2,6 +2,7 @@ package com.business.cybord.controllers;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -68,7 +69,7 @@ public class SaldosAhorroController {
 
 	@PostMapping("/ahorros/conciliador")
 	public ResponseEntity<ConciliadorReportDto> conciliarAhorros(@RequestBody @Valid List<ConciliaSaldoDto> dtos,
-			@RequestParam(name = "days",required = false) int days, Authentication authentication) throws IsbgServiceException {
+			@RequestParam(name = "days",required = false) Optional<Integer> days, Authentication authentication) throws IsbgServiceException {
 		return new ResponseEntity<>(service.conciliarAhorros(dtos, days, authentication), HttpStatus.CREATED);
 	}
 
