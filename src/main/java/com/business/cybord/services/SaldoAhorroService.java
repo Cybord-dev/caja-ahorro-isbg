@@ -86,7 +86,6 @@ public class SaldoAhorroService {
 
 	public ConciliadorReportDto conciliarAhorros(List<ConciliaSaldoDto> ahorros,Optional<Integer> days,
 			Authentication authentication) throws IsbgServiceException {
-		
 		ConciliadorReportDto report = new ConciliadorReportDto();
 		if (ahorros != null && !ahorros.isEmpty()) {
 			int day = !days.isPresent()? 8 : days.get();
@@ -147,6 +146,7 @@ public class SaldoAhorroService {
 			try {
 				UsuarioDto usuarioDto = usuarioService.getUserByNoEmpleado(csd.getNoEmpleado());
 				csd.setIdUsuario(usuarioDto.getId());
+				csd.setNombre(usuarioDto.getNombre());
 				if (!usuarioDto.isAhorrador()) {
 					csd.setObservaciones("El Empleado no esta dado de alta como ahorrador");
 					report.addError(csd);
@@ -167,7 +167,7 @@ public class SaldoAhorroService {
 					}
 				}
 			} catch (ResponseStatusException e) {
-				csd.setObservaciones(e.getMessage());
+				csd.setObservaciones(e.getReason());
 				report.addError(csd);
 			}
 		}
