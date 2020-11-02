@@ -10,7 +10,7 @@ public enum EventFactoryTypeEnum {
 	VALIDA_TESO(EventFactoryEnum.VALIDA_TESO_EVENT, "tesoreria","ValidacionTeso"),
 	VALIDA_ADMIN(EventFactoryEnum.VALIDA_ADMIN_EVENT, "administracion","ValidaAdmin"),
 	VALIDA_GERENCIA(EventFactoryEnum.VALIDA_GERENCIA_EVENT, "gerencia","ValidacionGerencia"),
-	VALIDA_DIRECCION(EventFactoryEnum.VALIDA_GERENCIA_EVENT, "direccion","ValidacionDireccion"),
+	VALIDA_DIRECCION(EventFactoryEnum.VALIDA_DIRECCION_EVENT, "direccion","ValidacionDireccion"),
 	SOLICITUD_TERMINADA(EventFactoryEnum.SOLICITUD_TERMINADA, "sistema","Finalizada");
 	
 

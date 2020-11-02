@@ -1,4 +1,4 @@
-package com.business.cybord.rules.validations.general;
+package com.business.cybord.rules.validations.ahorro;
 
 import java.time.LocalDate;
 import java.time.Month;

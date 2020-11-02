@@ -2,10 +2,10 @@ package com.business.cybord.rules.suites;
 
 import org.jeasy.rules.api.Rules;
 
-import com.business.cybord.rules.validations.general.FechaInicioAhorroRule;
-import com.business.cybord.rules.validations.general.MontoModificacionAhorroRule;
+import com.business.cybord.rules.validations.ahorro.FechaInicioAhorroRule;
 import com.business.cybord.rules.validations.general.NoSoyAhorradorRule;
-import com.business.cybord.rules.validations.general.SueldoModificacionAhorroRule;
+import com.business.cybord.rules.validations.modificacion.MontoModificacionAhorroRule;
+import com.business.cybord.rules.validations.modificacion.SueldoModificacionAhorroRule;
 
 public class ModificacionAhorroSuite implements ISuite {
 

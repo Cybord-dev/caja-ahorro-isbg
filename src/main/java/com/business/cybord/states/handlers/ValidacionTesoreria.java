@@ -1,4 +1,4 @@
-package com.business.cybord.states;
+package com.business.cybord.states.handlers;
 
 import org.jeasy.states.api.EventHandler;
 import org.slf4j.Logger;

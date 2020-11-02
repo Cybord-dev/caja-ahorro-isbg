@@ -72,7 +72,11 @@ public class ValidacionService {
 						String.format("la solicitud id= %d del usuario =%d no existe", idSolicitud, idUsuario)));
 		if (validacion.isStatus()) {
 			SolicitudDto solicitudDto = mapper.getDtoFromSolicitudEntity(sol);
-			sol.setStatus(validaEstadoActual(solicitudDto, validacion));
+			if(specialValidation(solicitudDto, validacion)) {
+				sol.setStatus(EventFactoryTypeEnum.VALIDA_TESO.getState());
+			}else {
+				sol.setStatus(validaEstadoActual(solicitudDto, validacion));
+			}
 			solicitudDto = mapper.getDtoFromSolicitudEntity(repositorySol.save(sol));
 			validacion.setNumeroValidacion(solicitudDto.getValidaciones().size() + 1);
 			Validacion val = mapper.getEntityFromValidacionesDto(validacion);
@@ -93,12 +97,22 @@ public class ValidacionService {
 		}
 
 	}
-	
-//	public boolean specialConditino(SolicitudDto solicitudDto, ValidacionDto validacion) {
-//		if(solicitudDto.getTipo().equals(SolicitudFactoryTypeEnum.SOLICITUD_RETIRO_PARCIAL_AHORRO_EXTERNO.getReferenceName()))
-//		
-//		return false;
-//	}
+
+	public boolean specialValidation(SolicitudDto solicitudDto, ValidacionDto validacion) {
+		if ((solicitudDto.getTipo()
+				.equals(SolicitudFactoryTypeEnum.SOLICITUD_CANCELACION_AHORRO_EXTERNO.getReferenceName())
+				|| solicitudDto.getTipo()
+						.equals(SolicitudFactoryTypeEnum.SOLICITUD_RETIRO_PARCIAL_AHORRO_EXTERNO.getReferenceName()))
+						&& validacion.getArea().equals(EventFactoryTypeEnum.VALIDA_DIRECCION.getReferenceName())
+						&& !solicitudDto.getValidaciones().stream().anyMatch(a -> {
+							return a.getArea().equals(EventFactoryTypeEnum.VALIDA_DIRECCION.getReferenceName())
+									|| a.getArea().equals(EventFactoryTypeEnum.VALIDA_TESO.getReferenceName());
+						})) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	public String validaEstadoActual(SolicitudDto solicitudDto, ValidacionDto validacion) throws IsbgServiceException {
 		try {
@@ -126,7 +140,7 @@ public class ValidacionService {
 						.getEnumValue().getInstance(solicitudDto);
 				solicitud.fire(event);
 			}
-			State stado=solicitud.nextState();
+			State stado = solicitud.nextState();
 			if (newState.equals(stado)) {
 				return solicitud.nextState().getName();
 			}

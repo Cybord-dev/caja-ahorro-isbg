@@ -16,10 +16,10 @@ import org.springframework.http.HttpStatus;
 import com.business.cybord.models.dtos.SolicitudDto;
 import com.business.cybord.models.enums.EventFactoryTypeEnum;
 import com.business.cybord.models.error.IsbgServiceException;
-import com.business.cybord.states.ValidacionFinalizada;
-import com.business.cybord.states.ValidacionRh;
 import com.business.cybord.states.events.SolicitudFinalizadaEvent;
 import com.business.cybord.states.events.ValidaRhEvent;
+import com.business.cybord.states.handlers.ValidacionFinalizada;
+import com.business.cybord.states.handlers.ValidacionRh;
 
 public class SolicitudAhorroInterna implements ISolicitud {
 

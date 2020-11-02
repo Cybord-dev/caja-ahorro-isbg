@@ -1,4 +1,4 @@
-package com.business.cybord.rules.validations.general;
+package com.business.cybord.rules.validations.modificacion;
 
 import java.math.BigDecimal;
 import java.util.List;

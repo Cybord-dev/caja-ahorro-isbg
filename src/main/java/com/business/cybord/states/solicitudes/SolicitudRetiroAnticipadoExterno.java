@@ -16,16 +16,16 @@ import org.springframework.http.HttpStatus;
 import com.business.cybord.models.dtos.SolicitudDto;
 import com.business.cybord.models.enums.EventFactoryTypeEnum;
 import com.business.cybord.models.error.IsbgServiceException;
-import com.business.cybord.states.ValidaDireccion;
-import com.business.cybord.states.ValidacionConta;
-import com.business.cybord.states.ValidacionFinalizada;
-import com.business.cybord.states.ValidacionGerencia;
-import com.business.cybord.states.ValidacionTesoreria;
 import com.business.cybord.states.events.SolicitudFinalizadaEvent;
 import com.business.cybord.states.events.ValidaContaEvent;
 import com.business.cybord.states.events.ValidaDireccionEvent;
 import com.business.cybord.states.events.ValidaGerenciaEvent;
 import com.business.cybord.states.events.ValidaTesoEvent;
+import com.business.cybord.states.handlers.ValidaDireccion;
+import com.business.cybord.states.handlers.ValidacionConta;
+import com.business.cybord.states.handlers.ValidacionFinalizada;
+import com.business.cybord.states.handlers.ValidacionGerencia;
+import com.business.cybord.states.handlers.ValidacionTesoreria;
 
 public class SolicitudRetiroAnticipadoExterno implements ISolicitud {
 
@@ -52,17 +52,29 @@ public class SolicitudRetiroAnticipadoExterno implements ISolicitud {
 		Transition validacionConta = new TransitionBuilder().name(EventFactoryTypeEnum.VALIDA_CONTA_EVENT.getState())
 				.sourceState(creada).eventType(ValidaContaEvent.class).eventHandler(new ValidacionConta())
 				.targetState(validaConta).build();
+		
+		Transition validacionDireccion = new TransitionBuilder().name(EventFactoryTypeEnum.VALIDA_DIRECCION.getState())
+				.sourceState(creada).eventType(ValidaDireccionEvent.class).eventHandler(new ValidaDireccion())
+				.targetState(validaDireccion).build();
+		
+		Transition validacionDireccionConta = new TransitionBuilder().name(EventFactoryTypeEnum.VALIDA_DIRECCION.getState())
+				.sourceState(validaConta).eventType(ValidaDireccionEvent.class).eventHandler(new ValidaDireccion())
+				.targetState(validaDireccion).build();
 
 		Transition validacionGerncia = new TransitionBuilder().name(EventFactoryTypeEnum.VALIDA_GERENCIA.getState())
 				.sourceState(validaConta).eventType(ValidaGerenciaEvent.class).eventHandler(new ValidacionGerencia())
 				.targetState(validaGerencia).build();
+		
+		Transition validacionDireccionGerencia = new TransitionBuilder().name(EventFactoryTypeEnum.VALIDA_DIRECCION.getState())
+				.sourceState(validaGerencia).eventType(ValidaDireccionEvent.class).eventHandler(new ValidaDireccion())
+				.targetState(validaDireccion).build();
 
 		Transition validacionAdmin = new TransitionBuilder().name(EventFactoryTypeEnum.VALIDA_TESO.getState())
 				.sourceState(validaGerencia).eventType(ValidaTesoEvent.class).eventHandler(new ValidacionTesoreria())
 				.targetState(validaTso).build();
 
-		Transition validacioDireccionTeso = new TransitionBuilder().name(EventFactoryTypeEnum.VALIDA_RH.getState())
-				.sourceState(validaDireccion).eventType(ValidaDireccionEvent.class).eventHandler(new ValidaDireccion())
+		Transition validacioDireccionTeso = new TransitionBuilder().name(EventFactoryTypeEnum.VALIDA_TESO.getState())
+				.sourceState(validaDireccion).eventType(ValidaTesoEvent.class).eventHandler(new ValidacionTesoreria())
 				.targetState(validaTso).build();
 
 		Transition solicitudFinalizada = new TransitionBuilder()
@@ -73,8 +85,15 @@ public class SolicitudRetiroAnticipadoExterno implements ISolicitud {
 		transitions.add(validacionConta);
 		transitions.add(validacionGerncia);
 		transitions.add(validacionAdmin);
-		transitions.add(validacioDireccionTeso);
 		transitions.add(solicitudFinalizada);
+		
+		
+		//Condiciones especiales
+		transitions.add(validacionDireccion);
+		transitions.add(validacioDireccionTeso);
+		transitions.add(validacionDireccionConta);
+		transitions.add(validacionDireccionGerencia);
+		
 
 		State state = new State(EventFactoryTypeEnum.SOLICITUD_CREADA.getState());
 		turnstileStateMachine = new FiniteStateMachineBuilder(states, state).registerTransitions(transitions).build();

@@ -6,6 +6,7 @@ import com.business.cybord.states.solicitudes.SolicitudAhorroInterna;
 import com.business.cybord.states.solicitudes.SolicitudCancelacionAhorroExterno;
 import com.business.cybord.states.solicitudes.SolicitudCancelacionAhorroInterno;
 import com.business.cybord.states.solicitudes.SolicitudModificacionAhorro;
+import com.business.cybord.states.solicitudes.SolicitudRetiroAnticipadoExterno;
 import com.business.cybord.states.solicitudes.SolicitudRetiroAnticipadoInterno;
 
 public enum SolicitudFactoryEnum {
@@ -53,8 +54,8 @@ public enum SolicitudFactoryEnum {
 	SOLICITUD_RETIRO_PARCIAL_AHORRO_EXTERNO {
 
 		@Override
-		public SolicitudRetiroAnticipadoInterno getInstance() {
-			return new SolicitudRetiroAnticipadoInterno();
+		public SolicitudRetiroAnticipadoExterno getInstance() {
+			return new SolicitudRetiroAnticipadoExterno();
 		}
 
 	},
