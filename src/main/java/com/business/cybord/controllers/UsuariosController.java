@@ -45,7 +45,7 @@ public class UsuariosController {
 	public ResponseEntity<Page<UsuarioDto>> getAllFacturasByParametros(@RequestParam Map<String, String> parameters) {
 		return new ResponseEntity<>(service.getUsuariosPorParametros(parameters), HttpStatus.OK);
 	}
-
+	
 	@PostMapping
 	public ResponseEntity<UsuarioDto> insertarNuevoUsuario(@RequestBody @Valid UsuarioDto usuarioDto) {
 		return new ResponseEntity<>(service.insertarNuevoUsuario(usuarioDto), HttpStatus.CREATED);
