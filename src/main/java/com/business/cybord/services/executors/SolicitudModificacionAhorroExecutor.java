@@ -48,7 +48,7 @@ public class SolicitudModificacionAhorroExecutor implements SolicitudExecutor {
 							String.format("El usuario  %d no tiene sueldo", solicitudDto.getIdUsuario()),
 							HttpStatus.CONFLICT.value()));
 			AtributoSolicitud atributo = solicitudDto.getAttributesAsList().stream()
-					.filter(a -> a.getNombre().equals(TipoAtributoSolicitudEnum.MONTO_MODIFICACION.name())).findFirst()
+					.filter(a -> a.getNombre().equals(TipoAtributoSolicitudEnum.MONTO.name())).findFirst()
 					.orElseThrow(() -> new IsbgServiceException("Error actualizando daatos en solicitud ahorro",
 							String.format("El usuario  %d no existe", solicitudDto.getIdUsuario()),
 							HttpStatus.CONFLICT.value()));

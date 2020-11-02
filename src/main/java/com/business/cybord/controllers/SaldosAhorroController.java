@@ -19,8 +19,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.business.cybord.models.dtos.SaldoAhorroDto;
+import com.business.cybord.models.dtos.composed.ConciliaSaldoDto;
+import com.business.cybord.models.dtos.composed.ConciliadorReportDto;
 import com.business.cybord.models.dtos.composed.ReporteSaldosDto;
 import com.business.cybord.models.dtos.composed.SaldoAhorroCajaDto;
+import com.business.cybord.models.error.IsbgServiceException;
 import com.business.cybord.services.SaldoAhorroService;
 
 @RestController
@@ -40,7 +43,7 @@ public class SaldosAhorroController {
 	public ResponseEntity<List<SaldoAhorroCajaDto>> getSaldosAhorrosCurrentCajaAnual() {
 		return new ResponseEntity<>(service.getSaldosAhorrosCurrentCajaAnual(), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/saldosAhorro/anual/agrupado")
 	public ResponseEntity<List<SaldoAhorroCajaDto>> getSaldosAhorrosCurrentCajaAnualAgrupado() {
 		return new ResponseEntity<>(service.getSaldosAhorrosCurrentCajaAnualAgrupado(), HttpStatus.OK);
@@ -61,6 +64,12 @@ public class SaldosAhorroController {
 	public ResponseEntity<SaldoAhorroDto> getSaldoAhorroPorIdYIdusuario(@PathVariable Integer idUsuario,
 			@PathVariable Integer idAhorro) {
 		return new ResponseEntity<>(service.getSaldoAhorroByIdAndIdUsuario(idUsuario, idAhorro), HttpStatus.OK);
+	}
+
+	@PostMapping("/ahorros/conciliador")
+	public ResponseEntity<ConciliadorReportDto> conciliarAhorros(@RequestBody @Valid List<ConciliaSaldoDto> dtos,
+			@RequestParam(name = "days",required = false) int days, Authentication authentication) throws IsbgServiceException {
+		return new ResponseEntity<>(service.conciliarAhorros(dtos, days, authentication), HttpStatus.CREATED);
 	}
 
 	@PostMapping("/ahorros/bulk")

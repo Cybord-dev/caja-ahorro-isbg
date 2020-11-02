@@ -1,7 +1,15 @@
 package com.business.cybord.models.dtos;
 
-public class CatalogoOficinaDto {
+import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class CatalogoOficinaDto implements Serializable{
+
+	private static final long serialVersionUID = -5608482842543418755L;
 	private int id;
 	private String oficina;
 	private String tipo;

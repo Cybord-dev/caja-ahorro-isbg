@@ -16,46 +16,37 @@ import org.springframework.http.HttpStatus;
 import com.business.cybord.models.dtos.SolicitudDto;
 import com.business.cybord.models.enums.EventFactoryTypeEnum;
 import com.business.cybord.models.error.IsbgServiceException;
-import com.business.cybord.states.ValidacionConta;
-import com.business.cybord.states.ValidacionFinalizada;
-import com.business.cybord.states.ValidacionRh;
 import com.business.cybord.states.events.SolicitudFinalizadaEvent;
-import com.business.cybord.states.events.ValidaContaEvent;
 import com.business.cybord.states.events.ValidaRhEvent;
+import com.business.cybord.states.handlers.ValidacionFinalizada;
+import com.business.cybord.states.handlers.ValidacionRh;
 
-public class SolicitudAhorro implements ISolicitud {
+public class SolicitudAhorroInterna implements ISolicitud {
 
 	private FiniteStateMachine turnstileStateMachine;
 	private Set<State> states;
 	private Set<Transition> transitions;
 
-	public SolicitudAhorro() {
+	public SolicitudAhorroInterna() {
 		State creada = new State(EventFactoryTypeEnum.SOLICITUD_CREADA.getState());
 		State validaRh = new State(EventFactoryTypeEnum.VALIDA_RH.getState());
-		State validaConta = new State(EventFactoryTypeEnum.VALIDA_CONTA_EVENT.getState());
 		State finalizada = new State(EventFactoryTypeEnum.SOLICITUD_TERMINADA.getState());
 		states = new HashSet<>();
 		transitions = new HashSet<>();
 		states.add(creada);
 		states.add(validaRh);
-		states.add(validaConta);
 		states.add(finalizada);
 
 		Transition validacionRh = new TransitionBuilder().name(EventFactoryTypeEnum.VALIDA_RH.getState())
 				.sourceState(creada).eventType(ValidaRhEvent.class).eventHandler(new ValidacionRh())
 				.targetState(validaRh).build();
 
-		Transition validacionConta = new TransitionBuilder().name(EventFactoryTypeEnum.VALIDA_CONTA_EVENT.getState())
-				.sourceState(validaRh).eventType(ValidaContaEvent.class).eventHandler(new ValidacionConta())
-				.targetState(validaConta).build();
-
 		Transition solicitudFinalizada = new TransitionBuilder()
-				.name(EventFactoryTypeEnum.SOLICITUD_TERMINADA.getState()).sourceState(validaConta)
+				.name(EventFactoryTypeEnum.SOLICITUD_TERMINADA.getState()).sourceState(validaRh)
 				.eventType(SolicitudFinalizadaEvent.class).eventHandler(new ValidacionFinalizada())
 				.targetState(finalizada).build();
 
 		transitions.add(validacionRh);
-		transitions.add(validacionConta);
 		transitions.add(solicitudFinalizada);
 
 		turnstileStateMachine = new FiniteStateMachineBuilder(states, creada).registerTransitions(transitions)
@@ -97,5 +88,4 @@ public class SolicitudAhorro implements ISolicitud {
 			throw new IsbgServiceException(e.getMessage(), "No hay un estado siguiente", HttpStatus.CONFLICT.value());
 		}
 	}
-
 }

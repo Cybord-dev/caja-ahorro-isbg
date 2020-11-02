@@ -5,13 +5,14 @@ import org.jeasy.states.api.AbstractEvent;
 import com.business.cybord.models.dtos.SolicitudDto;
 import com.business.cybord.models.enums.EventFactoryTypeEnum;
 
-public class ValidaGerenciaEvent extends AbstractEvent {
+public class ValidaDireccionEvent extends AbstractEvent {
 	private SolicitudDto solicitudDto;
 
-	public ValidaGerenciaEvent(SolicitudDto solicitudDto) {
-		super(EventFactoryTypeEnum.VALIDA_GERENCIA.getState());
+	public ValidaDireccionEvent(SolicitudDto solicitudDto) {
+		super(EventFactoryTypeEnum.VALIDA_DIRECCION.getState());
 		this.solicitudDto = solicitudDto;
 	}
+
 
 	public SolicitudDto getSolicitudDto() {
 		return solicitudDto;
