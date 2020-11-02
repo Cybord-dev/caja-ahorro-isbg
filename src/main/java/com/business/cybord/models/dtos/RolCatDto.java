@@ -1,7 +1,15 @@
 package com.business.cybord.models.dtos;
 
-public class RolCatDto {
+import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class RolCatDto implements Serializable{
+
+	private static final long serialVersionUID = 2270906626365615882L;
 	private int id;
 	private String nombre;
 

@@ -21,6 +21,7 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.stereotype.Repository;
 
 import com.business.cybord.models.Constants.SqlConstants;
+import com.business.cybord.models.dtos.SaldoAhorroDto;
 import com.business.cybord.models.dtos.composed.ReporteSaldosDto;
 import com.business.cybord.models.dtos.composed.SaldoAhorroCajaDto;
 import com.business.cybord.models.enums.sql.SaldoAhorroFilterEnum;
@@ -28,6 +29,7 @@ import com.business.cybord.models.enums.sql.UsuariosFilterEnum;
 import com.business.cybord.utils.extractor.ReporteSaldosRowMapper;
 import com.business.cybord.utils.extractor.SaldoAhorroCajaAgrupadoRowMapper;
 import com.business.cybord.utils.extractor.SaldoAhorroCajaRowMapper;
+import com.business.cybord.utils.extractor.SaldoAhorroDtoRowMapper;
 import com.business.cybord.utils.helper.DateHelper;
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
 import com.healthmarketscience.sqlbuilder.FunctionCall;
@@ -50,11 +52,39 @@ public class ReportesSaldosDao {
 			+ "	SUM(monto) as monto, tipo,MONTH(fecha_creacion) as mes  " + "FROM saldo_ahorro " + "where 1=1 "
 			+ "	AND YEAR(fecha_creacion)=YEAR(CURDATE()) " + "group by " + "	tipo, MONTH(fecha_creacion);";
 	
-	private static final String AHORRO_CAJA_POR_TIPO_ANUAL_AGRUPADO = "SELECT SUM(monto) monto , tipo " + 
-			"FROM saldo_ahorro where YEAR(fecha_creacion)=YEAR(CURDATE()) group by tipo;";
+	private static final String AHORRO_CAJA_POR_TIPO_ANUAL_AGRUPADO = "SELECT "
+			+ "SUM(monto) monto,"
+			+ " tipo " + 
+			"FROM "
+			+ "	saldo_ahorro "
+			+ "WHERE YEAR(fecha_creacion)=YEAR(CURDATE()) "
+			+ "GROUP BY tipo;";
+	
+	private static final String AHORROS_INTERNOS_LAST_DAYS = "SELECT b.*" + 
+			"	FROM " + 
+			"		isbg.usuarios 			a," + 
+			"		isbg.saldo_ahorro		b" + 
+			"	WHERE 1=1" + 
+			"		AND a.id_usuario=b.id_usuario" + 
+			"	    AND a.tipo_usuario='INTERNO'"+
+			"		AND a.ahorrador=1" + 
+			"	    AND	b.fecha_creacion>=current_date()-?;";
+	
+	
 
 	private static final Logger log = LoggerFactory.getLogger(ReportesSaldosDao.class);
 
+	public List<SaldoAhorroDto> getAhorrosInternosLastDays(int days) {
+		return jdbcTemplate.query(new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+				PreparedStatement ps = con.prepareStatement(AHORROS_INTERNOS_LAST_DAYS);
+				ps.setInt(1, days);
+				return ps;
+			}
+		}, new SaldoAhorroDtoRowMapper());
+	}
+	
 	public List<SaldoAhorroCajaDto> getAhorrosCajaAnual() {
 		return jdbcTemplate.query(new PreparedStatementCreator() {
 			@Override

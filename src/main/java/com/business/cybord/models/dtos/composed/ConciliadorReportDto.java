@@ -1,10 +1,17 @@
 package com.business.cybord.models.dtos.composed;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConciliadorReportDto {
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class ConciliadorReportDto implements Serializable{
+
+	private static final long serialVersionUID = -2825976281577781669L;
 	private List<ConciliaSaldoDto> correctos;
 	private List<ConciliaSaldoDto> errores;
 
