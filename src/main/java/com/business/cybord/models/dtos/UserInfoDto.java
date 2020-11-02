@@ -7,6 +7,7 @@ public class UserInfoDto {
 	
 	private int id;
 	private Boolean activo;
+	private String noEmpleado;
 	private String nombre;
 	private String email;
 	private String urlImagenPerfil;
@@ -24,6 +25,12 @@ public class UserInfoDto {
 	}
 	public void setActivo(Boolean activo) {
 		this.activo = activo;
+	}
+	public String getNoEmpleado() {
+		return noEmpleado;
+	}
+	public void setNoEmpleado(String noEmpleado) {
+		this.noEmpleado = noEmpleado;
 	}
 	public String getNombre() {
 		return nombre;
@@ -57,7 +64,8 @@ public class UserInfoDto {
 	}
 	@Override
 	public String toString() {
-		return "UserInfoDto [id=" + id + ", activo=" + activo + ", nombre=" + nombre + ", email=" + email + ", roles="
-				+ roles + ", menu=" + menu + "]";
+		return "UserInfoDto [id=" + id + ", activo=" + activo + ", noEmpleado=" + noEmpleado + ", nombre=" + nombre
+				+ ", email=" + email + ", urlImagenPerfil=" + urlImagenPerfil + ", roles=" + roles + ", menu=" + menu
+				+ "]";
 	}
 }
