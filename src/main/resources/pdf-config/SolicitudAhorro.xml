@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+    <xsl:template match="/SolicitudPdfModel">
+        <root xmlns="http://www.w3.org/1999/XSL/Format" xmlns:fox="http://xmlgraphics.apache.org/fop/extensions">
+            <layout-master-set>
+                <simple-page-master page-height="279mm" page-width="216mm" margin="30mm" master-name="letter">
+                    <region-body />
+                    <region-after extent="3mm" />
+                </simple-page-master>
+            </layout-master-set>
+            <page-sequence master-reference="letter">
+                <title>Solicitud</title>
+
+                <static-content flow-name="xsl-region-after">
+                    <block font-size="2.5mm">
+                        <inline-container width="160.0mm">
+                            <block font-weight="bold" font-size="3mm" text-align="left">Deposito a cuenta de nomina</block>
+                        </inline-container>
+
+                        <inline-container text-align="right" width="47mm">
+                            <block>
+                                Página
+                                <page-number />
+                                de
+                                <page-number-citation ref-id="last-item" />
+                            </block>
+                        </inline-container>
+                    </block>
+                </static-content>
+
+                <flow flow-name="xsl-region-body">
+
+                    <block-container height="10mm" margin-bottom="10mm" padding="0mm">
+                        <block>
+                             <inline-container width="160.0mm">
+                                <block text-align="right" font-size="4mm"  margin-top="5mm">
+                                   <xsl:value-of select="Fecha" />
+                                 </block>
+                            </inline-container>
+                        </block>
+                    </block-container>
+                
+                     <block-container height="15mm" margin-bottom="1mm" padding="0mm">
+                        <block>
+                            <inline-container width="160.0mm">
+                                <block text-align="center" font-size="6mm" font-weight="bold" margin-top="1mm">
+                                    PROGRAMA DE AHORRO VOLUNTARIO
+                                </block>
+                            </inline-container>
+                        </block>
+                    </block-container>
+
+                    <block-container height="20mm" margin-bottom="1mm" padding="0mm">
+                        <block>
+                            <inline-container width="160.0mm">
+                                <block text-align="center" font-size="6mm" font-weight="bold" margin-top="1mm">
+                                    <xsl:value-of select="Titulo" />
+                                </block>
+                            </inline-container>
+                        </block>
+                    </block-container>
+
+                     <block-container height="10mm" margin-bottom="5mm" padding="0mm">
+                        <block>
+                            <inline-container width="160.0mm">
+                                <block text-align="left" font-size="5mm"  margin-top="5mm">
+                                    Nóminas :
+                                </block>
+                            </inline-container>
+                        </block>
+                    </block-container>
+
+                    <block-container height="70mm" margin-bottom="5mm" padding="10mm">
+                        <block>
+                            <inline-container width="160.0mm">
+                                <block text-align="justify" line-height="10.00mm"  font-size="4mm"  margin-top="5mm">
+                                  <xsl:value-of select="Texto" />
+                                </block>
+                            </inline-container>
+                        </block>
+                    </block-container>
+
+                    <block-container height="15mm" margin-bottom="5mm" padding="0mm">
+                        <block>
+                            <inline-container width="160.0mm">
+                                <block text-align="left" font-size="3mm"  margin-top="5mm">
+                                    Atentamente
+                                </block>
+                            </inline-container>
+                        </block>
+                    </block-container>
+
+                    <block-container height="5mm" margin-bottom="5mm" padding="0mm">
+                        <block>
+                            <inline-container width="160.0mm">
+                                <block text-align="left" font-size="3mm"  margin-top="5mm">
+                                    ------------------------------------------
+                                </block>
+                            </inline-container>
+                        </block>
+                    </block-container>
+
+                    <block-container height="10mm" margin-bottom="5mm" padding="0mm">
+                        <block>
+                            <inline-container width="40.0mm">
+                                <block text-align="center" font-size="3mm"  margin-top="5mm">
+                                    (Firma y Nombre)
+                                </block>
+                            </inline-container>
+                        </block>
+                    </block-container>
+                    
+
+                    <block id="last-item" />
+                </flow>
+            </page-sequence>
+        </root>
+    </xsl:template>
+</xsl:stylesheet>
