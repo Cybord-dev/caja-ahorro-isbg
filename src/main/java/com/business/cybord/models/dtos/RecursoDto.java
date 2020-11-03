@@ -18,6 +18,19 @@ public class RecursoDto implements Serializable {
 	private String dato;
 	private Date fechaCreacion;
 
+	public RecursoDto() {
+		super();
+	}
+	public RecursoDto(String referencia, String tipoArchivo, String tipoRecurso, String dato,
+			Date fechaCreacion) {
+		super();
+		this.referencia = referencia;
+		this.tipoArchivo = tipoArchivo;
+		this.tipoRecurso = tipoRecurso;
+		this.dato = dato;
+		this.fechaCreacion = fechaCreacion;
+	}
+
 	public int getId() {
 		return id;
 	}
