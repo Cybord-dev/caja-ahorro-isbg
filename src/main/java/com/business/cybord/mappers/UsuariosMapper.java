@@ -22,8 +22,7 @@ public interface UsuariosMapper {
 	@Mapping(target = "roles", ignore = true)
 	@Mapping(target = "datosUsuario", ignore = true)
 	UsuarioDto getDtoFromUserEntity(Usuario entity);
-
-	List<UsuarioDto> getUsuariosDtoFromEntities(List<Usuario> entities);
+	List<UsuarioDto> getDtosFromEntities(List<Usuario> entities);
 
 	@Mapping(target = "roles", ignore = true)
 	UserInfoDto getUserInfoFromUsuario(Usuario entity);
