@@ -1,5 +1,6 @@
 package com.business.cybord.controllers;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.business.cybord.models.dtos.RecursoDto;
 import com.business.cybord.models.dtos.SolicitudDto;
 import com.business.cybord.models.dtos.composed.UserSolicitudDto;
 import com.business.cybord.models.error.IsbgServiceException;
@@ -33,6 +35,11 @@ public class SolicitudesContoller {
 	@GetMapping("/solicitudes")
 	public ResponseEntity<Page<UserSolicitudDto>> getSolicitudByFiltros(@RequestParam Map<String, String> parameters) {
 		return new ResponseEntity<>(service.getAllSolicitudes(parameters), HttpStatus.OK);
+	}
+	
+	@GetMapping("/solicitudes/report")
+	public ResponseEntity<RecursoDto> getSolicitudesReport(@RequestParam Map<String, String> parameters) throws IOException {
+		return new ResponseEntity<>(service.getSolicitudesReport(parameters), HttpStatus.OK);
 	}
 	
 	@GetMapping("/solicitudes/{idSolicitud}")

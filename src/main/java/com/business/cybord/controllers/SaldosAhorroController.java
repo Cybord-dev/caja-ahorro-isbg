@@ -1,5 +1,6 @@
 package com.business.cybord.controllers;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.business.cybord.models.dtos.RecursoDto;
 import com.business.cybord.models.dtos.SaldoAhorroDto;
 import com.business.cybord.models.dtos.composed.ConciliaSaldoDto;
 import com.business.cybord.models.dtos.composed.ConciliadorReportDto;
@@ -37,7 +39,13 @@ public class SaldosAhorroController {
 	@GetMapping("/saldosAhorro")
 	public ResponseEntity<Page<ReporteSaldosDto>> getSaldosAhorrosCurrentCaja(
 			@RequestParam Map<String, String> parameters) {
-		return new ResponseEntity<>(service.getSaldosAhorrosCurrentCaja(parameters), HttpStatus.OK);
+		return new ResponseEntity<>(service.getSaldosAhorros(parameters), HttpStatus.OK);
+	}
+	
+	@GetMapping("/saldosAhorro/report")
+	public ResponseEntity<RecursoDto> getSaldosAhorrosReporte(
+			@RequestParam Map<String, String> parameters) throws IOException {
+		return new ResponseEntity<>(service.getSaldosAhorrosReport(parameters), HttpStatus.OK);
 	}
 
 	@GetMapping("/saldosAhorro/anual")
