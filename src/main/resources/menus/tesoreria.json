@@ -4,12 +4,12 @@
 	"icon": "icon-credit-card",
 	"children": [
 		{
-			"name": "Aprobaciones",
+			"name": "Retiros Ahorro",
 			"url": "/tesoreria/validaciones",
 			"icon": "icon-check"
 		},
 		{
-			"name": "Historico validaciones",
+			"name": "Historico retiro ahorro",
 			"url": "/tesoreria/historico",
 			"icon": "icon-list"
 		}
