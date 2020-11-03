@@ -11,7 +11,9 @@ import com.business.cybord.rules.suites.CancelacionAhorroSuite;
 import com.business.cybord.rules.suites.ModificacionAhorroSuite;
 import com.business.cybord.rules.suites.RetiroParcialAhorroSuite;
 import com.business.cybord.rules.suites.SolicitudAhorroSuite;
+import com.business.cybord.utils.helper.FileHelper;
 import com.business.cybord.utils.helper.MailHelper;
+import com.business.cybord.utils.helper.NumberTranslatorHelper;
 
 @SpringBootApplication
 public class ServicesApplication {
@@ -54,5 +56,19 @@ public class ServicesApplication {
 	public RulesEngine getRulesEngine() {
 		return new DefaultRulesEngine();
 	}
+	
+	@Bean
+	public FileHelper getFileHelper() {
+		return new FileHelper();
+	}
+	
+	@Bean
+	public NumberTranslatorHelper getNumberTranslatorHelper() {
+		return new NumberTranslatorHelper();
+	}
+	
+	
+	
+	
 
 }

@@ -122,6 +122,12 @@
 			<artifactId>sqlbuilder</artifactId>
 			<version>3.0.1</version>
 		</dependency>
+		<!-- pdf generator -->
+		<dependency>
+			<groupId>org.apache.xmlgraphics</groupId>
+			<artifactId>fop</artifactId>
+			<version>2.4</version>
+		</dependency>
 	</dependencies>
 
 
