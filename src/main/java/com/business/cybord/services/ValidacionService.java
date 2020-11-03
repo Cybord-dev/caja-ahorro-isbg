@@ -1,8 +1,12 @@
 package com.business.cybord.services;
 
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.jeasy.states.api.AbstractEvent;
 import org.jeasy.states.api.FiniteStateMachineException;
@@ -16,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.cybord.mappers.SolicitudMapper;
+import com.business.cybord.models.dtos.RecursoDto;
 import com.business.cybord.models.dtos.SolicitudDto;
 import com.business.cybord.models.dtos.UsuarioDto;
 import com.business.cybord.models.dtos.ValidacionDto;
@@ -47,11 +52,34 @@ public class ValidacionService {
 	private ValidacionDao validacionDao;
 	@Autowired
 	private SolicitudExecutorManager solicitudExecutorManager;
+	
+	@Autowired
+	private DownloaderService reportService;
 
 	public Page<UserValidacionSolicitudDto> getAllValidaciones(Map<String, String> parameters) {
 		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
 		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
 		return validacionDao.findAll(parameters, PageRequest.of(page, size, Sort.by("fechaActualizacion")));
+	}
+	
+	public RecursoDto getValidacionesReport(Map<String, String> parameters) throws IOException {
+		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
+		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
+		Page<UserValidacionSolicitudDto> validaciones = validacionDao.findAll(parameters, PageRequest.of(page, size, Sort.by("fechaActualizacion")));
+		
+		List<Map<String, String>> data = validaciones.getContent().stream().map(v -> {
+			Map<String, String> map = new HashMap<>();
+			map.put("ID SOLICITUD", v.getId().toString());
+			map.put("NO EMPLEADO", v.getNoEmpleado().toString());
+			map.put("NOMBRE", v.getNombre());
+			map.put("FECHA CREACION", String.format("%tF", v.getFechaCreacion()));
+			map.put("FECHA EJECUCION", String.format("%tF", v.getFechaEjecucion()));
+			map.put("TIPO SOLICITUD", v.getTipo());
+			map.put("ESTATUS", v.getStatus());
+			return map;
+		}).collect(Collectors.toList());
+		
+		return reportService.generateBase64Report(String.format("VALIDACIONES_%tF", new Date()), data);
 	}
 
 	public List<ValidacionDto> getAllValidacionesByIdSolicitud(int idSol) {

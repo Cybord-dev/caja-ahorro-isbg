@@ -1,12 +1,13 @@
 package com.business.cybord.services;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.jeasy.rules.api.Facts;
 import org.jeasy.rules.api.RulesEngine;
@@ -20,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.business.cybord.mappers.SolicitudMapper;
 import com.business.cybord.mappers.UsuariosMapper;
+import com.business.cybord.models.dtos.RecursoDto;
 import com.business.cybord.models.dtos.SolicitudDto;
 import com.business.cybord.models.dtos.UsuarioDto;
 import com.business.cybord.models.dtos.composed.UserSolicitudDto;
@@ -57,13 +59,36 @@ public class SolicitudService {
 	private RulesEngine rulesEngine;
 	@Autowired
 	private SolicitudDao solicitudDao;
+	
+	@Autowired
+	private DownloaderService reportService;
 
-	DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
 
 	public Page<UserSolicitudDto> getAllSolicitudes(Map<String, String> parameters) {
 		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
 		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
 		return solicitudDao.findAll(parameters, PageRequest.of(page, size, Sort.by("fechaActualizacion")));
+	}
+	
+	public RecursoDto getSolicitudesReport(Map<String, String> parameters) throws IOException {
+		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
+		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
+		
+		Page<UserSolicitudDto> requestsPage = solicitudDao.findAll(parameters, PageRequest.of(page, size, Sort.by("fechaActualizacion")));
+		
+		List<Map<String, String>> data = requestsPage.getContent().stream().map(s -> {
+			Map<String, String> map = new HashMap<>();
+			map.put("ID SOLICITUD", s.getId().toString());
+			map.put("TIPO USUARIO", s.getTipoUsuario());
+			map.put("NO EMPLEADO", s.getNoEmpleado().toString());
+			map.put("NOMBRE", s.getNombre());
+			map.put("ESTATUS", s.getStatus());
+			map.put("TIPO SOLICITUD", s.getTipo());
+			
+			return map;
+		}).collect(Collectors.toList());
+		
+		return reportService.generateBase64Report(String.format("SOLICITUDES_%tF", new Date()), data);
 	}
 
 	public List<SolicitudDto> getSolicitudByIdUsuario(int idUsuario) {
@@ -105,8 +130,8 @@ public class SolicitudService {
 		if (solicitudDto.getFechaEjecucion() == null) {
 			solicitudDto.setFechaEjecucion(new Date());
 		}
-		if (solicitudDto.getAtributos().containsKey(TipoAtributoSolicitudEnum.FECHA.name())) {
-			solicitudDto.getAtributos().put(TipoAtributoSolicitudEnum.FECHA.name(), dateFormat.format(new Date()));
+		if (solicitudDto.getAtributos().containsKey(TipoAtributoSolicitudEnum.FECHA.name())) { 
+			solicitudDto.getAtributos().put(TipoAtributoSolicitudEnum.FECHA.name(), String.format("%tF", new Date()));
 		}
 		ISolicitud solicitud = sfte.getInstance();
 		solicitudDto.setStatus(solicitud.nextState().getName());

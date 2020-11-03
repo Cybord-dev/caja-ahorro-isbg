@@ -1,5 +1,6 @@
 package com.business.cybord.controllers;
 
+import java.io.IOException;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.business.cybord.models.dtos.RecursoDto;
 import com.business.cybord.models.dtos.UserInfoDto;
 import com.business.cybord.models.dtos.UsuarioDto;
 import com.business.cybord.services.UsuarioService;
@@ -42,8 +44,13 @@ public class UsuariosController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<Page<UsuarioDto>> getAllFacturasByParametros(@RequestParam Map<String, String> parameters) {
+	public ResponseEntity<Page<UsuarioDto>> getAllUsuariosByParametros(@RequestParam Map<String, String> parameters) {
 		return new ResponseEntity<>(service.getUsuariosPorParametros(parameters), HttpStatus.OK);
+	}
+	
+	@GetMapping("/report")
+	public ResponseEntity<RecursoDto> getUsuariosReportByParametros(@RequestParam Map<String, String> parameters) throws IOException {
+		return new ResponseEntity<>(service.descargaReporteUsuarios(parameters), HttpStatus.OK);
 	}
 	
 	@PostMapping

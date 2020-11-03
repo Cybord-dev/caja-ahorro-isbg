@@ -12,28 +12,28 @@ public class UserValidacionSolicitudDto implements Serializable {
 
 	private static final long serialVersionUID = 4223586331591210264L;
 
-	private int id;
+	private Integer id;
 	private String validador;
 	private Date fechaCreacion;
 	private String aprobada;
 	private String detalle;
 	private String area;
 
-	private int noEmpleado;
-	private int idUsuario;
+	private Integer noEmpleado;
+	private Integer idUsuario;
 	private String nombre;
 	private String tipoUsuario;
 
-	private int idSolicitud;
+	private Integer idSolicitud;
 	private String tipo;
 	private Date fechaEjecucion;
 	private String status;
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -53,6 +53,14 @@ public class UserValidacionSolicitudDto implements Serializable {
 		this.fechaCreacion = fechaCreacion;
 	}
 
+	public String getAprobada() {
+		return aprobada;
+	}
+
+	public void setAprobada(String aprobada) {
+		this.aprobada = aprobada;
+	}
+
 	public String getDetalle() {
 		return detalle;
 	}
@@ -61,19 +69,27 @@ public class UserValidacionSolicitudDto implements Serializable {
 		this.detalle = detalle;
 	}
 
-	public int getNoEmpleado() {
+	public String getArea() {
+		return area;
+	}
+
+	public void setArea(String area) {
+		this.area = area;
+	}
+
+	public Integer getNoEmpleado() {
 		return noEmpleado;
 	}
 
-	public void setNoEmpleado(int noEmpleado) {
+	public void setNoEmpleado(Integer noEmpleado) {
 		this.noEmpleado = noEmpleado;
 	}
 
-	public int getIdUsuario() {
+	public Integer getIdUsuario() {
 		return idUsuario;
 	}
 
-	public void setIdUsuario(int idUsuario) {
+	public void setIdUsuario(Integer idUsuario) {
 		this.idUsuario = idUsuario;
 	}
 
@@ -93,11 +109,11 @@ public class UserValidacionSolicitudDto implements Serializable {
 		this.tipoUsuario = tipoUsuario;
 	}
 
-	public int getIdSolicitud() {
+	public Integer getIdSolicitud() {
 		return idSolicitud;
 	}
 
-	public void setIdSolicitud(int idSolicitud) {
+	public void setIdSolicitud(Integer idSolicitud) {
 		this.idSolicitud = idSolicitud;
 	}
 
@@ -109,14 +125,6 @@ public class UserValidacionSolicitudDto implements Serializable {
 		this.tipo = tipo;
 	}
 
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
 	public Date getFechaEjecucion() {
 		return fechaEjecucion;
 	}
@@ -125,20 +133,12 @@ public class UserValidacionSolicitudDto implements Serializable {
 		this.fechaEjecucion = fechaEjecucion;
 	}
 
-	public String getAprobada() {
-		return aprobada;
+	public String getStatus() {
+		return status;
 	}
 
-	public void setAprobada(String aprobada) {
-		this.aprobada = aprobada;
-	}
-
-	public String getArea() {
-		return area;
-	}
-
-	public void setArea(String area) {
-		this.area = area;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	@Override
