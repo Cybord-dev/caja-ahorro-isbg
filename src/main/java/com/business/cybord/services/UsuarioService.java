@@ -66,7 +66,7 @@ public class UsuarioService {
 			@Override
 			public Predicate toPredicate(Root<Usuario> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
 				List<Predicate> predicates = new ArrayList<>();
-				List<String> filtros = Arrays.asList(new String[] { "nombre", "email", "tipoUsuario"});
+				List<String> filtros = Arrays.asList(new String[] { "nombre", "email", "tipoUsuario" });
 				for (String i : filtros) {
 					if (parameters.get(i) != null)
 						predicates.add(
@@ -78,8 +78,8 @@ public class UsuarioService {
 							criteriaBuilder.equal(root.get("activo"), Integer.parseInt(parameters.get("estatus")))));
 				}
 				if (parameters.get("noEmpleado") != null) {
-					predicates.add(criteriaBuilder.and(
-							criteriaBuilder.equal(root.get("noEmpleado"), parameters.get("noEmpleado"))));
+					predicates.add(criteriaBuilder
+							.and(criteriaBuilder.equal(root.get("noEmpleado"), parameters.get("noEmpleado"))));
 				}
 				return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
@@ -117,15 +117,16 @@ public class UsuarioService {
 
 	public UsuarioDto getUserById(Integer id) {
 		log.info("Buscando usuario con id : {}", id);
-		Usuario entity = repository.findById(id).orElseThrow(
-				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("user no existe %d", id)));
+		Usuario entity = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+				String.format("Usuario con el Id %d no existe ", id)));
 		return mapper.getDtoFromUserEntity(entity);
 	}
-	
-	public UsuarioDto getUserByNoEmpleado(Integer id) {
+
+	public UsuarioDto getUserByNoEmpleado(String id) {
 		log.info("Buscando usuario con id : {}", id);
-		Usuario entity = repository.findById(id).orElseThrow(
-				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("user no existe %d", id)));
+		Usuario entity = repository.findByNoEmpleado(id)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+						String.format("Usuario con numero de empleado  %s no existe", id)));
 		return mapper.getDtoFromUserEntity(entity);
 	}
 
@@ -178,7 +179,6 @@ public class UsuarioService {
 		throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
 				String.format("%s no es un usuario autorizado", "anonymous"));
 	}
-
 
 	private List<MenuItem> getMenuFromResource(String fileName) {
 		try {

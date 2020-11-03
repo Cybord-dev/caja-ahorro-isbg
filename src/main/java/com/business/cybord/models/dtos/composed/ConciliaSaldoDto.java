@@ -1,10 +1,18 @@
 package com.business.cybord.models.dtos.composed;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class ConciliaSaldoDto {
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class ConciliaSaldoDto implements Serializable{
+
+	private static final long serialVersionUID = 6120525882244348410L;
 	private int idUsuario;
+	private String noEmpleado;
 	private String nombre;
 	private BigDecimal saldo;
 	private Boolean validado;
@@ -50,10 +58,18 @@ public class ConciliaSaldoDto {
 		this.observaciones = observaciones;
 	}
 
+	public String getNoEmpleado() {
+		return noEmpleado;
+	}
+
+	public void setNoEmpleado(String noEmpleado) {
+		this.noEmpleado = noEmpleado;
+	}
+
 	@Override
 	public String toString() {
-		return "ConciliaSaldoDto [idUsuario=" + idUsuario + ", nombre=" + nombre + ", saldo=" + saldo + ", validado="
-				+ validado + ", observaciones=" + observaciones + "]";
+		return "ConciliaSaldoDto [idUsuario=" + idUsuario + ", noEmpleado=" + noEmpleado + ", nombre=" + nombre
+				+ ", saldo=" + saldo + ", validado=" + validado + ", observaciones=" + observaciones + "]";
 	}
 
 }

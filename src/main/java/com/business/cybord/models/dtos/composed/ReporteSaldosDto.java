@@ -3,6 +3,11 @@ package com.business.cybord.models.dtos.composed;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ReporteSaldosDto implements Serializable {
 
 	private static final long serialVersionUID = -8053100009213525659L;

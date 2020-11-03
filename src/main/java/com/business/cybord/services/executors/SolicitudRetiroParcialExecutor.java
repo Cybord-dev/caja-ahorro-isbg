@@ -36,7 +36,7 @@ public class SolicitudRetiroParcialExecutor implements SolicitudExecutor {
 	@Override
 	public void execute(SolicitudDto solicitudDto, ValidacionDto validacionDto) throws IsbgServiceException {
 		Usuario usuario = repositoryUsuario.findById(solicitudDto.getIdUsuario())
-				.orElseThrow(() -> new IsbgServiceException("Error actualizando daatos en solicitud ahorro",
+				.orElseThrow(() -> new IsbgServiceException("Error actualizando datos en solicitud ahorro",
 						String.format("El usuario  %d no existe", solicitudDto.getIdUsuario()),
 						HttpStatus.CONFLICT.value()));
 		if (solicitudDto.getStatus().equals(EventFactoryTypeEnum.SOLICITUD_TERMINADA.getState())) {
