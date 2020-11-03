@@ -1,5 +1,6 @@
 package com.business.cybord.controllers;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.business.cybord.models.dtos.RecursoDto;
 import com.business.cybord.models.dtos.ValidacionDto;
 import com.business.cybord.models.dtos.composed.UserValidacionSolicitudDto;
 import com.business.cybord.models.error.IsbgServiceException;
@@ -34,6 +36,12 @@ public class ValidacionsController {
 	public ResponseEntity<Page<UserValidacionSolicitudDto>> getValidaciones(
 			@RequestParam Map<String, String> parameters) {
 		return new ResponseEntity<>(service.getAllValidaciones(parameters), HttpStatus.OK);
+	}
+	
+	@GetMapping("/validaciones/report")
+	public ResponseEntity<RecursoDto> getValidacionesReport(
+			@RequestParam Map<String, String> parameters) throws IOException {
+		return new ResponseEntity<>(service.getValidacionesReport(parameters), HttpStatus.OK);
 	}
 
 	@GetMapping("/usuarios/{idUsuario}/solicitudes/{idSolicitud}/validaciones")

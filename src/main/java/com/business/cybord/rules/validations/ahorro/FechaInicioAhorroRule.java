@@ -1,7 +1,5 @@
 package com.business.cybord.rules.validations.ahorro;
 
-import java.time.LocalDate;
-import java.time.Month;
 import java.util.List;
 
 import org.jeasy.rules.annotation.Action;
@@ -18,8 +16,8 @@ public class FechaInicioAhorroRule {
 	@Condition
 	public boolean condition(@Fact("solicitud") SolicitudDto solicitudDto, @Fact("usuario") UsuarioDto usuarioDto,
 			@Fact("results") List<String> results) {
-		LocalDate endDate = LocalDate.now().withMonth(Month.SEPTEMBER.getValue()).withDayOfMonth(1);
-
+		// LocalDate endDate =
+		// LocalDate.now().withMonth(Month.SEPTEMBER.getValue()).withDayOfMonth(1);
 		// TODO uncomment this rule when the code was ready on production
 		// if (solicitudDto.getFechaEjecucion()
 //				.before(Date.from(endDate.atStartOfDay(ZoneId.systemDefault()).toInstant()))) {
