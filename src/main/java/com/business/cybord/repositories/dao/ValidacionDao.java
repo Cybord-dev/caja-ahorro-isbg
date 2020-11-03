@@ -64,7 +64,7 @@ public class ValidacionDao {
 		String since = parameters.containsKey(SqlConstants.SINCE) ? parameters.get(SqlConstants.SINCE)
 				: dateFormat.format(new DateTime().minusYears(1).toDate());
 		String to = parameters.containsKey(SqlConstants.TO) ? parameters.get(SqlConstants.TO)
-				: dateFormat.format(dh.addOneDay(new Date()));
+				: dateFormat.format(dh.addDays(new Date(),2));
 		DbSchema schema = new DbSpec().addDefaultSchema();
 
 		DbTable validiacion = schema.addTable("validaciones");
