@@ -163,6 +163,12 @@ public class SaldoAhorroService {
 				}
 			}
 		}
+		for(ConciliaSaldoDto csdtdo:report.getCorrectos()) {
+			if(!correctos.stream().anyMatch(a->a.getIdUsuario()==csdtdo.getIdUsuario())) {
+				csdtdo.setObservaciones("El sistema no genero su ahorro quincencal");
+				report.addError(csdtdo);
+			}
+		}
 		report.setCorrectos(correctos);
 
 	}
