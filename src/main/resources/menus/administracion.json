@@ -7,16 +7,6 @@
         "name": "Administracion roles",
         "url": "/administracion/usuarios",
         "icon": "icon-user-unfollow"
-      },
-      {
-        "name": "Aprobaciónes",
-        "url": "/administracion/validaciones",
-        "icon": "icon-check"
-      },
-      {
-        "name": "Historico validaciones",
-        "url": "/administracion/historico",
-        "icon": "icon-list"
       }
     ]
   }

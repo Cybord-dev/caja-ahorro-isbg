@@ -1,10 +1,13 @@
 package com.business.cybord.services;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.cybord.mappers.SaldoAhorroMapper;
+import com.business.cybord.models.dtos.RecursoDto;
 import com.business.cybord.models.dtos.SaldoAhorroDto;
 import com.business.cybord.models.dtos.UsuarioDto;
 import com.business.cybord.models.dtos.composed.ConciliaSaldoDto;
@@ -43,11 +47,33 @@ public class SaldoAhorroService {
 
 	@Autowired
 	private UsuarioService usuarioService;
+	
+	@Autowired
+	private DownloaderService reportService;
 
-	public Page<ReporteSaldosDto> getSaldosAhorrosCurrentCaja(Map<String, String> parameters) {
+	public Page<ReporteSaldosDto> getSaldosAhorros(Map<String, String> parameters) {
 		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
 		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
 		return reportesSaldosDao.findAll(parameters, PageRequest.of(page, size, Sort.by("fechaActualizacion")));
+	}
+	
+	public RecursoDto getSaldosAhorrosReport(Map<String, String> parameters) throws IOException {
+		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
+		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
+		Page<ReporteSaldosDto> saldos = reportesSaldosDao.findAll(parameters, PageRequest.of(page, size, Sort.by("fechaActualizacion")));
+		
+		List<Map<String, String>> data = saldos.getContent().stream().map(s -> {
+			Map<String, String> map = new HashMap<>();
+			map.put("TIPO EMPLEADO", s.getTipoEmpleado());
+			map.put("NO EMPLEADO", s.getNoEmpleado().toString());
+			map.put("ORIGEN", s.getOrigen());
+			map.put("TIPO", s.getTipo());
+			map.put("MONTO", s.getMonto().toString());
+			map.put("FECHA", s.getFecha());
+			return map;
+		}).collect(Collectors.toList());
+		
+		return reportService.generateBase64Report("REGISTRO AHORRO", data);
 	}
 
 	public List<SaldoAhorroCajaDto> getSaldosAhorrosCurrentCajaAnual() {
@@ -137,6 +163,12 @@ public class SaldoAhorroService {
 				}
 			}
 		}
+		for(ConciliaSaldoDto csdtdo:report.getCorrectos()) {
+			if(!correctos.stream().anyMatch(a->a.getIdUsuario()==csdtdo.getIdUsuario())) {
+				csdtdo.setObservaciones("El sistema no genero su ahorro quincencal");
+				report.addError(csdtdo);
+			}
+		}
 		report.setCorrectos(correctos);
 
 	}
@@ -185,7 +217,7 @@ public class SaldoAhorroService {
 			}
 			return mapper.getDtosFromEntity(ahorros);
 		} else {
-			throw new ResponseStatusException(HttpStatus.CONFLICT, "No estaas logeado");
+			throw new ResponseStatusException(HttpStatus.CONFLICT, "Tu sesion no se encuentra activa");
 		}
 
 	}

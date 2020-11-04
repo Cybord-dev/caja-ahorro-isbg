@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +15,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +32,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.business.cybord.mappers.UsuariosMapper;
 import com.business.cybord.models.dtos.MenuItem;
+import com.business.cybord.models.dtos.RecursoDto;
 import com.business.cybord.models.dtos.UserInfoDto;
 import com.business.cybord.models.dtos.UsuarioDto;
 import com.business.cybord.models.entities.Usuario;
@@ -90,14 +91,12 @@ public class UsuarioService {
 		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
 		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
 		Page<Usuario> result = repository.findAll(buildSearchFilters(parameters),
-				PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
-		return new PageImpl<>(mapper.getUsuariosDtoFromEntities(result.getContent()), result.getPageable(),
+				PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));	
+		return new PageImpl<>(mapper.getDtosFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
 	}
 	
-	public void descargaReporteUsuarios(Map<String, String> parameters,HttpServletResponse response) throws IOException {
-		parameters.put("page", "0");
-		parameters.put("size", "10000");
+	public RecursoDto descargaReporteUsuarios(Map<String, String> parameters) throws IOException {
 		Page<UsuarioDto> userPage = getUsuariosPorParametros(parameters);
 		
 		List<Map<String, String>> data = userPage.getContent().stream().map(u -> {
@@ -107,12 +106,10 @@ public class UsuarioService {
 			map.put("TIPO", u.getTipoUsuario());
 			map.put("ACTIVO", u.getActivo()?"SI":"NO");
 			map.put("EMAIL", u.getEmail());
-			//map.put("SUELDO", u.getDatosUsuario().get("SUELDO"));
 			return map;
 		}).collect(Collectors.toList());
 		
-		reportService.generateExcelReport(data, "Usuarios", response);
-		
+		return reportService.generateBase64Report(String.format("USUARIOS_%tF", new Date()), data);
 	}
 
 	public UsuarioDto getUserById(Integer id) {
@@ -179,7 +176,7 @@ public class UsuarioService {
 		throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
 				String.format("%s no es un usuario autorizado", "anonymous"));
 	}
-
+	
 	private List<MenuItem> getMenuFromResource(String fileName) {
 		try {
 			List<MenuItem> menu = new ArrayList<>();

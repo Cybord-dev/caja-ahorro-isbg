@@ -37,9 +37,14 @@ public class UsuarioMapperDecorator implements UsuariosMapper {
 	}
 
 	@Override
-	public List<UsuarioDto> getUsuariosDtoFromEntities(List<Usuario> entities) {
-		List<UsuarioDto> dtos = delegate.getUsuariosDtoFromEntities(entities);
-		return dtos;
+	public List<UsuarioDto> getDtosFromEntities(List<Usuario> entities) {
+		return delegate.getDtosFromEntities(entities);
+		// TODO evaluate if this mapping is usefull beacuse is too heavy and slow
+//		List<UsuarioDto> dtos =new ArrayList<>();
+//		for (Usuario entity : entities) {
+//			dtos.add(getDtoFromUserEntity(entity));
+//		}
+//		return dtos;
 	}
 
 	@Override
