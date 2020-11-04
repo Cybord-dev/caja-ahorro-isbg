@@ -18,12 +18,12 @@ import com.business.cybord.models.enums.EventFactoryTypeEnum;
 import com.business.cybord.models.error.IsbgServiceException;
 import com.business.cybord.states.events.SolicitudFinalizadaEvent;
 import com.business.cybord.states.events.ValidaDireccionEvent;
-import com.business.cybord.states.events.ValidaGerenciaEvent;
+import com.business.cybord.states.events.ValidaGerenciaInternaEvent;
 import com.business.cybord.states.events.ValidaRhEvent;
 import com.business.cybord.states.events.ValidaTesoEvent;
 import com.business.cybord.states.handlers.ValidaDireccion;
 import com.business.cybord.states.handlers.ValidacionFinalizada;
-import com.business.cybord.states.handlers.ValidacionGerencia;
+import com.business.cybord.states.handlers.ValidacionGerenciaInterna;
 import com.business.cybord.states.handlers.ValidacionRh;
 import com.business.cybord.states.handlers.ValidacionTesoreria;
 
@@ -36,7 +36,7 @@ public class SolicitudRetiroAnticipadoInterno implements ISolicitud {
 	public SolicitudRetiroAnticipadoInterno() {
 		State creada = new State(EventFactoryTypeEnum.SOLICITUD_CREADA.getState());
 		State validaRh = new State(EventFactoryTypeEnum.VALIDA_RH.getState());
-		State validaGerencia = new State(EventFactoryTypeEnum.VALIDA_GERENCIA.getState());
+		State validaGerencia = new State(EventFactoryTypeEnum.VALIDA_GERENCIA_INTERNA.getState());
 		State validaTso = new State(EventFactoryTypeEnum.VALIDA_TESO.getState());
 		State validaDireccion = new State(EventFactoryTypeEnum.VALIDA_DIRECCION.getState());
 		State finalizada = new State(EventFactoryTypeEnum.SOLICITUD_TERMINADA.getState());
@@ -61,8 +61,8 @@ public class SolicitudRetiroAnticipadoInterno implements ISolicitud {
 				.sourceState(validaRh).eventType(ValidaDireccionEvent.class).eventHandler(new ValidaDireccion())
 				.targetState(validaDireccion).build();
 
-		Transition validacionGerncia = new TransitionBuilder().name(EventFactoryTypeEnum.VALIDA_GERENCIA.getState())
-				.sourceState(validaRh).eventType(ValidaGerenciaEvent.class).eventHandler(new ValidacionGerencia())
+		Transition validacionGerncia = new TransitionBuilder().name(EventFactoryTypeEnum.VALIDA_GERENCIA_INTERNA.getState())
+				.sourceState(validaRh).eventType(ValidaGerenciaInternaEvent.class).eventHandler(new ValidacionGerenciaInterna())
 				.targetState(validaGerencia).build();
 		
 		Transition validacionDireccionGerencia = new TransitionBuilder().name(EventFactoryTypeEnum.VALIDA_DIRECCION.getState())

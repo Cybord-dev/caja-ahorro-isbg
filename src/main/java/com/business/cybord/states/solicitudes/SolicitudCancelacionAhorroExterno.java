@@ -19,12 +19,12 @@ import com.business.cybord.models.error.IsbgServiceException;
 import com.business.cybord.states.events.SolicitudFinalizadaEvent;
 import com.business.cybord.states.events.ValidaContaEvent;
 import com.business.cybord.states.events.ValidaDireccionEvent;
-import com.business.cybord.states.events.ValidaGerenciaEvent;
+import com.business.cybord.states.events.ValidaGerenciaExternaEvent;
 import com.business.cybord.states.events.ValidaTesoEvent;
 import com.business.cybord.states.handlers.ValidaDireccion;
 import com.business.cybord.states.handlers.ValidacionConta;
 import com.business.cybord.states.handlers.ValidacionFinalizada;
-import com.business.cybord.states.handlers.ValidacionGerencia;
+import com.business.cybord.states.handlers.ValidacionGerenciaExterna;
 import com.business.cybord.states.handlers.ValidacionTesoreria;
 
 public class SolicitudCancelacionAhorroExterno implements ISolicitud {
@@ -36,7 +36,7 @@ public class SolicitudCancelacionAhorroExterno implements ISolicitud {
 	public SolicitudCancelacionAhorroExterno() {
 		State creada = new State(EventFactoryTypeEnum.SOLICITUD_CREADA.getState());
 		State validaConta = new State(EventFactoryTypeEnum.VALIDA_CONTA_EVENT.getState());
-		State validaGerencia = new State(EventFactoryTypeEnum.VALIDA_GERENCIA.getState());
+		State validaGerencia = new State(EventFactoryTypeEnum.VALIDA_GERENCIA_EXTERNA.getState());
 		State validaTso = new State(EventFactoryTypeEnum.VALIDA_TESO.getState());
 		State validaDireccion = new State(EventFactoryTypeEnum.VALIDA_DIRECCION.getState());
 		State finalizada = new State(EventFactoryTypeEnum.SOLICITUD_TERMINADA.getState());
@@ -61,8 +61,8 @@ public class SolicitudCancelacionAhorroExterno implements ISolicitud {
 				.sourceState(validaConta).eventType(ValidaDireccionEvent.class).eventHandler(new ValidaDireccion())
 				.targetState(validaDireccion).build();
 
-		Transition validacionGerncia = new TransitionBuilder().name(EventFactoryTypeEnum.VALIDA_GERENCIA.getState())
-				.sourceState(validaConta).eventType(ValidaGerenciaEvent.class).eventHandler(new ValidacionGerencia())
+		Transition validacionGerncia = new TransitionBuilder().name(EventFactoryTypeEnum.VALIDA_GERENCIA_EXTERNA.getState())
+				.sourceState(validaConta).eventType(ValidaGerenciaExternaEvent.class).eventHandler(new ValidacionGerenciaExterna())
 				.targetState(validaGerencia).build();
 		
 		Transition validacionDireccionGerencia = new TransitionBuilder().name(EventFactoryTypeEnum.VALIDA_DIRECCION.getState())

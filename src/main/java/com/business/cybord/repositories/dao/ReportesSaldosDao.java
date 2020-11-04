@@ -67,6 +67,7 @@ public class ReportesSaldosDao {
 			"	WHERE 1=1" + 
 			"		AND a.id_usuario=b.id_usuario" + 
 			"	    AND a.tipo_usuario='INTERNO'"+
+			"	    AND a.tipo='ahorro'"+
 			"		AND a.ahorrador=1" + 
 			"	    AND	b.fecha_creacion>=current_date()-?;";
 	

@@ -8,7 +8,8 @@ import com.business.cybord.states.events.SolicitudFinalizadaEvent;
 import com.business.cybord.states.events.ValidaAdminEvent;
 import com.business.cybord.states.events.ValidaContaEvent;
 import com.business.cybord.states.events.ValidaDireccionEvent;
-import com.business.cybord.states.events.ValidaGerenciaEvent;
+import com.business.cybord.states.events.ValidaGerenciaExternaEvent;
+import com.business.cybord.states.events.ValidaGerenciaInternaEvent;
 import com.business.cybord.states.events.ValidaRhEvent;
 import com.business.cybord.states.events.ValidaTesoEvent;
 import com.business.cybord.states.solicitudes.ISolicitud;
@@ -54,11 +55,19 @@ public enum EventFactoryEnum {
 		}
 
 	},
-	VALIDA_GERENCIA_EVENT {
+	VALIDA_GERENCIA_EXTERNA_EVENT {
 
 		@Override
 		public AbstractEvent getInstance(SolicitudDto dto) {
-			return new ValidaGerenciaEvent(dto);
+			return new ValidaGerenciaExternaEvent(dto);
+		}
+
+	},
+	VALIDA_GERENCIA_INTERNA_EVENT {
+
+		@Override
+		public AbstractEvent getInstance(SolicitudDto dto) {
+			return new ValidaGerenciaInternaEvent(dto);
 		}
 
 	},
