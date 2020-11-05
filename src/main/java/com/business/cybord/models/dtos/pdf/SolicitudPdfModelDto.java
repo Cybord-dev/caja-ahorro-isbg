@@ -18,16 +18,19 @@ public class SolicitudPdfModelDto implements Serializable {
 	private String titulo;
 	@XmlElement(name = "Texto")
 	private String texto;
+	@XmlElement(name = "Nombre")
+	private String nombre;
 
 	public SolicitudPdfModelDto() {
 		super();
 	}
 
-	public SolicitudPdfModelDto(String fecha, String titulo, String texto) {
+	public SolicitudPdfModelDto(String fecha, String titulo, String texto,String nombre) {
 		super();
 		this.fecha = fecha;
 		this.titulo = titulo;
 		this.texto = texto;
+		this.nombre=nombre;
 	}
 
 	public String getFecha() {
@@ -54,9 +57,18 @@ public class SolicitudPdfModelDto implements Serializable {
 		this.texto = texto;
 	}
 
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
 	@Override
 	public String toString() {
-		return "SolicitudPdfModelDto [fecha=" + fecha + ", titulo=" + titulo + ", texto=" + texto + "]";
+		return "SolicitudPdfModelDto [fecha=" + fecha + ", titulo=" + titulo + ", texto=" + texto + ", nombre=" + nombre
+				+ "]";
 	}
 
 }

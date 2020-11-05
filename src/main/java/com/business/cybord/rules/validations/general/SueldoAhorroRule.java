@@ -22,7 +22,7 @@ public class SueldoAhorroRule {
 				&& !solicitudDto.getAtributos().isEmpty() && solicitudDto.getAtributos().containsKey("MONTO")) {
 			BigDecimal sueldo = new BigDecimal(usuarioDto.getDatosUsuario().get("SUELDO"));
 			BigDecimal monto = new BigDecimal(solicitudDto.getAtributos().get("MONTO"));
-			return monto.multiply(new BigDecimal(2)).compareTo(sueldo)==1;
+			return monto.multiply(new BigDecimal(4)).compareTo(sueldo)==1;
 		}
 		return true;
 	}

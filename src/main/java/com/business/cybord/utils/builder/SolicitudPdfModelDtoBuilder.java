@@ -28,5 +28,10 @@ public class SolicitudPdfModelDtoBuilder extends AbstractBuilder<SolicitudPdfMod
 		instance.setTexto(texto);
 		return this;
 	}
+	
+	public SolicitudPdfModelDtoBuilder setNombre(String nombre) {
+		instance.setNombre(nombre);
+		return this;
+	}
 
 }

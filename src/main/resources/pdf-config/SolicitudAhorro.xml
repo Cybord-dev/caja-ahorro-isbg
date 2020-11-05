@@ -90,27 +90,16 @@
                         </block>
                     </block-container>
 
-                    <block-container height="5mm" margin-bottom="5mm" padding="0mm">
+                    <block-container height="15mm" margin-bottom="5mm" padding="0mm">
                         <block>
                             <inline-container width="160.0mm">
-                                <block text-align="left" font-size="3mm"  margin-top="5mm">
-                                    ------------------------------------------
-                                </block>
-                            </inline-container>
-                        </block>
-                    </block-container>
-
-                    <block-container height="10mm" margin-bottom="5mm" padding="0mm">
-                        <block>
-                            <inline-container width="40.0mm">
-                                <block text-align="center" font-size="3mm"  margin-top="5mm">
-                                    (Firma y Nombre)
+                                <block text-align="left" font-size="4mm"  margin-top="5mm">
+                                  <xsl:value-of select="Nombre" />
                                 </block>
                             </inline-container>
                         </block>
                     </block-container>
                     
-
                     <block id="last-item" />
                 </flow>
             </page-sequence>
