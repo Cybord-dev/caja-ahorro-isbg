@@ -98,6 +98,7 @@ public class ValidacionService {
 		Solicitud sol = repositorySol.findByIdUsuarioAndId(idUsuario, idSolicitud)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 						String.format("la solicitud id= %d del usuario =%d no existe", idSolicitud, idUsuario)));
+		reviewValidator(validacion, sol);
 		if (validacion.isStatus()) {
 			SolicitudDto solicitudDto = mapper.getDtoFromSolicitudEntity(sol);
 			if(specialValidation(solicitudDto, validacion)) {
@@ -124,6 +125,20 @@ public class ValidacionService {
 			return mapper.getDtoFromValidacionesEntity(repositoryValidacion.save(val));
 		}
 
+	}
+	
+	private void reviewValidator(ValidacionDto validacion,Solicitud solicitud) throws IsbgServiceException {
+		if(solicitud.getUsuario().getEmail().equals(validacion.getEmail())) {
+			  throw new IsbgServiceException("El validador creo la solicitud",
+						"El validador debe ser alguien distinto", HttpStatus.CONFLICT.value());
+		}else {
+			for(Validacion val:solicitud.getValidaciones()) {
+				if(val.getEmail().equals(validacion.getEmail())) {
+					throw new IsbgServiceException("El validador ya valido en otra area",
+								"El validador debe ser alguien distinto", HttpStatus.CONFLICT.value());
+				}
+			}
+		}
 	}
 
 	public boolean specialValidation(SolicitudDto solicitudDto, ValidacionDto validacion) {

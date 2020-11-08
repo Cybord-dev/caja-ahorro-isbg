@@ -22,6 +22,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.business.cybord.mappers.SolicitudMapper;
 import com.business.cybord.mappers.UsuariosMapper;
 import com.business.cybord.models.dtos.RecursoDto;
+import com.business.cybord.models.dtos.SaldoAhorroDto;
 import com.business.cybord.models.dtos.SolicitudDto;
 import com.business.cybord.models.dtos.UsuarioDto;
 import com.business.cybord.models.dtos.composed.UserSolicitudDto;
@@ -57,6 +58,8 @@ public class SolicitudService {
 	private SuiteManager suiteManager;
 	@Autowired
 	private RulesEngine rulesEngine;
+	@Autowired
+	private SaldoAhorroService saldoAhorroService;
 	@Autowired
 	private SolicitudDao solicitudDao;
 	
@@ -119,7 +122,8 @@ public class SolicitudService {
 		Usuario usuario = repositoryUsuario.findById(idUsuario)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 						String.format("el usuario id= %d no existe", idUsuario)));
-		executeRules(solicitudDto, usuariosMapper.getDtoFromUserEntity(usuario));
+		List<SaldoAhorroDto> saldos=saldoAhorroService.getSaldosAhorroByUsuario(usuario.getId());
+		executeRules(solicitudDto, usuariosMapper.getDtoFromUserEntity(usuario),saldos);
 		SolicitudFactoryEnum sfte = SolicitudFactoryTypeEnum
 				.findByReferenceName(solicitudDto.getTipo(), usuario.getTipoUsuario())
 				.orElseThrow(() -> new IsbgServiceException(
@@ -147,13 +151,14 @@ public class SolicitudService {
 		return mapper.getDtoFromSolicitudEntity(nueva);
 	}
 
-	private void executeRules(SolicitudDto solicitudDto, UsuarioDto usuarioDto) throws IsbgServiceException {
+	private void executeRules(SolicitudDto solicitudDto, UsuarioDto usuarioDto,List<SaldoAhorroDto> saldos) throws IsbgServiceException {
 		ISuite suite = suiteManager.getSolicitudSuite(solicitudDto.getTipo());
 		Facts facts = new Facts();
 		List<String> results = new ArrayList<>();
 		facts.put("solicitud", solicitudDto);
 		facts.put("usuario", usuarioDto);
 		facts.put("results", results);
+		facts.put("saldos", saldos);
 		rulesEngine.fire(suite.getSuite(), facts);
 		if (!results.isEmpty()) {
 			throw new IsbgServiceException(results.toString(), "errores durante la validacion de la solicitud.",

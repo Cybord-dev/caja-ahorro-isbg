@@ -86,7 +86,7 @@ public class SaldoAhorroService {
 	}
 
 	public List<SaldoAhorroDto> getSaldosAhorroByUsuario(Integer id) {
-		return mapper.getDtosFromEntity(respository.findByIdUsuario(id));
+		return mapper.getDtosFromEntity(respository.findByIdUsuarioAndValidado(id,true));
 	}
 
 	public SaldoAhorroDto getSaldoAhorroByIdAndIdUsuario(Integer idUsuario, Integer idSaldo) {

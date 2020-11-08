@@ -81,7 +81,12 @@ public class SolicitudCancelacionAhorroExecutor implements SolicitudExecutor {
 					.filter(a -> a.getTipoDato().equals(TipoAtributoUsuarioEnum.OFICINA.name())).findFirst();
 			BigDecimal ahorro = new BigDecimal(0);
 			for (SaldoAhorroDto a : ahorros) {
-				ahorro = ahorro.add(a.getMonto());
+				if(a.getValidado()) {
+					ahorro = ahorro.add(a.getMonto());
+				}
+			}
+			if(ahorro.compareTo(new BigDecimal(0))<0) {
+				ahorro=new BigDecimal(0);
 			}
 			saldoAhorroService.insertSadoAhorro(usuario.getId(), new SaldoAhorroDto(usuario.getId(),
 					TipoAhorroEnum.RETIRO.getTipo(), ahorro.multiply(new BigDecimal(-1)), true),"Sistema");
@@ -133,4 +138,9 @@ public class SolicitudCancelacionAhorroExecutor implements SolicitudExecutor {
 						validacionDto.getStatusDesc()));
 	}
 
+	public static void main(String[] args) {
+		BigDecimal a= new BigDecimal(-10);
+		BigDecimal b= new BigDecimal(0);
+		System.out.println(a.compareTo(b));
+	}
 }

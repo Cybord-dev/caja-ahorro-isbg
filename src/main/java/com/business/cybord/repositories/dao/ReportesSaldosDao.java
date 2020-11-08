@@ -50,7 +50,7 @@ public class ReportesSaldosDao {
 
 	private static final String AHORRO_CAJA_POR_TIPO_ANUAL = "SELECT"
 			+ "	SUM(monto) as monto, tipo,MONTH(fecha_creacion) as mes  " + "FROM saldo_ahorro " + "where 1=1 "
-			+ "	AND YEAR(fecha_creacion)=YEAR(CURDATE()) " + "group by " + "	tipo, MONTH(fecha_creacion);";
+			+ "	AND YEAR(fecha_creacion)=YEAR(CURDATE()) AND validado=1 " + "group by " + "	tipo, MONTH(fecha_creacion);";
 	
 	private static final String AHORRO_CAJA_POR_TIPO_ANUAL_AGRUPADO = "SELECT "
 			+ "SUM(monto) monto,"
@@ -68,6 +68,7 @@ public class ReportesSaldosDao {
 			"		AND a.id_usuario=b.id_usuario" + 
 			"	    AND a.tipo_usuario='INTERNO'"+
 			"	    AND b.tipo='ahorro'"+
+			"		AND validado=1 "+
 			"		AND a.ahorrador=1" + 
 			"	    AND	b.fecha_creacion>=current_date()-?;";
 	
@@ -146,6 +147,10 @@ public class ReportesSaldosDao {
 				.addCondition(BinaryCondition.greaterThanOrEq(saldoAhorro.findColumn("fecha_creacion"), since))
 				.addCondition(BinaryCondition.lessThanOrEq(saldoAhorro.findColumn("fecha_creacion"), to));
 
+		saldoAhorro.addColumn("validado", "Integer", null);
+		selectStoresByParams.addCondition(BinaryCondition.equalTo(saldoAhorro.addColumn("validado"),
+				"1"));
+		
 		for (SaldoAhorroFilterEnum sal : SaldoAhorroFilterEnum.values()) {
 			if (parameters.containsKey(sal.getParamName())) {
 				saldoAhorro.addColumn(sal.getFieldName(), "String", null);
@@ -192,6 +197,10 @@ public class ReportesSaldosDao {
 				.addCondition(BinaryCondition.greaterThanOrEq(saldoAhorro.findColumn("fecha_creacion"), since))
 				.addCondition(BinaryCondition.lessThanOrEq(saldoAhorro.findColumn("fecha_creacion"), to));
 
+		saldoAhorro.addColumn("validado", "Integer", null);
+		selectStoresByParams.addCondition(BinaryCondition.equalTo(saldoAhorro.addColumn("validado"),
+				"1"));
+		
 		for (SaldoAhorroFilterEnum sal : SaldoAhorroFilterEnum.values()) {
 			if (parameters.containsKey(sal.getParamName())) {
 				saldoAhorro.addColumn(sal.getFieldName(), "String", null);

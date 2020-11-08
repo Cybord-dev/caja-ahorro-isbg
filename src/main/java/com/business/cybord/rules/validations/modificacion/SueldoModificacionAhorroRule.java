@@ -26,7 +26,7 @@ public class SueldoModificacionAhorroRule {
 			BigDecimal sueldo = new BigDecimal(usuarioDto.getDatosUsuario().get(TipoAtributoUsuarioEnum.SUELDO.name()));
 			BigDecimal monto = new BigDecimal(
 					solicitudDto.getAtributos().get(TipoAtributoSolicitudEnum.MONTO.name()));
-			return monto.multiply(new BigDecimal(2)).compareTo(sueldo) == 1;
+			return monto.multiply(new BigDecimal(4)).compareTo(sueldo) == 1;
 		}
 		return true;
 	}
