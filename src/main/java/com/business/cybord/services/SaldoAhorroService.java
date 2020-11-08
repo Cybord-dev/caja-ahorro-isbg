@@ -47,7 +47,7 @@ public class SaldoAhorroService {
 
 	@Autowired
 	private UsuarioService usuarioService;
-	
+
 	@Autowired
 	private DownloaderService reportService;
 
@@ -56,12 +56,13 @@ public class SaldoAhorroService {
 		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
 		return reportesSaldosDao.findAll(parameters, PageRequest.of(page, size, Sort.by("fechaActualizacion")));
 	}
-	
+
 	public RecursoDto getSaldosAhorrosReport(Map<String, String> parameters) throws IOException {
 		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
 		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
-		Page<ReporteSaldosDto> saldos = reportesSaldosDao.findAll(parameters, PageRequest.of(page, size, Sort.by("fechaActualizacion")));
-		
+		Page<ReporteSaldosDto> saldos = reportesSaldosDao.findAll(parameters,
+				PageRequest.of(page, size, Sort.by("fechaActualizacion")));
+
 		List<Map<String, String>> data = saldos.getContent().stream().map(s -> {
 			Map<String, String> map = new HashMap<>();
 			map.put("TIPO EMPLEADO", s.getTipoEmpleado());
@@ -72,7 +73,7 @@ public class SaldoAhorroService {
 			map.put("FECHA", s.getFecha());
 			return map;
 		}).collect(Collectors.toList());
-		
+
 		return reportService.generateBase64Report("REGISTRO AHORRO", data);
 	}
 
@@ -99,26 +100,35 @@ public class SaldoAhorroService {
 		}
 	}
 
-	public SaldoAhorroDto insertSadoAhorro(Integer userId, SaldoAhorroDto saldoAhorroDto,Authentication authentication) {
+	public SaldoAhorroDto insertSadoAhorro(Integer userId, SaldoAhorroDto saldoAhorroDto, Authentication authentication)
+			throws IsbgServiceException {
+		OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
+		if (oidcUser != null && oidcUser.getAttributes() != null && oidcUser.getEmail() != null) {
+			return insertSadoAhorro(userId, saldoAhorroDto, oidcUser.getEmail());
+		} else {
+			throw new IsbgServiceException("No se esta logeado en el sistema",
+					"Se requiere estar logeado en eel sistema", HttpStatus.CONFLICT.value());
+		}
+
+	}
+
+	public SaldoAhorroDto insertSadoAhorro(Integer userId, SaldoAhorroDto saldoAhorroDto, String corrreo) {
 		Optional<SaldoAhorro> prestamoEntity = respository.findByIdUsuarioAndId(userId, saldoAhorroDto.getId());
 		if (prestamoEntity.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 					String.format("Ya existe un saldo usuario %d", userId));
 		} else {
-			SaldoAhorro saldoAhorro=mapper.getEntityFromDto(saldoAhorroDto);
-			OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
-			if (oidcUser != null && oidcUser.getAttributes() != null && oidcUser.getEmail() != null) {
-				saldoAhorro.setOrigen(oidcUser.getEmail());
-			}
+			SaldoAhorro saldoAhorro = mapper.getEntityFromDto(saldoAhorroDto);
+			saldoAhorro.setOrigen(corrreo);
 			return mapper.getDtoFromEntity(respository.save(saldoAhorro));
 		}
 	}
 
-	public ConciliadorReportDto conciliarAhorros(List<ConciliaSaldoDto> ahorros,Optional<Integer> days,
+	public ConciliadorReportDto conciliarAhorros(List<ConciliaSaldoDto> ahorros, Optional<Integer> days,
 			Authentication authentication) throws IsbgServiceException {
 		ConciliadorReportDto report = new ConciliadorReportDto();
 		if (ahorros != null && !ahorros.isEmpty()) {
-			int day = !days.isPresent()? 8 : days.get();
+			int day = !days.isPresent() ? 8 : days.get();
 			conciliacion(report, ahorros);
 			List<SaldoAhorroDto> saldos = reportesSaldosDao.getAhorrosInternosLastDays(day);
 			validacionAhorro(report, saldos, authentication);
@@ -167,8 +177,8 @@ public class SaldoAhorroService {
 				}
 			}
 		}
-		for(ConciliaSaldoDto csdtdo:report.getCorrectos()) {
-			if(!correctos.stream().anyMatch(a->a.getIdUsuario()==csdtdo.getIdUsuario())) {
+		for (ConciliaSaldoDto csdtdo : report.getCorrectos()) {
+			if (!correctos.stream().anyMatch(a -> a.getIdUsuario() == csdtdo.getIdUsuario())) {
 				csdtdo.setObservaciones("El sistema no genero su ahorro quincencal");
 				report.addError(csdtdo);
 			}

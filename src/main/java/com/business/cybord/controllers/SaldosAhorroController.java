@@ -65,7 +65,7 @@ public class SaldosAhorroController {
 
 	@PostMapping("/usuarios/{idUsuario}/ahorros")
 	public ResponseEntity<SaldoAhorroDto> insertSadoAhorro(@PathVariable Integer idUsuario,
-			@RequestBody @Valid SaldoAhorroDto dto,Authentication authentication) {
+			@RequestBody @Valid SaldoAhorroDto dto,Authentication authentication) throws IsbgServiceException {
 		return new ResponseEntity<>(service.insertSadoAhorro(idUsuario, dto,authentication), HttpStatus.CREATED);
 	}
 

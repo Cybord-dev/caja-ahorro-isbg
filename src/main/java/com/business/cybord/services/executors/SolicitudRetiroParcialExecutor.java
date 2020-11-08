@@ -58,7 +58,7 @@ public class SolicitudRetiroParcialExecutor implements SolicitudExecutor {
 							HttpStatus.CONFLICT.value()));
 			saldoAhorroService.insertSadoAhorro(usuario.getId(),
 					new SaldoAhorroDto(usuario.getId(), TipoAhorroEnum.RETIRO.getTipo(),
-							new BigDecimal(monto.getValor()).multiply(new BigDecimal(-1)), true));
+							new BigDecimal(monto.getValor()).multiply(new BigDecimal(-1)), true),"Sistema");
 			Optional<DatosUsuario> oficina = usuario.getDatosUsuario().stream()
 					.filter(a -> a.getTipoDato().equals(TipoAtributoUsuarioEnum.OFICINA.name())).findFirst();
 			

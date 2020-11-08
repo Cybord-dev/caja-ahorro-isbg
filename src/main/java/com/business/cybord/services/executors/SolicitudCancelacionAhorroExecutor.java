@@ -84,7 +84,7 @@ public class SolicitudCancelacionAhorroExecutor implements SolicitudExecutor {
 				ahorro = ahorro.add(a.getMonto());
 			}
 			saldoAhorroService.insertSadoAhorro(usuario.getId(), new SaldoAhorroDto(usuario.getId(),
-					TipoAhorroEnum.RETIRO.getTipo(), ahorro.multiply(new BigDecimal(-1)), true));
+					TipoAhorroEnum.RETIRO.getTipo(), ahorro.multiply(new BigDecimal(-1)), true),"Sistema");
 			usuario.setAhorrador(false);
 			repositoryUsuario.save(usuario);
 			datoUsuarioService.borraDatoUsuario(dato.getId());
