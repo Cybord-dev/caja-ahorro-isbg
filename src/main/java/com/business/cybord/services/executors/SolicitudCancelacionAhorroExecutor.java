@@ -92,7 +92,7 @@ public class SolicitudCancelacionAhorroExecutor implements SolicitudExecutor {
 			
 			//TODO: AGREGAR RAZON DE CANCELACION
 			String texto = String.format(
-					"%s, con número de trabajador %s," + 
+					"%s, con número de trabajador %s , " + 
 					"adscrito a la Oficina de %s solicito por este medio se cancele el" + 
 					"descuento que se aplica en mi pago de nómina la cantidad de $%s(%s)" + 
 					"a partir de la fecha %s, debido a %s ,asimismo se me reintegre la" + 

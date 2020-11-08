@@ -67,7 +67,7 @@ public class SolicitudAhorroExecutor implements SolicitudExecutor {
 			Optional<DatosUsuario> oficina = usuario.getDatosUsuario().stream()
 					.filter(a -> a.getTipoDato().equals(TipoAtributoUsuarioEnum.OFICINA.name())).findFirst();
 			String texto = String.format(
-					"%s, con el número de trabajador %s,adscrito a la Oficina de %s autorizo que por este medio se "
+					"%s, con el número de trabajador %s , adscrito a la Oficina de %s autorizo que por este medio se "
 					+ "descuente de mi pago de nommina, la cantidad de $%s(%s) a partir del dia.Durante el periodo "
 					+ "correspondiente ,autorizo que la cantidad retenida sea depositada en la cuen ta del PROGRAMA DE AHORRO VOLUNTARIO,"
 					+ " estoy de acuerdo que la cantidad ahorrada y los intereses que se hubiesen generado me sean entregados al término del periodo.",

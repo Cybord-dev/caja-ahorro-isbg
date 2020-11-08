@@ -63,7 +63,7 @@ public class SolicitudRetiroParcialExecutor implements SolicitudExecutor {
 					.filter(a -> a.getTipoDato().equals(TipoAtributoUsuarioEnum.OFICINA.name())).findFirst();
 			
 			String texto = String.format(
-					"%s, con número de trabajador %s," + 
+					"%s, con número de trabajador %s , " + 
 					"adscrito a la Oficina de %s solicito por este medio la cantidad de " + 
 					"$%s por concepto de Retiro Parcial de mi ahorro.",
 					usuario.getNombre(), usuario.getNoEmpleado(), oficina.isPresent() ? oficina.get().getDato() : "",

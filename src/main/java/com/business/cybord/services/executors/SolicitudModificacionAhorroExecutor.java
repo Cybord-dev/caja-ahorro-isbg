@@ -69,7 +69,7 @@ public class SolicitudModificacionAhorroExecutor implements SolicitudExecutor {
 			Optional<DatosUsuario> oficina = usuario.getDatosUsuario().stream()
 					.filter(a -> a.getTipoDato().equals(TipoAtributoUsuarioEnum.OFICINA.name())).findFirst();
 			String texto = String.format(
-					"%s, con número de trabajador %s," + 
+					"%s, con número de trabajador %s , " + 
 					"adscrito a la Oficina de %s solicito por este medio se modifique el " + 
 					"descuento que se me aplica en mi pago de nómina la cantidad de $%s por la cantidad $%s" + 
 					" a partir de  %s .",

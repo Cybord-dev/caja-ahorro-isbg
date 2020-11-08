@@ -99,14 +99,18 @@ public class SaldoAhorroService {
 		}
 	}
 
-	public SaldoAhorroDto insertSadoAhorro(Integer userId, SaldoAhorroDto saldoAhorroDto) {
+	public SaldoAhorroDto insertSadoAhorro(Integer userId, SaldoAhorroDto saldoAhorroDto,Authentication authentication) {
 		Optional<SaldoAhorro> prestamoEntity = respository.findByIdUsuarioAndId(userId, saldoAhorroDto.getId());
-
 		if (prestamoEntity.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 					String.format("Ya existe un saldo usuario %d", userId));
 		} else {
-			return mapper.getDtoFromEntity(respository.save(mapper.getEntityFromDto(saldoAhorroDto)));
+			SaldoAhorro saldoAhorro=mapper.getEntityFromDto(saldoAhorroDto);
+			OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
+			if (oidcUser != null && oidcUser.getAttributes() != null && oidcUser.getEmail() != null) {
+				saldoAhorro.setOrigen(oidcUser.getEmail());
+			}
+			return mapper.getDtoFromEntity(respository.save(saldoAhorro));
 		}
 	}
 
