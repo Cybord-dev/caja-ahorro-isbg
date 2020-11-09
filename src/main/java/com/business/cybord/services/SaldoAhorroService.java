@@ -152,10 +152,10 @@ public class SaldoAhorroService {
 				conciliaDto.setNombre(saldoValidado.get().getNombre());
 				correctos.add(conciliaDto);
 				dto.setValidado(true);
-				OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
-				if (oidcUser != null && oidcUser.getAttributes() != null && oidcUser.getEmail() != null) {
-					dto.setOrigen(oidcUser.getEmail());
-				}
+//				OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
+//				if (oidcUser != null && oidcUser.getAttributes() != null && oidcUser.getEmail() != null) {
+//					dto.setOrigen(oidcUser.getEmail());
+//				}
 				respository.save(mapper.getEntityFromDto(dto));
 			} else {
 				Optional<ConciliaSaldoDto> usuario = report.getCorrectos().stream()

@@ -68,7 +68,7 @@ public class ReportesSaldosDao {
 			"		AND a.id_usuario=b.id_usuario" + 
 			"	    AND a.tipo_usuario='INTERNO'"+
 			"	    AND b.tipo='ahorro'"+
-			"		AND validado=1 "+
+			"		AND validado=0 "+
 			"		AND a.ahorrador=1" + 
 			"	    AND	b.fecha_creacion>=current_date()-?;";
 	
