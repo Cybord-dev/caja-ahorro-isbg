@@ -131,7 +131,7 @@ public class UsuarioService {
 		Optional<Usuario> entity = repository.findByEmail(usuario.getEmail());
 		if (entity.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					String.format("El dato %s ya existe", usuario.getEmail()));
+					String.format("Ese correo ya ha sido registrado"));
 		} else {
 			Usuario datos = repository.save(mapper.getEntityFromUserDto(usuario));
 			return mapper.getDtoFromUserEntity(datos);
@@ -140,7 +140,7 @@ public class UsuarioService {
 
 	public UsuarioDto actualizarUsuario(UsuarioDto usuario, int id) {
 		Usuario entity = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-				String.format("El usuario %s no existe.", usuario.getEmail())));
+				String.format("El usuario no existe.")));
 		entity.setActivo(usuario.getActivo());
 		entity.setNombre(usuario.getNombre());
 		entity.setTipoUsuario(usuario.getTipoUsuario());
