@@ -41,20 +41,21 @@ public class SaldosAhorroController {
 			@RequestParam Map<String, String> parameters) {
 		return new ResponseEntity<>(service.getSaldosAhorros(parameters), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/saldosAhorro/report")
-	public ResponseEntity<RecursoDto> getSaldosAhorrosReporte(
-			@RequestParam Map<String, String> parameters) throws IOException {
+	public ResponseEntity<RecursoDto> getSaldosAhorrosReporte(@RequestParam Map<String, String> parameters)
+			throws IOException {
 		return new ResponseEntity<>(service.getSaldosAhorrosReport(parameters), HttpStatus.OK);
 	}
 
 	@GetMapping("/saldosAhorro/anual")
-	public ResponseEntity<List<SaldoAhorroCajaDto>> getSaldosAhorrosCurrentCajaAnual() {
+	public ResponseEntity<List<SaldoAhorroCajaDto>> getSaldosAhorrosCurrentCajaAnual() throws IsbgServiceException {
 		return new ResponseEntity<>(service.getSaldosAhorrosCurrentCajaAnual(), HttpStatus.OK);
 	}
 
 	@GetMapping("/saldosAhorro/anual/agrupado")
-	public ResponseEntity<List<SaldoAhorroCajaDto>> getSaldosAhorrosCurrentCajaAnualAgrupado() {
+	public ResponseEntity<List<SaldoAhorroCajaDto>> getSaldosAhorrosCurrentCajaAnualAgrupado()
+			throws IsbgServiceException {
 		return new ResponseEntity<>(service.getSaldosAhorrosCurrentCajaAnualAgrupado(), HttpStatus.OK);
 	}
 
@@ -65,8 +66,8 @@ public class SaldosAhorroController {
 
 	@PostMapping("/usuarios/{idUsuario}/ahorros")
 	public ResponseEntity<SaldoAhorroDto> insertSadoAhorro(@PathVariable Integer idUsuario,
-			@RequestBody @Valid SaldoAhorroDto dto,Authentication authentication) throws IsbgServiceException {
-		return new ResponseEntity<>(service.insertSadoAhorro(idUsuario, dto,authentication), HttpStatus.CREATED);
+			@RequestBody @Valid SaldoAhorroDto dto, Authentication authentication) throws IsbgServiceException {
+		return new ResponseEntity<>(service.insertSadoAhorro(idUsuario, dto, authentication), HttpStatus.CREATED);
 	}
 
 	@GetMapping("/usuarios/{idUsuario}/ahorros/{idAhorro}")
@@ -77,7 +78,8 @@ public class SaldosAhorroController {
 
 	@PostMapping("/ahorros/conciliador")
 	public ResponseEntity<ConciliadorReportDto> conciliarAhorros(@RequestBody @Valid List<ConciliaSaldoDto> dtos,
-			@RequestParam(name = "days",required = false) Optional<Integer> days, Authentication authentication) throws IsbgServiceException {
+			@RequestParam(name = "days", required = false) Optional<Integer> days, Authentication authentication)
+			throws IsbgServiceException {
 		return new ResponseEntity<>(service.conciliarAhorros(dtos, days, authentication), HttpStatus.CREATED);
 	}
 

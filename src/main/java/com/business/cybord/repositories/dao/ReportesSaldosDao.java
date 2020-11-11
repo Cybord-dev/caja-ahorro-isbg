@@ -50,14 +50,14 @@ public class ReportesSaldosDao {
 
 	private static final String AHORRO_CAJA_POR_TIPO_ANUAL = "SELECT"
 			+ "	SUM(monto) as monto, tipo,MONTH(fecha_creacion) as mes  " + "FROM saldo_ahorro " + "where 1=1 "
-			+ "	AND YEAR(fecha_creacion)=YEAR(CURDATE()) AND validado=1 " + "group by " + "	tipo, MONTH(fecha_creacion);";
+			+ "	AND fecha_creacion between ? AND ?  AND validado=1 " + "group by " + "	tipo, MONTH(fecha_creacion);";
 	
 	private static final String AHORRO_CAJA_POR_TIPO_ANUAL_AGRUPADO = "SELECT "
 			+ "SUM(monto) monto,"
 			+ " tipo " + 
 			"FROM "
 			+ "	saldo_ahorro "
-			+ "WHERE YEAR(fecha_creacion)=YEAR(CURDATE()) "
+			+ "WHERE fecha_creacion between ? AND ? "
 			+ "GROUP BY tipo;";
 	
 	private static final String AHORROS_INTERNOS_LAST_DAYS = "SELECT b.*" + 
@@ -87,21 +87,27 @@ public class ReportesSaldosDao {
 		}, new SaldoAhorroDtoRowMapper());
 	}
 	
-	public List<SaldoAhorroCajaDto> getAhorrosCajaAnual() {
+	public List<SaldoAhorroCajaDto> getAhorrosCajaAnual(String start,String end) {
+		System.out.println(start);
+		System.out.println(end);
 		return jdbcTemplate.query(new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 				PreparedStatement ps = con.prepareStatement(AHORRO_CAJA_POR_TIPO_ANUAL);
+				ps.setString(1, start);
+				ps.setString(2, end);
 				return ps;
 			}
 		}, new SaldoAhorroCajaRowMapper());
 	}
 	
-	public List<SaldoAhorroCajaDto> getAhorrosCajaAnualAgrupado() {
+	public List<SaldoAhorroCajaDto> getAhorrosCajaAnualAgrupado(String start,String end) {
 		return jdbcTemplate.query(new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 				PreparedStatement ps = con.prepareStatement(AHORRO_CAJA_POR_TIPO_ANUAL_AGRUPADO);
+				ps.setString(1, start);
+				ps.setString(2, end);
 				return ps;
 			}
 		}, new SaldoAhorroCajaAgrupadoRowMapper());

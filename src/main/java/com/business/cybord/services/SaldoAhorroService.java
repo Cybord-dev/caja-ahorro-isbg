@@ -2,6 +2,8 @@ package com.business.cybord.services;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.cybord.mappers.SaldoAhorroMapper;
+import com.business.cybord.models.dtos.CatCajaDto;
 import com.business.cybord.models.dtos.RecursoDto;
 import com.business.cybord.models.dtos.SaldoAhorroDto;
 import com.business.cybord.models.dtos.UsuarioDto;
@@ -51,6 +54,11 @@ public class SaldoAhorroService {
 	@Autowired
 	private DownloaderService reportService;
 
+	@Autowired
+	private CajaUtilityService cajaUtilityService;
+
+	private static final DateFormat format = new SimpleDateFormat("YYYY-MM-dd");
+
 	public Page<ReporteSaldosDto> getSaldosAhorros(Map<String, String> parameters) {
 		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
 		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
@@ -77,16 +85,21 @@ public class SaldoAhorroService {
 		return reportService.generateBase64Report("REGISTRO AHORRO", data);
 	}
 
-	public List<SaldoAhorroCajaDto> getSaldosAhorrosCurrentCajaAnual() {
-		return reportesSaldosDao.getAhorrosCajaAnual();
+	public List<SaldoAhorroCajaDto> getSaldosAhorrosCurrentCajaAnual() throws IsbgServiceException {
+		CatCajaDto currentCaja = cajaUtilityService.getCurrentCaja();
+		System.out.println(currentCaja);
+		return reportesSaldosDao.getAhorrosCajaAnual(format.format(currentCaja.getInicio()),
+				format.format(currentCaja.getEnd()));
 	}
 
-	public List<SaldoAhorroCajaDto> getSaldosAhorrosCurrentCajaAnualAgrupado() {
-		return reportesSaldosDao.getAhorrosCajaAnualAgrupado();
+	public List<SaldoAhorroCajaDto> getSaldosAhorrosCurrentCajaAnualAgrupado() throws IsbgServiceException {
+		CatCajaDto currentCaja = cajaUtilityService.getCurrentCaja();
+		return reportesSaldosDao.getAhorrosCajaAnualAgrupado(format.format(currentCaja.getInicio()),
+				format.format(currentCaja.getEnd()));
 	}
 
 	public List<SaldoAhorroDto> getSaldosAhorroByUsuario(Integer id) {
-		return mapper.getDtosFromEntity(respository.findByIdUsuarioAndValidado(id,true));
+		return mapper.getDtosFromEntity(respository.findByIdUsuarioAndValidado(id, true));
 	}
 
 	public SaldoAhorroDto getSaldoAhorroByIdAndIdUsuario(Integer idUsuario, Integer idSaldo) {
@@ -235,4 +248,5 @@ public class SaldoAhorroService {
 		}
 
 	}
+
 }

@@ -13,26 +13,22 @@ import com.business.cybord.models.error.IsbgServiceException;
 
 @ControllerAdvice
 public class ServicesExceptionHandler {
-	
-	
-	
-	private static final Logger log = LoggerFactory.getLogger(ServicesExceptionHandler.class);
 
+	private static final Logger log = LoggerFactory.getLogger(ServicesExceptionHandler.class);
 
 	@ExceptionHandler(value = Exception.class)
 	protected ResponseEntity<IsbgServiceException> handleException(Exception ex, WebRequest request) {
 		log.error("Unhandled exception", ex);
-		return new ResponseEntity<>(
-				new IsbgServiceException("Ooops algo salio mal, si el error persiste hazlonos saber.", ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()),
-				HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(new IsbgServiceException(
+				String.format("Ooops algo salio mal, si el error persiste hazlonos saber.Detalles:%s", ex.getMessage()),
+				ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ExceptionHandler(value = ResponseStatusException.class)
 	protected ResponseEntity<IsbgServiceException> handleResponseStatusException(ResponseStatusException ex,
 			WebRequest request) {
 		log.error("ResponseStatusException", ex);
-		return new ResponseEntity<>(
-				new IsbgServiceException(ex.getReason(),ex.getMessage(), ex.getStatus().value()),
+		return new ResponseEntity<>(new IsbgServiceException(ex.getReason(), ex.getMessage(), ex.getStatus().value()),
 				ex.getStatus());
 	}
 
