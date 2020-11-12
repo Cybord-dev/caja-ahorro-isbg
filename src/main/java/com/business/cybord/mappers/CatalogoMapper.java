@@ -6,9 +6,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MapperConfig;
 import org.mapstruct.ReportingPolicy;
 
-import com.business.cybord.models.dtos.CatCajaDto;
 import com.business.cybord.models.dtos.CatalogoDto;
-import com.business.cybord.models.entities.CatCaja;
 import com.business.cybord.models.entities.Catalogo;
 
 @Mapper
@@ -19,6 +17,4 @@ public interface CatalogoMapper {
 	
 	CatalogoDto getCatDtoFromEntidad(Catalogo dto);
 	List<CatalogoDto> getCatDtosFromEntidades(List<Catalogo> dto);
-	
-	CatCajaDto getCatCajaDtoFromEntidad(CatCaja entity);
 }

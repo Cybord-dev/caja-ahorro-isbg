@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -87,27 +88,25 @@ public class ReportesSaldosDao {
 		}, new SaldoAhorroDtoRowMapper());
 	}
 	
-	public List<SaldoAhorroCajaDto> getAhorrosCajaAnual(String start,String end) {
-		System.out.println(start);
-		System.out.println(end);
+	public List<SaldoAhorroCajaDto> getAhorrosCajaAnual(LocalDate start,LocalDate end) {
 		return jdbcTemplate.query(new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 				PreparedStatement ps = con.prepareStatement(AHORRO_CAJA_POR_TIPO_ANUAL);
-				ps.setString(1, start);
-				ps.setString(2, end);
+				ps.setDate(1,java.sql.Date.valueOf(start));
+				ps.setDate(2, java.sql.Date.valueOf(end));
 				return ps;
 			}
 		}, new SaldoAhorroCajaRowMapper());
 	}
 	
-	public List<SaldoAhorroCajaDto> getAhorrosCajaAnualAgrupado(String start,String end) {
+	public List<SaldoAhorroCajaDto> getAhorrosCajaAgrupado(LocalDate start,LocalDate end) {
 		return jdbcTemplate.query(new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 				PreparedStatement ps = con.prepareStatement(AHORRO_CAJA_POR_TIPO_ANUAL_AGRUPADO);
-				ps.setString(1, start);
-				ps.setString(2, end);
+				ps.setDate(1,java.sql.Date.valueOf(start));
+				ps.setDate(2, java.sql.Date.valueOf(end));
 				return ps;
 			}
 		}, new SaldoAhorroCajaAgrupadoRowMapper());
