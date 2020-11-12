@@ -28,10 +28,10 @@ public class CatalogoService {
 	}
 
 	public CatalogoDto getCatPropiedadByTipoAndNombre(String tipo, String nombre) {
-		log.info("Buscando CAT_PROPIEDADES de tipo : {} y nombre : {} ", tipo, nombre);
+		log.info("Buscando CATALOGO de tipo : {} y nombre : {} ", tipo, nombre);
 		return mapper.getCatDtoFromEntidad(repository.findByTipoAndNombre(tipo, nombre)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-						String.format("No hay CAT_PROPIEDADES con tipo =%s y nombre=%s", tipo, nombre))));
+						String.format("El catalogo %s  no contiene el valor %s", tipo, nombre))));
 
 	}
 
