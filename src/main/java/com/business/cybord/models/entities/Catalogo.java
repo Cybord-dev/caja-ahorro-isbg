@@ -14,7 +14,7 @@ import org.springframework.lang.NonNull;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "cat_propiedades")
-public class CatalogoPropiedad {
+public class Catalogo {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

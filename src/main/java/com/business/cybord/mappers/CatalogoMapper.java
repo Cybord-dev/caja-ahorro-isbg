@@ -3,17 +3,22 @@ package com.business.cybord.mappers;
 import java.util.List;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.MapperConfig;
+import org.mapstruct.ReportingPolicy;
 
 import com.business.cybord.models.dtos.CatCajaDto;
-import com.business.cybord.models.dtos.CatalogoOficinaDto;
+import com.business.cybord.models.dtos.CatalogoDto;
 import com.business.cybord.models.entities.CatCaja;
-import com.business.cybord.models.entities.CatalogoOficina;
+import com.business.cybord.models.entities.Catalogo;
 
 @Mapper
+@MapperConfig(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring")
 public interface CatalogoMapper {
-
-	CatalogoOficinaDto getCatDtoFromEntidad(CatalogoOficina entity);
+	Catalogo getEntidadFromCatDto(CatalogoDto dto);
+	
+	
+	CatalogoDto getCatDtoFromEntidad(Catalogo dto);
+	List<CatalogoDto> getCatDtosFromEntidades(List<Catalogo> dto);
+	
 	CatCajaDto getCatCajaDtoFromEntidad(CatCaja entity);
-	CatalogoOficina getEntityFromDto(CatalogoOficinaDto entity);
-	List<CatalogoOficinaDto> getCatDtosFromEntities(List<CatalogoOficina> entity);
 }

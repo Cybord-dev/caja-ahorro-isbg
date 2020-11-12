@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CatalogoPropiedadDto implements Serializable {
+public class CatalogoDto implements Serializable {
 	private static final long serialVersionUID = -3085736080595382783L;
 
 	private int id;
