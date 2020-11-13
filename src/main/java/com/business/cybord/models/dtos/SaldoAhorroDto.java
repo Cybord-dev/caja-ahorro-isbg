@@ -3,6 +3,9 @@ package com.business.cybord.models.dtos;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+
+import com.business.cybord.models.Constants;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -17,7 +20,9 @@ public class SaldoAhorroDto implements Serializable {
 	private BigDecimal monto;
 	private Boolean validado;
 	private String origen;
+	@JsonFormat(shape = JsonFormat.Shape.STRING)
 	private Date fechaCreacion;
+	@JsonFormat(shape = JsonFormat.Shape.STRING)
 	private Date fechaActualizacion;
 
 	public SaldoAhorroDto(int idUsuario, String tipo, BigDecimal monto, Boolean validado) {

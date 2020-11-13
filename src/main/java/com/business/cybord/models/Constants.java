@@ -2,12 +2,14 @@ package com.business.cybord.models;
 
 public class Constants {
 	
+	public static final String JSON_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+	
 	public class SqlConstants{
-		public final static String  LIMIT="LIMIT";
-		public final static String  OFFSET="OFFSET";
-		public final static String  DATE_FORMAT="yyyy-MM-dd";
-		public final static String  SINCE="since";
-		public final static String  TO="to";
+		public static final String  LIMIT="LIMIT";
+		public static final String  OFFSET="OFFSET";
+		public static final String  DATE_FORMAT="yyyy-MM-dd";
+		public static final String  SINCE="since";
+		public static final String  TO="to";
 	}
 
 }

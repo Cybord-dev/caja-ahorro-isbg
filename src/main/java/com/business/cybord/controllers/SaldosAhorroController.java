@@ -49,13 +49,12 @@ public class SaldosAhorroController {
 	}
 
 	@GetMapping("/saldosAhorro/anual")
-	public ResponseEntity<List<SaldoAhorroCajaDto>> getSaldosAhorrosCurrentCajaAnual() throws IsbgServiceException {
+	public ResponseEntity<Map<String,List<SaldoAhorroCajaDto>>> getSaldosAhorrosCurrentCajaAnual() {
 		return new ResponseEntity<>(service.getSaldosAhorrosCurrentCajaAnual(), HttpStatus.OK);
 	}
 
 	@GetMapping("/saldosAhorro/anual/agrupado")
-	public ResponseEntity<List<SaldoAhorroCajaDto>> getSaldosAhorrosCurrentCajaAnualAgrupado()
-			throws IsbgServiceException {
+	public ResponseEntity<List<SaldoAhorroCajaDto>> getSaldosAhorrosCurrentCajaAnualAgrupado(){
 		return new ResponseEntity<>(service.getSaldosAhorrosCurrentCajaAnualAgrupado(), HttpStatus.OK);
 	}
 

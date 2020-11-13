@@ -49,16 +49,15 @@ public class ReportesSaldosDao {
 	private DateFormat dateFormat = new SimpleDateFormat(SqlConstants.DATE_FORMAT);
 	private DateHelper dh = new DateHelper();
 
-	private static final String AHORRO_CAJA_POR_TIPO_ANUAL = "SELECT"
-			+ "	SUM(monto) as monto, tipo,MONTH(fecha_creacion) as mes  " + "FROM saldo_ahorro " + "where 1=1 "
-			+ "	AND fecha_creacion between ? AND ?  AND validado=1 " + "group by " + "	tipo, MONTH(fecha_creacion);";
+	private static final String AHORRO_CAJA_POR_TIPO_ANUAL = "SELECT SUM(monto) as monto, tipo,MONTH(fecha_creacion) as mes  " 
+			+ "FROM saldo_ahorro where fecha_creacion between ? AND ?  AND validado=1 " + "group by tipo, MONTH(fecha_creacion) Order by fecha_creacion;";
 	
 	private static final String AHORRO_CAJA_POR_TIPO_ANUAL_AGRUPADO = "SELECT "
 			+ "SUM(monto) monto,"
 			+ " tipo " + 
 			"FROM "
 			+ "	saldo_ahorro "
-			+ "WHERE fecha_creacion between ? AND ? "
+			+ "WHERE validado=1 AND fecha_creacion between ? AND ?"
 			+ "GROUP BY tipo;";
 	
 	private static final String AHORROS_INTERNOS_LAST_DAYS = "SELECT b.*" + 

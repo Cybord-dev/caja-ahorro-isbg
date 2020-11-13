@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.cybord.mappers.SaldoAhorroMapper;
+import com.business.cybord.models.Meses;
 import com.business.cybord.models.dtos.RecursoDto;
 import com.business.cybord.models.dtos.SaldoAhorroDto;
 import com.business.cybord.models.dtos.UsuarioDto;
@@ -82,10 +83,15 @@ public class SaldoAhorroService {
 		return reportService.generateBase64Report("REGISTRO AHORRO", data);
 	}
 
-	public List<SaldoAhorroCajaDto> getSaldosAhorrosCurrentCajaAnual() {
+	public Map<String,List<SaldoAhorroCajaDto>> getSaldosAhorrosCurrentCajaAnual() {
 		LocalDate start = cajaUtilityService.getInicioCajaActual();
 		LocalDate end = cajaUtilityService.getFinCajaActual();
-		return reportesSaldosDao.getAhorrosCajaAnual(start,end);
+		return reportesSaldosDao.getAhorrosCajaAnual(start,end).stream()
+				.map(s->{
+					s.setMes(Meses.getMesByNumber(s.getMes()).name());
+					return s;
+				})
+				.collect(Collectors.groupingBy(SaldoAhorroCajaDto::getTipo,Collectors.toList()));
 	}
 
 	public List<SaldoAhorroCajaDto> getSaldosAhorrosCurrentCajaAnualAgrupado() {
