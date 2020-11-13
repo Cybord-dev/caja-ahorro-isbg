@@ -3,7 +3,6 @@ package com.business.cybord.models.dtos;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.business.cybord.models.Constants;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -20,9 +19,9 @@ public class ValidacionDto implements Serializable {
 	private Integer numeroValidacion;
 	private boolean status;
 	private String statusDesc;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
+	@JsonFormat(shape = JsonFormat.Shape.STRING)
 	private Date fechaCreacion;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
+	@JsonFormat(shape = JsonFormat.Shape.STRING)
 	private Date fechaActualizacion;
 
 	public int getId() {

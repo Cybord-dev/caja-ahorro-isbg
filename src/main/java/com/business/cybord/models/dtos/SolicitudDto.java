@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.business.cybord.models.Constants;
 import com.business.cybord.models.entities.AtributoSolicitud;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -23,9 +22,9 @@ public class SolicitudDto implements Serializable{
 	private String status;
 	private String statusDetalle;
 	private Date fechaEjecucion;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
+	@JsonFormat(shape = JsonFormat.Shape.STRING)
 	private Date fechaCreacion;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
+	@JsonFormat(shape = JsonFormat.Shape.STRING)
 	private Date fechaActualizacion;
 	private Map<String,String> atributos;
 	private List<ValidacionDto> validaciones;
