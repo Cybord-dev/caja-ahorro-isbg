@@ -170,10 +170,10 @@ public class SaldoAhorroService {
 				conciliaDto.setNombre(saldoValidado.get().getNombre());
 				correctos.add(conciliaDto);
 				dto.setValidado(true);
-//				OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
-//				if (oidcUser != null && oidcUser.getAttributes() != null && oidcUser.getEmail() != null) {
-//					dto.setOrigen(oidcUser.getEmail());
-//				}
+				OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
+				if (oidcUser != null && oidcUser.getAttributes() != null && oidcUser.getEmail() != null) {
+					dto.setOrigen(oidcUser.getEmail());
+				}
 				respository.save(mapper.getEntityFromDto(dto));
 			} else {
 				Optional<ConciliaSaldoDto> usuario = report.getCorrectos().stream()
@@ -237,17 +237,24 @@ public class SaldoAhorroService {
 		}
 	}
 
-	public List<SaldoAhorroDto> insertBulk(List<SaldoAhorroDto> saldos, Authentication authentication) {
-		List<SaldoAhorro> ahorros = mapper.getEntitysFromDtos(saldos);
+	public ConciliadorReportDto ahorrosExternos(List<SaldoAhorroDto> saldos, Optional<Integer> days, Authentication authentication) {
+		ConciliadorReportDto reporte= new ConciliadorReportDto();
+		int day = !days.isPresent() ? 8 : days.get();
+		List<SaldoAhorroDto> ahorradores =reportesSaldosDao.getAhorrosExternosLastDays(day);
+			List<SaldoAhorro> ahorros = mapper.getEntitysFromDtos(saldos);
 		OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
 		if (oidcUser != null && oidcUser.getAttributes() != null && oidcUser.getEmail() != null) {
 			if (saldos != null && !saldos.isEmpty()) {
-				ahorros.forEach(a -> a.setOrigen(oidcUser.getEmail()));
-				ahorros = respository.saveAll(ahorros);
+//				for(SaldoAhorro ahorro:ahorros) {
+//					ahorro.setOrigen(oidcUser.getEmail());
+//					ahorro = respository.save(ahorro);
+//					reporte.addcorrecto(a);
+//				}
+				
 			} else {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Esta vacia la lista");
 			}
-			return mapper.getDtosFromEntity(ahorros);
+			return reporte;
 		} else {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, "Tu sesion no se encuentra activa");
 		}
