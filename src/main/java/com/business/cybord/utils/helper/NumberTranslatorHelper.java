@@ -2,13 +2,14 @@ package com.business.cybord.utils.helper;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 
 
 public class NumberTranslatorHelper {
 
 	private String cantidadConLetra(String s) {
 		StringBuilder result = new StringBuilder();
-		BigDecimal totalBigDecimal = new BigDecimal(s).setScale(2, BigDecimal.ROUND_DOWN);
+		BigDecimal totalBigDecimal = new BigDecimal(s).setScale(2, RoundingMode.HALF_EVEN);
 		long parteEntera = totalBigDecimal.toBigInteger().longValue();
 		int triUnidades = (int) ((parteEntera % 1000));
 		int triMiles = (int) ((parteEntera / 1000) % 1000);
