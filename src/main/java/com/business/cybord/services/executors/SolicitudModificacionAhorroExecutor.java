@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.business.cybord.mappers.DatoUsuarioMapper;
-import com.business.cybord.models.confiig.FileConfig;
+import com.business.cybord.models.config.FileConfig;
 import com.business.cybord.models.dtos.SolicitudDto;
 import com.business.cybord.models.dtos.ValidacionDto;
 import com.business.cybord.models.entities.AtributoSolicitud;

@@ -1,4 +1,4 @@
-package com.business.cybord.models.confiig;
+package com.business.cybord.models.config;
 
 import com.business.cybord.models.enums.config.TipoArchivoEnum;
 

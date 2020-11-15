@@ -3,7 +3,7 @@ package com.business.cybord.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.business.cybord.models.confiig.FileConfig;
+import com.business.cybord.models.config.FileConfig;
 import com.business.cybord.models.error.IsbgServiceException;
 import com.business.cybord.utils.builder.EmailConfigBuilder;
 import com.business.cybord.utils.helper.MailHelper;

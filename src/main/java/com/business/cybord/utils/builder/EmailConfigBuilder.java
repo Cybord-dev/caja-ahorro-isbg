@@ -3,8 +3,8 @@ package com.business.cybord.utils.builder;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.business.cybord.models.confiig.EmailConfig;
-import com.business.cybord.models.confiig.FileConfig;
+import com.business.cybord.models.config.EmailConfig;
+import com.business.cybord.models.config.FileConfig;
 
 public class EmailConfigBuilder extends AbstractBuilder<EmailConfig> {
 

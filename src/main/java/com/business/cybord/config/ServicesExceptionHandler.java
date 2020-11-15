@@ -20,7 +20,7 @@ public class ServicesExceptionHandler {
 	protected ResponseEntity<IsbgServiceException> handleException(Exception ex, WebRequest request) {
 		log.error("Unhandled exception", ex);
 		return new ResponseEntity<>(new IsbgServiceException(
-				String.format("Ooops algo salio mal, si el error persiste hazlonos saber.Detalles:%s", ex.getMessage()),
+				String.format("Ooops algo salio mal, si el error persiste hazlonos saber.Detalles", ex.getMessage()),
 				ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 

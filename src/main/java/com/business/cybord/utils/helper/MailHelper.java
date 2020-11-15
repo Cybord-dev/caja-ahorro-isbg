@@ -2,8 +2,8 @@ package com.business.cybord.utils.helper;
 
 import java.util.Properties;
 
-import com.business.cybord.models.confiig.EmailConfig;
-import com.business.cybord.models.confiig.FileConfig;
+import com.business.cybord.models.config.EmailConfig;
+import com.business.cybord.models.config.FileConfig;
 import com.business.cybord.models.enums.config.TipoArchivoEnum;
 import com.business.cybord.models.error.IsbgServiceException;
 
