@@ -164,6 +164,10 @@ public class UsuarioService {
 							String.format("%s no se encuentra registrado en la plataforma", oidcUser.getEmail())));
 
 			UserInfoDto userInfo = mapper.getUserInfoFromUsuario(usuario);
+			if(!userInfo.getActivo()) {
+				throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+						String.format("%s es un usuario inactivo", "Usuario inactivo"));
+			}
 			userInfo.setUrlImagenPerfil(oidcUser.getAttributes().get("picture").toString());
 			List<MenuItem> menu = new ArrayList<>();
 			for (String role : userInfo.getRoles()) {
