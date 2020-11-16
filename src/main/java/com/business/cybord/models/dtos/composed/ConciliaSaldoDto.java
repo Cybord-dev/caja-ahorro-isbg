@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class ConciliaSaldoDto implements Serializable {
 
 	private static final long serialVersionUID = 6120525882244348410L;
-	private int idUsuario;
+	private Integer idUsuario;
 	private String noEmpleado;
 	private String nombre;
 	private BigDecimal saldo;
@@ -22,7 +22,7 @@ public class ConciliaSaldoDto implements Serializable {
 		super();
 	}
 
-	public ConciliaSaldoDto(int idUsuario, String noEmpleado, String nombre, BigDecimal saldo, Boolean validado,
+	public ConciliaSaldoDto(Integer idUsuario, String noEmpleado, String nombre, BigDecimal saldo, Boolean validado,
 			String observaciones) {
 		super();
 		this.idUsuario = idUsuario;
@@ -33,11 +33,11 @@ public class ConciliaSaldoDto implements Serializable {
 		this.observaciones = observaciones;
 	}
 
-	public int getIdUsuario() {
+	public Integer getIdUsuario() {
 		return idUsuario;
 	}
 
-	public void setIdUsuario(int idUsuario) {
+	public void setIdUsuario(Integer idUsuario) {
 		this.idUsuario = idUsuario;
 	}
 

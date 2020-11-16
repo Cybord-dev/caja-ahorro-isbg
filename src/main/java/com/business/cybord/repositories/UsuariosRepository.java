@@ -1,5 +1,6 @@
 package com.business.cybord.repositories;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -20,5 +21,7 @@ public interface UsuariosRepository extends JpaRepository<Usuario, Integer>, Jpa
 	Optional<Usuario> findByEmail(String email);
 
 	Page<Usuario> findAll(Pageable pageable);
+	
+	List<Usuario> findByTipoUsuarioAndAhorrador(String tipoUsuario,Boolean ahorrador);
 
 }

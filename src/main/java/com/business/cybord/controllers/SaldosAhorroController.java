@@ -75,17 +75,22 @@ public class SaldosAhorroController {
 		return new ResponseEntity<>(service.getSaldoAhorroByIdAndIdUsuario(idUsuario, idAhorro), HttpStatus.OK);
 	}
 
-	@PostMapping("/ahorros/conciliador")
+	@PostMapping("/ahorros/conciliacion")
 	public ResponseEntity<ConciliadorReportDto> conciliarAhorros(@RequestBody @Valid List<ConciliaSaldoDto> dtos,
-			@RequestParam(name = "days", required = false) Optional<Integer> days, Authentication authentication)
-			throws IsbgServiceException {
-		return new ResponseEntity<>(service.conciliarAhorros(dtos, days, authentication), HttpStatus.CREATED);
+			@RequestParam(name = "days", required = false) Optional<Integer> days) throws IsbgServiceException {
+		return new ResponseEntity<>(service.conciliarAhorros(dtos, days), HttpStatus.CREATED);
 	}
 
-	@PostMapping("/ahorros/bulk")
-	public ResponseEntity<ConciliadorReportDto> inserrtBulk(@RequestBody @Valid List<SaldoAhorroDto> dtos,
+	@PostMapping("/ahorros/internos")
+	public ResponseEntity<List<ConciliaSaldoDto>> ahorrosInternos(@RequestBody @Valid List<ConciliaSaldoDto> dtos,
+			Authentication authentication) throws IsbgServiceException {
+		return new ResponseEntity<>(service.ahorrosInternos(dtos, authentication), HttpStatus.CREATED);
+	}
+
+	@PostMapping("/ahorros/externos")
+	public ResponseEntity<ConciliadorReportDto> ahorrosExternos(@RequestBody @Valid List<SaldoAhorroDto> dtos,
 			@RequestParam(name = "days", required = false) Optional<Integer> days, Authentication authentication) {
-		return new ResponseEntity<>(service.ahorrosExternos(dtos,days, authentication), HttpStatus.CREATED);
+		return new ResponseEntity<>(service.ahorrosExternos(dtos, days, authentication), HttpStatus.CREATED);
 	}
 
 }

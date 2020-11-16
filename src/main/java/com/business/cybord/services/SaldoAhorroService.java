@@ -31,6 +31,7 @@ import com.business.cybord.models.dtos.composed.ConciliadorReportDto;
 import com.business.cybord.models.dtos.composed.ReporteSaldosDto;
 import com.business.cybord.models.dtos.composed.SaldoAhorroCajaDto;
 import com.business.cybord.models.entities.SaldoAhorro;
+import com.business.cybord.models.enums.TipoAhorroEnum;
 import com.business.cybord.models.enums.TipoAtributoUsuarioEnum;
 import com.business.cybord.models.error.IsbgServiceException;
 import com.business.cybord.repositories.SaldoAhorroRepository;
@@ -141,14 +142,13 @@ public class SaldoAhorroService {
 		}
 	}
 
-	public ConciliadorReportDto conciliarAhorros(List<ConciliaSaldoDto> ahorros, Optional<Integer> days,
-			Authentication authentication) throws IsbgServiceException {
+	public ConciliadorReportDto conciliarAhorros(List<ConciliaSaldoDto> ahorros, Optional<Integer> days) throws IsbgServiceException {
 		ConciliadorReportDto report = new ConciliadorReportDto();
 		if (ahorros != null && !ahorros.isEmpty()) {
 			int day = !days.isPresent() ? 8 : days.get();
 			conciliacion(report, ahorros);
 			List<SaldoAhorroDto> saldos = reportesSaldosDao.getAhorrosInternosLastDays(day);
-			validacionAhorro(report, saldos, authentication);
+			validacionAhorro(report, saldos);
 			return report;
 		} else {
 			throw new IsbgServiceException("No se mando ningun ahorro para validar",
@@ -156,8 +156,7 @@ public class SaldoAhorroService {
 		}
 	}
 
-	private void validacionAhorro(ConciliadorReportDto report, List<SaldoAhorroDto> saldos,
-			Authentication authentication) {
+	private void validacionAhorro(ConciliadorReportDto report, List<SaldoAhorroDto> saldos) {
 		List<ConciliaSaldoDto> correctos = new ArrayList<>();
 		for (SaldoAhorroDto dto : saldos) {
 			ConciliaSaldoDto conciliaDto = mapper.getConciliaDtoFromSaldo(dto);
@@ -169,11 +168,6 @@ public class SaldoAhorroService {
 				conciliaDto.setNombre(saldoValidado.get().getNombre());
 				correctos.add(conciliaDto);
 				dto.setValidado(true);
-				OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
-				if (oidcUser != null && oidcUser.getAttributes() != null && oidcUser.getEmail() != null) {
-					dto.setOrigen(oidcUser.getEmail());
-				}
-				respository.save(mapper.getEntityFromDto(dto));
 			} else {
 				Optional<ConciliaSaldoDto> usuario = report.getCorrectos().stream()
 						.filter(a -> a.getIdUsuario() == dto.getIdUsuario()).findFirst();
@@ -235,6 +229,19 @@ public class SaldoAhorroService {
 			}
 		}
 	}
+	
+	public List<ConciliaSaldoDto> ahorrosInternos(List<ConciliaSaldoDto> saldos,
+			Authentication authentication) {
+		OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
+		String origen=null;
+		if (oidcUser != null && oidcUser.getAttributes() != null && oidcUser.getEmail() != null) {
+			origen=oidcUser.getEmail();
+		}
+		for(ConciliaSaldoDto dto:saldos) {
+			respository.save(new SaldoAhorro(dto.getIdUsuario(),TipoAhorroEnum.AHORRO.getTipo(),dto.getSaldo(),true,origen));
+		}
+		return saldos;
+	}
 
 	public ConciliadorReportDto ahorrosExternos(List<SaldoAhorroDto> saldos, Optional<Integer> days,
 			Authentication authentication) {
@@ -242,17 +249,18 @@ public class SaldoAhorroService {
 		int day = !days.isPresent() ? 8 : days.get();
 		List<SaldoAhorroDto> ahorradores = reportesSaldosDao.getAhorrosExternosLastDays(day);
 		List<SaldoAhorro> ahorros = mapper.getEntitysFromDtos(saldos);
-		OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
-		if (oidcUser != null && oidcUser.getAttributes() != null && oidcUser.getEmail() != null) {
+//		OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
+//		if (oidcUser != null && oidcUser.getAttributes() != null && oidcUser.getEmail() != null) {
 			if (saldos != null && !saldos.isEmpty()) {
 				for (SaldoAhorro ahorro : ahorros) {
-					final Integer idUSer=ahorro.getIdUsuario();
+					UsuarioDto user = usuarioService.getUserById(ahorro.getIdUsuario());
+					Integer idUSer=ahorro.getIdUsuario();
 					if (ahorradores.stream().anyMatch(a ->idUSer.equals(a.getIdUsuario()))) {
-
+						reporte.addError(new ConciliaSaldoDto(ahorro.getIdUsuario(), user.getNoEmpleado(),
+								user.getNombre(), ahorro.getMonto(), true, "Ya tiene un ahorro cargado"));
 					} else {
-						ahorro.setOrigen(oidcUser.getEmail());
+//						ahorro.setOrigen(oidcUser.getEmail());
 						ahorro = respository.save(ahorro);
-						UsuarioDto user = usuarioService.getUserById(ahorro.getIdUsuario());
 						reporte.addcorrecto(new ConciliaSaldoDto(ahorro.getIdUsuario(), user.getNoEmpleado(),
 								user.getNombre(), ahorro.getMonto(), true, null));
 					}
@@ -260,10 +268,16 @@ public class SaldoAhorroService {
 			} else {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Esta vacia la lista");
 			}
+			for(UsuarioDto dto:usuarioService.findByTipoUsuarioAndAhorrador("EXTERNO", true)) {
+				if(reporte.getCorrectos().stream().noneMatch(a->a.getIdUsuario().equals(dto.getId()))) {
+					reporte.addError(new ConciliaSaldoDto(dto.getId(), dto.getNoEmpleado(),
+							dto.getNombre(), null, true, "Usuario ahorrador sin insumo de ahorro"));
+				}
+			}
 			return reporte;
-		} else {
-			throw new ResponseStatusException(HttpStatus.CONFLICT, "Tu sesion no se encuentra activa");
-		}
+//		} else {
+//			throw new ResponseStatusException(HttpStatus.CONFLICT, "Tu sesion no se encuentra activa");
+//		}
 
 	}
 

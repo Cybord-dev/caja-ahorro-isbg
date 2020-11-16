@@ -151,4 +151,8 @@ public class UsuarioService {
 		}
 	}
 
+	public List<UsuarioDto> findByTipoUsuarioAndAhorrador(String tipoUsuario, Boolean ahorrador) {
+		return mapper.getDtosFromEntities(repository.findByTipoUsuarioAndAhorrador(tipoUsuario, ahorrador));
+	}
+
 }
