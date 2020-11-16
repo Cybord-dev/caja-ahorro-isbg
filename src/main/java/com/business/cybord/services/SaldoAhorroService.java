@@ -142,7 +142,8 @@ public class SaldoAhorroService {
 		}
 	}
 
-	public ConciliadorReportDto conciliarAhorros(List<ConciliaSaldoDto> ahorros, Optional<Integer> days) throws IsbgServiceException {
+	public ConciliadorReportDto conciliarAhorros(List<ConciliaSaldoDto> ahorros, Optional<Integer> days)
+			throws IsbgServiceException {
 		ConciliadorReportDto report = new ConciliadorReportDto();
 		if (ahorros != null && !ahorros.isEmpty()) {
 			int day = !days.isPresent() ? 8 : days.get();
@@ -229,16 +230,16 @@ public class SaldoAhorroService {
 			}
 		}
 	}
-	
-	public List<ConciliaSaldoDto> ahorrosInternos(List<ConciliaSaldoDto> saldos,
-			Authentication authentication) {
+
+	public List<ConciliaSaldoDto> ahorrosInternos(List<ConciliaSaldoDto> saldos, Authentication authentication) {
 		OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
-		String origen=null;
+		String origen = null;
 		if (oidcUser != null && oidcUser.getAttributes() != null && oidcUser.getEmail() != null) {
-			origen=oidcUser.getEmail();
+			origen = oidcUser.getEmail();
 		}
-		for(ConciliaSaldoDto dto:saldos) {
-			respository.save(new SaldoAhorro(dto.getIdUsuario(),TipoAhorroEnum.AHORRO.getTipo(),dto.getSaldo(),true,origen));
+		for (ConciliaSaldoDto dto : saldos) {
+			respository.save(
+					new SaldoAhorro(dto.getIdUsuario(), TipoAhorroEnum.AHORRO.getTipo(), dto.getSaldo(), true, origen));
 		}
 		return saldos;
 	}
@@ -249,17 +250,17 @@ public class SaldoAhorroService {
 		int day = !days.isPresent() ? 8 : days.get();
 		List<SaldoAhorroDto> ahorradores = reportesSaldosDao.getAhorrosExternosLastDays(day);
 		List<SaldoAhorro> ahorros = mapper.getEntitysFromDtos(saldos);
-//		OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
-//		if (oidcUser != null && oidcUser.getAttributes() != null && oidcUser.getEmail() != null) {
+		OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
+		if (oidcUser != null && oidcUser.getAttributes() != null && oidcUser.getEmail() != null) {
 			if (saldos != null && !saldos.isEmpty()) {
 				for (SaldoAhorro ahorro : ahorros) {
 					UsuarioDto user = usuarioService.getUserById(ahorro.getIdUsuario());
-					Integer idUSer=ahorro.getIdUsuario();
-					if (ahorradores.stream().anyMatch(a ->idUSer.equals(a.getIdUsuario()))) {
+					Integer idUSer = ahorro.getIdUsuario();
+					if (ahorradores.stream().anyMatch(a -> idUSer.equals(a.getIdUsuario()))) {
 						reporte.addError(new ConciliaSaldoDto(ahorro.getIdUsuario(), user.getNoEmpleado(),
 								user.getNombre(), ahorro.getMonto(), true, "Ya tiene un ahorro cargado"));
 					} else {
-//						ahorro.setOrigen(oidcUser.getEmail());
+						ahorro.setOrigen(oidcUser.getEmail());
 						ahorro = respository.save(ahorro);
 						reporte.addcorrecto(new ConciliaSaldoDto(ahorro.getIdUsuario(), user.getNoEmpleado(),
 								user.getNombre(), ahorro.getMonto(), true, null));
@@ -268,16 +269,17 @@ public class SaldoAhorroService {
 			} else {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Esta vacia la lista");
 			}
-			for(UsuarioDto dto:usuarioService.findByTipoUsuarioAndAhorrador("EXTERNO", true)) {
-				if(reporte.getCorrectos().stream().noneMatch(a->a.getIdUsuario().equals(dto.getId()))) {
-					reporte.addError(new ConciliaSaldoDto(dto.getId(), dto.getNoEmpleado(),
-							dto.getNombre(), null, true, "Usuario ahorrador sin insumo de ahorro"));
+			for (UsuarioDto dto : usuarioService.findByTipoUsuarioAndAhorrador("EXTERNO", true)) {
+				if (reporte.getCorrectos().stream().noneMatch(a -> a.getIdUsuario().equals(dto.getId()))
+						&& !reporte.getErrores().stream().anyMatch(a -> a.getIdUsuario().equals(dto.getId()))) {
+					reporte.addError(new ConciliaSaldoDto(dto.getId(), dto.getNoEmpleado(), dto.getNombre(), null, true,
+							"Usuario ahorrador sin insumo de ahorro"));
 				}
 			}
 			return reporte;
-//		} else {
-//			throw new ResponseStatusException(HttpStatus.CONFLICT, "Tu sesion no se encuentra activa");
-//		}
+		} else {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, "Tu sesion no se encuentra activa");
+		}
 
 	}
 
