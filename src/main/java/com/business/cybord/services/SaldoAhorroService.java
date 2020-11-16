@@ -179,7 +179,8 @@ public class SaldoAhorroService {
 					conciliaDto.setNombre(usuario.get().getNombre());
 					report.addError(conciliaDto);
 				} else {
-					if (!report.getErrores().stream().anyMatch(a -> a.getIdUsuario() == dto.getIdUsuario())) {
+					if (!report.getErrores().stream()
+							.anyMatch(a -> a.getIdUsuario() != null && a.getIdUsuario() == dto.getIdUsuario())) {
 						conciliaDto.setObservaciones(String.format("El usuario no tiene registro en la coincilacion"));
 						UsuarioDto userDto = usuarioService.getUserById(dto.getIdUsuario());
 						conciliaDto.setNoEmpleado(userDto.getNoEmpleado());
