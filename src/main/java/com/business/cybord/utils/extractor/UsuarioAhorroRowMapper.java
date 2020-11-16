@@ -17,6 +17,7 @@ public class UsuarioAhorroRowMapper implements RowMapper<UserAhorroDto> {
 		result.setNombre(rs.getString("nombre"));
 		result.setEmail(rs.getString("email"));
 		result.setAhorrador(rs.getBoolean("ahorrador"));
+		result.setActivo(rs.getBoolean("estatus"));
 		result.setNoEmpleado(rs.getString("no_empleado"));
 		result.setTipoUsuario(rs.getString("tipo_usuario"));
 		if(rs.getString("dato")!=null) {

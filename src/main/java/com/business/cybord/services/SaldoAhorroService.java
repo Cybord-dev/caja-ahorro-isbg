@@ -83,15 +83,13 @@ public class SaldoAhorroService {
 		return reportService.generateBase64Report("REGISTRO AHORRO", data);
 	}
 
-	public Map<String,List<SaldoAhorroCajaDto>> getSaldosAhorrosCurrentCajaAnual() {
+	public Map<String, List<SaldoAhorroCajaDto>> getSaldosAhorrosCurrentCajaAnual() {
 		LocalDate start = cajaUtilityService.getInicioCajaActual();
 		LocalDate end = cajaUtilityService.getFinCajaActual();
-		return reportesSaldosDao.getAhorrosCajaAnual(start,end).stream()
-				.map(s->{
-					s.setMes(Meses.getMesByNumber(s.getMes()).name());
-					return s;
-				})
-				.collect(Collectors.groupingBy(SaldoAhorroCajaDto::getTipo,Collectors.toList()));
+		return reportesSaldosDao.getAhorrosCajaAnual(start, end).stream().map(s -> {
+			s.setMes(Meses.getMesByNumber(s.getMes()).name());
+			return s;
+		}).collect(Collectors.groupingBy(SaldoAhorroCajaDto::getTipo, Collectors.toList()));
 	}
 
 	public List<SaldoAhorroCajaDto> getSaldosAhorrosCurrentCajaAnualAgrupado() {
@@ -104,7 +102,8 @@ public class SaldoAhorroService {
 	public List<SaldoAhorroDto> getSaldosAhorroByUsuario(Integer id) {
 		LocalDate start = cajaUtilityService.getInicioCajaActual();
 		LocalDate end = cajaUtilityService.getFinCajaActual();
-		return mapper.getDtosFromEntity(respository.findAhorosUsuarioCajaActual(id,Date.valueOf(start), Date.valueOf(end)));
+		return mapper
+				.getDtosFromEntity(respository.findAhorosUsuarioCajaActual(id, Date.valueOf(start), Date.valueOf(end)));
 	}
 
 	public SaldoAhorroDto getSaldoAhorroByIdAndIdUsuario(Integer idUsuario, Integer idSaldo) {
@@ -237,20 +236,27 @@ public class SaldoAhorroService {
 		}
 	}
 
-	public ConciliadorReportDto ahorrosExternos(List<SaldoAhorroDto> saldos, Optional<Integer> days, Authentication authentication) {
-		ConciliadorReportDto reporte= new ConciliadorReportDto();
+	public ConciliadorReportDto ahorrosExternos(List<SaldoAhorroDto> saldos, Optional<Integer> days,
+			Authentication authentication) {
+		ConciliadorReportDto reporte = new ConciliadorReportDto();
 		int day = !days.isPresent() ? 8 : days.get();
-		List<SaldoAhorroDto> ahorradores =reportesSaldosDao.getAhorrosExternosLastDays(day);
-			List<SaldoAhorro> ahorros = mapper.getEntitysFromDtos(saldos);
+		List<SaldoAhorroDto> ahorradores = reportesSaldosDao.getAhorrosExternosLastDays(day);
+		List<SaldoAhorro> ahorros = mapper.getEntitysFromDtos(saldos);
 		OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
 		if (oidcUser != null && oidcUser.getAttributes() != null && oidcUser.getEmail() != null) {
 			if (saldos != null && !saldos.isEmpty()) {
-//				for(SaldoAhorro ahorro:ahorros) {
-//					ahorro.setOrigen(oidcUser.getEmail());
-//					ahorro = respository.save(ahorro);
-//					reporte.addcorrecto(a);
-//				}
-				
+				for (SaldoAhorro ahorro : ahorros) {
+					final Integer idUSer=ahorro.getIdUsuario();
+					if (ahorradores.stream().anyMatch(a ->idUSer.equals(a.getIdUsuario()))) {
+
+					} else {
+						ahorro.setOrigen(oidcUser.getEmail());
+						ahorro = respository.save(ahorro);
+						UsuarioDto user = usuarioService.getUserById(ahorro.getIdUsuario());
+						reporte.addcorrecto(new ConciliaSaldoDto(ahorro.getIdUsuario(), user.getNoEmpleado(),
+								user.getNombre(), ahorro.getMonto(), true, null));
+					}
+				}
 			} else {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Esta vacia la lista");
 			}

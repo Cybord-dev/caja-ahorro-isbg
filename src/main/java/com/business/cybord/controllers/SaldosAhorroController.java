@@ -49,12 +49,12 @@ public class SaldosAhorroController {
 	}
 
 	@GetMapping("/saldosAhorro/anual")
-	public ResponseEntity<Map<String,List<SaldoAhorroCajaDto>>> getSaldosAhorrosCurrentCajaAnual() {
+	public ResponseEntity<Map<String, List<SaldoAhorroCajaDto>>> getSaldosAhorrosCurrentCajaAnual() {
 		return new ResponseEntity<>(service.getSaldosAhorrosCurrentCajaAnual(), HttpStatus.OK);
 	}
 
 	@GetMapping("/saldosAhorro/anual/agrupado")
-	public ResponseEntity<List<SaldoAhorroCajaDto>> getSaldosAhorrosCurrentCajaAnualAgrupado(){
+	public ResponseEntity<List<SaldoAhorroCajaDto>> getSaldosAhorrosCurrentCajaAnualAgrupado() {
 		return new ResponseEntity<>(service.getSaldosAhorrosCurrentCajaAnualAgrupado(), HttpStatus.OK);
 	}
 
@@ -83,9 +83,9 @@ public class SaldosAhorroController {
 	}
 
 	@PostMapping("/ahorros/bulk")
-	public ResponseEntity<List<SaldoAhorroDto>> inserrtBulk(@RequestBody @Valid List<SaldoAhorroDto> dtos,
-			Authentication authentication) {
-		return new ResponseEntity<>(service.insertBulk(dtos, authentication), HttpStatus.CREATED);
+	public ResponseEntity<ConciliadorReportDto> inserrtBulk(@RequestBody @Valid List<SaldoAhorroDto> dtos,
+			@RequestParam(name = "days", required = false) Optional<Integer> days, Authentication authentication) {
+		return new ResponseEntity<>(service.ahorrosExternos(dtos,days, authentication), HttpStatus.CREATED);
 	}
 
 }

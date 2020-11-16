@@ -72,6 +72,18 @@ public class ReportesSaldosDao {
 			"		AND a.ahorrador=1" + 
 			"	    AND	b.fecha_creacion>=current_date()-?;";
 	
+	private static final String AHORROS_EXTERNOS_LAST_DAYS = "SELECT b.*" + 
+			"	FROM " + 
+			"		isbg.usuarios 			a," + 
+			"		isbg.saldo_ahorro		b" + 
+			"	WHERE 1=1" + 
+			"		AND a.id_usuario=b.id_usuario" + 
+			"	    AND a.tipo_usuario='EXTERNO'"+
+			"	    AND b.tipo='ahorro'"+
+			"		AND validado=1 "+
+			"		AND a.ahorrador=1" + 
+			"	    AND	b.fecha_creacion>=current_date()-?;";
+	
 	
 
 	private static final Logger log = LoggerFactory.getLogger(ReportesSaldosDao.class);
@@ -81,6 +93,17 @@ public class ReportesSaldosDao {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 				PreparedStatement ps = con.prepareStatement(AHORROS_INTERNOS_LAST_DAYS);
+				ps.setInt(1, days);
+				return ps;
+			}
+		}, new SaldoAhorroDtoRowMapper());
+	}
+	
+	public List<SaldoAhorroDto> getAhorrosExternosLastDays(int days) {
+		return jdbcTemplate.query(new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+				PreparedStatement ps = con.prepareStatement(AHORROS_EXTERNOS_LAST_DAYS);
 				ps.setInt(1, days);
 				return ps;
 			}
