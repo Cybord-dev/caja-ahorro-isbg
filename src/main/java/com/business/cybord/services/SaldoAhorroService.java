@@ -31,7 +31,6 @@ import com.business.cybord.models.dtos.composed.ConciliadorReportDto;
 import com.business.cybord.models.dtos.composed.ReporteSaldosDto;
 import com.business.cybord.models.dtos.composed.SaldoAhorroCajaDto;
 import com.business.cybord.models.entities.SaldoAhorro;
-import com.business.cybord.models.enums.TipoAhorroEnum;
 import com.business.cybord.models.enums.TipoAtributoUsuarioEnum;
 import com.business.cybord.models.error.IsbgServiceException;
 import com.business.cybord.repositories.SaldoAhorroRepository;
@@ -234,15 +233,20 @@ public class SaldoAhorroService {
 
 	public List<ConciliaSaldoDto> ahorrosInternos(List<ConciliaSaldoDto> saldos, Authentication authentication) {
 		OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
-		String origen = null;
+		String origen=null;
+		List<ConciliaSaldoDto> saldosGuardados=new ArrayList<>();
 		if (oidcUser != null && oidcUser.getAttributes() != null && oidcUser.getEmail() != null) {
 			origen = oidcUser.getEmail();
 		}
 		for (ConciliaSaldoDto dto : saldos) {
-			respository.save(new SaldoAhorro(dto.getId(), dto.getIdUsuario(), TipoAhorroEnum.AHORRO.getTipo(),
-					dto.getSaldo(), true, origen));
+			Optional<SaldoAhorro> ahorro=respository.findById(dto.getId());
+			if(ahorro.isEmpty()) {
+				ahorro.get().setId(dto.getId());
+				ahorro.get().setOrigen(origen);
+				saldosGuardados.add(dto);
+			}
 		}
-		return saldos;
+		return saldosGuardados;
 	}
 
 	public ConciliadorReportDto ahorrosExternos(List<SaldoAhorroDto> saldos, Optional<Integer> days,
