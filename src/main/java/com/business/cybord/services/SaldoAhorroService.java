@@ -240,9 +240,10 @@ public class SaldoAhorroService {
 		}
 		for (ConciliaSaldoDto dto : saldos) {
 			Optional<SaldoAhorro> ahorro=respository.findById(dto.getId());
-			if(ahorro.isEmpty()) {
+			if(ahorro.isPresent()) {
 				ahorro.get().setId(dto.getId());
 				ahorro.get().setOrigen(origen);
+				respository.save(ahorro.get());
 				saldosGuardados.add(dto);
 			}
 		}
