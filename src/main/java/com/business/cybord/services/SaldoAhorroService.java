@@ -243,6 +243,7 @@ public class SaldoAhorroService {
 			if(ahorro.isPresent()) {
 				ahorro.get().setId(dto.getId());
 				ahorro.get().setOrigen(origen);
+				ahorro.get().setValidado(true);
 				respository.save(ahorro.get());
 				saldosGuardados.add(dto);
 			}
