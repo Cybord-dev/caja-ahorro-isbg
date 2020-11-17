@@ -239,8 +239,8 @@ public class SaldoAhorroService {
 			origen = oidcUser.getEmail();
 		}
 		for (ConciliaSaldoDto dto : saldos) {
-			respository.save(
-					new SaldoAhorro(dto.getIdUsuario(), TipoAhorroEnum.AHORRO.getTipo(), dto.getSaldo(), true, origen));
+			respository.save(new SaldoAhorro(dto.getId(), dto.getIdUsuario(), TipoAhorroEnum.AHORRO.getTipo(),
+					dto.getSaldo(), true, origen));
 		}
 		return saldos;
 	}

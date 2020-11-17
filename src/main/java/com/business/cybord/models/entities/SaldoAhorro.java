@@ -63,14 +63,17 @@ public class SaldoAhorro {
 		this.validado = validado;
 	}
 
-	public SaldoAhorro(int idUsuario, String tipo, BigDecimal monto, Boolean validado,String origen) {
+	public SaldoAhorro(int id,int idUsuario, String tipo, BigDecimal monto, Boolean validado,String origen) {
 		super();
+		this.id=id;
 		this.idUsuario = idUsuario;
 		this.tipo = tipo;
 		this.monto = monto;
 		this.validado = validado;
 		this.origen=origen;
 	}
+	
+	
 	public int getId() {
 		return id;
 	}

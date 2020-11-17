@@ -12,6 +12,7 @@ public class ConciliaSaldoDto implements Serializable {
 
 	private static final long serialVersionUID = 6120525882244348410L;
 	private Integer idUsuario;
+	private Integer id;
 	private String noEmpleado;
 	private String nombre;
 	private BigDecimal saldo;
@@ -81,10 +82,19 @@ public class ConciliaSaldoDto implements Serializable {
 		this.noEmpleado = noEmpleado;
 	}
 
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 	@Override
 	public String toString() {
-		return "ConciliaSaldoDto [idUsuario=" + idUsuario + ", noEmpleado=" + noEmpleado + ", nombre=" + nombre
-				+ ", saldo=" + saldo + ", validado=" + validado + ", observaciones=" + observaciones + "]";
+		return "ConciliaSaldoDto [idUsuario=" + idUsuario + ", id=" + id + ", noEmpleado="
+				+ noEmpleado + ", nombre=" + nombre + ", saldo=" + saldo + ", validado=" + validado + ", observaciones="
+				+ observaciones + "]";
 	}
 
 }
