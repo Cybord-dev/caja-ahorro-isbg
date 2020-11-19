@@ -44,7 +44,7 @@ spring:
 spring:
   profiles: dev
   datasource:
-        url: jdbc:mysql://isbg.ckqz4zbtwhi3.us-west-1.rds.amazonaws.com:3306/isbg
+        url: jdbc:mysql://test-db.caygcdtmmphs.us-west-1.rds.amazonaws.com:3306/isbg
         username: master
         password: 51g35ISBG
         driverClassName: com.mysql.cj.jdbc.Driver
@@ -72,7 +72,7 @@ spring:
 spring:
   profiles: stg
   datasource:
-        url: jdbc:mysql://isbg.ckqz4zbtwhi3.us-west-1.rds.amazonaws.com:3306/isbg
+        url: jdbc:mysql://test-db.caygcdtmmphs.us-west-1.rds.amazonaws.com:3306/isbg
         username: master
         password: 51g35ISBG
         driverClassName: com.mysql.cj.jdbc.Driver
