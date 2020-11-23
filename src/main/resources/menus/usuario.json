@@ -4,14 +4,24 @@
    "icon": "icon-user",
    "children": [
       {
-        "name": "Historico ahorro",
+        "name": "Historico",
         "url": "/usuarios/reportes",
-        "icon": "icon-chart"
+        "icon": "icon-book-open"
       },
       {
         "name":"Trámites Ahorro",
         "url": "/usuarios/tramites",
-        "icon": "icon-doc"
+        "icon": "icon-docs"
+      },
+      {
+        "name":"Trámites Prestamo",
+        "url": "/usuarios/prestamos",
+        "icon": "icon-drawer"
+      },
+      {
+        "name":"Pagos Prestamos",
+        "url": "/usuarios/pagos",
+        "icon": "icon-wallet"
       }
     ]
 }
