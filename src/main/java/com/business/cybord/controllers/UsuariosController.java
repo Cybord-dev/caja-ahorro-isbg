@@ -37,6 +37,7 @@ public class UsuariosController {
 		return new ResponseEntity<>(service.getUserInfo(authentication), HttpStatus.OK);
 	}
 
+	//todo: AGREGAR LA CAPACIDAD DE PAGO ACTUAL
 	@GetMapping("/{id}")
 	public ResponseEntity<UsuarioDto> getUserById(@PathVariable Integer id) {
 		return new ResponseEntity<>(service.getUserById(id), HttpStatus.OK);
