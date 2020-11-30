@@ -19,7 +19,7 @@ public class UserValidacionSolicitudDto implements Serializable {
 	private String detalle;
 	private String area;
 
-	private Integer noEmpleado;
+	private String noEmpleado;
 	private Integer idUsuario;
 	private String nombre;
 	private String tipoUsuario;
@@ -77,11 +77,11 @@ public class UserValidacionSolicitudDto implements Serializable {
 		this.area = area;
 	}
 
-	public Integer getNoEmpleado() {
+	public String getNoEmpleado() {
 		return noEmpleado;
 	}
 
-	public void setNoEmpleado(Integer noEmpleado) {
+	public void setNoEmpleado(String noEmpleado) {
 		this.noEmpleado = noEmpleado;
 	}
 

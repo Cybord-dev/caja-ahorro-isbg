@@ -13,7 +13,7 @@ public class UserSolicitudRowMapper implements RowMapper<UserSolicitudDto> {
 	@Override
 	public UserSolicitudDto mapRow(ResultSet rs, int rowNum) throws SQLException {
 		UserSolicitudDto result = new UserSolicitudDto();
-		result.setNoEmpleado(rs.getInt("no_empleado"));
+		result.setNoEmpleado(rs.getString("no_empleado"));
 		result.setId(rs.getInt("id_solicitud"));
 		result.setIdUsuario(rs.getInt("id_usuario"));
 		result.setNombre(rs.getString("nombre"));

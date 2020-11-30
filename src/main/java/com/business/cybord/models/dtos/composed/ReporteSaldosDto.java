@@ -16,7 +16,7 @@ public class ReporteSaldosDto implements Serializable {
 	private String fecha;
 	private BigDecimal monto;
 	private String ahorrador;
-	private Integer noEmpleado;
+	private String noEmpleado;
 	private String origen;
 	private String tipoEmpleado;
 
@@ -52,11 +52,11 @@ public class ReporteSaldosDto implements Serializable {
 		this.ahorrador = ahorrador;
 	}
 
-	public Integer getNoEmpleado() {
+	public String getNoEmpleado() {
 		return noEmpleado;
 	}
 
-	public void setNoEmpleado(Integer noEmpleado) {
+	public void setNoEmpleado(String noEmpleado) {
 		this.noEmpleado = noEmpleado;
 	}
 

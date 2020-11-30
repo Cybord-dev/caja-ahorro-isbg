@@ -17,7 +17,7 @@ public class ReporteSaldosRowMapper implements RowMapper<ReporteSaldosDto> {
 		result.setFecha(rs.getString("fecha_creacion"));
 		result.setOrigen(rs.getString("origen"));
 		result.setAhorrador(rs.getString("nombre"));
-		result.setNoEmpleado(rs.getInt("no_empleado"));
+		result.setNoEmpleado(rs.getString("no_empleado"));
 		result.setTipoEmpleado(rs.getString("tipo_usuario"));
 		return result;
 	}

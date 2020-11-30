@@ -34,6 +34,12 @@ public class PrestamoController {
 			@RequestBody @Valid PrestamoDto dto) {
 		return new ResponseEntity<>(service.insertPrestamo(idUsuario, dto), HttpStatus.CREATED);
 	}
+	
+	//TODO: ENDPOINT DE TODOS LOS SALDOS POR USUARIO  (URGE EDISON)
+	///usuarios/{idUsuario}/prestamos DAR TODOS LOS NO SALDADOS
+	
+	//TODO: ENDPOINT DE TODOS LOS SALDOS POR FILTROS GLOBALES
+	///prestamos 
 
 	@GetMapping("/{idUsuario}/prestamos/{idPrestamo}/saldos/{idSaldo}")
 	public ResponseEntity<PrestamoDto> getPrestamoPorIdPrestamoYIdusuarioYIdSaldo(@PathVariable Integer idUsuario,
@@ -43,3 +49,4 @@ public class PrestamoController {
 	}
 
 }
+
