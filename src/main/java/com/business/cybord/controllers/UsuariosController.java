@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.business.cybord.models.dtos.CapacidadPagoDto;
 import com.business.cybord.models.dtos.RecursoDto;
 import com.business.cybord.models.dtos.UserInfoDto;
 import com.business.cybord.models.dtos.UsuarioDto;
@@ -37,10 +38,16 @@ public class UsuariosController {
 		return new ResponseEntity<>(service.getUserInfo(authentication), HttpStatus.OK);
 	}
 
-	//todo: AGREGAR LA CAPACIDAD DE PAGO ACTUAL
+	
 	@GetMapping("/{id}")
 	public ResponseEntity<UsuarioDto> getUserById(@PathVariable Integer id) {
 		return new ResponseEntity<>(service.getUserById(id), HttpStatus.OK);
+	}
+	
+	//todo: AGREGAR LA CAPACIDAD DE PAGO ACTUAL
+	@GetMapping("/{id}/capacidad-pago")
+	public ResponseEntity<CapacidadPagoDto> getcapacidadPagoUserById(@PathVariable Integer id) {
+		return new ResponseEntity<>(service.calculoCapacidadPago(id), HttpStatus.OK);
 	}
 
 	@GetMapping

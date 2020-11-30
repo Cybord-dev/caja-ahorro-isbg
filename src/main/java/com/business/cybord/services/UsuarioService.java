@@ -2,6 +2,7 @@ package com.business.cybord.services;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.cybord.mappers.UsuariosMapper;
+import com.business.cybord.models.dtos.CapacidadPagoDto;
 import com.business.cybord.models.dtos.MenuItem;
 import com.business.cybord.models.dtos.RecursoDto;
 import com.business.cybord.models.dtos.UserInfoDto;
@@ -47,6 +49,9 @@ public class UsuarioService {
 
 	@Autowired
 	private UserRepositoryDao userRepositoryDao;
+	
+	@Autowired
+	private PrestamoService prestamoService;
 
 	private ObjectMapper objMapper = new ObjectMapper();
 
@@ -109,6 +114,19 @@ public class UsuarioService {
 		entity.setNoEmpleado(usuario.getNoEmpleado());
 		return mapper.getDtoFromUserEntity(repository.save(entity));
 	}
+	
+	
+	public CapacidadPagoDto calculoCapacidadPago(Integer idUsuario) {
+		CapacidadPagoDto capacidad = new CapacidadPagoDto();
+		
+		UsuarioDto usuario = getUserById(idUsuario);
+		BigDecimal sueldo = new BigDecimal(usuario.getDatosUsuario().get("SUELDO"));
+		// TODO code a better algorith for payment capacity
+		capacidad.setCapacidadPago(sueldo.multiply(BigDecimal.valueOf(0.5))); 
+		capacidad.setPrestamosActivos(prestamoService.getPrestamosdeUnUsuarioPorSuId(idUsuario));
+		// TODO set avalados
+		return capacidad;
+	}
 
 	public UserInfoDto getUserInfo(Authentication auth) {
 		OidcUser oidcUser = (OidcUser) auth.getPrincipal();
@@ -135,6 +153,7 @@ public class UsuarioService {
 		throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
 				String.format("%s no es un usuario autorizado", "anonymous"));
 	}
+	
 
 	private List<MenuItem> getMenuFromResource(String fileName) {
 		try {
