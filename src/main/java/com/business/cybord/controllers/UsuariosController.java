@@ -37,7 +37,6 @@ public class UsuariosController {
 	public ResponseEntity<UserInfoDto> getMyInfo(Authentication authentication) {
 		return new ResponseEntity<>(service.getUserInfo(authentication), HttpStatus.OK);
 	}
-
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<UsuarioDto> getUserById(@PathVariable Integer id) {

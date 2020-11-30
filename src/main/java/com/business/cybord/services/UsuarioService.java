@@ -124,7 +124,7 @@ public class UsuarioService {
 		// TODO code a better algorith for payment capacity
 		capacidad.setCapacidadPago(sueldo.multiply(BigDecimal.valueOf(0.5))); 
 		capacidad.setPrestamosActivos(prestamoService.getPrestamosdeUnUsuarioPorSuId(idUsuario));
-		// TODO set avalados
+		capacidad.setAvalados(new ArrayList<>());
 		return capacidad;
 	}
 
