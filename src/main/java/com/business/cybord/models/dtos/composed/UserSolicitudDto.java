@@ -13,7 +13,7 @@ public class UserSolicitudDto implements Serializable {
 	private static final long serialVersionUID = 4223586331591210264L;
 
 	private Integer id;
-	private Integer noEmpleado;
+	private String noEmpleado;
 	private Integer idUsuario;
 	private String nombre;
 	private String tipo;
@@ -27,10 +27,10 @@ public class UserSolicitudDto implements Serializable {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public Integer getNoEmpleado() {
+	public String getNoEmpleado() {
 		return noEmpleado;
 	}
-	public void setNoEmpleado(Integer noEmpleado) {
+	public void setNoEmpleado(String noEmpleado) {
 		this.noEmpleado = noEmpleado;
 	}
 	public Integer getIdUsuario() {
