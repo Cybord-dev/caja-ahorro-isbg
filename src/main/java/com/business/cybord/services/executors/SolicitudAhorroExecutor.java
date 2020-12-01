@@ -22,6 +22,7 @@ import com.business.cybord.models.enums.TipoAtributoUsuarioEnum;
 import com.business.cybord.models.enums.config.TipoArchivoEnum;
 import com.business.cybord.models.error.IsbgServiceException;
 import com.business.cybord.repositories.UsuariosRepository;
+import com.business.cybord.services.CatalogosCacheService;
 import com.business.cybord.services.DatoUsuarioService;
 import com.business.cybord.services.MailService;
 import com.business.cybord.services.PdfServiceGenerator;
@@ -46,6 +47,9 @@ public class SolicitudAhorroExecutor implements SolicitudExecutor {
 
 	@Autowired
 	private NumberTranslatorHelper numberTranslatorHelper;
+	
+	@Autowired
+	private CatalogosCacheService catalogosCacheService;
 
 	@Override
 	public void execute(SolicitudDto solicitudDto, ValidacionDto validacionDto) throws IsbgServiceException {
@@ -66,14 +70,25 @@ public class SolicitudAhorroExecutor implements SolicitudExecutor {
 			repositoryUsuario.save(usuario);
 			Optional<DatosUsuario> oficina = usuario.getDatosUsuario().stream()
 					.filter(a -> a.getTipoDato().equals(TipoAtributoUsuarioEnum.OFICINA.name())).findFirst();
+			String cadenaOficina="";
+			if(oficina.isPresent()) {
+				cadenaOficina="";
+				cadenaOficina=catalogosCacheService.getCatalogo(oficina.get().getDato()).orElse("");
+			}
+			
+			AtributoSolicitud fecha = solicitudDto.getAttributesAsList().stream()
+					.filter(a -> a.getNombre().equals(TipoAtributoSolicitudEnum.FECHA.name())).findFirst()
+					.orElseThrow(() -> new IsbgServiceException("No existe el monto en la solicitud",
+							"No existe el monto en la solicitud", HttpStatus.CONFLICT.value()));
+			
 			String texto = String.format(
 					"%s, con el número de trabajador %s , adscrito a la Oficina de %s autorizo que por este medio se "
-					+ "descuente de mi pago de nommina, la cantidad de $%s(%s) a partir del dia.Durante el periodo "
-					+ "correspondiente ,autorizo que la cantidad retenida sea depositada en la cuen ta del PROGRAMA DE AHORRO VOLUNTARIO,"
+					+ "descuente de mi pago de Nomina, la cantidad de $%s(%s) a partir del dia %s.Durante el periodo "
+					+ "correspondiente ,autorizo que la cantidad retenida sea depositada en la cuenta del PROGRAMA DE AHORRO VOLUNTARIO "
 					+ " estoy de acuerdo que la cantidad ahorrada y los intereses que se hubiesen generado me sean entregados al término del periodo.",
-					usuario.getNombre(), usuario.getNoEmpleado(), oficina.isPresent() ? oficina.get().getDato() : "",
+					usuario.getNombre(), usuario.getNoEmpleado(), cadenaOficina,
 					atributo.getValor(),
-					numberTranslatorHelper.getStringNumber(new BigDecimal(atributo.getValor()), "MXN"));
+					numberTranslatorHelper.getStringNumber(new BigDecimal(atributo.getValor()), "MXN"),fecha.getValor());
 			SolicitudPdfModelDtoBuilder modelBuilderDto = new SolicitudPdfModelDtoBuilder().setFecha(new Date())
 					.setTitulo("Solicitud de adhesión al Programa de ahorro Voluntario").setTexto(texto)
 					.setNombre(usuario.getNombre());
