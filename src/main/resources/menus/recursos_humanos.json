@@ -22,6 +22,11 @@
         "name": "Conciliación informacion",
         "url": "/recursos-humanos/conciliacion",
         "icon": "icon-cloud-upload"
+      },
+      {
+        "name": "Validacion pagos",
+        "url": "/recursos-humanos/pagos-capital",
+        "icon": "icon-wallet"
       }
     ]
   }

@@ -12,6 +12,16 @@
 			"name": "Historico retiro ahorro",
 			"url": "/tesoreria/historico",
 			"icon": "icon-list"
+		},
+		{
+			"name": "Reportes de ahorro",
+			"url": "/tesoreria/reportes-ahorro",
+			"icon": "icon-wallet"
+		},
+		{
+			"name": "Reportes de prestamo",
+			"url": "/tesoreria/reportes-prestamo",
+			"icon": "icon-wallet"
 		}
 	]
- }
+}
