@@ -22,6 +22,11 @@
         "name":"Pagos Prestamos",
         "url": "/usuarios/pagos",
         "icon": "icon-wallet"
+      },
+      {
+        "name":"Aceptacion aval",
+        "url": "/usuarios/avales",
+        "icon": "icon-people"
       }
     ]
 }
