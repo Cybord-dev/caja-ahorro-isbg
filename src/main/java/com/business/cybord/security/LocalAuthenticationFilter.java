@@ -11,29 +11,31 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 
 @Component
-@Profile({"local"})
+@Profile({ "local" })
 public class LocalAuthenticationFilter extends GenericFilterBean {
 
 	private static final String ANONYMOUS_USER = "anonymousUser";
-	
+
 	private static final Logger log = LoggerFactory.getLogger(LocalAuthenticationFilter.class);
-	
+
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
 			throws IOException, ServletException {
-		HttpServletRequest  req = (HttpServletRequest) request;
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		
-		if(!ANONYMOUS_USER.equals(principal.toString())) {
-			OidcUser oidcUser = (OidcUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			if(oidcUser!=null && oidcUser.getAttributes()!=null && oidcUser.getEmail()!=null) {
-				log.debug("{} is requesting {}?{} from {}", oidcUser.getEmail(),req.getRequestURL(),req.getQueryString(),request.getRemoteAddr());
+		HttpServletRequest req = (HttpServletRequest) request;
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		if (authentication != null && !ANONYMOUS_USER.equals(authentication.getPrincipal().toString())) {
+			OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
+			if (oidcUser != null && oidcUser.getAttributes() != null && oidcUser.getEmail() != null) {
+				log.debug("{} is requesting {}?{} from {}", oidcUser.getEmail(), req.getRequestURL(),
+						req.getQueryString(), request.getRemoteAddr());
 				filterChain.doFilter(request, response);
 			}
 		}

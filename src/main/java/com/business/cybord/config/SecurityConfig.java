@@ -19,8 +19,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and().authorizeRequests()
-		.anyRequest().authenticated().and().oauth2Login().and().logout().invalidateHttpSession(true).logoutSuccessUrl("/#/login")
+		http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and()
+		.authorizeRequests()
+		.antMatchers("/api/v1/**","/index.html","/")
+		.authenticated().and().oauth2Login().and()
+		.logout().logoutUrl("/logout")
+		.logoutSuccessUrl("/logout/exit")
 		.invalidateHttpSession(true).deleteCookies("JSESSIONID");
 	}
 }
