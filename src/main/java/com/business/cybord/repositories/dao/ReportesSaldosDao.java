@@ -161,6 +161,7 @@ public class ReportesSaldosDao {
 		saldoAhorro.addColumn("monto", "Double", null);
 		saldoAhorro.addColumn("origen", "String", null);
 		saldoAhorro.addColumn("tipo", "String", null);
+		saldoAhorro.addColumn("observaciones", "String", null);
 		usuarios.addColumn("nombre", "String", null);
 		usuarios.addColumn("tipo_usuario", "String", null);
 		usuarios.addColumn("no_empleado", "String", null);
@@ -168,8 +169,8 @@ public class ReportesSaldosDao {
 		SelectQuery selectStoresByParams = new SelectQuery().addFromTable(saldoAhorro)
 				.addColumns(saldoAhorro.findColumns("fecha_creacion")).addColumns(saldoAhorro.findColumns("monto"))
 				.addColumns(saldoAhorro.findColumns("tipo")).addColumns(usuarios.findColumns("tipo_usuario"))
-				.addColumns(usuarios.findColumns("no_empleado")).addColumns(saldoAhorro.findColumns("origen"))
-				.addColumns(usuarios.findColumns("nombre"))
+				.addColumns(saldoAhorro.findColumns("observaciones")).addColumns(usuarios.findColumns("no_empleado"))
+				.addColumns(saldoAhorro.findColumns("origen")).addColumns(usuarios.findColumns("nombre"))
 				.addJoin(SelectQuery.JoinType.INNER, saldoAhorro, usuarios, BinaryCondition.equalTo(columnA, columnB))
 				.addCondition(BinaryCondition.greaterThanOrEq(saldoAhorro.findColumn("fecha_creacion"), since))
 				.addCondition(BinaryCondition.lessThanOrEq(saldoAhorro.findColumn("fecha_creacion"), to));

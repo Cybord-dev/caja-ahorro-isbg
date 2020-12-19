@@ -103,6 +103,7 @@ public class UsuarioService {
 	public UsuarioDto actualizarUsuario(UsuarioDto usuario, int id) {
 		Usuario entity = repository.findById(id).orElseThrow(
 				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("El usuario no existe.")));
+		entity.setEmail(usuario.getEmail());
 		entity.setActivo(usuario.getActivo());
 		entity.setNombre(usuario.getNombre());
 		entity.setTipoUsuario(usuario.getTipoUsuario());
