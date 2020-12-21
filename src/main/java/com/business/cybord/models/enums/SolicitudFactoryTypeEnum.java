@@ -16,9 +16,9 @@ public enum SolicitudFactoryTypeEnum {
 			"SolicitudCreadaEvent", "ValidaContaEvent","INTERNO"),
 	SOLICITUD_RETIRO_PARCIAL_AHORRO_EXTERNO(SolicitudFactoryEnum.SOLICITUD_RETIRO_PARCIAL_AHORRO_EXTERNO, "RetiroParcialAhorro",
 			"SolicitudCreadaEvent", "ValidaContaEvent","EXTERNO"),
-	SOLICITUD_MODIFICACION_AHORRO_INTERNO(SolicitudFactoryEnum.SOLICITUD_MODIFICACION_AHORRO, "ModificacionAhorro",
+	SOLICITUD_MODIFICACION_AHORRO_INTERNO(SolicitudFactoryEnum.SOLICITUD_MODIFICACION_AHORRO_INTERNO, "ModificacionAhorro",
 			"SolicitudCreadaEvent", "ValidaContaEvent","INTERNO"),
-	SOLICITUD_MODIFICACION_AHORRO_EXTENO(SolicitudFactoryEnum.SOLICITUD_MODIFICACION_AHORRO, "ModificacionAhorro",
+	SOLICITUD_MODIFICACION_AHORRO_EXTENO(SolicitudFactoryEnum.SOLICITUD_MODIFICACION_AHORRO_EXTERNO, "ModificacionAhorro",
 			"SolicitudCreadaEvent", "ValidaContaEvent","EXTERNO");
 
 	private SolicitudFactoryEnum enumValue;
