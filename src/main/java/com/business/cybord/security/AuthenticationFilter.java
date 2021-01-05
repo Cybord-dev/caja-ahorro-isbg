@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Component;
@@ -30,23 +31,30 @@ public class AuthenticationFilter extends GenericFilterBean {
 			throws IOException, ServletException {
 
 		HttpServletRequest req = (HttpServletRequest) request;
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-		if (!ANONYMOUS_USER.equals(principal.toString())) {
-			OidcUser oidcUser = (OidcUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			if (oidcUser != null && oidcUser.getAttributes() != null && oidcUser.getEmail() != null) {
-				log.debug("{} is requesting {}?{} from {}", oidcUser.getEmail(), req.getRequestURL(),
-						req.getQueryString(), request.getRemoteAddr());
-				filterChain.doFilter(request, response);
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		if(authentication !=null) {
+			if (!ANONYMOUS_USER.equals(authentication.getPrincipal().toString())) {
+				OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
+				if (oidcUser != null && oidcUser.getAttributes() != null && oidcUser.getEmail() != null) {
+					log.info("{} is requesting {}?{} from {}", oidcUser.getEmail(), req.getRequestURL(),
+							req.getQueryString(), request.getRemoteAddr());
+					filterChain.doFilter(request, response);
+				} else {
+					HttpServletResponse resp = (HttpServletResponse) response;
+					resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Session invalida.");
+					filterChain.doFilter(request, response);
+				}
 			} else {
 				HttpServletResponse resp = (HttpServletResponse) response;
-				resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Session invalida.");
+				resp.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Usuario no autorizado.");
 				filterChain.doFilter(request, response);
 			}
-		} else {
-			HttpServletResponse resp = (HttpServletResponse) response;
-			resp.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Usuario no autorizado.");
+		}else {
+			log.warn("NO AUTHENTICATED request to: {} from {}", req.getRequestURL(), request.getRemoteAddr());
 			filterChain.doFilter(request, response);
 		}
+		
 	}
 }

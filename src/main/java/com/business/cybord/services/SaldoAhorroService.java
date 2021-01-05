@@ -72,9 +72,11 @@ public class SaldoAhorroService {
 		List<Map<String, String>> data = saldos.getContent().stream().map(s -> {
 			Map<String, String> map = new HashMap<>();
 			map.put("TIPO EMPLEADO", s.getTipoEmpleado());
-			map.put("NO EMPLEADO", s.getNoEmpleado().toString());
+			map.put("NO EMPLEADO", s.getNoEmpleado());
+			map.put("AHORRADOR", s.getAhorrador());
 			map.put("ORIGEN", s.getOrigen());
 			map.put("TIPO", s.getTipo());
+			map.put("OBSERVACIONES", s.getObservaciones());
 			map.put("MONTO", s.getMonto().toString());
 			map.put("FECHA", s.getFecha());
 			return map;

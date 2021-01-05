@@ -19,7 +19,7 @@ public class MontoModificacionAhorroRule {
 			@Fact("results") List<String> results) {
 		if (solicitudDto != null && solicitudDto.getAtributos() != null
 				&& solicitudDto.getAtributos().containsKey(TipoAtributoSolicitudEnum.MONTO.name())) {
-			return Double.valueOf(solicitudDto.getAtributos().get(TipoAtributoSolicitudEnum.MONTO.name())) <= 100.00;
+			return Double.valueOf(solicitudDto.getAtributos().get(TipoAtributoSolicitudEnum.MONTO.name())) < 100.00;
 		} else {
 			return true;
 		}

@@ -18,6 +18,7 @@ public class ReporteSaldosDto implements Serializable {
 	private String ahorrador;
 	private String noEmpleado;
 	private String origen;
+	private String observaciones;
 	private String tipoEmpleado;
 
 	public String getTipo() {
@@ -74,6 +75,14 @@ public class ReporteSaldosDto implements Serializable {
 
 	public void setOrigen(String origen) {
 		this.origen = origen;
+	}
+	
+	public String getObservaciones() {
+		return observaciones;
+	}
+
+	public void setObservaciones(String observaciones) {
+		this.observaciones = observaciones;
 	}
 
 	@Override

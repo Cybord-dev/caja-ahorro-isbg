@@ -40,6 +40,9 @@ public class SaldoAhorro {
 
 	@Column(name = "origen")
 	private String origen;
+	
+	@Column(name = "observaciones")
+	private String observaciones;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
@@ -138,11 +141,18 @@ public class SaldoAhorro {
 		this.origen = origen;
 	}
 
+	public String getObservaciones() {
+		return observaciones;
+	}
+
+	public void setObservaciones(String observaciones) {
+		this.observaciones = observaciones;
+	}
+
 	@Override
 	public String toString() {
 		return "SaldoAhorro [id=" + id + ", idUsuario=" + idUsuario + ", tipo=" + tipo + ", monto=" + monto
-				+ ", validado=" + validado + ", origen=" + origen + ", fechaCreacion=" + fechaCreacion
-				+ ", fechaActualizacion=" + fechaActualizacion + "]";
+				+ ", validado=" + validado + ", origen=" + origen + ", observaciones=" + observaciones
+				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
-
 }

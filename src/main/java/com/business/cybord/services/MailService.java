@@ -16,8 +16,8 @@ public class MailService {
 
 	public void sentEmail(String correo,String asunto, String mensaje,FileConfig file) throws IsbgServiceException {
 		EmailConfigBuilder emailBuilder = new EmailConfigBuilder()
-				.setEmisor("dev01@semmeljack.com")
-				.setPwEmisor("Edcgamer12?")
+				.setEmisor("webmaster@siges.com.mx")
+				.setPwEmisor("C4ch3t0n_2020*")
 				.setAsunto(asunto)
 				.addReceptor(correo).setPort("587")
 				.setDominio("smtp.gmail.com")
@@ -28,8 +28,8 @@ public class MailService {
 	
 	public void sentEmail(String correo,String asunto, String mensaje) throws IsbgServiceException {
 		EmailConfigBuilder emailBuilder = new EmailConfigBuilder()
-				.setEmisor("dev01@semmeljack.com")
-				.setPwEmisor("Edcgamer12?")
+				.setEmisor("webmaster@siges.com.mx")
+				.setPwEmisor("C4ch3t0n_2020*")
 				.setAsunto(asunto)
 				.addReceptor(correo).setPort("587")
 				.setDominio("smtp.gmail.com")

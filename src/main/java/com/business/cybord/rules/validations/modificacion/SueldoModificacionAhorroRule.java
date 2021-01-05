@@ -1,6 +1,7 @@
 package com.business.cybord.rules.validations.modificacion;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 import org.jeasy.rules.annotation.Action;
@@ -26,7 +27,8 @@ public class SueldoModificacionAhorroRule {
 			BigDecimal sueldo = new BigDecimal(usuarioDto.getDatosUsuario().get(TipoAtributoUsuarioEnum.SUELDO.name()));
 			BigDecimal monto = new BigDecimal(
 					solicitudDto.getAtributos().get(TipoAtributoSolicitudEnum.MONTO.name()));
-			return monto.multiply(new BigDecimal(4)).compareTo(sueldo) == 1;
+			return monto.compareTo(
+					sueldo.divide(new BigDecimal(2)).multiply(new BigDecimal(.7)).setScale(0, RoundingMode.UP)) == 1;
 		}
 		return true;
 	}

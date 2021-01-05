@@ -19,6 +19,7 @@ public class SaldoAhorroDto implements Serializable {
 	private BigDecimal monto;
 	private Boolean validado;
 	private String origen;
+	private String observaciones;
 	@JsonFormat(shape = JsonFormat.Shape.STRING)
 	private Date fechaCreacion;
 	@JsonFormat(shape = JsonFormat.Shape.STRING)
@@ -99,11 +100,18 @@ public class SaldoAhorroDto implements Serializable {
 		this.origen = origen;
 	}
 
+	public String getObservaciones() {
+		return observaciones;
+	}
+
+	public void setObservaciones(String observaciones) {
+		this.observaciones = observaciones;
+	}
+
 	@Override
 	public String toString() {
 		return "SaldoAhorroDto [id=" + id + ", idUsuario=" + idUsuario + ", tipo=" + tipo + ", monto=" + monto
-				+ ", validado=" + validado + ", origen=" + origen + ", fechaCreacion=" + fechaCreacion
-				+ ", fechaActualizacion=" + fechaActualizacion + "]";
+				+ ", validado=" + validado + ", origen=" + origen + ", observaciones=" + observaciones
+				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
-
 }
