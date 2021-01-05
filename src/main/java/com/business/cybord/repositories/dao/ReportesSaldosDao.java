@@ -72,17 +72,17 @@ public class ReportesSaldosDao {
 			"		AND a.ahorrador=1" + 
 			"	    AND	b.fecha_creacion>=current_date()-?;";
 	
-	private static final String AHORROS_EXTERNOS_LAST_DAYS = "SELECT b.*" + 
-			"	FROM " + 
-			"		isbg.usuarios 			a," + 
-			"		isbg.saldo_ahorro		b" + 
-			"	WHERE 1=1" + 
-			"		AND a.id_usuario=b.id_usuario" + 
-			"	    AND a.tipo_usuario='EXTERNO'"+
-			"	    AND b.tipo='ahorro'"+
-			"		AND validado=1 "+
-			"		AND a.ahorrador=1" + 
-			"	    AND	b.fecha_creacion>=current_date()-?;";
+	private static final String AHORROS_EXTERNOS_LAST_DAYS = "SELECT b.* "
+			+ "				FROM   "
+			+ "					isbg.usuarios 			a,"
+			+ "					isbg.saldo_ahorro		b"
+			+ "				WHERE 1=1  "
+			+ "					AND a.id_usuario=b.id_usuario"
+			+ "				    AND a.tipo_usuario='EXTERNO'"
+			+ "				    AND b.tipo='ahorro'"
+			+ "					AND validado=1"
+			+ "					AND a.ahorrador=1"
+			+ "				    AND	b.fecha_creacion>=TIMESTAMPADD(DAY,?,CURRENT_TIMESTAMP);";
 	
 	
 
