@@ -94,9 +94,3 @@ spring:
   resources:
     static-locations: 
     - classpath:/static/ 
-    
- 
-
-
-
-
