@@ -1,17 +1,50 @@
 server:
-  port: 9999
- 
+  port: 8080
+  
 spring:
   profiles:
-    active: "prod"
+    active: "stg"
   main:
     banner-mode: "off"
-   
----    
+    
+---
+      
 spring:
-  profiles: prod
+  profiles: local
   datasource:
-        url: jdbc:mysql://isbg.ckqz4zbtwhi3.us-west-1.rds.amazonaws.com:3306/isbg
+    url: jdbc:h2:~/test;DB_CLOSE_DELAY=-1
+    username: sa
+    driver-class-name: org.h2.Driver
+    password: 
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+      
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 821564819362-i74glsh0fobf9je7j5p51skrago06h8t.apps.googleusercontent.com
+            client-secret: UeLCKfI_-p-l9bMOCFxc-EEj
+          
+  main:
+    banner-mode: "off"
+  resources:
+    static-locations: 
+    - classpath:/static/ 
+ 
+---    
+    
+spring:
+  profiles: dev
+  datasource:
+        url: jdbc:mysql://test-db.caygcdtmmphs.us-west-1.rds.amazonaws.com:3306/isbg
         username: master
         password: 51g35ISBG
         driverClassName: com.mysql.cj.jdbc.Driver
@@ -19,17 +52,45 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: none      
-     
+      
   security:
     oauth2:
       client:
         registration:
           google:
-            client-id: 860501104882-sk9djrlq4u1safvm9lkhk60sgejhvnfq.apps.googleusercontent.com
-            client-secret: vUYMM9qOyCIb2kdVjHfIFD3r
-         
+            client-id: 821564819362-i74glsh0fobf9je7j5p51skrago06h8t.apps.googleusercontent.com
+            client-secret: UeLCKfI_-p-l9bMOCFxc-EEj
+          
   main:
     banner-mode: "off"
   resources:
-    static-locations:
-    - classpath:/static/
+    static-locations: 
+    - classpath:/static/   
+    
+---    
+    
+spring:
+  profiles: stg
+  datasource:
+        url: jdbc:mysql://test-db.caygcdtmmphs.us-west-1.rds.amazonaws.com:3306/isbg
+        username: master
+        password: 51g35ISBG
+        driverClassName: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none      
+      
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 821564819362-i74glsh0fobf9je7j5p51skrago06h8t.apps.googleusercontent.com
+            client-secret: UeLCKfI_-p-l9bMOCFxc-EEj
+          
+  main:
+    banner-mode: "off"
+  resources:
+    static-locations: 
+    - classpath:/static/ 
