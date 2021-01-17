@@ -11,6 +11,7 @@ import com.business.cybord.rules.suites.CancelacionAhorroSuite;
 import com.business.cybord.rules.suites.ModificacionAhorroSuite;
 import com.business.cybord.rules.suites.RetiroParcialAhorroSuite;
 import com.business.cybord.rules.suites.SolicitudAhorroSuite;
+import com.business.cybord.rules.suites.SolicitudPrestamoSuite;
 import com.business.cybord.utils.helper.FileHelper;
 import com.business.cybord.utils.helper.MailHelper;
 import com.business.cybord.utils.helper.NumberTranslatorHelper;
@@ -44,6 +45,12 @@ public class ServicesApplication {
 	@Qualifier("RetiroParcialAhorro")
 	public RetiroParcialAhorroSuite getRetiroParcialAhorroSuite() {
 		return new RetiroParcialAhorroSuite();
+	}
+	
+	@Bean
+	@Qualifier("SolicitudPrestamo")
+	public SolicitudPrestamoSuite getSolicitudPrestamoSuite() {
+		return new SolicitudPrestamoSuite();
 	}
 
 	

@@ -8,7 +8,7 @@ public enum SolicitudSuitEnum {
 	CANCELACION_AHORRO_SUITE("CancelacionAhorro"),
 	MODIFICACION_AHORRO_SUITE("ModificacionAhorro"),
 	RETIRO_PARCIAL_AHORRO_SUITE("RetiroParcialAhorro"),
-	PRESTAMO_SUITE("Prestamo");
+	SOLICITUD_PRESTAMO_SUITE("SolicitudPrestamo");
 
 	private String suite;
 
