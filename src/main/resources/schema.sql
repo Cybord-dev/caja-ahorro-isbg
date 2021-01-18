@@ -149,3 +149,16 @@ CREATE TABLE IF NOT EXISTS `cat_oficina` (
 
 ALTER TABLE recursos ADD CONSTRAINT RECURSOS_UNIQUE
 UNIQUE(referencia,tipo_archivo,tipo_recurso);  
+
+
+CREATE TABLE IF NOT EXISTS aceptacion_aval (
+  id INT NOT NULL AUTO_INCREMENT UNIQUE,
+  id_solicitud INT NOT NULL,
+  no_empleado_aval varchar(100) NOT NULL,
+  nombre_aval varchar(100) NOT NULL,
+  email_aval varchar(100),
+  estatus varchar(100) NOT NULL,
+  comentarios varchar(300) NULL,
+  fecha_creacion TIMESTAMP NULL,
+  fecha_actualizacion TIMESTAMP NULL
+);
