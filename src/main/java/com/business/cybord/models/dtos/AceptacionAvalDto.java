@@ -1,6 +1,7 @@
 package com.business.cybord.models.dtos;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -15,13 +16,13 @@ public class AceptacionAvalDto implements Serializable {
 	private int id;
 	private int idSolicitud;
 	private String noEmpleadoAval;
-	private String nombreAval;
-	private String emailAval;
+	private String nombreDeudor;
+	private String noEmpleadoDeudor;
+	private BigDecimal montoPrestamo;
 	private String estatus;
 	private String comentarios;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
-	
 	
 	public int getId() {
 		return id;
@@ -41,17 +42,23 @@ public class AceptacionAvalDto implements Serializable {
 	public void setNoEmpleadoAval(String noEmpleadoAval) {
 		this.noEmpleadoAval = noEmpleadoAval;
 	}
-	public String getNombreAval() {
-		return nombreAval;
+	public String getNombreDeudor() {
+		return nombreDeudor;
 	}
-	public void setNombreAval(String nombreAval) {
-		this.nombreAval = nombreAval;
+	public void setNombreDeudor(String nombreDeudor) {
+		this.nombreDeudor = nombreDeudor;
 	}
-	public String getEmailAval() {
-		return emailAval;
+	public String getNoEmpleadoDeudor() {
+		return noEmpleadoDeudor;
 	}
-	public void setEmailAval(String emailAval) {
-		this.emailAval = emailAval;
+	public void setNoEmpleadoDeudor(String noEmpleadoDeudor) {
+		this.noEmpleadoDeudor = noEmpleadoDeudor;
+	}
+	public BigDecimal getMontoPrestamo() {
+		return montoPrestamo;
+	}
+	public void setMontoPrestamo(BigDecimal montoPrestamo) {
+		this.montoPrestamo = montoPrestamo;
 	}
 	public String getEstatus() {
 		return estatus;
@@ -80,8 +87,8 @@ public class AceptacionAvalDto implements Serializable {
 	@Override
 	public String toString() {
 		return "AceptacionAvalDto [id=" + id + ", idSolicitud=" + idSolicitud + ", noEmpleadoAval=" + noEmpleadoAval
-				+ ", nombreAval=" + nombreAval + ", emailAval=" + emailAval + ", estatus=" + estatus + ", comentarios="
-				+ comentarios + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
+				+ ", nombreDeudor=" + nombreDeudor + ", noEmpleadoDeudor=" + noEmpleadoDeudor + ", montoPrestamo="
+				+ montoPrestamo + ", estatus=" + estatus + ", comentarios=" + comentarios + ", fechaCreacion="
+				+ fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
-
 }

@@ -1,6 +1,7 @@
 package com.business.cybord.models.entities;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -36,11 +37,14 @@ public class AceptacionAval implements Serializable{
 	@Column(name = "no_empleado_aval")
 	private String noEmpleadoAval;
 	
-	@Column(name = "nombre_aval")
-	private String nombreAval;
+	@Column(name = "nombre_deudor")
+	private String nombreDeudor;
 	
-	@Column(name = "email_aval")
-	private String emailAval;
+	@Column(name = "no_empleado_deudor")
+	private String noEmpleadoDeudor;
+	
+	@Column(name = "monto_prestamo")
+	private BigDecimal montoPrestamo;
 	
 	@NotNull
 	@Column(name = "estatus")
@@ -83,20 +87,28 @@ public class AceptacionAval implements Serializable{
 		this.noEmpleadoAval = noEmpleadoAval;
 	}
 
-	public String getNombreAval() {
-		return nombreAval;
+	public String getNombreDeudor() {
+		return nombreDeudor;
 	}
 
-	public void setNombreAval(String nombreAval) {
-		this.nombreAval = nombreAval;
+	public void setNombreDeudor(String nombreDeudor) {
+		this.nombreDeudor = nombreDeudor;
 	}
 
-	public String getEmailAval() {
-		return emailAval;
+	public String getNoEmpleadoDeudor() {
+		return noEmpleadoDeudor;
 	}
 
-	public void setEmailAval(String emailAval) {
-		this.emailAval = emailAval;
+	public void setNoEmpleadoDeudor(String noEmpleadoDeudor) {
+		this.noEmpleadoDeudor = noEmpleadoDeudor;
+	}
+
+	public BigDecimal getMontoPrestamo() {
+		return montoPrestamo;
+	}
+
+	public void setMontoPrestamo(BigDecimal montoPrestamo) {
+		this.montoPrestamo = montoPrestamo;
 	}
 
 	public String getEstatus() {
@@ -134,7 +146,8 @@ public class AceptacionAval implements Serializable{
 	@Override
 	public String toString() {
 		return "AceptacionAval [id=" + id + ", idSolicitud=" + idSolicitud + ", noEmpleadoAval=" + noEmpleadoAval
-				+ ", nombreAval=" + nombreAval + ", emailAval=" + emailAval + ", estatus=" + estatus + ", comentarios="
-				+ comentarios + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
+				+ ", nombreDeudor=" + nombreDeudor + ", noEmpleadoDeudor=" + noEmpleadoDeudor + ", montoPrestamo="
+				+ montoPrestamo + ", estatus=" + estatus + ", comentarios=" + comentarios + ", fechaCreacion="
+				+ fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
 }

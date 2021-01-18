@@ -33,8 +33,7 @@ public class AceptacionAvalController {
 		return new ResponseEntity<>(service.findAllAceptaciones(), HttpStatus.OK);
 	}
 	
-	
-	@GetMapping("solicitudes/{}/aceptaciones")
+	@GetMapping("solicitudes/{idSolicitud}/aceptaciones")
 	public ResponseEntity<List<AceptacionAvalDto>> findAceptacionesBySolicitud(@PathVariable Integer idSolicitud) {
 		return new ResponseEntity<>(service.findAceptacionesFromSolucitud(idSolicitud), HttpStatus.OK);
 	}
