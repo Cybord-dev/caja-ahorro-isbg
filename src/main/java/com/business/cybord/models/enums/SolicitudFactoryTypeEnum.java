@@ -20,9 +20,9 @@ public enum SolicitudFactoryTypeEnum {
 			"SolicitudCreadaEvent", "ValidaContaEvent","INTERNO"),
 	SOLICITUD_MODIFICACION_AHORRO_EXTENO(SolicitudFactoryEnum.SOLICITUD_MODIFICACION_AHORRO_EXTERNO, "ModificacionAhorro",
 			"SolicitudCreadaEvent", "ValidaContaEvent","EXTERNO"),
-	SOLICITUD_PRESTAMO_INTERNO(SolicitudFactoryEnum.SOLICITUD_PRESTAMO_INTERNO, "ModificacionAhorro",
+	SOLICITUD_PRESTAMO_INTERNO(SolicitudFactoryEnum.SOLICITUD_PRESTAMO_INTERNO, "SolicitudPrestamo",
 			"SolicitudCreadaEvent", "ValidaContaEvent","INTERNO"),
-	SOLICITUD_PRESTAMO_EXTERNO(SolicitudFactoryEnum.SOLICITUD_PRESTAMO_EXTERNO, "ModificacionAhorro",
+	SOLICITUD_PRESTAMO_EXTERNO(SolicitudFactoryEnum.SOLICITUD_PRESTAMO_EXTERNO, "SolicitudPrestamo",
 			"SolicitudCreadaEvent", "ValidaContaEvent","EXTERNO");
 
 	private SolicitudFactoryEnum enumValue;

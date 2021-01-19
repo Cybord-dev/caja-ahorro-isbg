@@ -17,11 +17,13 @@ import com.business.cybord.models.dtos.SolicitudDto;
 import com.business.cybord.models.enums.EventFactoryTypeEnum;
 import com.business.cybord.models.error.IsbgServiceException;
 import com.business.cybord.states.events.SolicitudFinalizadaEvent;
+import com.business.cybord.states.events.ValidaAvalesEvent;
 import com.business.cybord.states.events.ValidaDireccionEvent;
 import com.business.cybord.states.events.ValidaGerenciaInternaEvent;
 import com.business.cybord.states.events.ValidaRhEvent;
 import com.business.cybord.states.events.ValidaTesoEvent;
 import com.business.cybord.states.handlers.ValidaDireccion;
+import com.business.cybord.states.handlers.ValidacionAval;
 import com.business.cybord.states.handlers.ValidacionFinalizada;
 import com.business.cybord.states.handlers.ValidacionGerenciaInterna;
 import com.business.cybord.states.handlers.ValidacionRh;
@@ -35,6 +37,7 @@ public class SolicitudPrestamoInterno implements ISolicitud {
 
 	public SolicitudPrestamoInterno() {
 		State creada = new State(EventFactoryTypeEnum.SOLICITUD_CREADA.getState());
+		State validacionAval = new State(EventFactoryTypeEnum.VALIDA_AVALES.getState());
 		State validaRh = new State(EventFactoryTypeEnum.VALIDA_RH.getState());
 		State validaGerencia = new State(EventFactoryTypeEnum.VALIDA_GERENCIA_INTERNA.getState());
 		State validaTso = new State(EventFactoryTypeEnum.VALIDA_TESO.getState());
@@ -43,14 +46,19 @@ public class SolicitudPrestamoInterno implements ISolicitud {
 		states = new HashSet<>();
 		transitions = new HashSet<>();
 		states.add(creada);
+		states.add(validacionAval);
 		states.add(validaRh);
 		states.add(validaDireccion);
 		states.add(validaGerencia);
 		states.add(validaTso);
 		states.add(finalizada);
 
+		Transition validacionAvales = new TransitionBuilder().name(EventFactoryTypeEnum.VALIDA_AVALES.getState())
+				.sourceState(creada).eventType(ValidaAvalesEvent.class).eventHandler(new ValidacionAval())
+				.targetState(validacionAval).build();
+		
 		Transition validacionRh = new TransitionBuilder().name(EventFactoryTypeEnum.VALIDA_RH.getState())
-				.sourceState(creada).eventType(ValidaRhEvent.class).eventHandler(new ValidacionRh())
+				.sourceState(validacionAval).eventType(ValidaRhEvent.class).eventHandler(new ValidacionRh())
 				.targetState(validaRh).build();
 		
 		Transition validacionDireccion = new TransitionBuilder().name(EventFactoryTypeEnum.VALIDA_DIRECCION.getState())
@@ -82,6 +90,7 @@ public class SolicitudPrestamoInterno implements ISolicitud {
 				.eventType(SolicitudFinalizadaEvent.class).eventHandler(new ValidacionFinalizada())
 				.targetState(finalizada).build();
 
+		transitions.add(validacionAvales);
 		transitions.add(validacionRh);
 		transitions.add(validacionGerncia);
 		transitions.add(validacionAdmin);
