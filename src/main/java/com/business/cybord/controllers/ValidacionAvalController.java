@@ -27,6 +27,7 @@ public class ValidacionAvalController {
 	@Autowired
 	private ValidacionAvalService service;
 	
+	
 	@GetMapping("/avales")
 	public ResponseEntity<List<ValidacionAvalDto>> findAllAvalesByFiltros() {
 		return new ResponseEntity<>(service.findAllAvalesByFiltros(), HttpStatus.OK);
