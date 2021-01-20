@@ -28,15 +28,20 @@ public class AceptacionAvalController {
 	private AceptacionAvalService service;
 	
 	
-	@GetMapping("/aceptaciones")
+	@GetMapping("/aprobaciones")
 	public ResponseEntity<List<AceptacionAvalDto>> findAllAceptaciones() {
 		return new ResponseEntity<>(service.findAllAceptaciones(), HttpStatus.OK);
 	}
 	
-	@GetMapping("solicitudes/{idSolicitud}/aceptaciones")
+	@GetMapping("solicitudes/{idSolicitud}/aprobaciones")
 	public ResponseEntity<List<AceptacionAvalDto>> findAceptacionesBySolicitud(@PathVariable Integer idSolicitud) {
 		return new ResponseEntity<>(service.findAceptacionesFromSolucitud(idSolicitud), HttpStatus.OK);
 	}
 	
-
+	
+	@GetMapping("empleados/{noEmpleado}/aprobaciones")
+	public ResponseEntity<List<AceptacionAvalDto>> findAprobacionesPorAval(@PathVariable String noEmpleado) {
+		return new ResponseEntity<>(service.findAceptacionesFromSolucitud(130), HttpStatus.OK);
+	}
+	
 }

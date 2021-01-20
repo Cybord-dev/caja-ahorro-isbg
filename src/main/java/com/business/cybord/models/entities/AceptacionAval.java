@@ -37,6 +37,9 @@ public class AceptacionAval implements Serializable{
 	@Column(name = "no_empleado_aval")
 	private String noEmpleadoAval;
 	
+	@Column(name = "nombre_aval")
+	private String nombreAval;
+	
 	@Column(name = "nombre_deudor")
 	private String nombreDeudor;
 	
@@ -85,6 +88,14 @@ public class AceptacionAval implements Serializable{
 
 	public void setNoEmpleadoAval(String noEmpleadoAval) {
 		this.noEmpleadoAval = noEmpleadoAval;
+	}
+	
+	public String getNombreAval() {
+		return nombreAval;
+	}
+
+	public void setNombreAval(String nombreAval) {
+		this.nombreAval = nombreAval;
 	}
 
 	public String getNombreDeudor() {
@@ -146,8 +157,9 @@ public class AceptacionAval implements Serializable{
 	@Override
 	public String toString() {
 		return "AceptacionAval [id=" + id + ", idSolicitud=" + idSolicitud + ", noEmpleadoAval=" + noEmpleadoAval
-				+ ", nombreDeudor=" + nombreDeudor + ", noEmpleadoDeudor=" + noEmpleadoDeudor + ", montoPrestamo="
-				+ montoPrestamo + ", estatus=" + estatus + ", comentarios=" + comentarios + ", fechaCreacion="
-				+ fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
+				+ ", nombreAval=" + nombreAval + ", nombreDeudor=" + nombreDeudor + ", noEmpleadoDeudor="
+				+ noEmpleadoDeudor + ", montoPrestamo=" + montoPrestamo + ", estatus=" + estatus + ", comentarios="
+				+ comentarios + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
+
 }

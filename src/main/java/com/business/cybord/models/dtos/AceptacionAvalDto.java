@@ -16,6 +16,7 @@ public class AceptacionAvalDto implements Serializable {
 	private int id;
 	private int idSolicitud;
 	private String noEmpleadoAval;
+	private String nombreAval;
 	private String nombreDeudor;
 	private String noEmpleadoDeudor;
 	private BigDecimal montoPrestamo;
@@ -41,6 +42,12 @@ public class AceptacionAvalDto implements Serializable {
 	}
 	public void setNoEmpleadoAval(String noEmpleadoAval) {
 		this.noEmpleadoAval = noEmpleadoAval;
+	}
+	public String getNombreAval() {
+		return nombreAval;
+	}
+	public void setNombreAval(String nombreAval) {
+		this.nombreAval = nombreAval;
 	}
 	public String getNombreDeudor() {
 		return nombreDeudor;
@@ -87,8 +94,8 @@ public class AceptacionAvalDto implements Serializable {
 	@Override
 	public String toString() {
 		return "AceptacionAvalDto [id=" + id + ", idSolicitud=" + idSolicitud + ", noEmpleadoAval=" + noEmpleadoAval
-				+ ", nombreDeudor=" + nombreDeudor + ", noEmpleadoDeudor=" + noEmpleadoDeudor + ", montoPrestamo="
-				+ montoPrestamo + ", estatus=" + estatus + ", comentarios=" + comentarios + ", fechaCreacion="
-				+ fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
+				+ ", nombreAval=" + nombreAval + ", nombreDeudor=" + nombreDeudor + ", noEmpleadoDeudor="
+				+ noEmpleadoDeudor + ", montoPrestamo=" + montoPrestamo + ", estatus=" + estatus + ", comentarios="
+				+ comentarios + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
 }
