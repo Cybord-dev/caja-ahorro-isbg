@@ -22,7 +22,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "aceptacion_aval")
-public class AceptacionAval implements Serializable{
+public class ValidacionAval implements Serializable{
 	
 	private static final long serialVersionUID = 4985707770690731426L;
 

@@ -70,7 +70,7 @@ public class Solicitud {
 	private List<AtributoSolicitud> atributos;
 
 	@OneToMany(mappedBy = "solicitud")
-	private List<Validacion> validaciones;
+	private List<ValidacionSolicitud> validaciones;
 
 	public void update(Solicitud n) {
 		this.fechaEjecucion = n.getFechaEjecucion();
@@ -154,11 +154,11 @@ public class Solicitud {
 		this.atributos = atributos;
 	}
 
-	public List<Validacion> getValidaciones() {
+	public List<ValidacionSolicitud> getValidaciones() {
 		return validaciones;
 	}
 
-	public void setValidaciones(List<Validacion> validaciones) {
+	public void setValidaciones(List<ValidacionSolicitud> validaciones) {
 		this.validaciones = validaciones;
 	}
 

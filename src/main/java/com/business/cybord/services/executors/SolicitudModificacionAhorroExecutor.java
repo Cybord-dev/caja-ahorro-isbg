@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import com.business.cybord.mappers.DatoUsuarioMapper;
 import com.business.cybord.models.config.FileConfig;
 import com.business.cybord.models.dtos.SolicitudDto;
-import com.business.cybord.models.dtos.ValidacionDto;
+import com.business.cybord.models.dtos.ValidacionSolicitudDto;
 import com.business.cybord.models.entities.AtributoSolicitud;
 import com.business.cybord.models.entities.DatosUsuario;
 import com.business.cybord.models.entities.Usuario;
@@ -46,7 +46,7 @@ public class SolicitudModificacionAhorroExecutor implements SolicitudExecutor {
 	private PdfServiceGenerator pdfServiceGenerator;
 
 	@Override
-	public void execute(SolicitudDto solicitudDto, ValidacionDto validacionDto) throws IsbgServiceException {
+	public void execute(SolicitudDto solicitudDto, ValidacionSolicitudDto validacionDto) throws IsbgServiceException {
 		Usuario usuario = repositoryUsuario.findById(solicitudDto.getIdUsuario())
 				.orElseThrow(() -> new IsbgServiceException("Error actualizando daatos en solicitud ahorro",
 						String.format("El usuario  %d no existe", solicitudDto.getIdUsuario()),
@@ -101,7 +101,7 @@ public class SolicitudModificacionAhorroExecutor implements SolicitudExecutor {
 	}
 
 	@Override
-	public void rechazo(SolicitudDto solicitudDto, ValidacionDto validacionDto) throws IsbgServiceException {
+	public void rechazo(SolicitudDto solicitudDto, ValidacionSolicitudDto validacionDto) throws IsbgServiceException {
 		Usuario usuario = repositoryUsuario.findById(solicitudDto.getIdUsuario())
 				.orElseThrow(() -> new IsbgServiceException("Error actualizando daatos en solicitud ahorro",
 						String.format("El usuario  %d no existe", solicitudDto.getIdUsuario()),

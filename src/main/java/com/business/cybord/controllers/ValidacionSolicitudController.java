@@ -21,16 +21,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.business.cybord.models.dtos.RecursoDto;
-import com.business.cybord.models.dtos.ValidacionDto;
+import com.business.cybord.models.dtos.ValidacionSolicitudDto;
 import com.business.cybord.models.dtos.composed.UserValidacionSolicitudDto;
 import com.business.cybord.models.error.IsbgServiceException;
-import com.business.cybord.services.ValidacionService;
+import com.business.cybord.services.ValidacionSolicitudService;
 
 @RestController
 @RequestMapping("/api/v1")
-public class ValidacionsController {
+public class ValidacionSolicitudController {
 	@Autowired
-	private ValidacionService service;
+	private ValidacionSolicitudService service;
 
 	@GetMapping("/validaciones")
 	public ResponseEntity<Page<UserValidacionSolicitudDto>> getValidaciones(
@@ -45,27 +45,27 @@ public class ValidacionsController {
 	}
 
 	@GetMapping("/usuarios/{idUsuario}/solicitudes/{idSolicitud}/validaciones")
-	public ResponseEntity<List<ValidacionDto>> getValidacionByIdSoolicitud(@PathVariable Integer idUsuario,
+	public ResponseEntity<List<ValidacionSolicitudDto>> getValidacionByIdSoolicitud(@PathVariable Integer idUsuario,
 			@PathVariable Integer idSolicitud) {
 		return new ResponseEntity<>(service.getAllValidacionesByIdSolicitud(idSolicitud), HttpStatus.OK);
 	}
 
 	@GetMapping("/usuarios/{idUsuario}/solicitudes/{idSolicitud}/validaciones/{idValidacion}")
-	public ResponseEntity<ValidacionDto> getValidacionById(@PathVariable Integer idUsuario,
+	public ResponseEntity<ValidacionSolicitudDto> getValidacionById(@PathVariable Integer idUsuario,
 			@PathVariable Integer idSolicitud, @PathVariable Integer idValidacion) {
 		return new ResponseEntity<>(service.getValidacionById(idValidacion), HttpStatus.OK);
 	}
 
 	@PostMapping("/usuarios/{idUsuario}/solicitudes/{idSolicitud}/validaciones")
-	public ResponseEntity<ValidacionDto> crearValidacion(@PathVariable Integer idUsuario,
-			@PathVariable Integer idSolicitud, @RequestBody @Valid ValidacionDto validacionDto)
+	public ResponseEntity<ValidacionSolicitudDto> crearValidacion(@PathVariable Integer idUsuario,
+			@PathVariable Integer idSolicitud, @RequestBody @Valid ValidacionSolicitudDto validacionDto)
 			throws IsbgServiceException {
 		return new ResponseEntity<>(service.crearValidacion(idUsuario, idSolicitud, validacionDto), HttpStatus.CREATED);
 	}
 
 	@PutMapping("/validaciones/{idValidacion}")
-	public ResponseEntity<ValidacionDto> actualizarValidacion(@PathVariable Integer idValidacion,
-			@RequestBody @Valid ValidacionDto validacionDto) {
+	public ResponseEntity<ValidacionSolicitudDto> actualizarValidacion(@PathVariable Integer idValidacion,
+			@RequestBody @Valid ValidacionSolicitudDto validacionDto) {
 		return new ResponseEntity<>(service.actualizarValidacion(idValidacion, validacionDto), HttpStatus.OK);
 	}
 

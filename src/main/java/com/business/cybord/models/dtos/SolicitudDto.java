@@ -27,7 +27,7 @@ public class SolicitudDto implements Serializable{
 	@JsonFormat(shape = JsonFormat.Shape.STRING)
 	private Date fechaActualizacion;
 	private Map<String,String> atributos;
-	private List<ValidacionDto> validaciones;
+	private List<ValidacionSolicitudDto> validaciones;
 	
 	
 	public List<AtributoSolicitud> getAttributesAsList(){
@@ -98,11 +98,11 @@ public class SolicitudDto implements Serializable{
 		this.atributos = atributos;
 	}
 
-	public List<ValidacionDto> getValidaciones() {
+	public List<ValidacionSolicitudDto> getValidaciones() {
 		return validaciones;
 	}
 
-	public void setValidaciones(List<ValidacionDto> validaciones) {
+	public void setValidaciones(List<ValidacionSolicitudDto> validaciones) {
 		this.validaciones = validaciones;
 	}
 

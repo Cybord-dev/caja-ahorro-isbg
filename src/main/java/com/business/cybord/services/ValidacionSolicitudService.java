@@ -23,25 +23,25 @@ import com.business.cybord.mappers.SolicitudMapper;
 import com.business.cybord.models.dtos.RecursoDto;
 import com.business.cybord.models.dtos.SolicitudDto;
 import com.business.cybord.models.dtos.UsuarioDto;
-import com.business.cybord.models.dtos.ValidacionDto;
+import com.business.cybord.models.dtos.ValidacionSolicitudDto;
 import com.business.cybord.models.dtos.composed.UserValidacionSolicitudDto;
 import com.business.cybord.models.entities.Solicitud;
-import com.business.cybord.models.entities.Validacion;
+import com.business.cybord.models.entities.ValidacionSolicitud;
 import com.business.cybord.models.enums.EventFactoryTypeEnum;
 import com.business.cybord.models.enums.SolicitudFactoryEnum;
 import com.business.cybord.models.enums.SolicitudFactoryTypeEnum;
 import com.business.cybord.models.error.IsbgServiceException;
 import com.business.cybord.repositories.SolicitudRepository;
-import com.business.cybord.repositories.ValidacionRepository;
-import com.business.cybord.repositories.dao.ValidacionDao;
+import com.business.cybord.repositories.ValidacionSolicitudRepository;
+import com.business.cybord.repositories.dao.ValidacionSolicitudDao;
 import com.business.cybord.services.executors.SolicitudExecutorManager;
 import com.business.cybord.states.solicitudes.ISolicitud;
 
 @Service
-public class ValidacionService {
+public class ValidacionSolicitudService {
 
 	@Autowired
-	private ValidacionRepository repositoryValidacion;
+	private ValidacionSolicitudRepository repositoryValidacion;
 	@Autowired
 	private SolicitudRepository repositorySol;
 	@Autowired
@@ -49,7 +49,7 @@ public class ValidacionService {
 	@Autowired
 	private SolicitudMapper mapper;
 	@Autowired
-	private ValidacionDao validacionDao;
+	private ValidacionSolicitudDao validacionDao;
 	@Autowired
 	private SolicitudExecutorManager solicitudExecutorManager;
 	
@@ -82,18 +82,18 @@ public class ValidacionService {
 		return reportService.generateBase64Report(String.format("VALIDACIONES_%tF", new Date()), data);
 	}
 
-	public List<ValidacionDto> getAllValidacionesByIdSolicitud(int idSol) {
+	public List<ValidacionSolicitudDto> getAllValidacionesByIdSolicitud(int idSol) {
 		return mapper.validacionDtoToValidacion(repositoryValidacion.findByIdSolicitud(idSol));
 	}
 
-	public ValidacionDto getValidacionById(int idValidacion) {
-		Validacion entity = repositoryValidacion.findById(idValidacion)
+	public ValidacionSolicitudDto getValidacionById(int idValidacion) {
+		ValidacionSolicitud entity = repositoryValidacion.findById(idValidacion)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 						String.format("La validacion id=%d no existe", idValidacion)));
 		return mapper.getDtoFromValidacionesEntity(entity);
 	}
 
-	public ValidacionDto crearValidacion(int idUsuario, int idSolicitud, ValidacionDto validacion)
+	public ValidacionSolicitudDto crearValidacion(int idUsuario, int idSolicitud, ValidacionSolicitudDto validacion)
 			throws IsbgServiceException {
 		Solicitud sol = repositorySol.findByIdUsuarioAndId(idUsuario, idSolicitud)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -108,7 +108,7 @@ public class ValidacionService {
 			}
 			solicitudDto = mapper.getDtoFromSolicitudEntity(repositorySol.save(sol));
 			validacion.setNumeroValidacion(solicitudDto.getValidaciones().size() + 1);
-			Validacion val = mapper.getEntityFromValidacionesDto(validacion);
+			ValidacionSolicitud val = mapper.getEntityFromValidacionesDto(validacion);
 			val.setSolicitud(sol);
 			validacion = mapper.getDtoFromValidacionesEntity(repositoryValidacion.save(val));
 			solicitudExecutorManager.getSolicitudExecutor(solicitudDto.getTipo()).execute(solicitudDto, validacion);
@@ -118,7 +118,7 @@ public class ValidacionService {
 			sol.setStatus("Rechazada");
 			sol.setStatusDetalle(validacion.getStatusDesc());
 			repositorySol.save(sol);
-			Validacion val = mapper.getEntityFromValidacionesDto(validacion);
+			ValidacionSolicitud val = mapper.getEntityFromValidacionesDto(validacion);
 			val.setSolicitud(sol);
 			validacion.setNumeroValidacion(solicitudDto.getValidaciones().size() + 1);
 			solicitudExecutorManager.getSolicitudExecutor(solicitudDto.getTipo()).rechazo(solicitudDto, validacion);
@@ -127,12 +127,12 @@ public class ValidacionService {
 
 	}
 	
-	private void reviewValidator(ValidacionDto validacion,Solicitud solicitud) throws IsbgServiceException {
+	private void reviewValidator(ValidacionSolicitudDto validacion,Solicitud solicitud) throws IsbgServiceException {
 		if(solicitud.getUsuario().getEmail().equals(validacion.getEmail())) {
 			  throw new IsbgServiceException("El validador creo la solicitud",
 						"El validador debe ser alguien distinto", HttpStatus.CONFLICT.value());
 		}else {
-			for(Validacion val:solicitud.getValidaciones()) {
+			for(ValidacionSolicitud val:solicitud.getValidaciones()) {
 				if(val.getEmail().equals(validacion.getEmail())) {
 					throw new IsbgServiceException("El validador ya valido en otra area",
 								"El validador debe ser alguien distinto", HttpStatus.CONFLICT.value());
@@ -141,7 +141,7 @@ public class ValidacionService {
 		}
 	}
 
-	public boolean specialValidation(SolicitudDto solicitudDto, ValidacionDto validacion) {
+	public boolean specialValidation(SolicitudDto solicitudDto, ValidacionSolicitudDto validacion) {
 		if ((solicitudDto.getTipo()
 				.equals(SolicitudFactoryTypeEnum.SOLICITUD_CANCELACION_AHORRO_EXTERNO.getReferenceName())
 				|| solicitudDto.getTipo()
@@ -157,7 +157,7 @@ public class ValidacionService {
 		}
 	}
 
-	public String validaEstadoActual(SolicitudDto solicitudDto, ValidacionDto validacion) throws IsbgServiceException {
+	public String validaEstadoActual(SolicitudDto solicitudDto, ValidacionSolicitudDto validacion) throws IsbgServiceException {
 		try {
 			UsuarioDto usuario = usuarioService.getUserById(solicitudDto.getIdUsuario());
 			SolicitudFactoryEnum sfte = SolicitudFactoryTypeEnum
@@ -175,7 +175,7 @@ public class ValidacionService {
 			ISolicitud solicitud = sfte.getInstance();
 			solicitud.define(solicitudDto.getStatus());
 			solicitudDto.getValidaciones().sort((d1, d2) -> d1.getFechaCreacion().compareTo(d2.getFechaCreacion()));
-			for (ValidacionDto validacionDto : solicitudDto.getValidaciones()) {
+			for (ValidacionSolicitudDto validacionDto : solicitudDto.getValidaciones()) {
 				AbstractEvent event = EventFactoryTypeEnum.findByReferenceName(validacionDto.getArea())
 						.orElseThrow(() -> new IsbgServiceException(
 								String.format("Evento %s no existe", validacion.getArea()), "No existe el evento",
@@ -197,8 +197,8 @@ public class ValidacionService {
 		}
 	}
 
-	public ValidacionDto actualizarValidacion(int idValidacion, ValidacionDto nueva) {
-		Optional<Validacion> validacion = repositoryValidacion.findById(idValidacion);
+	public ValidacionSolicitudDto actualizarValidacion(int idValidacion, ValidacionSolicitudDto nueva) {
+		Optional<ValidacionSolicitud> validacion = repositoryValidacion.findById(idValidacion);
 		if (validacion.isPresent()) {
 			validacion.get().update(mapper.getEntityFromValidacionesDto(nueva));
 			return mapper.getDtoFromValidacionesEntity(validacion.get());
@@ -209,7 +209,7 @@ public class ValidacionService {
 	}
 
 	public void deleteValidacion(int idValidacion) {
-		Optional<Validacion> entity = repositoryValidacion.findById(idValidacion);
+		Optional<ValidacionSolicitud> entity = repositoryValidacion.findById(idValidacion);
 		if (entity.isPresent()) {
 			repositoryValidacion.delete(entity.get());
 		} else {

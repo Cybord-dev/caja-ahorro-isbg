@@ -22,7 +22,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "validaciones")
-public class Validacion {
+public class ValidacionSolicitud {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_validacion")
@@ -59,7 +59,7 @@ public class Validacion {
 	@JoinColumn(name = "id_solicitud", referencedColumnName = "id_solicitud")
 	private Solicitud solicitud;
 
-	public void update(Validacion n) {
+	public void update(ValidacionSolicitud n) {
 		this.status = n.status;
 		this.numeroValidacion = n.numeroValidacion;
 	}
