@@ -11,6 +11,7 @@ import com.business.cybord.models.entities.ValidacionAval;
 public interface ValidacionAvalRepository extends JpaRepository<ValidacionAval, Integer> {
 
 	List<ValidacionAval> findByIdSolicitud(Integer idSolicitud);
+	List<ValidacionAval> findByNoEmpleadoAvalAndEstatus(String noEmpleadoAval,String estatus);
 	List<ValidacionAval> findByNoEmpleadoAval(String noEmpleadoAval);
 	
 }

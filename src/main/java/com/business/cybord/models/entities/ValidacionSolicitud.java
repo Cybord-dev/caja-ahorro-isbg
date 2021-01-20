@@ -21,7 +21,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "validaciones")
+@Table(name = "validaciones_solicitud")
 public class ValidacionSolicitud {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

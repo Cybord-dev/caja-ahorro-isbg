@@ -1,6 +1,6 @@
 package com.business.cybord.models.enums.sql;
 
-public enum ValdiacionFilterEnum {
+public enum ValdiacionSolicitudFilterEnum {
 
 	CORREO("email", "email", true),
 	AREA("area", "area", false),
@@ -10,7 +10,7 @@ public enum ValdiacionFilterEnum {
 	private String fieldName;
 	private boolean likeable;
 
-	private ValdiacionFilterEnum(String paramName, String fieldName, boolean likeable) {
+	private ValdiacionSolicitudFilterEnum(String paramName, String fieldName, boolean likeable) {
 		this.paramName = paramName;
 		this.fieldName = fieldName;
 		this.likeable = likeable;

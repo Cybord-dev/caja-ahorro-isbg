@@ -24,7 +24,7 @@ import com.business.cybord.models.Constants.SqlConstants;
 import com.business.cybord.models.dtos.composed.UserValidacionSolicitudDto;
 import com.business.cybord.models.enums.sql.SolicitudFilterEnum;
 import com.business.cybord.models.enums.sql.UsuariosFilterEnum;
-import com.business.cybord.models.enums.sql.ValdiacionFilterEnum;
+import com.business.cybord.models.enums.sql.ValdiacionSolicitudFilterEnum;
 import com.business.cybord.utils.extractor.UserValidacionSolicitudRowMapper;
 import com.business.cybord.utils.helper.DateHelper;
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
@@ -67,7 +67,7 @@ public class ValidacionSolicitudDao {
 				: dateFormat.format(dh.addDays(new Date(),2));
 		DbSchema schema = new DbSpec().addDefaultSchema();
 
-		DbTable validiacion = schema.addTable("validaciones");
+		DbTable validiacion = schema.addTable("validaciones_solicitud");
 		DbTable solicitudes = schema.addTable("solicitudes");
 		DbTable usuarios = schema.addTable("usuarios");
 
@@ -128,7 +128,7 @@ public class ValidacionSolicitudDao {
 			}
 		}
 
-		for (ValdiacionFilterEnum sol : ValdiacionFilterEnum.values()) {
+		for (ValdiacionSolicitudFilterEnum sol : ValdiacionSolicitudFilterEnum.values()) {
 			if (parameters.containsKey(sol.getParamName())) {
 				if (sol.isLikeable()) {
 					validiacion.addColumn(sol.getFieldName(), "String", null);
@@ -152,7 +152,7 @@ public class ValidacionSolicitudDao {
 				: dateFormat.format(dh.addOneDay(new Date()));
 		DbSchema schema = new DbSpec().addDefaultSchema();
 
-		DbTable validiacion = schema.addTable("validaciones");
+		DbTable validiacion = schema.addTable("validaciones_solicitud");
 		DbTable solicitudes = schema.addTable("solicitudes");
 		DbTable usuarios = schema.addTable("usuarios");
 
@@ -193,7 +193,7 @@ public class ValidacionSolicitudDao {
 			}
 		}
 
-		for (ValdiacionFilterEnum sol : ValdiacionFilterEnum.values()) {
+		for (ValdiacionSolicitudFilterEnum sol : ValdiacionSolicitudFilterEnum.values()) {
 			if (parameters.containsKey(sol.getParamName())) {
 				if (sol.isLikeable()) {
 					validiacion.addColumn(sol.getFieldName(), "String", null);

@@ -49,7 +49,7 @@ public class ValidacionSolicitudService {
 	@Autowired
 	private SolicitudMapper mapper;
 	@Autowired
-	private ValidacionSolicitudDao validacionDao;
+	private ValidacionSolicitudDao validacionSolicitudDao;
 	@Autowired
 	private SolicitudExecutorManager solicitudExecutorManager;
 	
@@ -59,13 +59,13 @@ public class ValidacionSolicitudService {
 	public Page<UserValidacionSolicitudDto> getAllValidaciones(Map<String, String> parameters) {
 		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
 		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
-		return validacionDao.findAll(parameters, PageRequest.of(page, size, Sort.by("fechaActualizacion")));
+		return validacionSolicitudDao.findAll(parameters, PageRequest.of(page, size, Sort.by("fechaActualizacion")));
 	}
 	
 	public RecursoDto getValidacionesReport(Map<String, String> parameters) throws IOException {
 		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
 		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
-		Page<UserValidacionSolicitudDto> validaciones = validacionDao.findAll(parameters, PageRequest.of(page, size, Sort.by("fechaActualizacion")));
+		Page<UserValidacionSolicitudDto> validaciones = validacionSolicitudDao.findAll(parameters, PageRequest.of(page, size, Sort.by("fechaActualizacion")));
 		
 		List<Map<String, String>> data = validaciones.getContent().stream().map(v -> {
 			Map<String, String> map = new HashMap<>();
