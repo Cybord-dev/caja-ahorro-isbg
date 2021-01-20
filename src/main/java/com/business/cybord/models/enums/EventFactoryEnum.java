@@ -6,6 +6,7 @@ import com.business.cybord.models.dtos.SolicitudDto;
 import com.business.cybord.states.events.SolicitudCreadaEvent;
 import com.business.cybord.states.events.SolicitudFinalizadaEvent;
 import com.business.cybord.states.events.ValidaAdminEvent;
+import com.business.cybord.states.events.ValidaAvalesEvent;
 import com.business.cybord.states.events.ValidaContaEvent;
 import com.business.cybord.states.events.ValidaDireccionEvent;
 import com.business.cybord.states.events.ValidaGerenciaExternaEvent;
@@ -20,6 +21,14 @@ public enum EventFactoryEnum {
 		@Override
 		public AbstractEvent getInstance(SolicitudDto dto) {
 			return new SolicitudCreadaEvent(dto);
+		}
+
+	},
+	VALIDA_AVALES {
+
+		@Override
+		public AbstractEvent getInstance(SolicitudDto dto) {
+			return new ValidaAvalesEvent(dto);
 		}
 
 	},

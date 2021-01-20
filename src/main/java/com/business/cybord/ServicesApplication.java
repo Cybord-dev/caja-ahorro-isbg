@@ -52,7 +52,6 @@ public class ServicesApplication {
 	public SolicitudPrestamoSuite getSolicitudPrestamoSuite() {
 		return new SolicitudPrestamoSuite();
 	}
-
 	
 	@Bean
 	public MailHelper getMailHelper() {

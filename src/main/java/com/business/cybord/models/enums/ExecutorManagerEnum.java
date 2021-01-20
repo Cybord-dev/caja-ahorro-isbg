@@ -8,7 +8,7 @@ public enum ExecutorManagerEnum {
 	CANCELACION_AHORRO_EXECUTOR("CancelacionAhorroExecutor","CancelacionAhorro"),
 	MODIFICACION_AHORRO_EXECUTOR("ModificacionAhorroExecutor","ModificacionAhorro"),
 	RETIRO_PARCIAL_AHORRO_EXECUTOR("RetiroParcialAhorroExecutor","RetiroParcialAhorro"),
-	PRESTAMO_PARCIAL_AHORRO_EXECUTOR("PrestamoExecutor","Prestamo");
+	PRESTAMO_EXECUTOR("PrestamoExecutor","SolicitudPrestamo");
 
 	private String qualifier;
 	private String solicitud;
