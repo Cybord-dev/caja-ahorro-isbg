@@ -134,9 +134,6 @@ public class SolicitudService {
 		if (solicitudDto.getFechaEjecucion() == null) {
 			solicitudDto.setFechaEjecucion(new Date());
 		}
-		if (solicitudDto.getAtributos().containsKey(TipoAtributoSolicitudEnum.FECHA.name())) { 
-			solicitudDto.getAtributos().put(TipoAtributoSolicitudEnum.FECHA.name(), String.format("%tF", new Date()));
-		}
 		ISolicitud solicitud = sfte.getInstance();
 		solicitudDto.setStatus(solicitud.nextState().getName());
 		Solicitud nueva = mapper.getEntityFromSolicitudDto(solicitudDto);
@@ -167,14 +164,15 @@ public class SolicitudService {
 	}
 
 	public SolicitudDto actualizarSolicitud(int idSolicitud, SolicitudDto nueva) {
-		Optional<Solicitud> solicitud = repositorySolicitud.findById(idSolicitud);
-		if (solicitud.isPresent()) {
-			solicitud.get().update(mapper.getEntityFromSolicitudDto(nueva));
-			return mapper.getDtoFromSolicitudEntity(solicitud.get());
-		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					String.format("la solicitud id=%d no existe", idSolicitud));
-		}
+		Solicitud solicitud = repositorySolicitud.findById(idSolicitud)
+				.orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,
+				String.format("la solicitud id=%d no existe", idSolicitud)));
+		
+		solicitud.setStatus(nueva.getStatus());
+		solicitud.setStatusDetalle(nueva.getStatusDetalle());
+		solicitud.setFechaActualizacion(new Date());
+		
+		return mapper.getDtoFromSolicitudEntity(repositorySolicitud.save(solicitud));
 	}
 
 	public void deleteSolicitud(int idSolicitud) {
