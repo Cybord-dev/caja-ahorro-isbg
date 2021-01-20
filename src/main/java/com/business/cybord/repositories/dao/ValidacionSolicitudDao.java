@@ -36,7 +36,7 @@ import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSpec;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbTable;
 
 @Repository
-public class ValidacionDao {
+public class ValidacionSolicitudDao {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
