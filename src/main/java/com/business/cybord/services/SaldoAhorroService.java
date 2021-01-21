@@ -112,7 +112,6 @@ public class SaldoAhorroService {
 		Optional<SaldoAhorro> saldoAhorro = respository.findByIdUsuarioAndId(idUsuario, idSaldo);
 		if (saldoAhorro.isPresent()) {
 			return mapper.getDtoFromEntity(saldoAhorro.get());
-
 		} else {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 					String.format("No existe una cohencidencia de saldo y suauario %d", idUsuario));

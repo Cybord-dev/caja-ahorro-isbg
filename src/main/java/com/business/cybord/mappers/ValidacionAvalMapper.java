@@ -13,5 +13,6 @@ public interface ValidacionAvalMapper {
 	
 	ValidacionAvalDto getDtoFromEntity(ValidacionAval aceptacion);
 	List<ValidacionAvalDto> getDtosFromEntities(List<ValidacionAval> aceptaciones);
+	ValidacionAval getEntityFromDto(ValidacionAvalDto aceptacion);
 
 }

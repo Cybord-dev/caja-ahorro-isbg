@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SolicitudDto implements Serializable{
+public class SolicitudDto implements Serializable {
 
 	private static final long serialVersionUID = 1437291290675415033L;
 	private int id;
@@ -26,12 +26,12 @@ public class SolicitudDto implements Serializable{
 	private Date fechaCreacion;
 	@JsonFormat(shape = JsonFormat.Shape.STRING)
 	private Date fechaActualizacion;
-	private Map<String,String> atributos;
+	private Map<String, String> atributos;
 	private List<ValidacionSolicitudDto> validaciones;
-	
-	
-	public List<AtributoSolicitud> getAttributesAsList(){
-		return atributos.entrySet().stream().map(e-> new AtributoSolicitud(e.getKey(),e.getValue())).collect(Collectors.toList());
+
+	public List<AtributoSolicitud> getAttributesAsList() {
+		return atributos.entrySet().stream().map(e -> new AtributoSolicitud(e.getKey(), e.getValue()))
+				.collect(Collectors.toList());
 	}
 
 	public int getId() {
@@ -89,7 +89,7 @@ public class SolicitudDto implements Serializable{
 	public void setFechaActualizacion(Date fechaActualizacion) {
 		this.fechaActualizacion = fechaActualizacion;
 	}
-	
+
 	public Map<String, String> getAtributos() {
 		return atributos;
 	}
