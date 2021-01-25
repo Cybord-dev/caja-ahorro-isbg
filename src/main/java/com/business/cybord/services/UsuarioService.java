@@ -117,14 +117,14 @@ public class UsuarioService {
 	}
 	
 	
-	public CapacidadPagoDto calculoCapacidadPago(Integer idUsuario) {
+	public CapacidadPagoDto calculoCapacidadPago(String noEmpleado) {
 		CapacidadPagoDto capacidad = new CapacidadPagoDto();
 		
-		UsuarioDto usuario = getUserById(idUsuario);
+		UsuarioDto usuario = getUserByNoEmpleado(noEmpleado);
 		BigDecimal sueldo = new BigDecimal(usuario.getDatosUsuario().get("SUELDO"));
 		// TODO code a better algorith for payment capacity
-		capacidad.setCapacidadPago(sueldo.multiply(BigDecimal.valueOf(0.5))); 
-		capacidad.setPrestamosActivos(prestamoService.getPrestamosdeUnUsuarioPorSuId(idUsuario));
+		capacidad.setCapacidadPago(sueldo.multiply(BigDecimal.valueOf(Math.random()/3))); 
+		capacidad.setPrestamosActivos(prestamoService.getPrestamosdeUnUsuarioPorSuId(usuario.getId()));
 		capacidad.setAvalados(new ArrayList<>());
 		return capacidad;
 	}

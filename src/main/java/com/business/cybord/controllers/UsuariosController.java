@@ -44,9 +44,9 @@ public class UsuariosController {
 	}
 	
 	//todo: AGREGAR LA CAPACIDAD DE PAGO ACTUAL
-	@GetMapping("/{id}/capacidad-pago")
-	public ResponseEntity<CapacidadPagoDto> getcapacidadPagoUserById(@PathVariable Integer id) {
-		return new ResponseEntity<>(service.calculoCapacidadPago(id), HttpStatus.OK);
+	@GetMapping("/{noEmpleado}/capacidad-pago")
+	public ResponseEntity<CapacidadPagoDto> getcapacidadPagoUserById(@PathVariable String noEmpleado) {
+		return new ResponseEntity<>(service.calculoCapacidadPago(noEmpleado), HttpStatus.OK);
 	}
 
 	@GetMapping
