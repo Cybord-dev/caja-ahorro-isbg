@@ -188,9 +188,9 @@ public class ValidacionAvalService {
 		long amount = atributos.stream().filter(a -> a.getNombre().contains(TipoAtributoSolicitudEnum.AVAL.name()))
 				.count();
 		AtributoSolicitud att = atributos.stream()
-				.filter(a -> a.getNombre().equals(TipoAtributoSolicitudEnum.DESCUENTO_QUINCENAL.name())).findFirst()
+				.filter(a -> a.getNombre().equals(TipoAtributoSolicitudEnum.MONTO.name())).findFirst()
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
-						"La solicitud no tiene monto quincenal como atributo"));
+						"La solicitud no tiene monto como atributo"));
 		BigDecimal monto = new BigDecimal(att.getValor()).divide(new BigDecimal(amount), 2, RoundingMode.HALF_UP);
 
 		ValidacionAvalDto aval = new ValidacionAvalDto();
