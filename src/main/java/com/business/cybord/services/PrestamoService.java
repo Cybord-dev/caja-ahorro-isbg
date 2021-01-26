@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.cybord.mappers.PrestamoMapper;
+import com.business.cybord.mappers.SaldoPrestamoMapper;
 import com.business.cybord.models.dtos.PrestamoDto;
 import com.business.cybord.models.entities.Prestamo;
 import com.business.cybord.repositories.PrestamoRepository;
@@ -20,6 +21,10 @@ public class PrestamoService {
 
 	@Autowired
 	private PrestamoMapper mapper;
+	
+	@Autowired
+	private SaldoPrestamoMapper saldoPrestamoMapper;
+	
 
 
 	public List<PrestamoDto> getPrestamosdeUnUsuarioPorSuId(Integer id) {
@@ -30,10 +35,10 @@ public class PrestamoService {
 
 		Optional<Prestamo> prestamo = repository.findByIdAndIdDeudor(idPrestamo, idUsuario);
 		if (prestamo.isPresent()) {
+			return mapper.getDtoFromEntity(prestamo.get());
+		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
 					String.format("No existe un usuario para ese prestamo"));
-		} else {
-			return mapper.getDtoFromEntity(prestamo.get());
 		}
 	}
 
@@ -55,7 +60,8 @@ public class PrestamoService {
 					String.format("Ya existe un prestamo para ese usuario user %d", userId));
 		} else {
 			Prestamo prestamo = mapper.getEntityFromDto(prestamoDto);
-			prestamo.setSaldosPrestamo(prestamoDto.getSaldosPrestamo());
+			prestamoDto.getEstatus();
+			prestamo.setSaldosPrestamo(saldoPrestamoMapper.getEntitysFromDtos(prestamoDto.getSaldosPrestamo()));
 			return mapper.getDtoFromEntity(repository.save(prestamo));
 		}
 	}
