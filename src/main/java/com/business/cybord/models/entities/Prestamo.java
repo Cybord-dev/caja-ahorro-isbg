@@ -35,10 +35,16 @@ public class Prestamo {
 	private int idDeudor;
 
 	@Column(name = "estatus")
-	private Boolean estatus;
+	private String estatus;
 
 	@Column(name = "monto")
 	private BigDecimal monto;
+	
+	@Column(name = "no_quincenas")
+	private int noQuincenas;
+	
+	@Column(name = "tasa_interes")
+	private BigDecimal tasaInteres;
 
 	@Column(name = "fecha_terminacion")
 	private Date fechaTerminacion;
@@ -73,11 +79,11 @@ public class Prestamo {
 		this.idDeudor = idDeudor;
 	}
 
-	public Boolean getEstatus() {
+	public String getEstatus() {
 		return estatus;
 	}
 
-	public void setEstatus(Boolean estatus) {
+	public void setEstatus(String estatus) {
 		this.estatus = estatus;
 	}
 
@@ -87,6 +93,22 @@ public class Prestamo {
 
 	public void setMonto(BigDecimal monto) {
 		this.monto = monto;
+	}
+	
+	public int getNoQuincenas() {
+		return noQuincenas;
+	}
+
+	public void setNoQuincenas(int noQuincenas) {
+		this.noQuincenas = noQuincenas;
+	}
+
+	public BigDecimal getTasaInteres() {
+		return tasaInteres;
+	}
+
+	public void setTasaInteres(BigDecimal tasaInteres) {
+		this.tasaInteres = tasaInteres;
 	}
 
 	public Date getFechaTerminacion() {
@@ -124,8 +146,9 @@ public class Prestamo {
 	@Override
 	public String toString() {
 		return "Prestamo [id=" + id + ", idDeudor=" + idDeudor + ", estatus=" + estatus + ", monto=" + monto
-				+ ", fechaTerminacion=" + fechaTerminacion + ", fechaCreacion=" + fechaCreacion
-				+ ", fechaActualizacion=" + fechaActualizacion + ", saldosPrestamo=" + saldosPrestamo + "]";
+				+ ", noQuincenas=" + noQuincenas + ", tasaInteres=" + tasaInteres + ", fechaTerminacion="
+				+ fechaTerminacion + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
+				+ ", saldosPrestamo=" + saldosPrestamo + "]";
 	}
 
 }

@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.List;
 
-import com.business.cybord.models.entities.SaldoPrestamo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -16,12 +15,14 @@ public class PrestamoDto implements Serializable{
 	private static final long serialVersionUID = -4411000742264499694L;
 	private int id;
 	private int idDeudor;
-	private Boolean estatus;
+	private String estatus;
 	private BigDecimal monto;
+	private int noQuincenas;
+	private BigDecimal tasaInteres;
 	private Date fechaTerminacion;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
-	private List<SaldoPrestamo> saldosPrestamo;
+	private List<SaldoPrestamoDto> saldosPrestamo;
 
 	public int getId() {
 		return id;
@@ -39,11 +40,11 @@ public class PrestamoDto implements Serializable{
 		this.idDeudor = idDeudor;
 	}
 
-	public Boolean getEstatus() {
+	public String getEstatus() {
 		return estatus;
 	}
 
-	public void setEstatus(Boolean estatus) {
+	public void setEstatus(String estatus) {
 		this.estatus = estatus;
 	}
 
@@ -53,6 +54,22 @@ public class PrestamoDto implements Serializable{
 
 	public void setMonto(BigDecimal monto) {
 		this.monto = monto;
+	}
+
+	public int getNoQuincenas() {
+		return noQuincenas;
+	}
+
+	public void setNoQuincenas(int noQuincenas) {
+		this.noQuincenas = noQuincenas;
+	}
+
+	public BigDecimal getTasaInteres() {
+		return tasaInteres;
+	}
+
+	public void setTasaInteres(BigDecimal tasaInteres) {
+		this.tasaInteres = tasaInteres;
 	}
 
 	public Date getFechaTerminacion() {
@@ -79,19 +96,19 @@ public class PrestamoDto implements Serializable{
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	public List<SaldoPrestamo> getSaldosPrestamo() {
+	public List<SaldoPrestamoDto> getSaldosPrestamo() {
 		return saldosPrestamo;
 	}
 
-	public void setSaldosPrestamo(List<SaldoPrestamo> saldosPrestamo) {
+	public void setSaldosPrestamo(List<SaldoPrestamoDto> saldosPrestamo) {
 		this.saldosPrestamo = saldosPrestamo;
 	}
 
 	@Override
 	public String toString() {
-		return "Prestamo [id=" + id + ", idDeudor=" + idDeudor + ", estatus=" + estatus + ", monto=" + monto
-				+ ", fechaTerminacion=" + fechaTerminacion + ", fechaCreacion=" + fechaCreacion
-				+ ", fechaActualizacion=" + fechaActualizacion + ", saldosPrestamo=" + saldosPrestamo + "]";
+		return "PrestamoDto [id=" + id + ", idDeudor=" + idDeudor + ", estatus=" + estatus + ", monto=" + monto
+				+ ", noQuincenas=" + noQuincenas + ", tasaInteres=" + tasaInteres + ", fechaTerminacion="
+				+ fechaTerminacion + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
+				+ ", saldosPrestamo=" + saldosPrestamo + "]";
 	}
-
 }
