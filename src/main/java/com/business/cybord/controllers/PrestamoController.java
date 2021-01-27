@@ -47,6 +47,13 @@ public class PrestamoController {
 		return new ResponseEntity<>(service.getPrestamoPorIdPrestamoYIdusuarioYIdSaldo(idUsuario, idPrestamo, idSaldo),
 				HttpStatus.OK);
 	}
+	
+	@PostMapping("/prestamos/generarsaldo")
+	public ResponseEntity<Void> generarSaldo(){
+		service.generarSaldoPrestamo();
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		
+	}
 
 }
 
