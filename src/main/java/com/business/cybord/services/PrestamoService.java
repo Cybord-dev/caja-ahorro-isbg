@@ -123,6 +123,7 @@ public class PrestamoService {
 				.setIdPrestamo(prestamo.getId())
 				.setTipo(TipoSaldoPrestamoEnum.PAGO.toString())
 				.setMonto(prestamo.getMonto().doubleValue() / prestamo.getNoQuincenas() )
+				.setValidado(false)
 				.build();
 		saldoPrestamoRespository.save(saldoPrestamo);
 			
@@ -133,6 +134,7 @@ public class PrestamoService {
 				.setIdPrestamo(prestamo.getId())
 				.setTipo(TipoSaldoPrestamoEnum.INTERES.toString())
 				.setMonto(prestamo.getMonto().doubleValue()* (prestamo.getTasaInteres().doubleValue() / 100) )
+				.setValidado(false)
 				.build();
 		saldoPrestamoRespository.save(saldoPrestamo);
 	}

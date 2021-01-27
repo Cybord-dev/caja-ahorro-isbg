@@ -25,6 +25,11 @@ public class SaldoPrestamoBuilder extends AbstractBuilder<SaldoPrestamo> {
 		return this;
 	}
 	
+	public SaldoPrestamoBuilder setValidado(Boolean validado) {
+		instance.setValidado(validado);
+		return this;
+	}
+	
 		
 	
 	
