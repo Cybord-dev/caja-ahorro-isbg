@@ -19,6 +19,7 @@ public class PrestamoDto implements Serializable{
 	private BigDecimal monto;
 	private int noQuincenas;
 	private BigDecimal tasaInteres;
+	private BigDecimal saldoPendiente;
 	private Date fechaTerminacion;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
@@ -71,6 +72,14 @@ public class PrestamoDto implements Serializable{
 	public void setTasaInteres(BigDecimal tasaInteres) {
 		this.tasaInteres = tasaInteres;
 	}
+	
+	public BigDecimal getSaldoPendiente() {
+		return saldoPendiente;
+	}
+
+	public void setSaldoPendiente(BigDecimal saldoPendiente) {
+		this.saldoPendiente = saldoPendiente;
+	}
 
 	public Date getFechaTerminacion() {
 		return fechaTerminacion;
@@ -107,8 +116,8 @@ public class PrestamoDto implements Serializable{
 	@Override
 	public String toString() {
 		return "PrestamoDto [id=" + id + ", idDeudor=" + idDeudor + ", estatus=" + estatus + ", monto=" + monto
-				+ ", noQuincenas=" + noQuincenas + ", tasaInteres=" + tasaInteres + ", fechaTerminacion="
-				+ fechaTerminacion + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
-				+ ", saldosPrestamo=" + saldosPrestamo + "]";
+				+ ", noQuincenas=" + noQuincenas + ", tasaInteres=" + tasaInteres + ", saldoPendiente=" + saldoPendiente
+				+ ", fechaTerminacion=" + fechaTerminacion + ", fechaCreacion=" + fechaCreacion
+				+ ", fechaActualizacion=" + fechaActualizacion + ", saldosPrestamo=" + saldosPrestamo + "]";
 	}
 }

@@ -45,6 +45,9 @@ public class Prestamo {
 	
 	@Column(name = "tasa_interes")
 	private BigDecimal tasaInteres;
+	
+	@Column(name = "saldo_pendiente")
+	private BigDecimal saldoPendiente;
 
 	@Column(name = "fecha_terminacion")
 	private Date fechaTerminacion;
@@ -109,6 +112,14 @@ public class Prestamo {
 
 	public void setTasaInteres(BigDecimal tasaInteres) {
 		this.tasaInteres = tasaInteres;
+	}
+	
+	public BigDecimal getSaldoPendiente() {
+		return saldoPendiente;
+	}
+
+	public void setSaldoPendiente(BigDecimal saldoPendiente) {
+		this.saldoPendiente = saldoPendiente;
 	}
 
 	public Date getFechaTerminacion() {

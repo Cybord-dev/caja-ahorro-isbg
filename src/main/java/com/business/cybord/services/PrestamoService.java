@@ -35,8 +35,7 @@ public class PrestamoService {
 		if (prestamo.isPresent()) {
 			return mapper.getDtoFromEntity(prestamo.get());
 		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					String.format("No existe un usuario para ese prestamo"));
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,"No existe un usuario para ese prestamo");
 		}
 	}
 
