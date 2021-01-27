@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.business.cybord.models.dtos.PrestamoDto;
+import com.business.cybord.models.dtos.SaldoPrestamoDto;
 import com.business.cybord.services.PrestamoService;
 
 @RestController
@@ -49,9 +50,8 @@ public class PrestamoController {
 	}
 	
 	@PostMapping("/prestamos/generarsaldo")
-	public ResponseEntity<Void> generarSaldo(){
-		service.generarSaldoPrestamo();
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	public ResponseEntity<List<SaldoPrestamoDto>> generarSaldo(){
+		return new ResponseEntity<>(service.generarSaldoPrestamo(), HttpStatus.CREATED);
 		
 	}
 

@@ -1,10 +1,9 @@
 package com.business.cybord.services;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -13,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.business.cybord.mappers.PrestamoMapper;
 import com.business.cybord.mappers.SaldoPrestamoMapper;
 import com.business.cybord.models.dtos.PrestamoDto;
+import com.business.cybord.models.dtos.SaldoPrestamoDto;
 import com.business.cybord.models.entities.Prestamo;
 import com.business.cybord.models.entities.SaldoPrestamo;
 import com.business.cybord.models.enums.EstatusPrestamoEnum;
@@ -37,10 +37,6 @@ public class PrestamoService {
 	private SaldoPrestamoMapper saldoPrestamoMapper;
 	
 	
-	private static final Logger log = LoggerFactory.getLogger(PrestamoService.class);
-
-	
-
 	public List<PrestamoDto> getPrestamosdeUnUsuarioPorSuId(Integer id) {
 		return mapper.getDtosFromEntity(repository.findByIdDeudor(id));
 	}
@@ -80,7 +76,7 @@ public class PrestamoService {
 		}
 	}
 
-	public void generarSaldoPrestamo() {
+	public List<SaldoPrestamoDto> generarSaldoPrestamo() {
 		List<Prestamo> prestamosActivoTraspasado = repository.findActivoTraspasado();
 
 		List<Prestamo> activos = prestamosActivoTraspasado.stream()
@@ -89,6 +85,8 @@ public class PrestamoService {
 		List<Prestamo> traspasados = prestamosActivoTraspasado.stream()
 				.filter(p -> p.getEstatus().equals(EstatusPrestamoEnum.TRASPASADO.toString()))
 				.collect(Collectors.toList());
+		
+		List<SaldoPrestamo> generados = new ArrayList<>();
 
 		for (Prestamo activo : activos) {
 
@@ -98,8 +96,8 @@ public class PrestamoService {
 				activo.setEstatus(EstatusPrestamoEnum.TERMINADO.toString());
 				repository.save(activo);
 			} else {
-				createSaldoPrestamoPago(activo);
-				createSaldoPrestamoInteres(activo);
+				generados.add(createSaldoPrestamoPago(activo));
+				generados.add(createSaldoPrestamoInteres(activo));
 			}
 
 		}
@@ -111,32 +109,34 @@ public class PrestamoService {
 				traspasado.setEstatus(EstatusPrestamoEnum.TRASPASADO_TERMINADO.toString());
 				repository.save(traspasado);
 			} else {
-				createSaldoPrestamoPago(traspasado);
+				generados.add(createSaldoPrestamoPago(traspasado));
 			}
 
 		}
+		
+		return saldoPrestamoMapper.getDtosFromEntity(generados);
 
 	}
 	
-	private void createSaldoPrestamoPago(Prestamo prestamo) {
+	private SaldoPrestamo createSaldoPrestamoPago(Prestamo prestamo) {
 		SaldoPrestamo saldoPrestamo = new SaldoPrestamoBuilder()
 				.setIdPrestamo(prestamo.getId())
 				.setTipo(TipoSaldoPrestamoEnum.PAGO.toString())
 				.setMonto(prestamo.getMonto().doubleValue() / prestamo.getNoQuincenas() )
 				.setValidado(false)
 				.build();
-		saldoPrestamoRespository.save(saldoPrestamo);
+		return saldoPrestamoRespository.save(saldoPrestamo);
 			
 	}
 	
-	private void createSaldoPrestamoInteres(Prestamo prestamo) {
+	private SaldoPrestamo createSaldoPrestamoInteres(Prestamo prestamo) {
 		SaldoPrestamo saldoPrestamo = new SaldoPrestamoBuilder()
 				.setIdPrestamo(prestamo.getId())
 				.setTipo(TipoSaldoPrestamoEnum.INTERES.toString())
 				.setMonto(prestamo.getMonto().doubleValue()* (prestamo.getTasaInteres().doubleValue() / 100) )
 				.setValidado(false)
 				.build();
-		saldoPrestamoRespository.save(saldoPrestamo);
+		return saldoPrestamoRespository.save(saldoPrestamo);
 	}
 	
 	private Double montoEfectivamentePagado(Prestamo prestamo) {
