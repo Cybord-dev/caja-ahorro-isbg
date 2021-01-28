@@ -102,20 +102,20 @@ public class PrestamoService {
 		List<Prestamo> prestamosActivoTraspasado = repository.findActivoTraspasado();
 
 		List<Prestamo> activos = prestamosActivoTraspasado.stream()
-				.filter(p -> p.getEstatus().equals(EstatusPrestamoEnum.ACTIVO.toString())).collect(Collectors.toList());
+				.filter(p -> p.getEstatus().equals(EstatusPrestamoEnum.ACTIVO.name())).collect(Collectors.toList());
 
 		List<Prestamo> traspasados = prestamosActivoTraspasado.stream()
-				.filter(p -> p.getEstatus().equals(EstatusPrestamoEnum.TRASPASADO.toString()))
+				.filter(p -> p.getEstatus().equals(EstatusPrestamoEnum.TRASPASADO.name()))
 				.collect(Collectors.toList());
 		
 		List<SaldoPrestamo> generados = new ArrayList<>();
 
 		for (Prestamo activo : activos) {
 
-			Double sum = montoEfectivamentePagado(activo);
+			BigDecimal sum = montoEfectivamentePagado(activo);
 
-			if (sum == activo.getMonto().doubleValue()) {
-				activo.setEstatus(EstatusPrestamoEnum.TERMINADO.toString());
+			if (sum == activo.getMonto()) {
+				activo.setEstatus(EstatusPrestamoEnum.TERMINADO.name());
 				repository.save(activo);
 			} else {
 				generados.add(createSaldoPrestamoPago(activo));
@@ -125,10 +125,10 @@ public class PrestamoService {
 		}
 
 		for (Prestamo traspasado : traspasados) {
-			Double sum = montoEfectivamentePagado(traspasado);
+			BigDecimal sum = montoEfectivamentePagado(traspasado);
 
-			if (sum == traspasado.getMonto().doubleValue()) {
-				traspasado.setEstatus(EstatusPrestamoEnum.TRASPASADO_TERMINADO.toString());
+			if (sum == traspasado.getMonto()) {
+				traspasado.setEstatus(EstatusPrestamoEnum.TRASPASADO_TERMINADO.name());
 				repository.save(traspasado);
 			} else {
 				generados.add(createSaldoPrestamoPago(traspasado));
@@ -143,8 +143,8 @@ public class PrestamoService {
 	private SaldoPrestamo createSaldoPrestamoPago(Prestamo prestamo) {
 		SaldoPrestamo saldoPrestamo = new SaldoPrestamoBuilder()
 				.setIdPrestamo(prestamo.getId())
-				.setTipo(TipoSaldoPrestamoEnum.PAGO.toString())
-				.setMonto(prestamo.getMonto().doubleValue() / prestamo.getNoQuincenas() )
+				.setTipo(TipoSaldoPrestamoEnum.PAGO.name())
+				.setMonto(prestamo.getMonto().divide(new BigDecimal(prestamo.getNoQuincenas())) )
 				.setValidado(false)
 				.setOrigen("System")
 				.build();
@@ -155,20 +155,20 @@ public class PrestamoService {
 	private SaldoPrestamo createSaldoPrestamoInteres(Prestamo prestamo) {
 		SaldoPrestamo saldoPrestamo = new SaldoPrestamoBuilder()
 				.setIdPrestamo(prestamo.getId())
-				.setTipo(TipoSaldoPrestamoEnum.INTERES.toString())
-				.setMonto(prestamo.getMonto().doubleValue()* (prestamo.getTasaInteres().doubleValue() / 100) )
+				.setTipo(TipoSaldoPrestamoEnum.INTERES.name())
+				.setMonto(prestamo.getMonto().multiply(prestamo.getTasaInteres().divide(new BigDecimal(100))))
 				.setValidado(false)
 				.setOrigen("System")
 				.build();
 		return saldosRepository.save(saldoPrestamo);
 	}
 	
-	private Double montoEfectivamentePagado(Prestamo prestamo) {
+	private BigDecimal montoEfectivamentePagado(Prestamo prestamo) {
 		return prestamo.getSaldosPrestamo().stream()
-				.filter(sp-> sp.getTipo().equals(TipoSaldoPrestamoEnum.PAGO.toString()))
+				.filter(sp-> sp.getTipo().equals(TipoSaldoPrestamoEnum.PAGO.name()))
 				.filter(sp-> sp.getValidado()== true)
-				.mapToDouble(sp-> sp.getMonto().doubleValue())
-				.sum();
+				.map(sp-> sp.getMonto())
+				.reduce(BigDecimal.ZERO, (a,b)-> a.add(b));
 	}
 
 }

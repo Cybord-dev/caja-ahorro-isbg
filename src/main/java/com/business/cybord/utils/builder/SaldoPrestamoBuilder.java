@@ -20,8 +20,8 @@ public class SaldoPrestamoBuilder extends AbstractBuilder<SaldoPrestamo> {
 		return this;
 	}
 	
-	public SaldoPrestamoBuilder setMonto(Double monto) {
-		instance.setMonto(new BigDecimal(monto));
+	public SaldoPrestamoBuilder setMonto(BigDecimal monto) {
+		instance.setMonto(monto);
 		return this;
 	}
 	
