@@ -80,7 +80,7 @@ public class PrestamoService {
 					String.format("El prestamo con id %d  no existe.", idPrestamo)));
 		SaldoPrestamo saldo = saldosRepository.save(mapper.getSaldoEntityFromSaldoDto(dto));
 		prestamo.setSaldoPendiente(prestamo.getSaldoPendiente().subtract(dto.getMonto()));
-		if(BigDecimal.ZERO.compareTo(prestamo.getSaldoPendiente())>0) {
+		if(BigDecimal.ZERO.compareTo(prestamo.getSaldoPendiente())>=0) {
 			prestamo.setEstatus("TERMINADO");
 		}
 		repository.save(prestamo);
