@@ -14,6 +14,7 @@ public class SaldoPrestamoDto implements Serializable{
 	private int id;
 	private int idPrestamo;
 	private String tipo;
+	private String origen;
 	private BigDecimal monto;
 	private Boolean validado;
 	private Date fechaCreacion;
@@ -41,6 +42,14 @@ public class SaldoPrestamoDto implements Serializable{
 
 	public void setTipo(String tipo) {
 		this.tipo = tipo;
+	}
+	
+	public String getOrigen() {
+		return origen;
+	}
+
+	public void setOrigen(String origen) {
+		this.origen = origen;
 	}
 
 	public BigDecimal getMonto() {

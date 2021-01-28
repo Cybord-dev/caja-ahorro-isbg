@@ -32,6 +32,9 @@ public class SaldoPrestamo {
 
 	@Column(name = "tipo")
 	private String tipo;
+	
+	@Column(name = "origen")
+	private String origen;
 
 	@Column(name = "monto")
 	private BigDecimal monto;
@@ -71,6 +74,14 @@ public class SaldoPrestamo {
 
 	public void setTipo(String tipo) {
 		this.tipo = tipo;
+	}
+
+	public String getOrigen() {
+		return origen;
+	}
+
+	public void setOrigen(String origen) {
+		this.origen = origen;
 	}
 
 	public BigDecimal getMonto() {
