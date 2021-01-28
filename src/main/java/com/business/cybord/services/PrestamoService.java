@@ -114,7 +114,7 @@ public class PrestamoService {
 
 			BigDecimal sum = montoEfectivamentePagado(activo);
 
-			if (sum == activo.getMonto()) {
+			if (sum.equals(activo.getMonto())) {
 				activo.setEstatus(EstatusPrestamoEnum.TERMINADO.name());
 				repository.save(activo);
 			} else {
@@ -127,7 +127,7 @@ public class PrestamoService {
 		for (Prestamo traspasado : traspasados) {
 			BigDecimal sum = montoEfectivamentePagado(traspasado);
 
-			if (sum == traspasado.getMonto()) {
+			if (sum.equals(traspasado.getMonto())) {
 				traspasado.setEstatus(EstatusPrestamoEnum.TRASPASADO_TERMINADO.name());
 				repository.save(traspasado);
 			} else {
