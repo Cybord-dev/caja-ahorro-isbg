@@ -22,11 +22,11 @@ public interface PrestamoMapper {
 	PrestamoDto getDtoFromEntity(Prestamo entiti);
 	List<PrestamoDto> getDtosFromEntity(List<Prestamo> entities);
 	
-	SaldoPrestamo getEntityFromDto(SaldoPrestamoDto dto);
-	List<SaldoPrestamo> getEntitiesFromDtos(List<SaldoPrestamoDto> dtos);
+	SaldoPrestamo getSaldoEntityFromSaldoDto(SaldoPrestamoDto dto);
+	List<SaldoPrestamo> getSaldoEntitiesFromSaldoDtos(List<SaldoPrestamoDto> dtos);
 	
-	SaldoPrestamoDto getDtoFromEntity(SaldoPrestamo entity);
-	List<SaldoPrestamoDto> getDtosFromEntities(List<SaldoPrestamoDto> entities);
+	SaldoPrestamoDto getSaldoDtoFromEntity(SaldoPrestamo entity);
+	List<SaldoPrestamoDto> getSaldoDtosFromEntities(List<SaldoPrestamoDto> entities);
 
 	
 }
