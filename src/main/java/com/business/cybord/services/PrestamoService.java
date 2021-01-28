@@ -1,7 +1,7 @@
 package com.business.cybord.services;
-import java.util.ArrayList;
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.cybord.mappers.PrestamoMapper;
+import com.business.cybord.mappers.SaldoPrestamoMapper;
 import com.business.cybord.models.dtos.PrestamoDto;
 import com.business.cybord.models.dtos.SaldoPrestamoDto;
 import com.business.cybord.models.entities.Prestamo;
@@ -24,8 +25,6 @@ import com.business.cybord.models.enums.TipoSaldoPrestamoEnum;
 import com.business.cybord.repositories.PrestamoRepository;
 import com.business.cybord.repositories.SaldoPrestamoRepository;
 import com.business.cybord.utils.builder.SaldoPrestamoBuilder;
-import com.business.cybord.repositories.PrestamoRepository;
-import com.business.cybord.repositories.SaldoPrestamoRepository;
 
 
 
@@ -40,6 +39,9 @@ public class PrestamoService {
 
 	@Autowired
 	private PrestamoMapper mapper;
+	
+	@Autowired
+	private SaldoPrestamoMapper saldoPrestamoMapper;
 	
 	
 	
@@ -95,6 +97,7 @@ public class PrestamoService {
 		return mapper.getSaldoDtoFromEntity(saldo);
 	}
 
+	@Transactional(rollbackOn = { DataAccessException.class, SQLException.class })
 	public List<SaldoPrestamoDto> generarSaldoPrestamo() {
 		List<Prestamo> prestamosActivoTraspasado = repository.findActivoTraspasado();
 
@@ -143,8 +146,9 @@ public class PrestamoService {
 				.setTipo(TipoSaldoPrestamoEnum.PAGO.toString())
 				.setMonto(prestamo.getMonto().doubleValue() / prestamo.getNoQuincenas() )
 				.setValidado(false)
+				.setOrigen("System")
 				.build();
-		return saldoPrestamoRespository.save(saldoPrestamo);
+		return saldosRepository.save(saldoPrestamo);
 			
 	}
 	
@@ -154,8 +158,9 @@ public class PrestamoService {
 				.setTipo(TipoSaldoPrestamoEnum.INTERES.toString())
 				.setMonto(prestamo.getMonto().doubleValue()* (prestamo.getTasaInteres().doubleValue() / 100) )
 				.setValidado(false)
+				.setOrigen("System")
 				.build();
-		return saldoPrestamoRespository.save(saldoPrestamo);
+		return saldosRepository.save(saldoPrestamo);
 	}
 	
 	private Double montoEfectivamentePagado(Prestamo prestamo) {

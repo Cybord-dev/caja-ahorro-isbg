@@ -30,6 +30,11 @@ public class SaldoPrestamoBuilder extends AbstractBuilder<SaldoPrestamo> {
 		return this;
 	}
 	
+	public SaldoPrestamoBuilder setOrigen(String origen) {
+		instance.setOrigen(origen);
+		return this;
+	}
+	
 		
 	
 	
