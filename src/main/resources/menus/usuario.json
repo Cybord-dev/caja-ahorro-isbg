@@ -24,6 +24,11 @@
         "icon": "icon-wallet"
       },
       {
+        "name":"Prestamos Activos",
+        "url": "/usuarios/prestamos-activos",
+        "icon": "icon-folder"
+      },
+      {
         "name":"Aceptacion aval",
         "url": "/usuarios/avales",
         "icon": "icon-people"
