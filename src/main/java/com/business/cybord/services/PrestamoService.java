@@ -20,10 +20,12 @@ import com.business.cybord.models.dtos.PrestamoDto;
 import com.business.cybord.models.dtos.SaldoPrestamoDto;
 import com.business.cybord.models.entities.Prestamo;
 import com.business.cybord.models.entities.SaldoPrestamo;
+import com.business.cybord.models.entities.ValidacionAval;
 import com.business.cybord.models.enums.EstatusPrestamoEnum;
 import com.business.cybord.models.enums.TipoSaldoPrestamoEnum;
 import com.business.cybord.repositories.PrestamoRepository;
 import com.business.cybord.repositories.SaldoPrestamoRepository;
+import com.business.cybord.repositories.ValidacionAvalRepository;
 import com.business.cybord.utils.builder.SaldoPrestamoBuilder;
 
 
@@ -42,6 +44,9 @@ public class PrestamoService {
 	
 	@Autowired
 	private SaldoPrestamoMapper saldoPrestamoMapper;
+	
+	@Autowired
+	private ValidacionAvalRepository avalRepository;
 	
 	
 	
@@ -140,6 +145,30 @@ public class PrestamoService {
 
 	}
 	
+	@Transactional(rollbackOn = { DataAccessException.class, SQLException.class })
+	public List<PrestamoDto> traspasarPrestamo(Integer idPrestamo) {
+		Prestamo prestamo = repository.findById(idPrestamo)
+				.orElseThrow(()->  new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("No existe el prestamo con id %d", idPrestamo)));
+		
+		//TODO validar si el prestamo es de un estatus valido
+
+		List<ValidacionAval> avales = avalRepository.findByIdSolicitud(prestamo.getId());
+		
+		//TODO validar que exista el aval
+		
+		//Calcular el numero de quincenas faltantes
+				
+		BigDecimal montoEfectivamentePagado = montoEfectivamentePagado(prestamo);
+		
+		//dividir el monto que falte entre los avales
+		
+		//agregar saldo prestamo correspondiente
+		
+				
+		return null;
+	}
+
+	
 	private SaldoPrestamo createSaldoPrestamoPago(Prestamo prestamo) {
 		SaldoPrestamo saldoPrestamo = new SaldoPrestamoBuilder()
 				.setIdPrestamo(prestamo.getId())
@@ -151,6 +180,7 @@ public class PrestamoService {
 		return saldosRepository.save(saldoPrestamo);
 			
 	}
+	
 	
 	private SaldoPrestamo createSaldoPrestamoInteres(Prestamo prestamo) {
 		SaldoPrestamo saldoPrestamo = new SaldoPrestamoBuilder()
@@ -170,5 +200,7 @@ public class PrestamoService {
 				.map(sp-> sp.getMonto())
 				.reduce(BigDecimal.ZERO, (a,b)-> a.add(b));
 	}
+
+
 
 }

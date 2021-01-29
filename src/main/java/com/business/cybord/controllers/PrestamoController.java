@@ -60,6 +60,11 @@ public class PrestamoController {
 	public ResponseEntity<SaldoPrestamoDto> insertPagoPrestamo(@PathVariable Integer idPrestamo,@RequestBody @Valid SaldoPrestamoDto saldo){
 		return new ResponseEntity<>(service.insertPagoPrestamo(idPrestamo, saldo),HttpStatus.CREATED);
 	}
+	
+	@PostMapping("/prestamos/{idPrestamo}/traspasarprestamo")
+	public ResponseEntity<List<PrestamoDto>> traspasarPrestamo(@PathVariable Integer idPrestamo){
+		return new ResponseEntity<>(service.traspasarPrestamo(idPrestamo), HttpStatus.CREATED);
+	}
 
 }
 
