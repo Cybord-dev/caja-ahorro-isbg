@@ -1,8 +1,10 @@
 package com.business.cybord.services;
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -13,12 +15,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.cybord.mappers.PrestamoMapper;
+import com.business.cybord.mappers.SaldoPrestamoMapper;
 import com.business.cybord.models.dtos.PrestamoDto;
 import com.business.cybord.models.dtos.SaldoPrestamoDto;
 import com.business.cybord.models.entities.Prestamo;
 import com.business.cybord.models.entities.SaldoPrestamo;
+import com.business.cybord.models.enums.EstatusPrestamoEnum;
+import com.business.cybord.models.enums.TipoSaldoPrestamoEnum;
 import com.business.cybord.repositories.PrestamoRepository;
 import com.business.cybord.repositories.SaldoPrestamoRepository;
+import com.business.cybord.utils.builder.SaldoPrestamoBuilder;
 
 
 
@@ -33,6 +39,10 @@ public class PrestamoService {
 
 	@Autowired
 	private PrestamoMapper mapper;
+	
+	@Autowired
+	private SaldoPrestamoMapper saldoPrestamoMapper;
+	
 	
 	
 
@@ -85,6 +95,80 @@ public class PrestamoService {
 		}
 		repository.save(prestamo);
 		return mapper.getSaldoDtoFromEntity(saldo);
+	}
+
+	@Transactional(rollbackOn = { DataAccessException.class, SQLException.class })
+	public List<SaldoPrestamoDto> generarSaldoPrestamo() {
+		List<Prestamo> prestamosActivoTraspasado = repository.findActivoTraspasado();
+
+		List<Prestamo> activos = prestamosActivoTraspasado.stream()
+				.filter(p -> p.getEstatus().equals(EstatusPrestamoEnum.ACTIVO.name())).collect(Collectors.toList());
+
+		List<Prestamo> traspasados = prestamosActivoTraspasado.stream()
+				.filter(p -> p.getEstatus().equals(EstatusPrestamoEnum.TRASPASADO.name()))
+				.collect(Collectors.toList());
+		
+		List<SaldoPrestamo> generados = new ArrayList<>();
+
+		for (Prestamo activo : activos) {
+
+			BigDecimal sum = montoEfectivamentePagado(activo);
+
+			if (sum.equals(activo.getMonto())) {
+				activo.setEstatus(EstatusPrestamoEnum.TERMINADO.name());
+				repository.save(activo);
+			} else {
+				generados.add(createSaldoPrestamoPago(activo));
+				generados.add(createSaldoPrestamoInteres(activo));
+			}
+
+		}
+
+		for (Prestamo traspasado : traspasados) {
+			BigDecimal sum = montoEfectivamentePagado(traspasado);
+
+			if (sum.equals(traspasado.getMonto())) {
+				traspasado.setEstatus(EstatusPrestamoEnum.TRASPASADO_TERMINADO.name());
+				repository.save(traspasado);
+			} else {
+				generados.add(createSaldoPrestamoPago(traspasado));
+			}
+
+		}
+		
+		return saldoPrestamoMapper.getDtosFromEntity(generados);
+
+	}
+	
+	private SaldoPrestamo createSaldoPrestamoPago(Prestamo prestamo) {
+		SaldoPrestamo saldoPrestamo = new SaldoPrestamoBuilder()
+				.setIdPrestamo(prestamo.getId())
+				.setTipo(TipoSaldoPrestamoEnum.PAGO.name())
+				.setMonto(prestamo.getMonto().divide(new BigDecimal(prestamo.getNoQuincenas())) )
+				.setValidado(false)
+				.setOrigen("System")
+				.build();
+		return saldosRepository.save(saldoPrestamo);
+			
+	}
+	
+	private SaldoPrestamo createSaldoPrestamoInteres(Prestamo prestamo) {
+		SaldoPrestamo saldoPrestamo = new SaldoPrestamoBuilder()
+				.setIdPrestamo(prestamo.getId())
+				.setTipo(TipoSaldoPrestamoEnum.INTERES.name())
+				.setMonto(prestamo.getMonto().multiply(prestamo.getTasaInteres().divide(new BigDecimal(100))))
+				.setValidado(false)
+				.setOrigen("System")
+				.build();
+		return saldosRepository.save(saldoPrestamo);
+	}
+	
+	private BigDecimal montoEfectivamentePagado(Prestamo prestamo) {
+		return prestamo.getSaldosPrestamo().stream()
+				.filter(sp-> sp.getTipo().equals(TipoSaldoPrestamoEnum.PAGO.name()))
+				.filter(sp-> sp.getValidado()== true)
+				.map(sp-> sp.getMonto())
+				.reduce(BigDecimal.ZERO, (a,b)-> a.add(b));
 	}
 
 }
