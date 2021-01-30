@@ -82,7 +82,7 @@ public class Prestamo {
 		this.id = id;
 	}
 
-	public int getIdDeudor() {
+	public int Id() {
 		return idDeudor;
 	}
 

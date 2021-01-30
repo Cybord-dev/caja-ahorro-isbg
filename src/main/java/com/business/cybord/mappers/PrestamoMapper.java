@@ -22,7 +22,7 @@ public interface PrestamoMapper {
 	Prestamo getEntityFromDto(PrestamoDto dto);
 	List<Prestamo> getEntitysFromDtos(List<PrestamoDto> dto);
 	
-	@Mapping(target="solicitud.atributos", ignore = true)
+	@Mapping(target="solicitud", ignore = true)
 	PrestamoDto getDtoFromEntity(Prestamo dto);
 	List<PrestamoDto> getDtosFromEntity(List<Prestamo> entities);
 	
