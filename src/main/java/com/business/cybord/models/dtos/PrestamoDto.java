@@ -15,7 +15,6 @@ public class PrestamoDto implements Serializable{
 	private static final long serialVersionUID = -4411000742264499694L;
 	private int id;
 	private int idDeudor;
-	private int idSolicitud;
 	private String estatus;
 	private BigDecimal monto;
 	private int noQuincenas;
@@ -116,14 +115,6 @@ public class PrestamoDto implements Serializable{
 		this.saldosPrestamo = saldosPrestamo;
 	}
 		
-	public int getIdSolicitud() {
-		return idSolicitud;
-	}
-
-	public void setIdSolicitud(int idSolicitud) {
-		this.idSolicitud = idSolicitud;
-	}
-
 	public SolicitudDto getSolicitud() {
 		return solicitud;
 	}

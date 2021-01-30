@@ -160,7 +160,7 @@ public class PrestamoService {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("El prestamo con id %d no tiene el estatus correcto", idPrestamo));
 		}
 
-		List<ValidacionAval> avales = avalRepository.findByIdSolicitud(prestamo.getIdSolicitud());
+		List<ValidacionAval> avales = avalRepository.findByIdSolicitud(prestamo.getSolicitud().getId());
 		
 		if(avales.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("El prestamo con id %d no tiene avales", idPrestamo));
@@ -182,7 +182,7 @@ public class PrestamoService {
 					.orElseThrow(()->  new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("No existe el usuario con numero de empleado %s", aval.getNoEmpleadoAval())));
 			
 			Prestamo prestamoAval = new PrestamoBuilder().setIdDeudor(usuarioAval.getId())
-									.setIdSolicitud(prestamo.getId())
+					//TODO: AGREGAR EL SET DEL OBJETO DE SOLICITUD 
 									.setEstatus(EstatusPrestamoEnum.TRASPASADO.name())
 									.setMonto(saldoPorAval)
 									.setNoQuincenas(prestamo.getNoQuincenas()- prestamo.getSaldosPrestamo().size())

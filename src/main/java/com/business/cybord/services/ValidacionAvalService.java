@@ -4,7 +4,6 @@
 package com.business.cybord.services;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
 import java.util.Map;
 
@@ -185,14 +184,10 @@ public class ValidacionAvalService {
 
 	public ValidacionAvalDto createAvalRegister(List<AtributoSolicitud> atributos, SolicitudDto SolicitudDto,
 			String noEmpleado) {
-		long amount = atributos.stream().filter(a -> a.getNombre().contains(TipoAtributoSolicitudEnum.AVAL.name()))
-				.count();
 		AtributoSolicitud att = atributos.stream()
 				.filter(a -> a.getNombre().equals(TipoAtributoSolicitudEnum.MONTO.name())).findFirst()
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
 						"La solicitud no tiene monto como atributo"));
-		BigDecimal monto = new BigDecimal(att.getValor()).divide(new BigDecimal(amount), 2, RoundingMode.HALF_UP);
-
 		ValidacionAvalDto aval = new ValidacionAvalDto();
 		aval.setIdSolicitud(SolicitudDto.getId());
 		aval.setNoEmpleadoAval(noEmpleado);
@@ -202,7 +197,7 @@ public class ValidacionAvalService {
 		aval.setNoEmpleadoDeudor(userDto.getNoEmpleado());
 		aval.setEstatus(AvalStatusEnum.SOLICITUD.name());
 		aval.setNombreAval(avalDto.getNombre());
-		aval.setMontoPrestamo(monto);
+		aval.setMontoPrestamo(new BigDecimal(att.getValor()));
 		return mapper.getDtoFromEntity(repository.save(mapper.getEntityFromDto(aval)));
 	}
 

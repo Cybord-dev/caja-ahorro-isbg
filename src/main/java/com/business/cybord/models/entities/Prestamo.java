@@ -35,9 +35,6 @@ public class Prestamo {
 	@Column(name = "id_deudor")
 	private int idDeudor;
 	
-	@Column(name= "id_solicitud")
-	private int idSolicitud;
-
 	@Column(name = "estatus")
 	private String estatus;
 
@@ -70,8 +67,8 @@ public class Prestamo {
 	@JoinColumn(name = "id_prestamo", referencedColumnName = "id_prestamo", insertable = false, updatable = false)
 	private List<SaldoPrestamo> saldosPrestamo;
 	
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "id_solicitud", referencedColumnName = "id_solicitud", insertable= false, updatable=false)
+	@OneToOne
+	@JoinColumn(name = "id_solicitud", referencedColumnName = "id_solicitud")
 	private Solicitud solicitud;
 
 	public int getId() {
@@ -88,10 +85,6 @@ public class Prestamo {
 
 	public void setIdDeudor(int idDeudor) {
 		this.idDeudor = idDeudor;
-	}
-
-	public int getIdSolicitud() {
-		return idSolicitud;
 	}
 	
 	public String getEstatus() {
@@ -165,11 +158,6 @@ public class Prestamo {
 	public void setSaldosPrestamo(List<SaldoPrestamo> saldosPrestamo) {
 		this.saldosPrestamo = saldosPrestamo;
 	}
-	
-
-	public void setIdSolicitud(int idSolicitud) {
-		this.idSolicitud = idSolicitud;
-	}
 
 	public Solicitud getSolicitud() {
 		return solicitud;
@@ -181,10 +169,11 @@ public class Prestamo {
 
 	@Override
 	public String toString() {
-		return "Prestamo [id=" + id + ", idDeudor=" + idDeudor + " idSolicitud= " + idSolicitud +  ", estatus=" + estatus + ", monto=" + monto
-				+ ", noQuincenas=" + noQuincenas + ", tasaInteres=" + tasaInteres + ", fechaTerminacion="
-				+ fechaTerminacion + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
-				+ ", saldosPrestamo=" + saldosPrestamo + "]";
+		return "Prestamo [id=" + id + ", idDeudor=" + idDeudor + ", estatus=" + estatus + ", monto=" + monto
+				+ ", noQuincenas=" + noQuincenas + ", tasaInteres=" + tasaInteres + ", saldoPendiente=" + saldoPendiente
+				+ ", fechaTerminacion=" + fechaTerminacion + ", fechaCreacion=" + fechaCreacion
+				+ ", fechaActualizacion=" + fechaActualizacion + ", saldosPrestamo=" + saldosPrestamo + ", solicitud="
+				+ solicitud + "]";
 	}
 
 }
