@@ -3,6 +3,7 @@ package com.business.cybord.mappers;
 import java.util.List;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.MapperConfig;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
@@ -13,7 +14,8 @@ import com.business.cybord.models.entities.SaldoPrestamo;
 
 
 
-@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring")
+@Mapper
+@MapperConfig(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface PrestamoMapper {
 	
 	@Mapping(target="solicitud.atributos",ignore = true)
@@ -21,7 +23,6 @@ public interface PrestamoMapper {
 	List<Prestamo> getEntitysFromDtos(List<PrestamoDto> dto);
 	
 	@Mapping(target="solicitud.atributos", ignore = true)
-	@Mapping(source = "solicitud.atributos", ignore = true, target = "")
 	PrestamoDto getDtoFromEntity(Prestamo dto);
 	List<PrestamoDto> getDtosFromEntity(List<Prestamo> entities);
 	
