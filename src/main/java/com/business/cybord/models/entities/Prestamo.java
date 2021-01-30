@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -33,6 +34,9 @@ public class Prestamo {
 
 	@Column(name = "id_deudor")
 	private int idDeudor;
+	
+	@Column(name= "id_solicitud")
+	private int idSolicitud;
 
 	@Column(name = "estatus")
 	private String estatus;
@@ -65,6 +69,10 @@ public class Prestamo {
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_prestamo", referencedColumnName = "id_prestamo", insertable = false, updatable = false)
 	private List<SaldoPrestamo> saldosPrestamo;
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "id_solicitud", referencedColumnName = "id_solicitud", insertable= false, updatable=false)
+	private Solicitud solicitud;
 
 	public int getId() {
 		return id;
@@ -82,6 +90,10 @@ public class Prestamo {
 		this.idDeudor = idDeudor;
 	}
 
+	public int getIdSolicitud() {
+		return idSolicitud;
+	}
+	
 	public String getEstatus() {
 		return estatus;
 	}
@@ -153,10 +165,23 @@ public class Prestamo {
 	public void setSaldosPrestamo(List<SaldoPrestamo> saldosPrestamo) {
 		this.saldosPrestamo = saldosPrestamo;
 	}
+	
+
+	public void setIdSolicitud(int idSolicitud) {
+		this.idSolicitud = idSolicitud;
+	}
+
+	public Solicitud getSolicitud() {
+		return solicitud;
+	}
+
+	public void setSolicitud(Solicitud solicitud) {
+		this.solicitud = solicitud;
+	}
 
 	@Override
 	public String toString() {
-		return "Prestamo [id=" + id + ", idDeudor=" + idDeudor + ", estatus=" + estatus + ", monto=" + monto
+		return "Prestamo [id=" + id + ", idDeudor=" + idDeudor + " idSolicitud= " + idSolicitud +  ", estatus=" + estatus + ", monto=" + monto
 				+ ", noQuincenas=" + noQuincenas + ", tasaInteres=" + tasaInteres + ", fechaTerminacion="
 				+ fechaTerminacion + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
 				+ ", saldosPrestamo=" + saldosPrestamo + "]";

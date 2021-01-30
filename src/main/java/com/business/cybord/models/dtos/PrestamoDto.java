@@ -15,6 +15,7 @@ public class PrestamoDto implements Serializable{
 	private static final long serialVersionUID = -4411000742264499694L;
 	private int id;
 	private int idDeudor;
+	private int idSolicitud;
 	private String estatus;
 	private BigDecimal monto;
 	private int noQuincenas;
@@ -24,14 +25,16 @@ public class PrestamoDto implements Serializable{
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private List<SaldoPrestamoDto> saldosPrestamo;
+	private SolicitudDto solicitud;
 
 	public int getId() {
 		return id;
-	}
+	}	
 
 	public void setId(int id) {
 		this.id = id;
 	}
+	
 
 	public int getIdDeudor() {
 		return idDeudor;
@@ -112,10 +115,26 @@ public class PrestamoDto implements Serializable{
 	public void setSaldosPrestamo(List<SaldoPrestamoDto> saldosPrestamo) {
 		this.saldosPrestamo = saldosPrestamo;
 	}
+		
+	public int getIdSolicitud() {
+		return idSolicitud;
+	}
+
+	public void setIdSolicitud(int idSolicitud) {
+		this.idSolicitud = idSolicitud;
+	}
+
+	public SolicitudDto getSolicitud() {
+		return solicitud;
+	}
+
+	public void setSolicitud(SolicitudDto solicitud) {
+		this.solicitud = solicitud;
+	}
 
 	@Override
 	public String toString() {
-		return "PrestamoDto [id=" + id + ", idDeudor=" + idDeudor + ", estatus=" + estatus + ", monto=" + monto
+		return "PrestamoDto [id=" + id + ", idDeudor=" +" idSolicitud  "+  ", estatus=" + estatus + ", monto=" + monto
 				+ ", noQuincenas=" + noQuincenas + ", tasaInteres=" + tasaInteres + ", saldoPendiente=" + saldoPendiente
 				+ ", fechaTerminacion=" + fechaTerminacion + ", fechaCreacion=" + fechaCreacion
 				+ ", fechaActualizacion=" + fechaActualizacion + ", saldosPrestamo=" + saldosPrestamo + "]";

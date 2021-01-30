@@ -2,6 +2,7 @@ package com.business.cybord.services;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,7 +21,6 @@ import com.business.cybord.models.dtos.PrestamoDto;
 import com.business.cybord.models.dtos.SaldoPrestamoDto;
 import com.business.cybord.models.entities.Prestamo;
 import com.business.cybord.models.entities.SaldoPrestamo;
-import com.business.cybord.models.entities.ValidacionAval;
 import com.business.cybord.models.enums.EstatusPrestamoEnum;
 import com.business.cybord.models.enums.TipoSaldoPrestamoEnum;
 import com.business.cybord.repositories.PrestamoRepository;
@@ -150,11 +150,15 @@ public class PrestamoService {
 		Prestamo prestamo = repository.findById(idPrestamo)
 				.orElseThrow(()->  new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("No existe el prestamo con id %d", idPrestamo)));
 		
-		//TODO validar si el prestamo es de un estatus valido
+		if(!(prestamo.getEstatus().equals(EstatusPrestamoEnum.ACTIVO.name()) || prestamo.getEstatus().equals(EstatusPrestamoEnum.SUSPENDIDO.name()))) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("El prestamo con id %d no tiene el estatus correcto", idPrestamo));
+		}
 
-		List<ValidacionAval> avales = avalRepository.findByIdSolicitud(prestamo.getId());
-		
+				
 		//TODO validar que exista el aval
+		
+		
+		//Crear Id_solicitud del prestamo
 		
 		//Calcular el numero de quincenas faltantes
 				
@@ -165,7 +169,7 @@ public class PrestamoService {
 		//agregar saldo prestamo correspondiente
 		
 				
-		return null;
+		return Arrays.asList(mapper.getDtoFromEntity(prestamo));
 	}
 
 	
