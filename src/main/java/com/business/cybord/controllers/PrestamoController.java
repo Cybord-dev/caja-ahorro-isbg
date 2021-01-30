@@ -27,7 +27,7 @@ public class PrestamoController {
 
 	@GetMapping("/usuarios/{idUsuario}/prestamos")
 	public ResponseEntity<List<PrestamoDto>> getPrestamosByUsuario(@PathVariable Integer idUsuario) {
-		return new ResponseEntity<>(service.getPrestamosdeUnUsuarioPorSuId(idUsuario), HttpStatus.OK);
+		return new ResponseEntity<>(service.getPrestamosdeUnUsuarioById(idUsuario), HttpStatus.OK);
 	}
 
 	@PostMapping("/usuarios/{idUsuario}/prestamos")
@@ -36,11 +36,16 @@ public class PrestamoController {
 		return new ResponseEntity<>(service.insertPrestamo(idUsuario, dto), HttpStatus.CREATED);
 	}
 	
-	//TODO: ENDPOINT DE TODOS LOS SALDOS POR USUARIO  (URGE EDISON)
-	///usuarios/{idUsuario}/prestamos DAR TODOS LOS NO SALDADOS
-	
-	//TODO: ENDPOINT DE TODOS LOS SALDOS POR FILTROS GLOBALES
-	///prestamos 
+	@GetMapping("/usuarios/{idUsuario}/prestamos/pendientes")
+	public ResponseEntity<List<PrestamoDto>> getPrestamosByUsuariosPendientes(@PathVariable Integer idUsuario) {
+		return new ResponseEntity<>(service.getPrestamosdeUnUsuarioByIdNotCompleted(idUsuario), HttpStatus.OK);
+	}
+
+	// TODO: ENDPOINT DE TODOS LOS SALDOS POR USUARIO (URGE EDISON)
+	/// usuarios/{idUsuario}/prestamos DAR TODOS LOS NO SALDADOS
+
+	// TODO: ENDPOINT DE TODOS LOS SALDOS POR FILTROS GLOBALES
+	/// prestamos
 
 	@GetMapping("/usuarios/{idUsuario}/prestamos/{idPrestamo}/saldos/{idSaldo}")
 	public ResponseEntity<PrestamoDto> getPrestamoPorIdPrestamoYIdusuarioYIdSaldo(@PathVariable Integer idUsuario,
@@ -48,18 +53,17 @@ public class PrestamoController {
 		return new ResponseEntity<>(service.getPrestamoPorIdPrestamoYIdusuarioYIdSaldo(idUsuario, idPrestamo, idSaldo),
 				HttpStatus.OK);
 	}
-	
+
 	@PostMapping("/prestamos/generarsaldo")
-	public ResponseEntity<List<SaldoPrestamoDto>> generarSaldo(){
+	public ResponseEntity<List<SaldoPrestamoDto>> generarSaldo() {
 		return new ResponseEntity<>(service.generarSaldoPrestamo(), HttpStatus.CREATED);
-		
+
 	}
-	
-	
+
 	@PostMapping("/prestamos/{idPrestamo}/saldos")
-	public ResponseEntity<SaldoPrestamoDto> insertPagoPrestamo(@PathVariable Integer idPrestamo,@RequestBody @Valid SaldoPrestamoDto saldo){
-		return new ResponseEntity<>(service.insertPagoPrestamo(idPrestamo, saldo),HttpStatus.CREATED);
+	public ResponseEntity<SaldoPrestamoDto> insertPagoPrestamo(@PathVariable Integer idPrestamo,
+			@RequestBody @Valid SaldoPrestamoDto saldo) {
+		return new ResponseEntity<>(service.insertPagoPrestamo(idPrestamo, saldo), HttpStatus.CREATED);
 	}
 
 }
-

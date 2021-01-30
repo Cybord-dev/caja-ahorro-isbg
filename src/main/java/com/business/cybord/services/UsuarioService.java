@@ -124,7 +124,7 @@ public class UsuarioService {
 		BigDecimal sueldo = new BigDecimal(usuario.getDatosUsuario().get("SUELDO"));
 		// TODO code a better algorith for payment capacity
 		capacidad.setCapacidadPago(sueldo.multiply(BigDecimal.valueOf(Math.random()/3))); 
-		capacidad.setPrestamosActivos(prestamoService.getPrestamosdeUnUsuarioPorSuId(usuario.getId()));
+		capacidad.setPrestamosActivos(prestamoService.getPrestamosdeUnUsuarioById(usuario.getId()));
 		capacidad.setAvalados(new ArrayList<>());
 		return capacidad;
 	}
