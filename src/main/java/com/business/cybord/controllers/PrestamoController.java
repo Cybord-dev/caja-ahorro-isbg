@@ -40,10 +40,7 @@ public class PrestamoController {
 	public ResponseEntity<List<PrestamoDto>> getPrestamosByUsuariosPendientes(@PathVariable Integer idUsuario) {
 		return new ResponseEntity<>(service.getPrestamosdeUnUsuarioByIdNotCompleted(idUsuario), HttpStatus.OK);
 	}
-
-	// TODO: ENDPOINT DE TODOS LOS SALDOS POR USUARIO (URGE EDISON)
-	/// usuarios/{idUsuario}/prestamos DAR TODOS LOS NO SALDADOS
-
+	
 	// TODO: ENDPOINT DE TODOS LOS SALDOS POR FILTROS GLOBALES
 	/// prestamos
 
