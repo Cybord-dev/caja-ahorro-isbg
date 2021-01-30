@@ -182,12 +182,16 @@ public class PrestamoService {
 					.orElseThrow(()->  new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("No existe el usuario con numero de empleado %s", aval.getNoEmpleadoAval())));
 			
 			Prestamo prestamoAval = new PrestamoBuilder().setIdDeudor(usuarioAval.getId())
-					//TODO: AGREGAR EL SET DEL OBJETO DE SOLICITUD 
 									.setEstatus(EstatusPrestamoEnum.TRASPASADO.name())
 									.setMonto(saldoPorAval)
-									.setNoQuincenas(prestamo.getNoQuincenas()- prestamo.getSaldosPrestamo().size())
+									.setNoQuincenas(prestamo.getNoQuincenas()- prestamo.getSaldosPrestamo().stream()
+											.filter(sp-> sp.getTipo().equals(TipoSaldoPrestamoEnum.PAGO.name()))
+											.filter(sp-> sp.getValidado().equals(true))
+											.collect(Collectors.toList()).size())
 									.setSaldoPendiente(saldoPorAval)
 									.setFechaTerminacion(prestamo.getFechaTerminacion())
+									.setSolicitud(prestamo.getSolicitud())
+									.setTasaInteres(BigDecimal.ZERO)
 									.build(); 
 			
 			prestamoAval = repository.save(prestamoAval);
