@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PrestamoDto implements Serializable{
+public class PrestamoDto implements Serializable {
 
 	private static final long serialVersionUID = -4411000742264499694L;
 	private int id;
@@ -28,19 +28,10 @@ public class PrestamoDto implements Serializable{
 
 	public int getId() {
 		return id;
-	}	
+	}
 
 	public void setId(int id) {
 		this.id = id;
-	}
-	
-
-	public int getIdDeudor() {
-		return idDeudor;
-	}
-
-	public void setIdDeudor(int idDeudor) {
-		this.idDeudor = idDeudor;
 	}
 
 	public String getEstatus() {
@@ -74,7 +65,7 @@ public class PrestamoDto implements Serializable{
 	public void setTasaInteres(BigDecimal tasaInteres) {
 		this.tasaInteres = tasaInteres;
 	}
-	
+
 	public BigDecimal getSaldoPendiente() {
 		return saldoPendiente;
 	}
@@ -114,7 +105,7 @@ public class PrestamoDto implements Serializable{
 	public void setSaldosPrestamo(List<SaldoPrestamoDto> saldosPrestamo) {
 		this.saldosPrestamo = saldosPrestamo;
 	}
-		
+
 	public SolicitudDto getSolicitud() {
 		return solicitud;
 	}
@@ -125,9 +116,17 @@ public class PrestamoDto implements Serializable{
 
 	@Override
 	public String toString() {
-		return "PrestamoDto [id=" + id + ", idDeudor=" +" idSolicitud  "+  ", estatus=" + estatus + ", monto=" + monto
+		return "PrestamoDto [id=" + id + ", idDeudor=" + " idSolicitud  " + ", estatus=" + estatus + ", monto=" + monto
 				+ ", noQuincenas=" + noQuincenas + ", tasaInteres=" + tasaInteres + ", saldoPendiente=" + saldoPendiente
 				+ ", fechaTerminacion=" + fechaTerminacion + ", fechaCreacion=" + fechaCreacion
 				+ ", fechaActualizacion=" + fechaActualizacion + ", saldosPrestamo=" + saldosPrestamo + "]";
+	}
+
+	public int getIdDeudor() {
+		return idDeudor;
+	}
+
+	public void setIdDeudor(int idDeudor) {
+		this.idDeudor = idDeudor;
 	}
 }

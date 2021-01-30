@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
+import org.mapstruct.MapperConfig;
 import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 
 import com.business.cybord.models.dtos.PrestamoDto;
 import com.business.cybord.models.dtos.SaldoPrestamoDto;
@@ -13,6 +15,7 @@ import com.business.cybord.models.entities.SaldoPrestamo;
 
 @Mapper
 @DecoratedWith(PrestamoMapperDecorator.class)
+@MapperConfig(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface PrestamoMapper {
 
 	@Mapping(target = "solicitud", ignore = true)

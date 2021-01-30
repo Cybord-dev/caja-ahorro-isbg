@@ -34,19 +34,19 @@ public class Prestamo {
 
 	@Column(name = "id_deudor")
 	private int idDeudor;
-	
+
 	@Column(name = "estatus")
 	private String estatus;
 
 	@Column(name = "monto")
 	private BigDecimal monto;
-	
+
 	@Column(name = "no_quincenas")
 	private int noQuincenas;
-	
+
 	@Column(name = "tasa_interes")
 	private BigDecimal tasaInteres;
-	
+
 	@Column(name = "saldo_pendiente")
 	private BigDecimal saldoPendiente;
 
@@ -66,7 +66,7 @@ public class Prestamo {
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_prestamo", referencedColumnName = "id_prestamo", insertable = false, updatable = false)
 	private List<SaldoPrestamo> saldosPrestamo;
-	
+
 	@OneToOne
 	@JoinColumn(name = "id_solicitud", referencedColumnName = "id_solicitud")
 	private Solicitud solicitud;
@@ -79,14 +79,14 @@ public class Prestamo {
 		this.id = id;
 	}
 
-	public int Id() {
+	public int getIdDeudor() {
 		return idDeudor;
 	}
 
 	public void setIdDeudor(int idDeudor) {
 		this.idDeudor = idDeudor;
 	}
-	
+
 	public String getEstatus() {
 		return estatus;
 	}
@@ -102,7 +102,7 @@ public class Prestamo {
 	public void setMonto(BigDecimal monto) {
 		this.monto = monto;
 	}
-	
+
 	public int getNoQuincenas() {
 		return noQuincenas;
 	}
@@ -118,7 +118,7 @@ public class Prestamo {
 	public void setTasaInteres(BigDecimal tasaInteres) {
 		this.tasaInteres = tasaInteres;
 	}
-	
+
 	public BigDecimal getSaldoPendiente() {
 		return saldoPendiente;
 	}
