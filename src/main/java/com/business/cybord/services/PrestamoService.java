@@ -1,5 +1,4 @@
 package com.business.cybord.services;
-import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -76,14 +75,9 @@ public class PrestamoService {
 	
 	@Transactional(rollbackOn = { DataAccessException.class, SQLException.class })
 	public SaldoPrestamoDto insertPagoPrestamo(Integer idPrestamo, SaldoPrestamoDto dto) {
-		Prestamo prestamo = repository.findById(idPrestamo).orElseThrow(()-> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+		repository.findById(idPrestamo).orElseThrow(()-> new ResponseStatusException(HttpStatus.BAD_REQUEST,
 					String.format("El prestamo con id %d  no existe.", idPrestamo)));
 		SaldoPrestamo saldo = saldosRepository.save(mapper.getSaldoEntityFromSaldoDto(dto));
-		prestamo.setSaldoPendiente(prestamo.getSaldoPendiente().subtract(dto.getMonto()));
-		if(BigDecimal.ZERO.compareTo(prestamo.getSaldoPendiente())>=0) {
-			prestamo.setEstatus("TERMINADO");
-		}
-		repository.save(prestamo);
 		return mapper.getSaldoDtoFromEntity(saldo);
 	}
 

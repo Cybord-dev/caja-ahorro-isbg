@@ -43,7 +43,6 @@ public class UsuariosController {
 		return new ResponseEntity<>(service.getUserById(id), HttpStatus.OK);
 	}
 	
-	//todo: AGREGAR LA CAPACIDAD DE PAGO ACTUAL
 	@GetMapping("/{noEmpleado}/capacidad-pago")
 	public ResponseEntity<CapacidadPagoDto> getcapacidadPagoUserById(@PathVariable String noEmpleado) {
 		return new ResponseEntity<>(service.calculoCapacidadPago(noEmpleado), HttpStatus.OK);
