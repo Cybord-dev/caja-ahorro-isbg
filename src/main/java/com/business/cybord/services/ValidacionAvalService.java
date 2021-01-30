@@ -53,7 +53,7 @@ public class ValidacionAvalService {
 	private ValidacionAvalRepository repository;
 
 	@Autowired
-	private ValidacionAvalDao dao;
+	private ValidacionAvalDao dao; 
 
 	@Autowired
 	private ValidacionAvalMapper mapper;
