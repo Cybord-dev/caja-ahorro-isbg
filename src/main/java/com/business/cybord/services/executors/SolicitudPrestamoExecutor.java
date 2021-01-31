@@ -21,6 +21,7 @@ import com.business.cybord.models.enums.config.TipoArchivoEnum;
 import com.business.cybord.models.error.IsbgServiceException;
 import com.business.cybord.repositories.PrestamoRepository;
 import com.business.cybord.repositories.UsuariosRepository;
+import com.business.cybord.services.CatalogoService;
 import com.business.cybord.services.MailService;
 import com.business.cybord.services.PdfServiceGenerator;
 import com.business.cybord.utils.builder.PrestamoBuilder;
@@ -44,6 +45,10 @@ public class SolicitudPrestamoExecutor extends AbstractSolicitudExecutor impleme
 
 	@Autowired
 	private PdfServiceGenerator pdfServiceGenerator;
+	
+	@Autowired
+	private CatalogoService catalogoService;
+	
 
 	@Override
 	public void execute(SolicitudDto solicitudDto, ValidacionSolicitudDto validacionDto) throws IsbgServiceException {
@@ -63,8 +68,7 @@ public class SolicitudPrestamoExecutor extends AbstractSolicitudExecutor impleme
 					.setNoQuincenas(Integer.valueOf(getAttributeFromList(TipoAtributoSolicitudEnum.NO_QUINCENAS,
 							solicitudDto.getAttributesAsList()).getValor()))
 					.setSaldoPendiente(Monto)
-					//TODO:  tomar la taza interes de la tabla del catalogo
-					.setTasaInteres(Constants.TASA_INTERES)
+					.setTasaInteres(new BigDecimal(catalogoService.getCatPropiedadByTipoAndNombre(Constants.TIPO_CONFIGURACIONES, Constants.TASA_INTERES).getValor()))
 					.setSolicitud(solicitudMapper.getEntityFromSolicitudDto(solicitudDto));
 			prestamoRepository.save(prestamoBuilder.build());
 			// TODO: AGREGAR CONTENIDO DEL TEXTO

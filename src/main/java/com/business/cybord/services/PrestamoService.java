@@ -198,7 +198,7 @@ public class PrestamoService {
 					.setEstatus(EstatusPrestamoEnum.TRASPASADO.name()).setMonto(saldoPorAval)
 					.setNoQuincenas(prestamo.getNoQuincenas() - prestamo.getSaldosPrestamo().stream()
 							.filter(sp -> sp.getTipo().equals(TipoSaldoPrestamoEnum.PAGO.name()))
-							.filter(sp -> sp.getValidado().equals(true)).collect(Collectors.toList()).size())
+							.filter(sp -> sp.getValidado().equals(true)).mapToInt(e-> 1).sum())
 					.setSaldoPendiente(saldoPorAval).setFechaTerminacion(prestamo.getFechaTerminacion())
 					.setSolicitud(prestamo.getSolicitud()).setTasaInteres(BigDecimal.ZERO).build();
 
@@ -229,7 +229,7 @@ public class PrestamoService {
 
 	private BigDecimal montoEfectivamentePagado(Prestamo prestamo) {
 		return prestamo.getSaldosPrestamo().stream()
-				.filter(sp -> sp.getTipo().equals(TipoSaldoPrestamoEnum.PAGO.name()))
+				.filter(sp -> !sp.getTipo().equals(TipoSaldoPrestamoEnum.INTERES.name()))
 				.filter(sp -> sp.getValidado() == true).map(sp -> sp.getMonto())
 				.reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
 	}
