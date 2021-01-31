@@ -50,8 +50,10 @@ public class PrestamoController {
 		return new ResponseEntity<>(service.getPrestamosdeUnUsuarioByIdNotCompleted(idUsuario), HttpStatus.OK);
 	}
 	
-	// TODO: ENDPOINT DE TODOS LOS SALDOS POR FILTROS GLOBALES
-	/// prestamos
+	@GetMapping("/saldo-prestamos")
+	public ResponseEntity<Page<SaldoPrestamoDto>> getPrestamosyParams(@RequestParam Map<String, String> parameters){
+		return new ResponseEntity<>(service.getPrestamosyParams(parameters), HttpStatus.OK);	
+	}
 
 	@GetMapping("/usuarios/{idUsuario}/prestamos/{idPrestamo}/saldos/{idSaldo}")
 	public ResponseEntity<PrestamoDto> getPrestamoPorIdPrestamoYIdusuarioYIdSaldo(@PathVariable Integer idUsuario,

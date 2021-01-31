@@ -18,7 +18,7 @@ import com.business.cybord.utils.extractor.RecursoRsExtractor;
 
 
 @Repository
-public class RecursoRepositoryJDBC {
+public class RecursosDao {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
