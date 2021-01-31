@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -39,13 +40,13 @@ public class Prestamo {
 
 	@Column(name = "monto")
 	private BigDecimal monto;
-	
+
 	@Column(name = "no_quincenas")
 	private int noQuincenas;
-	
+
 	@Column(name = "tasa_interes")
 	private BigDecimal tasaInteres;
-	
+
 	@Column(name = "saldo_pendiente")
 	private BigDecimal saldoPendiente;
 
@@ -65,6 +66,10 @@ public class Prestamo {
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_prestamo", referencedColumnName = "id_prestamo", insertable = false, updatable = false)
 	private List<SaldoPrestamo> saldosPrestamo;
+
+	@OneToOne
+	@JoinColumn(name = "id_solicitud", referencedColumnName = "id_solicitud")
+	private Solicitud solicitud;
 
 	public int getId() {
 		return id;
@@ -97,7 +102,7 @@ public class Prestamo {
 	public void setMonto(BigDecimal monto) {
 		this.monto = monto;
 	}
-	
+
 	public int getNoQuincenas() {
 		return noQuincenas;
 	}
@@ -113,7 +118,7 @@ public class Prestamo {
 	public void setTasaInteres(BigDecimal tasaInteres) {
 		this.tasaInteres = tasaInteres;
 	}
-	
+
 	public BigDecimal getSaldoPendiente() {
 		return saldoPendiente;
 	}
@@ -154,12 +159,21 @@ public class Prestamo {
 		this.saldosPrestamo = saldosPrestamo;
 	}
 
+	public Solicitud getSolicitud() {
+		return solicitud;
+	}
+
+	public void setSolicitud(Solicitud solicitud) {
+		this.solicitud = solicitud;
+	}
+
 	@Override
 	public String toString() {
 		return "Prestamo [id=" + id + ", idDeudor=" + idDeudor + ", estatus=" + estatus + ", monto=" + monto
-				+ ", noQuincenas=" + noQuincenas + ", tasaInteres=" + tasaInteres + ", fechaTerminacion="
-				+ fechaTerminacion + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
-				+ ", saldosPrestamo=" + saldosPrestamo + "]";
+				+ ", noQuincenas=" + noQuincenas + ", tasaInteres=" + tasaInteres + ", saldoPendiente=" + saldoPendiente
+				+ ", fechaTerminacion=" + fechaTerminacion + ", fechaCreacion=" + fechaCreacion
+				+ ", fechaActualizacion=" + fechaActualizacion + ", saldosPrestamo=" + saldosPrestamo + ", solicitud="
+				+ solicitud + "]";
 	}
 
 }

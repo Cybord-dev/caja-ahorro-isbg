@@ -26,12 +26,20 @@ import com.business.cybord.mappers.PrestamoMapper;
 import com.business.cybord.models.dtos.PrestamoDto;
 import com.business.cybord.models.dtos.SaldoPrestamoDto;
 import com.business.cybord.models.entities.Prestamo;
+import com.business.cybord.models.entities.Usuario;
+import com.business.cybord.models.entities.ValidacionAval;
 import com.business.cybord.models.enums.EstatusPrestamoEnum;
 import com.business.cybord.models.enums.TipoSaldoPrestamoEnum;
 import com.business.cybord.repositories.PrestamoRepository;
+import com.business.cybord.repositories.UsuariosRepository;
+import com.business.cybord.repositories.ValidacionAvalRepository;
 import com.business.cybord.repositories.dao.PrestamoDao;
 import com.business.cybord.repositories.dao.SaldoPrestamoDao;
+import com.business.cybord.utils.builder.PrestamoBuilder;
 import com.business.cybord.utils.builder.SaldoPrestamoBuilder;
+
+
+
 
 @Service
 public class PrestamoService {
@@ -49,6 +57,12 @@ public class PrestamoService {
 	@Autowired
 	private PrestamoMapper mapper;
 
+
+	@Autowired
+	private ValidacionAvalRepository avalRepository;
+
+	@Autowired
+	private UsuariosRepository usuarioRepository;
 
 	public Page<PrestamoDto> findPrestamosByFiltros(Map<String, String> parameters) {
 		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
@@ -154,6 +168,58 @@ public class PrestamoService {
 
 		return generados;
 
+	}
+	
+	@Transactional(rollbackOn = { DataAccessException.class, SQLException.class, ResponseStatusException.class })
+	public List<PrestamoDto> traspasarPrestamo(Integer idPrestamo) {
+		Prestamo prestamo = repository.findById(idPrestamo)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+						String.format("No existe el prestamo con id %d", idPrestamo)));
+
+		if (!(prestamo.getEstatus().equals(EstatusPrestamoEnum.ACTIVO.name())
+				|| prestamo.getEstatus().equals(EstatusPrestamoEnum.SUSPENDIDO.name()))) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					String.format("El prestamo con id %d no tiene el estatus correcto", idPrestamo));
+		}
+
+		List<ValidacionAval> avales = avalRepository.findByIdSolicitud(prestamo.getSolicitud().getId());
+
+		if (avales.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					String.format("El prestamo con id %d no tiene avales", idPrestamo));
+		}
+
+		BigDecimal montoEfectivamentePagado = montoEfectivamentePagado(prestamo);
+
+		BigDecimal saldoPorAval = (prestamo.getMonto().subtract(montoEfectivamentePagado))
+				.divide(new BigDecimal(avales.size()));
+
+		prestamo.setEstatus(EstatusPrestamoEnum.A_PAGAR_POR_AVAL.name());
+
+		repository.save(prestamo);
+
+		List<Prestamo> prestamosGenerados = new ArrayList<>();
+
+		for (ValidacionAval aval : avales) {
+			// TODO:CAMBIAR LA BUSQUEDA POR ID_USUARIO
+			Usuario usuarioAval = usuarioRepository.findByNoEmpleado(aval.getNoEmpleadoAval())
+					.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+							String.format("No existe el usuario con numero de empleado %s", aval.getNoEmpleadoAval())));
+
+			Prestamo prestamoAval = new PrestamoBuilder().setIdDeudor(usuarioAval.getId())
+					.setEstatus(EstatusPrestamoEnum.TRASPASADO.name()).setMonto(saldoPorAval)
+					.setNoQuincenas(prestamo.getNoQuincenas() - prestamo.getSaldosPrestamo().stream()
+							.filter(sp -> sp.getTipo().equals(TipoSaldoPrestamoEnum.PAGO.name()))
+							.filter(sp -> sp.getValidado().equals(true)).mapToInt(e-> 1).sum())
+					.setSaldoPendiente(saldoPorAval).setFechaTerminacion(prestamo.getFechaTerminacion())
+					.setSolicitud(prestamo.getSolicitud()).setTasaInteres(BigDecimal.ZERO).build();
+
+			prestamoAval = repository.save(prestamoAval);
+			prestamosGenerados.add(prestamoAval);
+
+		}
+
+		return mapper.getDtosFromEntity(prestamosGenerados);
 	}
 
 	private SaldoPrestamoDto createSaldoPrestamoPago(Prestamo prestamo) {

@@ -62,7 +62,7 @@ public class PrestamoController {
 				HttpStatus.OK);
 	}
 
-	@PostMapping("/prestamos/generarsaldo")
+	@PostMapping("/prestamos/generar-saldo")
 	public ResponseEntity<List<SaldoPrestamoDto>> generarSaldo() {
 		return new ResponseEntity<>(service.generarSaldoPrestamo(), HttpStatus.CREATED);
 
@@ -72,6 +72,11 @@ public class PrestamoController {
 	public ResponseEntity<SaldoPrestamoDto> insertPagoPrestamo(@PathVariable Integer idPrestamo,
 			@RequestBody @Valid SaldoPrestamoDto saldo) {
 		return new ResponseEntity<>(service.insertPagoPrestamo(idPrestamo, saldo), HttpStatus.CREATED);
+	}
+	
+	@PostMapping("/prestamos/{idPrestamo}/traspasar-prestamo")
+	public ResponseEntity<List<PrestamoDto>> traspasarPrestamo(@PathVariable Integer idPrestamo){
+		return new ResponseEntity<>(service.traspasarPrestamo(idPrestamo), HttpStatus.CREATED);
 	}
 
 }

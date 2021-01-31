@@ -3,6 +3,8 @@ package com.business.cybord.models;
 public class Constants {
 	
 	public static final String JSON_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+	public static final String TIPO_CONFIGURACIONES = "configuraciones";
+	public static final String TASA_INTERES = "TASA-INTERES";
 	
 	public class SqlConstants{
 		public static final String  LIMIT="LIMIT";
