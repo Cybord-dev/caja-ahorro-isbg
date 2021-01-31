@@ -8,13 +8,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.cybord.models.dtos.RecursoDto;
-import com.business.cybord.repositories.dao.RecursoRepositoryJDBC;
+import com.business.cybord.repositories.dao.RecursosDao;
 
 @Service
 public class RecursoService {
 
 	@Autowired
-	private RecursoRepositoryJDBC repository;
+	private RecursosDao repository;
 
 	public RecursoDto getRecursoPorTipoRecursoYreferenciaYTipoArchivo(String tipoRecurso, String referencia,
 			String tipoArchivo) {

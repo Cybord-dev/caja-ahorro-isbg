@@ -1,5 +1,14 @@
 package com.business.cybord.services;
 
+import com.business.cybord.mappers.PrestamoMapper;
+import com.business.cybord.models.dtos.PrestamoDto;
+import com.business.cybord.models.dtos.SaldoPrestamoDto;
+import com.business.cybord.models.entities.Prestamo;
+import com.business.cybord.repositories.PrestamoRepository;
+import com.business.cybord.repositories.UsuariosRepository;
+import com.business.cybord.repositories.ValidacionAvalRepository;
+import com.business.cybord.repositories.dao.PrestamoDao;
+import com.business.cybord.repositories.dao.SaldoPrestamoDao;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -7,35 +16,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.business.cybord.mappers.PrestamoMapper;
-import com.business.cybord.mappers.SaldoPrestamoMapper;
-import com.business.cybord.models.dtos.PrestamoDto;
-import com.business.cybord.models.dtos.SaldoPrestamoDto;
-import com.business.cybord.models.entities.Prestamo;
-import com.business.cybord.models.entities.SaldoPrestamo;
-import com.business.cybord.models.entities.Usuario;
-import com.business.cybord.models.entities.ValidacionAval;
-import com.business.cybord.models.enums.EstatusPrestamoEnum;
-import com.business.cybord.models.enums.TipoSaldoPrestamoEnum;
-import com.business.cybord.repositories.PrestamoRepository;
-import com.business.cybord.repositories.SaldoPrestamoRepository;
-import com.business.cybord.repositories.UsuariosRepository;
-import com.business.cybord.repositories.ValidacionAvalRepository;
-import com.business.cybord.utils.builder.PrestamoBuilder;
-import com.business.cybord.repositories.dao.PrestamoDao;
-import com.business.cybord.utils.builder.SaldoPrestamoBuilder;
+
+
 
 @Service
 public class PrestamoService {
@@ -45,15 +39,14 @@ public class PrestamoService {
 
 	@Autowired
 	private PrestamoDao dao;
-
+	
 	@Autowired
-	private SaldoPrestamoRepository saldosRepository;
+	private SaldoPrestamoDao saldosDao;
+
 
 	@Autowired
 	private PrestamoMapper mapper;
 
-	@Autowired
-	private SaldoPrestamoMapper saldoPrestamoMapper;
 
 	@Autowired
 	private ValidacionAvalRepository avalRepository;
@@ -73,6 +66,16 @@ public class PrestamoService {
 
 	public List<PrestamoDto> getPrestamosdeUnUsuarioByIdNotCompleted(Integer id) {
 		return mapper.getDtosFromEntity(repository.findByIdDeudorNotCompleted(id));
+	}
+	
+	public Page<SaldoPrestamoDto> getPrestamosyParams(@RequestParam Map<String, String> parameters){
+		// TODO generate dinamyc search wit pages
+		
+		List<SaldoPrestamoDto> rows = saldosDao.findAllSaldos();
+		
+		Pageable pageable = PageRequest.of(1, 10, Sort.by("fechaActualizacion"));
+		
+		return new PageImpl<>(rows, pageable,rows.size());
 	}
 
 	public PrestamoDto getPrestamoPorIdPrestamoYIdusuario(Integer idUsuario, Integer idPrestamo) {
@@ -112,8 +115,7 @@ public class PrestamoService {
 	public SaldoPrestamoDto insertPagoPrestamo(Integer idPrestamo, SaldoPrestamoDto dto) {
 		repository.findById(idPrestamo).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
 				String.format("El prestamo con id %d  no existe.", idPrestamo)));
-		SaldoPrestamo saldo = saldosRepository.save(mapper.getSaldoEntityFromSaldoDto(dto));
-		return mapper.getSaldoDtoFromEntity(saldo);
+		return saldosDao.insertSaldoPrestamo(dto);
 	}
 
 	@Transactional(rollbackOn = { DataAccessException.class, SQLException.class })
@@ -126,7 +128,7 @@ public class PrestamoService {
 		List<Prestamo> traspasados = prestamosActivoTraspasado.stream()
 				.filter(p -> p.getEstatus().equals(EstatusPrestamoEnum.TRASPASADO.name())).collect(Collectors.toList());
 
-		List<SaldoPrestamo> generados = new ArrayList<>();
+		List<SaldoPrestamoDto> generados = new ArrayList<>();
 
 		for (Prestamo activo : activos) {
 
@@ -154,77 +156,34 @@ public class PrestamoService {
 
 		}
 
-		return saldoPrestamoMapper.getDtosFromEntity(generados);
+		return generados;
 
 	}
 
-	@Transactional(rollbackOn = { DataAccessException.class, SQLException.class, ResponseStatusException.class })
-	public List<PrestamoDto> traspasarPrestamo(Integer idPrestamo) {
-		Prestamo prestamo = repository.findById(idPrestamo)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-						String.format("No existe el prestamo con id %d", idPrestamo)));
-
-		if (!(prestamo.getEstatus().equals(EstatusPrestamoEnum.ACTIVO.name())
-				|| prestamo.getEstatus().equals(EstatusPrestamoEnum.SUSPENDIDO.name()))) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					String.format("El prestamo con id %d no tiene el estatus correcto", idPrestamo));
-		}
-
-		List<ValidacionAval> avales = avalRepository.findByIdSolicitud(prestamo.getSolicitud().getId());
-
-		if (avales.isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					String.format("El prestamo con id %d no tiene avales", idPrestamo));
-		}
-
-		BigDecimal montoEfectivamentePagado = montoEfectivamentePagado(prestamo);
-
-		BigDecimal saldoPorAval = (prestamo.getMonto().subtract(montoEfectivamentePagado))
-				.divide(new BigDecimal(avales.size()));
-
-		prestamo.setEstatus(EstatusPrestamoEnum.A_PAGAR_POR_AVAL.name());
-
-		repository.save(prestamo);
-
-		List<Prestamo> prestamosGenerados = new ArrayList<>();
-
-		for (ValidacionAval aval : avales) {
-			// TODO:CAMBIAR LA BUSQUEDA POR ID_USUARIO
-			Usuario usuarioAval = usuarioRepository.findByNoEmpleado(aval.getNoEmpleadoAval())
-					.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-							String.format("No existe el usuario con numero de empleado %s", aval.getNoEmpleadoAval())));
-
-			Prestamo prestamoAval = new PrestamoBuilder().setIdDeudor(usuarioAval.getId())
-					.setEstatus(EstatusPrestamoEnum.TRASPASADO.name()).setMonto(saldoPorAval)
-					.setNoQuincenas(prestamo.getNoQuincenas() - prestamo.getSaldosPrestamo().stream()
-							.filter(sp -> sp.getTipo().equals(TipoSaldoPrestamoEnum.PAGO.name()))
-							.filter(sp -> sp.getValidado().equals(true)).mapToInt(e-> 1).sum())
-					.setSaldoPendiente(saldoPorAval).setFechaTerminacion(prestamo.getFechaTerminacion())
-					.setSolicitud(prestamo.getSolicitud()).setTasaInteres(BigDecimal.ZERO).build();
-
-			prestamoAval = repository.save(prestamoAval);
-			prestamosGenerados.add(prestamoAval);
-
-		}
-
-		return mapper.getDtosFromEntity(prestamosGenerados);
-	}
-
-	private SaldoPrestamo createSaldoPrestamoPago(Prestamo prestamo) {
-		SaldoPrestamo saldoPrestamo = new SaldoPrestamoBuilder().setIdPrestamo(prestamo.getId())
+	private SaldoPrestamoDto createSaldoPrestamoPago(Prestamo prestamo) {
+		SaldoPrestamoDto saldoPrestamo = new SaldoPrestamoBuilder().setIdPrestamo(prestamo.getId())
+				.setIdUsuario(prestamo.getIdDeudor())
+				.setMontoPrestamo(prestamo.getMonto())
+				.setNoQuincenas(prestamo.getNoQuincenas())
+				.setSaldoPendiente(prestamo.getSaldoPendiente())
 				.setTipo(TipoSaldoPrestamoEnum.PAGO.name())
 				.setMonto(prestamo.getMonto().divide(new BigDecimal(prestamo.getNoQuincenas()))).setValidado(false)
-				.setOrigen("System").build();
-		return saldosRepository.save(saldoPrestamo);
+				.setOrigen("SISTEMA").build();
+		return saldosDao.insertSaldoPrestamo(saldoPrestamo);
 
 	}
 
-	private SaldoPrestamo createSaldoPrestamoInteres(Prestamo prestamo) {
-		SaldoPrestamo saldoPrestamo = new SaldoPrestamoBuilder().setIdPrestamo(prestamo.getId())
+	private SaldoPrestamoDto createSaldoPrestamoInteres(Prestamo prestamo) {
+		SaldoPrestamoDto saldoPrestamo = new SaldoPrestamoBuilder()
+				.setIdPrestamo(prestamo.getId())
+				.setIdUsuario(prestamo.getIdDeudor())
+				.setMontoPrestamo(prestamo.getMonto())
+				.setNoQuincenas(prestamo.getNoQuincenas())
+				.setSaldoPendiente(prestamo.getSaldoPendiente())
 				.setTipo(TipoSaldoPrestamoEnum.INTERES.name())
 				.setMonto(prestamo.getMonto().multiply(prestamo.getTasaInteres().divide(new BigDecimal(100))))
-				.setValidado(false).setOrigen("System").build();
-		return saldosRepository.save(saldoPrestamo);
+				.setValidado(false).setOrigen("SISTEMA").build();
+		return saldosDao.insertSaldoPrestamo(saldoPrestamo);
 	}
 
 	private BigDecimal montoEfectivamentePagado(Prestamo prestamo) {
