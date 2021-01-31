@@ -53,7 +53,7 @@ public class SaldoPrestamoDao {
 		template.update(new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-				PreparedStatement ps = con.prepareStatement(INSERT_SALDO_PRESTAMO);
+				PreparedStatement ps = con.prepareStatement(INSERT_SALDO_PRESTAMO,new String[]{"id_saldo_prestamo"});
 				ps.setInt(1, saldo.getIdPrestamo());
 				ps.setString(2, saldo.getTipo());
 				ps.setBigDecimal(3, saldo.getMonto());
