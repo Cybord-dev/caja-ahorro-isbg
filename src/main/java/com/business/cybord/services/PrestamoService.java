@@ -65,6 +65,8 @@ public class PrestamoService {
 	}
 	
 	public Page<SaldoPrestamoDto> getPrestamosyParams(@RequestParam Map<String, String> parameters){
+		// TODO generate dinamyc search wit pages
+		
 		List<SaldoPrestamoDto> rows = saldosDao.findAllSaldos();
 		
 		Pageable pageable = PageRequest.of(1, 10, Sort.by("fechaActualizacion"));
