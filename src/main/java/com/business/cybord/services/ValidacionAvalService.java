@@ -100,9 +100,9 @@ public class ValidacionAvalService {
 		return mapper.getDtoFromEntity(repository.save(entity));
 	}
 
-	public List<ValidacionAvalDto> findAvalesNotApprovedByEmpleado(String noEmpleado) {
+	public List<ValidacionAvalDto> findAvalesNotApprovedByEmpleado(Integer idUsuario) {
 		return mapper.getDtosFromEntities(
-				repository.findByIdUsuarioAvalAndEstatus(noEmpleado, AvalStatusEnum.SOLICITUD.name()));
+				repository.findByIdUsuarioAvalAndEstatus(idUsuario, AvalStatusEnum.SOLICITUD.name()));
 	}
 
 	public List<ValidacionAvalDto> findAvalesBySolicitud(int idSolicitud) {

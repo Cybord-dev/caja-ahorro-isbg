@@ -47,9 +47,9 @@ public class ValidacionAvalController {
 		return new ResponseEntity<>(service.actualizarValidacion(id, dto), HttpStatus.OK);
 	}
 
-	@GetMapping("usuarios/{noEmpleado}/avales")
-	public ResponseEntity<List<ValidacionAvalDto>> findAvalesNotApprovedByEmpleado(@PathVariable String noEmpleado) {
-		return new ResponseEntity<>(service.findAvalesNotApprovedByEmpleado(noEmpleado), HttpStatus.OK);
+	@GetMapping("usuarios/{idUsuario}/avales")
+	public ResponseEntity<List<ValidacionAvalDto>> findAvalesNotApprovedByEmpleado(@PathVariable Integer idUsuario) {
+		return new ResponseEntity<>(service.findAvalesNotApprovedByEmpleado(idUsuario), HttpStatus.OK);
 	}
 
 	@GetMapping("solicitudes/{idSolicitud}/avales")
