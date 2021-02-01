@@ -16,7 +16,7 @@
 		{
 			"name": "Reportes de ahorro",
 			"url": "/tesoreria/reportes-ahorro",
-			"icon": "icon-wallet"
+			"icon": "icon-envelope-letter"
 		},
 		{
 			"name": "Reportes de prestamo",
