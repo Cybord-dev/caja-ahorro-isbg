@@ -3,6 +3,7 @@ package com.business.cybord.services;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -56,7 +57,7 @@ public class UsuarioService {
 
 	@Autowired
 	private PrestamoService prestamoService;
-	
+
 	@Autowired
 	private ValidacionAvalDao validacionAvalDao;
 
@@ -130,21 +131,26 @@ public class UsuarioService {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 					String.format("El empleado %s : no tiene el sueldo asignado", usuario.getNoEmpleado()));
 		}
+
 		BigDecimal sueldo = new BigDecimal(usuario.getDatosUsuario().get(TipoAtributoUsuarioEnum.SUELDO.name()));
-		capacidad.setSueldo(new BigDecimal(sueldo.doubleValue()));
+		capacidad.setSueldo(new BigDecimal(sueldo.toString()));
+		BigDecimal sueldoUtilizable = sueldo.multiply(new BigDecimal(0.7)).setScale(2, RoundingMode.HALF_UP);
+		capacidad.setSueldoUtilizable(new BigDecimal(sueldoUtilizable.toString()));
 		if (usuario.isAhorrador() && usuario.getDatosUsuario().containsKey(TipoAtributoUsuarioEnum.AHORRO.name())) {
 			BigDecimal ahorro = new BigDecimal(usuario.getDatosUsuario().get(TipoAtributoUsuarioEnum.AHORRO.name()));
-			capacidad.setAhorro(new BigDecimal(ahorro.doubleValue()));
-			sueldo = sueldo.subtract(ahorro);
+			capacidad.setAhorro(new BigDecimal(ahorro.toString()));
+			sueldoUtilizable = sueldoUtilizable.subtract(ahorro);
 		}
 		List<PrestamoDto> activePrestamos = prestamoService.getPrestamosdeUnUsuarioByIdNotCompleted(usuario.getId());
 		for (PrestamoDto prestamoDto : activePrestamos) {
-			sueldo = sueldo.subtract(prestamoDto.getMonto().divide(new BigDecimal(prestamoDto.getNoQuincenas())));
+			sueldoUtilizable = sueldoUtilizable
+					.subtract(prestamoDto.getMonto().divide(new BigDecimal(prestamoDto.getNoQuincenas())))
+					.setScale(2, RoundingMode.HALF_UP);
 		}
-		List<ValidacionAvalDto> prestamoAvales=validacionAvalDao.getActivePrestamosByAval(usuario.getId());
+		List<ValidacionAvalDto> prestamoAvales = validacionAvalDao.getActivePrestamosByAval(usuario.getId());
 		capacidad.setAvalados(prestamoAvales);
 		capacidad.setPrestamosActivos(activePrestamos);
-		capacidad.setCapacidadPago(sueldo);
+		capacidad.setCapacidadPago(sueldoUtilizable);
 		return capacidad;
 	}
 

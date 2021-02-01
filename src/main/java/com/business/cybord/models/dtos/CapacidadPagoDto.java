@@ -16,6 +16,7 @@ public class CapacidadPagoDto implements Serializable {
 	private static final long serialVersionUID = 30045272020115876L;
 	private BigDecimal capacidadPago;
 	private BigDecimal sueldo;
+	private BigDecimal sueldoUtilizable;
 	private BigDecimal ahorro;
 	private List<ValidacionAvalDto> avalados;
 	private List<PrestamoDto> prestamosActivos;
@@ -60,10 +61,19 @@ public class CapacidadPagoDto implements Serializable {
 		this.ahorro = ahorro;
 	}
 
+	public BigDecimal getSueldoUtilizable() {
+		return sueldoUtilizable;
+	}
+
+	public void setSueldoUtilizable(BigDecimal sueldoUtilizable) {
+		this.sueldoUtilizable = sueldoUtilizable;
+	}
+
 	@Override
 	public String toString() {
-		return "CapacidadPagoDto [capacidadPago=" + capacidadPago + ", sueldo=" + sueldo + ", ahorro=" + ahorro
-				+ ", avalados=" + avalados + ", prestamosActivos=" + prestamosActivos + "]";
+		return "CapacidadPagoDto [capacidadPago=" + capacidadPago + ", sueldo=" + sueldo + ", sueldoUtilizable="
+				+ sueldoUtilizable + ", ahorro=" + ahorro + ", avalados=" + avalados + ", prestamosActivos="
+				+ prestamosActivos + "]";
 	}
 
 }
