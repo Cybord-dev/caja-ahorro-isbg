@@ -54,10 +54,7 @@ public class SaldoPrestamoDao {
 	private DateHelper dh = new DateHelper();
 	
 	private static final Logger log = LoggerFactory.getLogger(SaldoPrestamoDao.class);
-
-//	private static final String SELECT_ALL_PRESTAMOS = "SELECT s.id_saldo_prestamo, p.id_prestamo, p.id_deudor, p.monto as monto_prestamo,p.saldo_pendiente,p.estatus, p.no_quincenas, p.tasa_interes, s.tipo, s.origen,s.monto,s.validado, s.fecha_creacion ,s.fecha_actualizacion \n"
-//			+ "FROM prestamo p INNER JOIN saldo_prestamo s ON p.id_prestamo = s.id_prestamo order by s.fecha_actualizacion";
-
+	
 	private static final String INSERT_SALDO_PRESTAMO = "INSERT INTO isbg.saldo_prestamo"
 			+ "(id_prestamo, tipo, monto, validado, origen, fecha_creacion, fecha_actualizacion) VALUES(?, ?, ?, ?, ?, now(), now())";
 
@@ -68,7 +65,7 @@ public class SaldoPrestamoDao {
 		template.update(new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-				PreparedStatement ps = con.prepareStatement(INSERT_SALDO_PRESTAMO);
+				PreparedStatement ps = con.prepareStatement(INSERT_SALDO_PRESTAMO,new String[]{"id_saldo_prestamo"});
 				ps.setInt(1, saldo.getIdPrestamo());
 				ps.setString(2, saldo.getTipo());
 				ps.setBigDecimal(3, saldo.getMonto());

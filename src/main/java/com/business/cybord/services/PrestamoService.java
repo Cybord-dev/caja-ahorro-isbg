@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
@@ -56,6 +58,8 @@ public class PrestamoService {
 
 	@Autowired
 	private UsuariosRepository usuarioRepository;
+
+	private static final Logger log = LoggerFactory.getLogger(PrestamoService.class);
 
 	public Page<PrestamoDto> findPrestamosByFiltros(Map<String, String> parameters) {
 		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
@@ -114,6 +118,24 @@ public class PrestamoService {
 		repository.findById(idPrestamo).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
 				String.format("El prestamo con id %d  no existe.", idPrestamo)));
 		return saldosDao.insertSaldoPrestamo(dto);
+	}
+
+	@Transactional(rollbackOn = { DataAccessException.class, SQLException.class })
+	public SaldoPrestamoDto updatePagoPrestamo(Integer idSaldo, SaldoPrestamoDto dto) {
+		
+		int updated = saldosDao.updateSaldoPrestamo(idSaldo, dto);
+		if(updated == 1 && dto.getValidado() && dto.getOrigen() != null) {
+			Prestamo prestamo  = repository.findById(dto.getIdPrestamo())
+					.orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "El saldo no se encuenttra ligado a ningun prestamo"));
+			
+			prestamo.setSaldoPendiente(prestamo.getSaldoPendiente().subtract(dto.getMonto()));
+			
+			log.info("Updating saldo pendiente del prestamo : {}", prestamo);
+			repository.save(prestamo);
+		}else {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El saldo no fue correctamente actualizado");
+		}
+		return dto;
 	}
 
 	@Transactional(rollbackOn = { DataAccessException.class, SQLException.class })

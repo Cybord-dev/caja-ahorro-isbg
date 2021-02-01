@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -50,10 +51,6 @@ public class PrestamoController {
 		return new ResponseEntity<>(service.getPrestamosdeUnUsuarioByIdNotCompleted(idUsuario), HttpStatus.OK);
 	}
 	
-	@GetMapping("/saldo-prestamos")
-	public ResponseEntity<Page<SaldoPrestamoDto>> getPrestamosyParams(@RequestParam Map<String, String> parameters){
-		return new ResponseEntity<>(service.getPrestamosyParams(parameters), HttpStatus.OK);	
-	}
 
 	@GetMapping("/usuarios/{idUsuario}/prestamos/{idPrestamo}/saldos/{idSaldo}")
 	public ResponseEntity<PrestamoDto> getPrestamoPorIdPrestamoYIdusuarioYIdSaldo(@PathVariable Integer idUsuario,
@@ -67,12 +64,24 @@ public class PrestamoController {
 		return new ResponseEntity<>(service.generarSaldoPrestamo(), HttpStatus.CREATED);
 
 	}
+	
+	@GetMapping("/saldo-prestamos")
+	public ResponseEntity<Page<SaldoPrestamoDto>> getPrestamosyParams(@RequestParam Map<String, String> parameters){
+		return new ResponseEntity<>(service.getPrestamosyParams(parameters), HttpStatus.OK);	
+	}
 
 	@PostMapping("/prestamos/{idPrestamo}/saldos")
 	public ResponseEntity<SaldoPrestamoDto> insertPagoPrestamo(@PathVariable Integer idPrestamo,
 			@RequestBody @Valid SaldoPrestamoDto saldo) {
 		return new ResponseEntity<>(service.insertPagoPrestamo(idPrestamo, saldo), HttpStatus.CREATED);
 	}
+	
+	@PutMapping("/saldo-prestamos/{idSaldo}")
+	public ResponseEntity<SaldoPrestamoDto> updatePagoPrestamo(@PathVariable Integer idSaldo,
+			@RequestBody @Valid SaldoPrestamoDto saldo) {
+		return new ResponseEntity<>(service.updatePagoPrestamo(idSaldo, saldo), HttpStatus.OK);
+	}
+
 	
 	@PostMapping("/prestamos/{idPrestamo}/traspasar-prestamo")
 	public ResponseEntity<List<PrestamoDto>> traspasarPrestamo(@PathVariable Integer idPrestamo){
