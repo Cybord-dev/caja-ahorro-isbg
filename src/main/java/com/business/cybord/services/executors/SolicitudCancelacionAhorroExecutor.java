@@ -94,8 +94,6 @@ public class SolicitudCancelacionAhorroExecutor implements SolicitudExecutor {
 			repositoryUsuario.save(usuario);
 			datoUsuarioService.borraDatoUsuario(dato.getId());
 			
-			
-			//TODO: AGREGAR RAZON DE CANCELACION
 			String texto = String.format(
 					"%s, con número de trabajador %s , " + 
 					"adscrito a la Oficina de %s solicito por este medio se cancele el" + 

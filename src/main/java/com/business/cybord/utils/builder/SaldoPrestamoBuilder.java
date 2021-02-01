@@ -82,5 +82,15 @@ public class SaldoPrestamoBuilder extends AbstractBuilder<SaldoPrestamoDto> {
 		instance.setFechaActualizacion(fechaActualizacion);
 		return this;
 	}
+	
+	public SaldoPrestamoBuilder setNoEmpleado(String noEmpleado) {
+		instance.setNoEmpleado(noEmpleado);
+		return this;
+	}
+	
+	public SaldoPrestamoBuilder setNombreEmpleado(String nombreEmpleado) {
+		instance.setNombreEmpleado(nombreEmpleado);
+		return this;
+	}
 
 }
