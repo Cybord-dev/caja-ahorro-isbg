@@ -26,13 +26,17 @@ import org.springframework.web.server.ResponseStatusException;
 import com.business.cybord.mappers.UsuariosMapper;
 import com.business.cybord.models.dtos.CapacidadPagoDto;
 import com.business.cybord.models.dtos.MenuItem;
+import com.business.cybord.models.dtos.PrestamoDto;
 import com.business.cybord.models.dtos.RecursoDto;
 import com.business.cybord.models.dtos.UserInfoDto;
 import com.business.cybord.models.dtos.UsuarioDto;
+import com.business.cybord.models.dtos.ValidacionAvalDto;
 import com.business.cybord.models.dtos.composed.UserAhorroDto;
 import com.business.cybord.models.entities.Usuario;
+import com.business.cybord.models.enums.TipoAtributoUsuarioEnum;
 import com.business.cybord.repositories.UsuariosRepository;
 import com.business.cybord.repositories.dao.UserRepositoryDao;
+import com.business.cybord.repositories.dao.ValidacionAvalDao;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
@@ -49,9 +53,12 @@ public class UsuarioService {
 
 	@Autowired
 	private UserRepositoryDao userRepositoryDao;
-	
+
 	@Autowired
 	private PrestamoService prestamoService;
+	
+	@Autowired
+	private ValidacionAvalDao validacionAvalDao;
 
 	private ObjectMapper objMapper = new ObjectMapper();
 
@@ -115,19 +122,29 @@ public class UsuarioService {
 		entity.setNoEmpleado(usuario.getNoEmpleado());
 		return mapper.getDtoFromUserEntity(repository.save(entity));
 	}
-	
-	
+
 	public CapacidadPagoDto calculoCapacidadPago(Integer idUsuario) {
 		CapacidadPagoDto capacidad = new CapacidadPagoDto();
-		//todo: AGREGAR LA CAPACIDAD DE PAGO ACTUAL
 		UsuarioDto usuario = getUserById(idUsuario);
-		BigDecimal sueldo = new BigDecimal(usuario.getDatosUsuario().get("SUELDO"));
-		if(usuario.isAhorrador()) {
-			
+		if (!usuario.getDatosUsuario().containsKey(TipoAtributoUsuarioEnum.SUELDO.name())) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					String.format("El empleado %s : no tiene el sueldo asignado", usuario.getNoEmpleado()));
 		}
-		capacidad.setCapacidadPago(sueldo.multiply(BigDecimal.valueOf(Math.random()/3))); 
-		capacidad.setPrestamosActivos(prestamoService.getPrestamosdeUnUsuarioById(usuario.getId()));
-		capacidad.setAvalados(new ArrayList<>());
+		BigDecimal sueldo = new BigDecimal(usuario.getDatosUsuario().get(TipoAtributoUsuarioEnum.SUELDO.name()));
+		capacidad.setSueldo(new BigDecimal(sueldo.doubleValue()));
+		if (usuario.isAhorrador() && usuario.getDatosUsuario().containsKey(TipoAtributoUsuarioEnum.AHORRO.name())) {
+			BigDecimal ahorro = new BigDecimal(usuario.getDatosUsuario().get(TipoAtributoUsuarioEnum.AHORRO.name()));
+			capacidad.setAhorro(new BigDecimal(ahorro.doubleValue()));
+			sueldo = sueldo.subtract(ahorro);
+		}
+		List<PrestamoDto> activePrestamos = prestamoService.getPrestamosdeUnUsuarioByIdNotCompleted(usuario.getId());
+		for (PrestamoDto prestamoDto : activePrestamos) {
+			sueldo = sueldo.subtract(prestamoDto.getMonto().divide(new BigDecimal(prestamoDto.getNoQuincenas())));
+		}
+		List<ValidacionAvalDto> prestamoAvales=validacionAvalDao.getActivePrestamosByAval(usuario.getId());
+		capacidad.setAvalados(prestamoAvales);
+		capacidad.setPrestamosActivos(activePrestamos);
+		capacidad.setCapacidadPago(sueldo);
 		return capacidad;
 	}
 
@@ -156,7 +173,6 @@ public class UsuarioService {
 		throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
 				String.format("%s no es un usuario autorizado", "anonymous"));
 	}
-	
 
 	private List<MenuItem> getMenuFromResource(String fileName) {
 		try {

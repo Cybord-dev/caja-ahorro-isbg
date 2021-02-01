@@ -37,7 +37,7 @@ public class PrestamoController {
 
 	@GetMapping("/usuarios/{idUsuario}/prestamos")
 	public ResponseEntity<List<PrestamoDto>> getPrestamosByUsuario(@PathVariable Integer idUsuario) {
-		return new ResponseEntity<>(service.getPrestamosdeUnUsuarioById(idUsuario), HttpStatus.OK);
+		return new ResponseEntity<>(service.getPrestamosByUsuarioId(idUsuario), HttpStatus.OK);
 	}
 
 	@PostMapping("/usuarios/{idUsuario}/prestamos")
@@ -55,7 +55,7 @@ public class PrestamoController {
 	@GetMapping("/usuarios/{idUsuario}/prestamos/{idPrestamo}/saldos/{idSaldo}")
 	public ResponseEntity<PrestamoDto> getPrestamoPorIdPrestamoYIdusuarioYIdSaldo(@PathVariable Integer idUsuario,
 			@PathVariable Integer idPrestamo, @PathVariable Integer idSaldo) {
-		return new ResponseEntity<>(service.getPrestamoPorIdPrestamoYIdusuarioYIdSaldo(idUsuario, idPrestamo, idSaldo),
+		return new ResponseEntity<>(service.getPrestamoByIdPrestamoAndIdusuarioAndIdSaldo(idUsuario, idPrestamo, idSaldo),
 				HttpStatus.OK);
 	}
 

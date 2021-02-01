@@ -41,9 +41,29 @@ public class ValidacionAvalDao {
 	private DateFormat dateFormat = new SimpleDateFormat(SqlConstants.DATE_FORMAT);
 
 	private DateHelper dh = new DateHelper();
+	
+	private static final String GET_ACTIVE_PRESTAMOS_BY_AVAL = "SELECT B.* "
+			+ "FROM "
+			+ "	   isbg.prestamo 			   A,"
+			+ "    isbg.validaciones_aval  B "
+			+ "where 1=1 "
+			+ "	   AND A.id_solicitud=B.id_solicitud "
+			+ "    AND B.id_usuario_aval=? "
+			+ "    AND A.estatus in ('ACTIVO','SUSPENDIDO','TRASPASADO');";
 
 	private static final Logger log = LoggerFactory.getLogger(ValidacionAvalDao.class);
 
+	public List<ValidacionAvalDto> getActivePrestamosByAval(Integer idUsuarioAval) {
+		return jdbcTemplate.query(new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+				PreparedStatement ps = con.prepareStatement(GET_ACTIVE_PRESTAMOS_BY_AVAL);
+				ps.setInt(1,idUsuarioAval);
+				return ps;
+			}
+		}, new ValidacionAvalRowMapper());
+	}
+	
 	public Page<ValidacionAvalDto> findAll(Map<String, String> parameters, Pageable pageable) {
 		int total = jdbcTemplate.queryForObject(solicitudCount(parameters), new Object[] {},
 				(rs, rowNum) -> rs.getInt(1));

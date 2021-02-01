@@ -12,8 +12,8 @@ import com.business.cybord.models.entities.Prestamo;
 public interface PrestamoRepository extends JpaRepository<Prestamo, Integer> {
 
 	public List<Prestamo> findByIdDeudor(Integer idDeudor);
-
-	@Query("select e from Prestamo e where e.idDeudor = :idDeudor and e.estatus in ('ACTIVO','SUSPENDIDO','A_PAGAR_POR_AVAL','TRASPASADO')")
+	//TODO: AGREGAR LOS ESTATUS EN UN ENUM Y NO HARCODEADOS
+	@Query("select e from Prestamo e where e.idDeudor = :idDeudor and e.estatus in ('ACTIVO','SUSPENDIDO','TRASPASADO')")
 	public List<Prestamo> findByIdDeudorNotCompleted(Integer idDeudor);
 
 	public Optional<Prestamo> findByIdAndIdDeudor(Integer idPrestamo, Integer idDeudor);

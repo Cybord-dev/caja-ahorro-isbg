@@ -70,7 +70,7 @@ public class PrestamoService {
 		return dao.findAll(parameters, PageRequest.of(page, size, Sort.by("fechaActualizacion")));
 	}
 
-	public List<PrestamoDto> getPrestamosdeUnUsuarioById(Integer id) {
+	public List<PrestamoDto> getPrestamosByUsuarioId(Integer id) {
 		return mapper.getDtosFromEntity(repository.findByIdDeudor(id));
 	}
 
@@ -84,7 +84,7 @@ public class PrestamoService {
 		return saldosDao.findAll(parameters, PageRequest.of(page, size, Sort.by("fechaActualizacion")));
 	}
 
-	public PrestamoDto getPrestamoPorIdPrestamoYIdusuario(Integer idUsuario, Integer idPrestamo) {
+	public PrestamoDto getPrestamoByIdPrestamoAndIdusuario(Integer idUsuario, Integer idPrestamo) {
 		Optional<Prestamo> prestamo = repository.findByIdAndIdDeudor(idPrestamo, idUsuario);
 		if (prestamo.isPresent()) {
 			return mapper.getDtoFromEntity(prestamo.get());
@@ -93,7 +93,7 @@ public class PrestamoService {
 		}
 	}
 
-	public PrestamoDto getPrestamoPorIdPrestamoYIdusuarioYIdSaldo(Integer idUsuario, Integer idPrestamo,
+	public PrestamoDto getPrestamoByIdPrestamoAndIdusuarioAndIdSaldo(Integer idUsuario, Integer idPrestamo,
 			Integer idSaldo) {
 		Optional<Prestamo> prestamo = repository.findByIdAndIdDeudorAndIdSaldo(idUsuario, idPrestamo, idSaldo);
 		if (prestamo.isPresent()) {
