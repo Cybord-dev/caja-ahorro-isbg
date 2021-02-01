@@ -145,6 +145,7 @@ public class UsuarioService {
 		for (PrestamoDto prestamoDto : activePrestamos) {
 			sueldoUtilizable = sueldoUtilizable
 					.subtract(prestamoDto.getMonto().divide(new BigDecimal(prestamoDto.getNoQuincenas())))
+					.subtract(prestamoDto.getMonto().multiply(new BigDecimal(0.01)))
 					.setScale(2, RoundingMode.HALF_UP);
 		}
 		List<ValidacionAvalDto> prestamoAvales = validacionAvalDao.getActivePrestamosByAval(usuario.getId());
