@@ -80,14 +80,10 @@ public class PrestamoDao {
 		prestamo.addColumn("fecha_actualizacion", "String", null);
 
 		SelectQuery selectByParams = new SelectQuery().addFromTable(prestamo)
-				.addColumns(prestamo.findColumns("id_prestamo"))
-				.addColumns(prestamo.findColumns("id_deudor"))
-				.addColumns(prestamo.findColumns("id_solicitud"))
-				.addColumns(prestamo.findColumns("estatus"))
-				.addColumns(prestamo.findColumns("no_quincenas"))
-				.addColumns(prestamo.findColumns("tasa_interes"))
-				.addColumns(prestamo.findColumns("monto"))
-				.addColumns(prestamo.findColumns("saldo_pendiente"))
+				.addColumns(prestamo.findColumns("id_prestamo")).addColumns(prestamo.findColumns("id_deudor"))
+				.addColumns(prestamo.findColumns("id_solicitud")).addColumns(prestamo.findColumns("estatus"))
+				.addColumns(prestamo.findColumns("no_quincenas")).addColumns(prestamo.findColumns("tasa_interes"))
+				.addColumns(prestamo.findColumns("monto")).addColumns(prestamo.findColumns("saldo_pendiente"))
 				.addColumns(prestamo.findColumns("fecha_terminacion"))
 				.addColumns(prestamo.findColumns("fecha_creacion"))
 				.addColumns(prestamo.findColumns("fecha_actualizacion"))
@@ -101,8 +97,10 @@ public class PrestamoDao {
 						parameters.get(prest.getParamName())));
 			}
 		}
-		log.info(selectByParams.toString());
-		return selectByParams.toString();
+		String query = selectByParams.toString().toString().concat(" " + SqlConstants.LIMIT + " "
+				+ pageable.getPageSize() + " " + SqlConstants.OFFSET + " " + pageable.getOffset());
+		log.info(query);
+		return query;
 	}
 
 	public String solicitudCount(Map<String, String> parameters) {

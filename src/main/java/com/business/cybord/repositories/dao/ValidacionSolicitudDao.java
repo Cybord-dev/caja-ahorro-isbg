@@ -64,7 +64,7 @@ public class ValidacionSolicitudDao {
 		String since = parameters.containsKey(SqlConstants.SINCE) ? parameters.get(SqlConstants.SINCE)
 				: dateFormat.format(new DateTime().minusYears(1).toDate());
 		String to = parameters.containsKey(SqlConstants.TO) ? parameters.get(SqlConstants.TO)
-				: dateFormat.format(dh.addDays(new Date(),2));
+				: dateFormat.format(dh.addDays(new Date(), 2));
 		DbSchema schema = new DbSpec().addDefaultSchema();
 
 		DbTable validiacion = schema.addTable("validaciones_solicitud");
@@ -141,8 +141,11 @@ public class ValidacionSolicitudDao {
 				}
 			}
 		}
-		log.info(selectByParams.toString().replace("t0.estatus,", "t0.estatus status,"));
-		return selectByParams.toString().replace("t0.estatus,", "t0.estatus status,");
+		String query = selectByParams.toString().replace("t0.estatus,", "t0.estatus status,").toString()
+				.concat(" " + SqlConstants.LIMIT + " " + pageable.getPageSize() + " " + SqlConstants.OFFSET + " "
+						+ pageable.getOffset());
+		log.info(query);
+		return query;
 	}
 
 	public String solicitudCount(Map<String, String> parameters) {

@@ -49,42 +49,24 @@ public class ReportesSaldosDao {
 	private DateFormat dateFormat = new SimpleDateFormat(SqlConstants.DATE_FORMAT);
 	private DateHelper dh = new DateHelper();
 
-	private static final String AHORRO_CAJA_POR_TIPO_ANUAL = "SELECT SUM(monto) as monto, tipo,MONTH(fecha_creacion) as mes  " 
-			+ "FROM saldo_ahorro where fecha_creacion between ? AND ?  AND validado=1 " + "group by tipo, MONTH(fecha_creacion) Order by fecha_creacion;";
-	
-	private static final String AHORRO_CAJA_POR_TIPO_ANUAL_AGRUPADO = "SELECT "
-			+ "SUM(monto) monto,"
-			+ " tipo " + 
-			"FROM "
-			+ "	saldo_ahorro "
-			+ "WHERE validado=1 AND fecha_creacion between ? AND ?"
-			+ "GROUP BY tipo;";
-	
-	private static final String AHORROS_INTERNOS_LAST_DAYS = "SELECT b.*" + 
-			"	FROM " + 
-			"		isbg.usuarios 			a," + 
-			"		isbg.saldo_ahorro		b" + 
-			"	WHERE 1=1" + 
-			"		AND a.id_usuario=b.id_usuario" + 
-			"	    AND a.tipo_usuario='INTERNO'"+
-			"	    AND b.tipo='ahorro'"+
-			"		AND validado=0 "+
-			"		AND a.ahorrador=1" + 
-			"	    AND	b.fecha_creacion>=current_date()-?;";
-	
-	private static final String AHORROS_EXTERNOS_LAST_DAYS = "SELECT b.* "
-			+ "				FROM   "
-			+ "					isbg.usuarios 			a,"
-			+ "					isbg.saldo_ahorro		b"
-			+ "				WHERE 1=1  "
-			+ "					AND a.id_usuario=b.id_usuario"
-			+ "				    AND a.tipo_usuario='EXTERNO'"
-			+ "				    AND b.tipo='ahorro'"
-			+ "					AND validado=1"
-			+ "					AND a.ahorrador=1"
+	private static final String AHORRO_CAJA_POR_TIPO_ANUAL = "SELECT SUM(monto) as monto, tipo,MONTH(fecha_creacion) as mes  "
+			+ "FROM saldo_ahorro where fecha_creacion between ? AND ?  AND validado=1 "
+			+ "group by tipo, MONTH(fecha_creacion) Order by fecha_creacion;";
+
+	private static final String AHORRO_CAJA_POR_TIPO_ANUAL_AGRUPADO = "SELECT " + "SUM(monto) monto," + " tipo "
+			+ "FROM " + "	saldo_ahorro " + "WHERE validado=1 AND fecha_creacion between ? AND ?" + "GROUP BY tipo;";
+
+	private static final String AHORROS_INTERNOS_LAST_DAYS = "SELECT b.*" + "	FROM "
+			+ "		isbg.usuarios 			a," + "		isbg.saldo_ahorro		b" + "	WHERE 1=1"
+			+ "		AND a.id_usuario=b.id_usuario" + "	    AND a.tipo_usuario='INTERNO'" + "	    AND b.tipo='ahorro'"
+			+ "		AND validado=0 " + "		AND a.ahorrador=1" + "	    AND	b.fecha_creacion>=current_date()-?;";
+
+	private static final String AHORROS_EXTERNOS_LAST_DAYS = "SELECT b.* " + "				FROM   "
+			+ "					isbg.usuarios 			a," + "					isbg.saldo_ahorro		b"
+			+ "				WHERE 1=1  " + "					AND a.id_usuario=b.id_usuario"
+			+ "				    AND a.tipo_usuario='EXTERNO'" + "				    AND b.tipo='ahorro'"
+			+ "					AND validado=1" + "					AND a.ahorrador=1"
 			+ "				    AND	b.fecha_creacion>=TIMESTAMPADD(DAY,?,CURRENT_TIMESTAMP);";
-	
-	
 
 	private static final Logger log = LoggerFactory.getLogger(ReportesSaldosDao.class);
 
@@ -98,7 +80,7 @@ public class ReportesSaldosDao {
 			}
 		}, new SaldoAhorroDtoRowMapper());
 	}
-	
+
 	public List<SaldoAhorroDto> getAhorrosExternosLastDays(int days) {
 		return jdbcTemplate.query(new PreparedStatementCreator() {
 			@Override
@@ -109,25 +91,25 @@ public class ReportesSaldosDao {
 			}
 		}, new SaldoAhorroDtoRowMapper());
 	}
-	
-	public List<SaldoAhorroCajaDto> getAhorrosCajaAnual(LocalDate start,LocalDate end) {
+
+	public List<SaldoAhorroCajaDto> getAhorrosCajaAnual(LocalDate start, LocalDate end) {
 		return jdbcTemplate.query(new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 				PreparedStatement ps = con.prepareStatement(AHORRO_CAJA_POR_TIPO_ANUAL);
-				ps.setDate(1,java.sql.Date.valueOf(start));
+				ps.setDate(1, java.sql.Date.valueOf(start));
 				ps.setDate(2, java.sql.Date.valueOf(end));
 				return ps;
 			}
 		}, new SaldoAhorroCajaRowMapper());
 	}
-	
-	public List<SaldoAhorroCajaDto> getAhorrosCajaAgrupado(LocalDate start,LocalDate end) {
+
+	public List<SaldoAhorroCajaDto> getAhorrosCajaAgrupado(LocalDate start, LocalDate end) {
 		return jdbcTemplate.query(new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 				PreparedStatement ps = con.prepareStatement(AHORRO_CAJA_POR_TIPO_ANUAL_AGRUPADO);
-				ps.setDate(1,java.sql.Date.valueOf(start));
+				ps.setDate(1, java.sql.Date.valueOf(start));
 				ps.setDate(2, java.sql.Date.valueOf(end));
 				return ps;
 			}
@@ -176,9 +158,8 @@ public class ReportesSaldosDao {
 				.addCondition(BinaryCondition.lessThanOrEq(saldoAhorro.findColumn("fecha_creacion"), to));
 
 		saldoAhorro.addColumn("validado", "Integer", null);
-		selectStoresByParams.addCondition(BinaryCondition.equalTo(saldoAhorro.addColumn("validado"),
-				"1"));
-		
+		selectStoresByParams.addCondition(BinaryCondition.equalTo(saldoAhorro.addColumn("validado"), "1"));
+
 		for (SaldoAhorroFilterEnum sal : SaldoAhorroFilterEnum.values()) {
 			if (parameters.containsKey(sal.getParamName())) {
 				saldoAhorro.addColumn(sal.getFieldName(), "String", null);
@@ -226,9 +207,8 @@ public class ReportesSaldosDao {
 				.addCondition(BinaryCondition.lessThanOrEq(saldoAhorro.findColumn("fecha_creacion"), to));
 
 		saldoAhorro.addColumn("validado", "Integer", null);
-		selectStoresByParams.addCondition(BinaryCondition.equalTo(saldoAhorro.addColumn("validado"),
-				"1"));
-		
+		selectStoresByParams.addCondition(BinaryCondition.equalTo(saldoAhorro.addColumn("validado"), "1"));
+
 		for (SaldoAhorroFilterEnum sal : SaldoAhorroFilterEnum.values()) {
 			if (parameters.containsKey(sal.getParamName())) {
 				saldoAhorro.addColumn(sal.getFieldName(), "String", null);

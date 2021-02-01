@@ -30,10 +30,10 @@ import com.healthmarketscience.sqlbuilder.dbspec.basic.DbTable;
 
 @Repository
 public class UserRepositoryDao {
-	
+
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	
+
 	private static final Logger log = LoggerFactory.getLogger(UserRepositoryDao.class);
 
 	public Page<UserAhorroDto> findAll(Map<String, String> parameters, Pageable pageable) {
@@ -48,16 +48,16 @@ public class UserRepositoryDao {
 		}, new UsuarioAhorroRowMapper());
 		return new PageImpl<>(rows, pageable, total);
 	}
-	
+
 	public String solicitudQuery(Map<String, String> parameters, Pageable pageable) {
 		DbSchema schema = new DbSpec().addDefaultSchema();
-		
+
 		DbTable usuarios = schema.addTable("usuarios");
 		DbTable datosUsuario = schema.addTable("datos_user");
 
 		DbColumn columnB = new DbColumn(usuarios, "id_usuario", "integer", 0);
 		DbColumn columnA = new DbColumn(datosUsuario, "id_usuario", "integer", 0);
-		
+
 		datosUsuario.addColumn("dato", "String", null);
 		datosUsuario.addColumn("tipo_dato", "String", null);
 		usuarios.addColumn("nombre", "String", null);
@@ -70,20 +70,15 @@ public class UserRepositoryDao {
 		usuarios.addColumn("tipo_usuario", "String", null);
 		usuarios.addColumn("fecha_creacion", "String", null);
 		usuarios.addColumn("fecha_actualizacion", "String", null);
-		
-		SelectQuery select = new SelectQuery().addFromTable(usuarios)
-				.addColumns(datosUsuario.findColumns("dato"))
-				.addColumns(usuarios.findColumns("tipo_usuario"))
-				.addColumns(usuarios.findColumns("id_usuario"))
-				.addColumns(usuarios.findColumns("no_empleado"))
-				.addColumns(usuarios.findColumns("nombre"))
-				.addColumns(usuarios.findColumns("email"))
-				.addColumns(usuarios.findColumns("ahorrador"))
-				.addColumns(usuarios.findColumns("estatus"))
-				.addColumns(usuarios.findColumns("fecha_creacion"))
-				.addColumns(usuarios.findColumns("fecha_actualizacion"))
-				.addJoin(SelectQuery.JoinType.LEFT_OUTER, usuarios,datosUsuario, BinaryCondition.equalTo(columnA, columnB));
-		
+
+		SelectQuery select = new SelectQuery().addFromTable(usuarios).addColumns(datosUsuario.findColumns("dato"))
+				.addColumns(usuarios.findColumns("tipo_usuario")).addColumns(usuarios.findColumns("id_usuario"))
+				.addColumns(usuarios.findColumns("no_empleado")).addColumns(usuarios.findColumns("nombre"))
+				.addColumns(usuarios.findColumns("email")).addColumns(usuarios.findColumns("ahorrador"))
+				.addColumns(usuarios.findColumns("estatus")).addColumns(usuarios.findColumns("fecha_creacion"))
+				.addColumns(usuarios.findColumns("fecha_actualizacion")).addJoin(SelectQuery.JoinType.LEFT_OUTER,
+						usuarios, datosUsuario, BinaryCondition.equalTo(columnA, columnB));
+
 		for (UsuarioAhorroFilterEnum usuario : UsuarioAhorroFilterEnum.values()) {
 			if (parameters.containsKey(usuario.getParamName())) {
 				if (usuario.isLikeable()) {
@@ -97,12 +92,14 @@ public class UserRepositoryDao {
 				}
 			}
 		}
-		String query = select.toString().concat(" " + SqlConstants.LIMIT + " " + pageable.getPageSize()
-				+ " " + SqlConstants.OFFSET + " " + pageable.getOffset()).replace("datos_user", "(select * from datos_user WHERE tipo_dato = 'AHORRO')");
+		String query = select.toString()
+				.concat(" " + SqlConstants.LIMIT + " " + pageable.getPageSize() + " " + SqlConstants.OFFSET + " "
+						+ pageable.getOffset())
+				.replace("datos_user", "(select * from datos_user WHERE tipo_dato = 'AHORRO')");
 		log.info(query);
 		return query;
 	}
-	
+
 	public String solicitudCount(Map<String, String> parameters) {
 		DbSchema schema = new DbSpec().addDefaultSchema();
 		DbTable usuarios = schema.addTable("usuarios");
@@ -119,8 +116,8 @@ public class UserRepositoryDao {
 							"%" + parameters.get(usuario.getParamName()) + "%"));
 				} else {
 					usuarios.addColumn(usuario.getFieldName(), "String", null);
-					selectStoresByParams.addCondition(BinaryCondition.equalTo(usuarios.addColumn(usuario.getFieldName()),
-							parameters.get(usuario.getParamName())));
+					selectStoresByParams.addCondition(BinaryCondition.equalTo(
+							usuarios.addColumn(usuario.getFieldName()), parameters.get(usuario.getParamName())));
 				}
 			}
 		}
@@ -128,5 +125,5 @@ public class UserRepositoryDao {
 		log.info(selectStoresByParams.toString());
 		return selectStoresByParams.toString();
 	}
-	
+
 }

@@ -122,7 +122,9 @@ public class UsuarioService {
 		//todo: AGREGAR LA CAPACIDAD DE PAGO ACTUAL
 		UsuarioDto usuario = getUserById(idUsuario);
 		BigDecimal sueldo = new BigDecimal(usuario.getDatosUsuario().get("SUELDO"));
-		// TODO code a better algorith for payment capacity
+		if(usuario.isAhorrador()) {
+			
+		}
 		capacidad.setCapacidadPago(sueldo.multiply(BigDecimal.valueOf(Math.random()/3))); 
 		capacidad.setPrestamosActivos(prestamoService.getPrestamosdeUnUsuarioById(usuario.getId()));
 		capacidad.setAvalados(new ArrayList<>());

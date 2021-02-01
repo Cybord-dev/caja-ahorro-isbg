@@ -49,12 +49,12 @@ public class SaldoPrestamoDao {
 
 	@Autowired
 	private JdbcTemplate template;
-	
+
 	private DateFormat dateFormat = new SimpleDateFormat(SqlConstants.DATE_FORMAT);
 	private DateHelper dh = new DateHelper();
-	
+
 	private static final Logger log = LoggerFactory.getLogger(SaldoPrestamoDao.class);
-	
+
 	private static final String INSERT_SALDO_PRESTAMO = "INSERT INTO isbg.saldo_prestamo"
 			+ "(id_prestamo, tipo, monto, validado, origen, fecha_creacion, fecha_actualizacion) VALUES(?, ?, ?, ?, ?, now(), now())";
 
@@ -65,7 +65,8 @@ public class SaldoPrestamoDao {
 		template.update(new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-				PreparedStatement ps = con.prepareStatement(INSERT_SALDO_PRESTAMO,new String[]{"id_saldo_prestamo"});
+				PreparedStatement ps = con.prepareStatement(INSERT_SALDO_PRESTAMO,
+						new String[] { "id_saldo_prestamo" });
 				ps.setInt(1, saldo.getIdPrestamo());
 				ps.setString(2, saldo.getTipo());
 				ps.setBigDecimal(3, saldo.getMonto());
@@ -92,7 +93,7 @@ public class SaldoPrestamoDao {
 			}
 		});
 	}
-	
+
 	public Page<SaldoPrestamoDto> findAll(Map<String, String> parameters, Pageable pageable) {
 		int total = template.queryForObject(saldoPrestamoCount(parameters), new Object[] {},
 				(rs, rowNum) -> rs.getInt(1));
@@ -106,12 +107,12 @@ public class SaldoPrestamoDao {
 		}, new SaldoPrestamoReportRowMapper());
 		return new PageImpl<>(rows, pageable, total);
 	}
-	
+
 	public String query(Map<String, String> parameters, Pageable pageable) {
 		String since = parameters.containsKey(SqlConstants.SINCE) ? parameters.get(SqlConstants.SINCE)
 				: dateFormat.format(new DateTime().minusYears(1).toDate());
 		String to = parameters.containsKey(SqlConstants.TO) ? parameters.get(SqlConstants.TO)
-				: dateFormat.format(dh.addDays(new Date(),2));
+				: dateFormat.format(dh.addDays(new Date(), 2));
 		DbSchema schema = new DbSpec().addDefaultSchema();
 
 		DbTable saldoPrestamo = schema.addTable("saldo_prestamo");
@@ -122,7 +123,7 @@ public class SaldoPrestamoDao {
 		DbColumn joinColumnA2 = new DbColumn(prestamo, "id_prestamo", "integer", 0);
 		DbColumn joinColumnB = new DbColumn(prestamo, "id_deudor", "integer", 0);
 		DbColumn joinColumnB2 = new DbColumn(usuarios, "id_usuario", "integer", 0);
-		
+
 		saldoPrestamo.addColumn("fecha_creacion", "String", null);
 		saldoPrestamo.addColumn("fecha_actualizacion", "String", null);
 		saldoPrestamo.addColumn("validado", "String", null);
@@ -149,18 +150,17 @@ public class SaldoPrestamoDao {
 						BinaryCondition.equalTo(joinColumnA, joinColumnA2))
 				.addJoin(SelectQuery.JoinType.INNER, prestamo, usuarios,
 						BinaryCondition.equalTo(joinColumnB, joinColumnB2))
-				.addColumns(saldoPrestamo.findColumns("fecha_creacion")).addColumns(saldoPrestamo.findColumns("fecha_actualizacion"))
+				.addColumns(saldoPrestamo.findColumns("fecha_creacion"))
+				.addColumns(saldoPrestamo.findColumns("fecha_actualizacion"))
 				.addColumns(saldoPrestamo.findColumns("validado")).addColumns(saldoPrestamo.findColumns("monto"))
 				.addColumns(saldoPrestamo.findColumns("origen")).addColumns(saldoPrestamo.findColumns("tipo"))
-				.addColumns(saldoPrestamo.findColumns("id_saldo_prestamo")).addColumns(saldoPrestamo.findColumns("id_prestamo"))
-				.addColumns(usuarios.findColumns("no_empleado")).addColumns(usuarios.findColumns("nombre"))
-				.addColumns(usuarios.findColumns("tipo_usuario")).addColumns(usuarios.findColumns("id_usuario"))
-				.addColumns(prestamo.findColumns("estatus")).addColumns(prestamo.findColumns("monto"))
-				.addColumns(prestamo.findColumns("no_quincenas"))
-				.addColumns(prestamo.findColumns("tasa_interes"))
-				.addColumns(prestamo.findColumns("saldo_pendiente"))
-				.addColumns(prestamo.findColumns("id_deudor"))
-				.addColumns(prestamo.findColumns("fecha_terminacion"))
+				.addColumns(saldoPrestamo.findColumns("id_saldo_prestamo"))
+				.addColumns(saldoPrestamo.findColumns("id_prestamo")).addColumns(usuarios.findColumns("no_empleado"))
+				.addColumns(usuarios.findColumns("nombre")).addColumns(usuarios.findColumns("tipo_usuario"))
+				.addColumns(usuarios.findColumns("id_usuario")).addColumns(prestamo.findColumns("estatus"))
+				.addColumns(prestamo.findColumns("monto")).addColumns(prestamo.findColumns("no_quincenas"))
+				.addColumns(prestamo.findColumns("tasa_interes")).addColumns(prestamo.findColumns("saldo_pendiente"))
+				.addColumns(prestamo.findColumns("id_deudor")).addColumns(prestamo.findColumns("fecha_terminacion"))
 				.addCondition(BinaryCondition.greaterThanOrEq(saldoPrestamo.findColumn("fecha_creacion"), since))
 				.addCondition(BinaryCondition.lessThanOrEq(saldoPrestamo.findColumn("fecha_creacion"), to));
 
@@ -199,11 +199,13 @@ public class SaldoPrestamoDao {
 				}
 			}
 		}
-		log.info(selectByParams.toString().replace("t1.monto,", "t1.monto monto_prestamo,"));
-		return selectByParams.toString().replace("t1.monto,", "t1.monto monto_prestamo,");
+		String query = selectByParams.toString().replace("t1.monto,", "t1.monto monto_prestamo,").toString()
+				.concat(" " + SqlConstants.LIMIT + " " + pageable.getPageSize() + " " + SqlConstants.OFFSET + " "
+						+ pageable.getOffset());
+		log.info(query);
+		return query;
 	}
 
-	
 	public String saldoPrestamoCount(Map<String, String> parameters) {
 		String since = parameters.containsKey(SqlConstants.SINCE) ? parameters.get(SqlConstants.SINCE)
 				: dateFormat.format(new DateTime().minusYears(1).toDate());

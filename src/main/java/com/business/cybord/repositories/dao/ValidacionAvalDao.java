@@ -94,7 +94,6 @@ public class ValidacionAvalDao {
 				.addColumns(validiacionAval.findColumns("nombre_aval"))
 				.addCondition(BinaryCondition.greaterThanOrEq(validiacionAval.findColumn("fecha_creacion"), since))
 				.addCondition(BinaryCondition.lessThanOrEq(validiacionAval.findColumn("fecha_creacion"), to));
-
 		for (ValidacionAvalFilterEnum val : ValidacionAvalFilterEnum.values()) {
 			if (parameters.containsKey(val.getParamName())) {
 				validiacionAval.addColumn(val.getFieldName(), "String", null);
@@ -102,8 +101,10 @@ public class ValidacionAvalDao {
 						parameters.get(val.getParamName())));
 			}
 		}
-		log.info(selectByParams.toString());
-		return selectByParams.toString();
+		String query = selectByParams.toString().concat(" " + SqlConstants.LIMIT + " " + pageable.getPageSize() + " "
+				+ SqlConstants.OFFSET + " " + pageable.getOffset());
+		log.info(query);
+		return query;
 	}
 
 	public String solicitudCount(Map<String, String> parameters) {

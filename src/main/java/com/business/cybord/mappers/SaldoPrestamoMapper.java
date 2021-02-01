@@ -11,7 +11,7 @@ import com.business.cybord.models.dtos.SaldoPrestamoDto;
 import com.business.cybord.models.entities.SaldoPrestamo;
 
 
-@Mapper
+@Mapper(config = IgnoreUnmappedMapperConfig.class)
 @MapperConfig(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring")
 public interface SaldoPrestamoMapper {
 	
