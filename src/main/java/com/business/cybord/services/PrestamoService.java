@@ -1,14 +1,5 @@
 package com.business.cybord.services;
 
-import com.business.cybord.mappers.PrestamoMapper;
-import com.business.cybord.models.dtos.PrestamoDto;
-import com.business.cybord.models.dtos.SaldoPrestamoDto;
-import com.business.cybord.models.entities.Prestamo;
-import com.business.cybord.repositories.PrestamoRepository;
-import com.business.cybord.repositories.UsuariosRepository;
-import com.business.cybord.repositories.ValidacionAvalRepository;
-import com.business.cybord.repositories.dao.PrestamoDao;
-import com.business.cybord.repositories.dao.SaldoPrestamoDao;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -16,7 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +18,25 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
+
+import com.business.cybord.mappers.PrestamoMapper;
+import com.business.cybord.models.dtos.PrestamoDto;
+import com.business.cybord.models.dtos.SaldoPrestamoDto;
+import com.business.cybord.models.entities.Prestamo;
+import com.business.cybord.models.entities.Usuario;
+import com.business.cybord.models.entities.ValidacionAval;
+import com.business.cybord.models.enums.EstatusPrestamoEnum;
+import com.business.cybord.models.enums.TipoSaldoPrestamoEnum;
+import com.business.cybord.repositories.PrestamoRepository;
+import com.business.cybord.repositories.UsuariosRepository;
+import com.business.cybord.repositories.ValidacionAvalRepository;
+import com.business.cybord.repositories.dao.PrestamoDao;
+import com.business.cybord.repositories.dao.SaldoPrestamoDao;
+import com.business.cybord.utils.builder.PrestamoBuilder;
+import com.business.cybord.utils.builder.SaldoPrestamoBuilder;
 
 
 
