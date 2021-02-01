@@ -43,9 +43,9 @@ public class UsuariosController {
 		return new ResponseEntity<>(service.getUserById(id), HttpStatus.OK);
 	}
 	
-	@GetMapping("/{noEmpleado}/capacidad-pago")
-	public ResponseEntity<CapacidadPagoDto> getcapacidadPagoUserById(@PathVariable String noEmpleado) {
-		return new ResponseEntity<>(service.calculoCapacidadPago(noEmpleado), HttpStatus.OK);
+	@GetMapping("/{idUsuario}/capacidad-pago")
+	public ResponseEntity<CapacidadPagoDto> getcapacidadPagoUserById(@PathVariable Integer idUsuario) {
+		return new ResponseEntity<>(service.calculoCapacidadPago(idUsuario), HttpStatus.OK);
 	}
 
 	@GetMapping

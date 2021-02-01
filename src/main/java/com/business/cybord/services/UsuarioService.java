@@ -117,10 +117,10 @@ public class UsuarioService {
 	}
 	
 	
-	public CapacidadPagoDto calculoCapacidadPago(String noEmpleado) {
+	public CapacidadPagoDto calculoCapacidadPago(Integer idUsuario) {
 		CapacidadPagoDto capacidad = new CapacidadPagoDto();
 		//todo: AGREGAR LA CAPACIDAD DE PAGO ACTUAL
-		UsuarioDto usuario = getUserByNoEmpleado(noEmpleado);
+		UsuarioDto usuario = getUserById(idUsuario);
 		BigDecimal sueldo = new BigDecimal(usuario.getDatosUsuario().get("SUELDO"));
 		// TODO code a better algorith for payment capacity
 		capacidad.setCapacidadPago(sueldo.multiply(BigDecimal.valueOf(Math.random()/3))); 
