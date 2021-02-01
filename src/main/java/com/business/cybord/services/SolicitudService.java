@@ -145,7 +145,7 @@ public class SolicitudService {
 		for (AtributoSolicitud att : solicitudDto.getAttributesAsList()) {
 			if (att.getNombre().contains(TipoAtributoSolicitudEnum.AVAL.name())) {
 				validacionAvalService.createAvalRegister(solicitudDto.getAttributesAsList(), solicitudDto,
-						att.getValor());
+						Integer.valueOf(att.getValor()));
 			} else {
 				att.setSolicitud(nueva);
 				nueva.getAtributos().add(atributoSolicitudRepository.save(att));

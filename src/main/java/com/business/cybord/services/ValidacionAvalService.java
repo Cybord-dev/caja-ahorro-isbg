@@ -52,7 +52,7 @@ public class ValidacionAvalService {
 	private ValidacionAvalRepository repository;
 
 	@Autowired
-	private ValidacionAvalDao dao; 
+	private ValidacionAvalDao dao;
 
 	@Autowired
 	private ValidacionAvalMapper mapper;
@@ -83,7 +83,7 @@ public class ValidacionAvalService {
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 						String.format("No existe la validacion solicitada")));
 		if (dto.getEstatus().equals(AvalStatusEnum.RECHAZO.name())) {
-			cancelSolicitud(dto.getIdSolicitud(), dto.getNoEmpleadoAval());
+			cancelSolicitud(dto.getIdSolicitud(), dto.getIdUsuarioAval());
 		} else {
 			List<ValidacionAval> avales = repository.findByIdSolicitud(dto.getIdSolicitud());
 			Boolean aprobado = true;
@@ -102,21 +102,21 @@ public class ValidacionAvalService {
 
 	public List<ValidacionAvalDto> findAvalesNotApprovedByEmpleado(String noEmpleado) {
 		return mapper.getDtosFromEntities(
-				repository.findByNoEmpleadoAvalAndEstatus(noEmpleado, AvalStatusEnum.SOLICITUD.name()));
+				repository.findByIdUsuarioAvalAndEstatus(noEmpleado, AvalStatusEnum.SOLICITUD.name()));
 	}
 
 	public List<ValidacionAvalDto> findAvalesBySolicitud(int idSolicitud) {
 		return mapper.getDtosFromEntities(repository.findByIdSolicitud(idSolicitud));
 	}
 
-	private void cancelSolicitud(int idSolicitud, String noEmpleadoAval) throws IsbgServiceException {
+	private void cancelSolicitud(int idSolicitud, int idUSuarioAval) throws IsbgServiceException {
 		Solicitud sol = repositorySol.findById(idSolicitud)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 						String.format("la solicitud id= %d ", idSolicitud)));
 		SolicitudDto solicitudDto = solicitudMapper.getDtoFromSolicitudEntity(sol);
-		String motivo = String.format("Rechazo de aval %s", noEmpleadoAval);
+		String motivo = String.format("Rechazo de aval %d", idUSuarioAval);
 		sol.setStatus("Rechazada");
-		sol.setStatusDetalle(String.format("Rechazo de aval %s", noEmpleadoAval));
+		sol.setStatusDetalle(String.format("Rechazo de aval %d", idUSuarioAval));
 		repositorySol.save(sol);
 		ValidacionSolicitudDto validacion = new ValidacionSolicitudDto();
 		validacion.setArea(TipoAtributoSolicitudEnum.AVAL.name());
@@ -134,7 +134,7 @@ public class ValidacionAvalService {
 		validacion.setEmail("");
 		validacion.setNumeroValidacion(1);
 		validacion.setStatus(true);
-		ValidacionSolicitud validacionSolicitud=solicitudMapper.getEntityFromValidacionesDto(validacion);
+		ValidacionSolicitud validacionSolicitud = solicitudMapper.getEntityFromValidacionesDto(validacion);
 		validacionSolicitud.setSolicitud(sol);
 		repositoryValidacion.save(validacionSolicitud);
 		sol.setStatus(validaEstadoActual(solicitudDto, validacion));
@@ -183,18 +183,18 @@ public class ValidacionAvalService {
 	}
 
 	public ValidacionAvalDto createAvalRegister(List<AtributoSolicitud> atributos, SolicitudDto SolicitudDto,
-			String noEmpleado) {
+			int noEmpleado) {
 		AtributoSolicitud att = atributos.stream()
 				.filter(a -> a.getNombre().equals(TipoAtributoSolicitudEnum.MONTO.name())).findFirst()
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
 						"La solicitud no tiene monto como atributo"));
 		ValidacionAvalDto aval = new ValidacionAvalDto();
 		aval.setIdSolicitud(SolicitudDto.getId());
-		aval.setNoEmpleadoAval(noEmpleado);
+		aval.setIdUsuarioAval(noEmpleado);
 		UsuarioDto userDto = usuarioService.getUserById(SolicitudDto.getIdUsuario());
-		UsuarioDto avalDto = usuarioService.getUserByNoEmpleado(noEmpleado);
+		UsuarioDto avalDto = usuarioService.getUserById(noEmpleado);
 		aval.setNombreDeudor(userDto.getNombre());
-		aval.setNoEmpleadoDeudor(userDto.getNoEmpleado());
+		aval.setIdUsuarioDeudor(userDto.getId());
 		aval.setEstatus(AvalStatusEnum.SOLICITUD.name());
 		aval.setNombreAval(avalDto.getNombre());
 		aval.setMontoPrestamo(new BigDecimal(att.getValor()));

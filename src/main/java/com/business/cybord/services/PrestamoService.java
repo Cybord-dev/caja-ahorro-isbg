@@ -194,10 +194,9 @@ public class PrestamoService {
 		repository.save(prestamo);
 		List<Prestamo> prestamosGenerados = new ArrayList<>();
 		for (ValidacionAval aval : avales) {
-			// TODO:CAMBIAR LA BUSQUEDA POR ID_USUARIO
-			Usuario usuarioAval = usuarioRepository.findByNoEmpleado(aval.getNoEmpleadoAval())
+			Usuario usuarioAval = usuarioRepository.findById(aval.getIdUsuarioAval())
 					.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-							String.format("No existe el usuario con numero de empleado %s", aval.getNoEmpleadoAval())));
+							String.format("No existe el usuario con id  %d", aval.getIdUsuarioAval())));
 			Prestamo prestamoAval = new PrestamoBuilder().setIdDeudor(usuarioAval.getId())
 					.setEstatus(EstatusPrestamoEnum.TRASPASADO.name()).setMonto(saldoPorAval)
 					.setNoQuincenas(prestamo.getNoQuincenas() - prestamo.getSaldosPrestamo().stream()
