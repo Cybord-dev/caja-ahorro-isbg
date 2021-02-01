@@ -2,9 +2,9 @@ package com.business.cybord.models.enums.sql;
 
 public enum ValidacionAvalFilterEnum {
 	
-	NO_EMPLEADO_AVAL("no_empleado_aval", "no_empleado_aval", false),
-	NO_EMPLEADO_DEUDOR("no_empleado_deudor", "no_empleado_deudor", false),
-	NOMBRE_DEUDOR("no_empleado_deudor", "no_empleado_deudor", true),
+	ID_USUARIO_AVAL("id_usuario_aval", "id_usuario_aval", false),
+	ID_USUARIO_DEUDOR("id_usuario_deudor", "id_usuario_deudor", false),
+	NOMBRE_DEUDOR("nombre_deudor", "nombre_deudor", true),
 	NOMBRE_AVAL("nombre_aval", "nombre_aval", true),
 	ESTATUS("estatus", "estatus", false);
 

@@ -22,33 +22,33 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "validaciones_aval")
-public class ValidacionAval implements Serializable{
-	
+public class ValidacionAval implements Serializable {
+
 	private static final long serialVersionUID = 4985707770690731426L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
-	
+
 	@Column(name = "id_solicitud")
 	private int idSolicitud;
-	
-	@Column(name = "no_empleado_aval")
-	private String noEmpleadoAval;
-	
+
+	@Column(name = "id_usuario_aval")
+	private int idUsuarioAval;
+
 	@Column(name = "nombre_aval")
 	private String nombreAval;
-	
+
 	@Column(name = "nombre_deudor")
 	private String nombreDeudor;
-	
-	@Column(name = "no_empleado_deudor")
-	private String noEmpleadoDeudor;
-	
+
+	@Column(name = "id_usuario_deudor")
+	private int idUsuarioDeudor;
+
 	@Column(name = "monto_prestamo")
 	private BigDecimal montoPrestamo;
-	
+
 	@NotNull
 	@Column(name = "estatus")
 	private String estatus;
@@ -82,14 +82,6 @@ public class ValidacionAval implements Serializable{
 		this.idSolicitud = idSolicitud;
 	}
 
-	public String getNoEmpleadoAval() {
-		return noEmpleadoAval;
-	}
-
-	public void setNoEmpleadoAval(String noEmpleadoAval) {
-		this.noEmpleadoAval = noEmpleadoAval;
-	}
-	
 	public String getNombreAval() {
 		return nombreAval;
 	}
@@ -104,14 +96,6 @@ public class ValidacionAval implements Serializable{
 
 	public void setNombreDeudor(String nombreDeudor) {
 		this.nombreDeudor = nombreDeudor;
-	}
-
-	public String getNoEmpleadoDeudor() {
-		return noEmpleadoDeudor;
-	}
-
-	public void setNoEmpleadoDeudor(String noEmpleadoDeudor) {
-		this.noEmpleadoDeudor = noEmpleadoDeudor;
 	}
 
 	public BigDecimal getMontoPrestamo() {
@@ -154,11 +138,27 @@ public class ValidacionAval implements Serializable{
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
+	public int getIdUsuarioAval() {
+		return idUsuarioAval;
+	}
+
+	public void setIdUsuarioAval(int idUsuarioAval) {
+		this.idUsuarioAval = idUsuarioAval;
+	}
+
+	public int getIdUsuarioDeudor() {
+		return idUsuarioDeudor;
+	}
+
+	public void setIdUsuarioDeudor(int idUsuarioDeudor) {
+		this.idUsuarioDeudor = idUsuarioDeudor;
+	}
+
 	@Override
 	public String toString() {
-		return "AceptacionAval [id=" + id + ", idSolicitud=" + idSolicitud + ", noEmpleadoAval=" + noEmpleadoAval
-				+ ", nombreAval=" + nombreAval + ", nombreDeudor=" + nombreDeudor + ", noEmpleadoDeudor="
-				+ noEmpleadoDeudor + ", montoPrestamo=" + montoPrestamo + ", estatus=" + estatus + ", comentarios="
+		return "ValidacionAval [id=" + id + ", idSolicitud=" + idSolicitud + ", idUsuarioAval=" + idUsuarioAval
+				+ ", nombreAval=" + nombreAval + ", nombreDeudor=" + nombreDeudor + ", idUsuarioDeudor="
+				+ idUsuarioDeudor + ", montoPrestamo=" + montoPrestamo + ", estatus=" + estatus + ", comentarios="
 				+ comentarios + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
 

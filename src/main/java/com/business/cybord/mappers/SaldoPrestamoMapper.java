@@ -20,6 +20,5 @@ public interface SaldoPrestamoMapper {
 	
 	SaldoPrestamoDto getDtoFromEntity(SaldoPrestamo entity);
 	List<SaldoPrestamoDto> getDtosFromEntity(List<SaldoPrestamo> entities);
-	
 
 }

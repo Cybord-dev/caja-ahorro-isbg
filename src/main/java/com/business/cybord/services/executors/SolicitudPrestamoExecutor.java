@@ -1,6 +1,9 @@
 package com.business.cybord.services.executors;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.business.cybord.mappers.SolicitudMapper;
 import com.business.cybord.models.Constants;
+import com.business.cybord.models.Constants.SqlConstants;
 import com.business.cybord.models.config.FileConfig;
 import com.business.cybord.models.dtos.SolicitudDto;
 import com.business.cybord.models.dtos.ValidacionSolicitudDto;
@@ -36,19 +40,20 @@ public class SolicitudPrestamoExecutor extends AbstractSolicitudExecutor impleme
 
 	@Autowired
 	private PrestamoRepository prestamoRepository;
-	
+
 	@Autowired
 	private SolicitudMapper solicitudMapper;
-	
+
 	@Autowired
 	private MailService mailService;
 
 	@Autowired
 	private PdfServiceGenerator pdfServiceGenerator;
-	
+
 	@Autowired
 	private CatalogoService catalogoService;
-	
+
+	DateTimeFormatter formatter = DateTimeFormatter.ofPattern(SqlConstants.DATE_FORMAT);
 
 	@Override
 	public void execute(SolicitudDto solicitudDto, ValidacionSolicitudDto validacionDto) throws IsbgServiceException {
@@ -56,22 +61,28 @@ public class SolicitudPrestamoExecutor extends AbstractSolicitudExecutor impleme
 				.orElseThrow(() -> new IsbgServiceException("Error actualizando datos en solicitud ahorro",
 						String.format("El usuario  %d no existe", solicitudDto.getIdUsuario()),
 						HttpStatus.CONFLICT.value()));
-		
+
 		if (solicitudDto.getStatus().equals(EventFactoryTypeEnum.SOLICITUD_TERMINADA.getState())) {
-			// TODO: AGREGAR LA FECHA FINAL SUMANDO FECHA DE EJECUCION + NUMERO DE QUINCENAS
-			BigDecimal Monto =new BigDecimal(
+			int numQuincenas = Integer.valueOf(
+					getAttributeFromList(TipoAtributoSolicitudEnum.NO_QUINCENAS, solicitudDto.getAttributesAsList())
+							.getValor());
+
+			String terminationDate = getAttributeFromList(TipoAtributoSolicitudEnum.FECHA,
+					solicitudDto.getAttributesAsList()).getValor();
+
+			BigDecimal Monto = new BigDecimal(
 					getAttributeFromList(TipoAtributoSolicitudEnum.MONTO, solicitudDto.getAttributesAsList())
 							.getValor());
 			PrestamoBuilder prestamoBuilder = new PrestamoBuilder().setEstatus(EstatusPrestamoEnum.ACTIVO.name())
-					.setFechaTerminacion(new Date()).setIdDeudor(solicitudDto.getIdUsuario())
-					.setMonto(Monto)
-					.setNoQuincenas(Integer.valueOf(getAttributeFromList(TipoAtributoSolicitudEnum.NO_QUINCENAS,
-							solicitudDto.getAttributesAsList()).getValor()))
+					.setFechaTerminacion(calculaFechaTerminacion(numQuincenas, terminationDate))
+					.setIdDeudor(solicitudDto.getIdUsuario()).setMonto(Monto).setNoQuincenas(numQuincenas)
 					.setSaldoPendiente(Monto)
-					.setTasaInteres(new BigDecimal(catalogoService.getCatPropiedadByTipoAndNombre(Constants.TIPO_CONFIGURACIONES, Constants.TASA_INTERES).getValor()))
+					.setTasaInteres(new BigDecimal(catalogoService
+							.getCatPropiedadByTipoAndNombre(Constants.TIPO_CONFIGURACIONES, Constants.TASA_INTERES)
+							.getValor()))
 					.setSolicitud(solicitudMapper.getEntityFromSolicitudDto(solicitudDto));
 			prestamoRepository.save(prestamoBuilder.build());
-			// TODO: AGREGAR CONTENIDO DEL TEXTO
+			// TODO: PDF DE SOLICITUD DE PRESTAMOS
 			String texto = "Texto PDF";
 			SolicitudPdfModelDtoBuilder modelBuilderDto = new SolicitudPdfModelDtoBuilder().setFecha(new Date())
 					.setTitulo("Solicitud de adhesión al Programa de ahorro Voluntario").setTexto(texto)
@@ -105,6 +116,14 @@ public class SolicitudPrestamoExecutor extends AbstractSolicitudExecutor impleme
 						"Hola %s,\n\nNo se completo tu solicitud con el follio %d del tipo %s en el area %s por el motivo %s\n\nSaludos.",
 						usuario.getNombre(), solicitudDto.getId(), solicitudDto.getTipo(), validacionDto.getArea(),
 						validacionDto.getStatusDesc()));
+	}
+
+	private Date calculaFechaTerminacion(int numQuincenas, String date) {
+		LocalDate terminationDate = LocalDate.parse(date, formatter);
+		int meses = numQuincenas / 2;
+		int dias = numQuincenas % 2;
+		terminationDate = terminationDate.plusMonths(meses).plusDays(dias * 15);
+		return Date.from(terminationDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
 	}
 
 }

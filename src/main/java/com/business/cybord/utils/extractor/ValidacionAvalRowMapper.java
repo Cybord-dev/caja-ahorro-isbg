@@ -14,9 +14,9 @@ public class ValidacionAvalRowMapper implements RowMapper<ValidacionAvalDto> {
 		ValidacionAvalDto result = new ValidacionAvalDto();
 		result.setIdSolicitud(rs.getInt("id_solicitud"));
 		result.setId(rs.getInt("id"));
-		result.setNoEmpleadoAval(rs.getString("no_empleado_aval"));
+		result.setIdUsuarioAval(rs.getInt("id_usuario_aval"));
 		result.setNombreDeudor(rs.getString("nombre_deudor"));
-		result.setNoEmpleadoDeudor(rs.getString("no_empleado_deudor"));
+		result.setIdUsuarioDeudor(rs.getInt("id_usuario_deudor"));
 		result.setEstatus(rs.getString("estatus"));
 		result.setComentarios(rs.getString("comentarios"));
 		result.setNombreAval(rs.getString("nombre_aval"));

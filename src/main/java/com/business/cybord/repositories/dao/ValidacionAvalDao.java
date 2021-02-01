@@ -70,9 +70,9 @@ public class ValidacionAvalDao {
 		validiacionAval.addColumn("fecha_creacion", "String", null);
 		validiacionAval.addColumn("id_solicitud", "String", null);
 		validiacionAval.addColumn("id", "String", null);
-		validiacionAval.addColumn("no_empleado_aval", "String", null);
+		validiacionAval.addColumn("id_usuario_aval", "String", null);
 		validiacionAval.addColumn("nombre_deudor", "String", null);
-		validiacionAval.addColumn("no_empleado_deudor", "String", null);
+		validiacionAval.addColumn("id_usuario_deudor", "String", null);
 		validiacionAval.addColumn("estatus", "String", null);
 		validiacionAval.addColumn("comentarios", "String", null);
 		validiacionAval.addColumn("fecha_creacion", "String", null);
@@ -83,9 +83,9 @@ public class ValidacionAvalDao {
 		SelectQuery selectByParams = new SelectQuery().addFromTable(validiacionAval)
 				.addColumns(validiacionAval.findColumns("fecha_creacion")).addColumns(validiacionAval.findColumns("id"))
 				.addColumns(validiacionAval.findColumns("id_solicitud"))
-				.addColumns(validiacionAval.findColumns("no_empleado_aval"))
+				.addColumns(validiacionAval.findColumns("id_usuario_aval"))
 				.addColumns(validiacionAval.findColumns("nombre_deudor"))
-				.addColumns(validiacionAval.findColumns("no_empleado_deudor"))
+				.addColumns(validiacionAval.findColumns("id_usuario_deudor"))
 				.addColumns(validiacionAval.findColumns("estatus"))
 				.addColumns(validiacionAval.findColumns("comentarios"))
 				.addColumns(validiacionAval.findColumns("fecha_creacion"))
