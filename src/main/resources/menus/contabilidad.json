@@ -37,7 +37,7 @@
       {
         "name": "Reportes de ahorro",
         "url": "/contabilidad/reportes-ahorro",
-        "icon": "icon-wallet"
+        "icon": "icon-envelope-letter"
       },
       {
         "name": "Reportes de prestamo",

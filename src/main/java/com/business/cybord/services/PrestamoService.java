@@ -82,7 +82,7 @@ public class PrestamoService {
 
 		List<SaldoPrestamoDto> rows = saldosDao.findAllSaldos();
 
-		Pageable pageable = PageRequest.of(1, 10, Sort.by("fechaActualizacion"));
+		Pageable pageable = PageRequest.of(0, 10);
 
 		return new PageImpl<>(rows, pageable, rows.size());
 	}

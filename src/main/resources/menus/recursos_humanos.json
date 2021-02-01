@@ -24,8 +24,13 @@
         "icon": "icon-cloud-upload"
       },
       {
-        "name": "Validacion pagos",
-        "url": "/recursos-humanos/pagos-capital",
+        "name": "Reportes de ahorro",
+        "url": "/recursos-humanos/reportes-ahorro",
+        "icon": "icon-envelope-letter"
+      },
+      {
+        "name": "Reportes de prestamo",
+        "url": "/recursos-humanos/reportes-prestamo",
         "icon": "icon-wallet"
       }
     ]
