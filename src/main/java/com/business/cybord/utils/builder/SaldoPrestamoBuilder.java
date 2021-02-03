@@ -92,5 +92,10 @@ public class SaldoPrestamoBuilder extends AbstractBuilder<SaldoPrestamoDto> {
 		instance.setNombreEmpleado(nombreEmpleado);
 		return this;
 	}
+	
+	public SaldoPrestamoBuilder setTipoUsuario(String tipoUsuario) {
+		instance.setTipoUsuario(tipoUsuario);
+		return this;
+	}
 
 }

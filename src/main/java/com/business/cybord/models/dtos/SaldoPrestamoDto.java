@@ -25,6 +25,7 @@ public class SaldoPrestamoDto implements Serializable {
 	// =============================
 	private String noEmpleado;
 	private String nombreEmpleado;
+	private String tipoUsuario;
 	// =============================
 	private String tipo;
 	private String origen;
@@ -161,13 +162,21 @@ public class SaldoPrestamoDto implements Serializable {
 		this.nombreEmpleado = nombreEmpleado;
 	}
 
+	public String getTipoUsuario() {
+		return tipoUsuario;
+	}
+
+	public void setTipoUsuario(String tipoUsuario) {
+		this.tipoUsuario = tipoUsuario;
+	}
+
 	@Override
 	public String toString() {
 		return "SaldoPrestamoDto [id=" + id + ", idPrestamo=" + idPrestamo + ", idUsuario=" + idUsuario
 				+ ", montoPrestamo=" + montoPrestamo + ", saldoPendiente=" + saldoPendiente + ", estatus=" + estatus
 				+ ", noQuincenas=" + noQuincenas + ", tasaInteres=" + tasaInteres + ", noEmpleado=" + noEmpleado
-				+ ", nombreEmpleado=" + nombreEmpleado + ", tipo=" + tipo + ", origen=" + origen + ", monto=" + monto
-				+ ", validado=" + validado + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
-				+ fechaActualizacion + "]";
+				+ ", nombreEmpleado=" + nombreEmpleado + ", tipoUsuario=" + tipoUsuario + ", tipo=" + tipo + ", origen="
+				+ origen + ", monto=" + monto + ", validado=" + validado + ", fechaCreacion=" + fechaCreacion
+				+ ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
 }

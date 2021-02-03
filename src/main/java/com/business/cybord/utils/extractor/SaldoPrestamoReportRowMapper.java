@@ -18,6 +18,7 @@ public class SaldoPrestamoReportRowMapper implements RowMapper<SaldoPrestamoDto>
 				.setNoQuincenas(rs.getInt("no_quincenas")).setTasaInteres(rs.getBigDecimal("tasa_interes"))
 				.setTipo(rs.getString("tipo")).setOrigen(rs.getString("origen")).setMonto(rs.getBigDecimal("monto"))
 				.setValidado(rs.getBoolean("validado")).setNoEmpleado(rs.getString("no_empleado"))
+				.setTipoUsuario(rs.getString("tipo_usuario"))
 				.setNombreEmpleado(rs.getString("nombre")).setFechaCreacion(rs.getDate("fecha_creacion").toLocalDate())
 				.setFechaActualizacion(rs.getTimestamp("fecha_actualizacion").toLocalDateTime()).build();
 	}
