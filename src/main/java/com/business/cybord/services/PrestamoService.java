@@ -1,6 +1,7 @@
 package com.business.cybord.services;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,9 +24,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.cybord.mappers.PrestamoMapper;
+import com.business.cybord.mappers.SaldoAhorroMapper;
+import com.business.cybord.mappers.SaldoPrestamoMapper;
+import com.business.cybord.models.Constants;
+import com.business.cybord.models.dtos.CalculoInteresDto;
 import com.business.cybord.models.dtos.PrestamoDto;
 import com.business.cybord.models.dtos.SaldoPrestamoDto;
 import com.business.cybord.models.entities.Prestamo;
+import com.business.cybord.models.entities.SaldoAhorro;
+import com.business.cybord.models.entities.SaldoPrestamo;
 import com.business.cybord.models.entities.Usuario;
 import com.business.cybord.models.entities.ValidacionAval;
 import com.business.cybord.models.enums.EstatusPrestamoEnum;
@@ -35,6 +42,7 @@ import com.business.cybord.repositories.UsuariosRepository;
 import com.business.cybord.repositories.ValidacionAvalRepository;
 import com.business.cybord.repositories.dao.PrestamoDao;
 import com.business.cybord.repositories.dao.SaldoPrestamoDao;
+import com.business.cybord.utils.builder.CalculoInteresDtoBuilder;
 import com.business.cybord.utils.builder.PrestamoBuilder;
 import com.business.cybord.utils.builder.SaldoPrestamoBuilder;
 
@@ -55,9 +63,24 @@ public class PrestamoService {
 
 	@Autowired
 	private PrestamoMapper mapper;
+	
+	@Autowired
+	private SaldoPrestamoMapper saldoPrestamoMapper;
+	
+	@Autowired
+	private CatalogoService catalogoService;
+	
+	@Autowired
+	private SaldoAhorroMapper saldoAhorroMapper;
+	
+	@Autowired
+	private SaldoPrestamoService saldoPrestamoService;
 
 	@Autowired
 	private ValidacionAvalRepository avalRepository;
+	
+	@Autowired
+	private SaldoAhorroService saldoAhorroService;
 
 	@Autowired
 	private UsuariosRepository usuarioRepository;
@@ -214,13 +237,42 @@ public class PrestamoService {
 		return mapper.getDtosFromEntity(prestamosGenerados);
 	}
 
+	public CalculoInteresDto calculoInteres(String fechaInicial, String fechaFinal) {
+		
+		//Validar el que la fecha Incial es menor a la fecha Final y que los ahorros no sean cero
+		
+		List<SaldoAhorro> saldosAhorroDelPeriodo = saldoAhorroService.getSaldosAhorroByPeriod(fechaInicial, fechaFinal);
+		BigDecimal saldoAhorroTotal = saldosAhorroDelPeriodo.stream().map(sa -> sa.getMonto()).reduce(BigDecimal.ZERO, (a,b)->a.add(b));
+		List<SaldoPrestamo> saldoPrestamoInteres = saldoPrestamoService.getSaldoPrestamoInteresByPeriod(fechaInicial, fechaFinal);
+		BigDecimal saldoPrestamoInteresTotal = saldoPrestamoInteres.stream().map(sp-> sp.getMonto()).reduce(BigDecimal.ZERO, (a,b)-> a.add(b));
+		BigDecimal interesRetencion = saldoPrestamoInteresTotal.multiply(
+				new BigDecimal(catalogoService.getCatPropiedadByTipoAndNombre(Constants.TIPO_CONFIGURACIONES, Constants.TASA_INTERES_RETENCION).getValor())
+				.divide(new BigDecimal(100)));
+		BigDecimal interesDelPerido = saldoPrestamoInteresTotal.subtract(interesRetencion);
+		BigDecimal porcentajeInteresDelPeriodo = (interesDelPerido.divide(saldoAhorroTotal,4, RoundingMode.HALF_UP)).multiply(new BigDecimal(100));
+		
+		return  new CalculoInteresDtoBuilder()
+				.setSaldoAhorro(saldoAhorroMapper.getDtosFromEntity(saldosAhorroDelPeriodo))
+				.setSaldoAhorroTotal(saldoAhorroTotal)
+				.setSaldoPrestamoInteres(saldoPrestamoMapper.getDtosFromEntity(saldoPrestamoInteres))
+				.setSaldoPrestamoInteresTotal(saldoPrestamoInteresTotal)
+				.setInteresRetenido(interesRetencion)
+				.setInteresDelPeriodo(interesDelPerido)
+				.setPorcentajeInteresDelPeriodo(porcentajeInteresDelPeriodo)
+				.build();
+		
+		
+	}
+
+	
+	
 	private SaldoPrestamoDto createSaldoPrestamoPago(Prestamo prestamo) {
 		SaldoPrestamoDto saldoPrestamo = new SaldoPrestamoBuilder().setIdPrestamo(prestamo.getId())
 				.setIdUsuario(prestamo.getIdDeudor()).setMontoPrestamo(prestamo.getMonto())
 				.setNoQuincenas(prestamo.getNoQuincenas()).setSaldoPendiente(prestamo.getSaldoPendiente())
 				.setTipo(TipoSaldoPrestamoEnum.PAGO.name())
 				.setMonto(prestamo.getMonto().divide(new BigDecimal(prestamo.getNoQuincenas()))).setValidado(false)
-				.setOrigen("SISTEMA").build();
+				.setOrigen(Constants.ORIGEN_SISTEMA).build();
 		return saldosDao.insertSaldoPrestamo(saldoPrestamo);
 
 	}
@@ -231,15 +283,16 @@ public class PrestamoService {
 				.setNoQuincenas(prestamo.getNoQuincenas()).setSaldoPendiente(prestamo.getSaldoPendiente())
 				.setTipo(TipoSaldoPrestamoEnum.INTERES.name())
 				.setMonto(prestamo.getMonto().multiply(prestamo.getTasaInteres().divide(new BigDecimal(100))))
-				.setValidado(false).setOrigen("SISTEMA").build();
+				.setValidado(false).setOrigen(Constants.ORIGEN_SISTEMA).build();
 		return saldosDao.insertSaldoPrestamo(saldoPrestamo);
 	}
 
 	private BigDecimal montoEfectivamentePagado(Prestamo prestamo) {
 		return prestamo.getSaldosPrestamo().stream()
 				.filter(sp -> !sp.getTipo().equals(TipoSaldoPrestamoEnum.INTERES.name()))
-				.filter(sp -> sp.getValidado() == true).map(sp -> sp.getMonto())
+				.filter(sp -> sp.getValidado()).map(sp -> sp.getMonto())
 				.reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
 	}
+
 
 }

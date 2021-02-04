@@ -1,5 +1,6 @@
 package com.business.cybord.controllers;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -7,6 +8,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.business.cybord.models.dtos.CalculoInteresDto;
 import com.business.cybord.models.dtos.PrestamoDto;
 import com.business.cybord.models.dtos.SaldoPrestamoDto;
 import com.business.cybord.services.PrestamoService;
@@ -86,6 +89,12 @@ public class PrestamoController {
 	@PostMapping("/prestamos/{idPrestamo}/traspasar-prestamo")
 	public ResponseEntity<List<PrestamoDto>> traspasarPrestamo(@PathVariable Integer idPrestamo){
 		return new ResponseEntity<>(service.traspasarPrestamo(idPrestamo), HttpStatus.CREATED);
+	}
+	
+	@GetMapping("/calculo-interes")
+	public ResponseEntity<CalculoInteresDto> calculoInteres(
+			@RequestParam  String fechaInicial, @RequestParam  String fechaFinal){
+		return new ResponseEntity<>(service.calculoInteres(fechaInicial, fechaFinal), HttpStatus.OK);
 	}
 
 }

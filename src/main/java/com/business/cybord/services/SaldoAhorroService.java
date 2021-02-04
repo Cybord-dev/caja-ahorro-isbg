@@ -291,4 +291,8 @@ public class SaldoAhorroService {
 
 	}
 
+	public List<SaldoAhorro> getSaldosAhorroByPeriod(String fechaInicial, String fechaFinal) {
+		return respository.getSaldoAhorroByPeriod(Date.valueOf(fechaInicial), Date.valueOf(fechaFinal));
+	}
+
 }
