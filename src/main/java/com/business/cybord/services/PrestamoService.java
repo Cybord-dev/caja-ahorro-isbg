@@ -3,6 +3,8 @@ package com.business.cybord.services;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -239,8 +241,16 @@ public class PrestamoService {
 
 	public CalculoInteresDto calculoInteres(String fechaInicial, String fechaFinal) {
 		
-		//Validar el que la fecha Incial es menor a la fecha Final y que los ahorros no sean cero
-		
+		try {
+			if(new SimpleDateFormat("yyyy-MM-dd").parse(fechaInicial).after(new SimpleDateFormat("yyyy-MM-dd").parse(fechaFinal))) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+						String.format("Fecha Incial %s es mayor a fecha final %s  ", fechaInicial, fechaFinal));
+			}
+		} catch (ParseException e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					"Formato incorrecto de Fechas el formato debe ser yyyy/MM/dd");
+		}
+			
 		List<SaldoAhorro> saldosAhorroDelPeriodo = saldoAhorroService.getSaldosAhorroByPeriod(fechaInicial, fechaFinal);
 		BigDecimal saldoAhorroTotal = saldosAhorroDelPeriodo.stream().map(sa -> sa.getMonto()).reduce(BigDecimal.ZERO, (a,b)->a.add(b));
 		List<SaldoPrestamo> saldoPrestamoInteres = saldoPrestamoService.getSaldoPrestamoInteresByPeriod(fechaInicial, fechaFinal);
@@ -249,7 +259,13 @@ public class PrestamoService {
 				new BigDecimal(catalogoService.getCatPropiedadByTipoAndNombre(Constants.TIPO_CONFIGURACIONES, Constants.TASA_INTERES_RETENCION).getValor())
 				.divide(new BigDecimal(100)));
 		BigDecimal interesDelPerido = saldoPrestamoInteresTotal.subtract(interesRetencion);
-		BigDecimal porcentajeInteresDelPeriodo = (interesDelPerido.divide(saldoAhorroTotal,4, RoundingMode.HALF_UP)).multiply(new BigDecimal(100));
+		BigDecimal porcentajeInteresDelPeriodo;
+		
+		if(saldoAhorroTotal.signum() > 0) {
+			porcentajeInteresDelPeriodo = (interesDelPerido.divide(saldoAhorroTotal,4, RoundingMode.HALF_UP)).multiply(new BigDecimal(100));
+		}else {
+			porcentajeInteresDelPeriodo = BigDecimal.ZERO;
+		}
 		
 		return  new CalculoInteresDtoBuilder()
 				.setSaldoAhorro(saldoAhorroMapper.getDtosFromEntity(saldosAhorroDelPeriodo))
