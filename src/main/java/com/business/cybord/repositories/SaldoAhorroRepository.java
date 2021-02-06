@@ -26,8 +26,6 @@ public interface SaldoAhorroRepository extends JpaRepository<SaldoAhorro, Intege
 	@Query("select s from SaldoAhorro s where s.id = :id_ahorro and s.idUsuario = :id_usuario")
 	public Optional<SaldoAhorro> findByIdUsuarioAndId( @Param("id_usuario") Integer idUsuario, @Param("id_ahorro") Integer idSaldo);
 
-	@Query("select s from SaldoAhorro s where s.validado > 0 and s.fechaCreacion between :start and :end")
-	public List<SaldoAhorro> getSaldoAhorroByPeriod(@Param("start") Date fechaInicial, @Param("end") Date fechaFinal);
 
 	
 

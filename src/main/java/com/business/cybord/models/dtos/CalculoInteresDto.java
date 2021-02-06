@@ -2,10 +2,6 @@ package com.business.cybord.models.dtos;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.List;
-
-import com.business.cybord.models.entities.SaldoAhorro;
-import com.business.cybord.models.entities.SaldoPrestamo;
 
 public class CalculoInteresDto implements Serializable {
 
@@ -17,8 +13,6 @@ public class CalculoInteresDto implements Serializable {
 	private BigDecimal interesRetenido;
 	private BigDecimal saldoAhorroTotal;
 	private BigDecimal saldoPrestamoInteresTotal;
-	private List<SaldoAhorroDto> saldoAhorro;
-	private List<SaldoPrestamoDto> saldoPrestamoInteres;
 	
 	public BigDecimal getInteresDelPerido() {
 		return interesDelPerido;
@@ -52,21 +46,6 @@ public class CalculoInteresDto implements Serializable {
 		this.saldoPrestamoInteresTotal = saldoPrestamoInteresTotal;
 	}
 	
-	public List<SaldoAhorroDto> getSaldoAhorro() {
-		return saldoAhorro;
-	}
-	
-	public void setSaldoAhorro(List<SaldoAhorroDto> saldoAhorro) {
-		this.saldoAhorro = saldoAhorro;
-	}
-	
-	public List<SaldoPrestamoDto> getSaldoPrestamoInteres() {
-		return saldoPrestamoInteres;
-	}
-	
-	public void setSaldoPrestamoInteres(List<SaldoPrestamoDto> saldoPrestamoInteres) {
-		this.saldoPrestamoInteres = saldoPrestamoInteres;
-	}
 
 	public BigDecimal getPorcentajeInteresDelPeriodo() {
 		return porcentajeInteresDelPeriodo;
@@ -80,10 +59,11 @@ public class CalculoInteresDto implements Serializable {
 	public String toString() {
 		return "CalculoInteresDto [porcentajeInteresDelPeriodo=" + porcentajeInteresDelPeriodo + ", interesDelPerido="
 				+ interesDelPerido + ", interesRetenido=" + interesRetenido + ", saldoAhorroTotal=" + saldoAhorroTotal
-				+ ", saldoPrestamoInteresTotal=" + saldoPrestamoInteresTotal + ", saldoAhorro=" + saldoAhorro
-				+ ", saldoPrestamoInteres=" + saldoPrestamoInteres + "]";
+				+ ", saldoPrestamoInteresTotal=" + saldoPrestamoInteresTotal + "]";
 	}
 
+
+	
 	
 	
 	

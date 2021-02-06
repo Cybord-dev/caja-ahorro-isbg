@@ -1,5 +1,6 @@
 package com.business.cybord.repositories.dao;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -67,6 +68,9 @@ public class ReportesSaldosDao {
 			+ "				    AND a.tipo_usuario='EXTERNO'" + "				    AND b.tipo='ahorro'"
 			+ "					AND validado=1" + "					AND a.ahorrador=1"
 			+ "				    AND	b.fecha_creacion>=TIMESTAMPADD(DAY,?,CURRENT_TIMESTAMP);";
+	
+	private static final String SALDO_PRESTAMO_TOTAL = "SELECT SUM(monto) FROM isbg.saldo_ahorro WHERE validado = 1 AND fecha_creacion BETWEEN ? AND ?";
+
 
 	private static final Logger log = LoggerFactory.getLogger(ReportesSaldosDao.class);
 
@@ -232,6 +236,12 @@ public class ReportesSaldosDao {
 		}
 		log.info(selectStoresByParams.toString());
 		return selectStoresByParams.toString();
+	}
+
+	public BigDecimal getSaldoAhorroTotal(LocalDate fechaInicial, LocalDate fechaFinal) {
+		String[] params = new String[]  {
+	               fechaInicial.toString(), fechaFinal.toString()};
+			return jdbcTemplate.queryForObject(SALDO_PRESTAMO_TOTAL,params, BigDecimal.class);
 	}
 
 }

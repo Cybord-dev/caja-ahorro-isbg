@@ -1,6 +1,6 @@
 package com.business.cybord.controllers;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -93,7 +93,7 @@ public class PrestamoController {
 	
 	@GetMapping("/calculo-interes")
 	public ResponseEntity<CalculoInteresDto> calculoInteres(
-			@RequestParam  String fechaInicial, @RequestParam  String fechaFinal){
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd")  LocalDate fechaInicial, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd")  LocalDate fechaFinal){
 		return new ResponseEntity<>(service.calculoInteres(fechaInicial, fechaFinal), HttpStatus.OK);
 	}
 

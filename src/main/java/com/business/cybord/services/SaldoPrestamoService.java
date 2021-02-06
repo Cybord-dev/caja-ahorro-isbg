@@ -1,23 +1,22 @@
 package com.business.cybord.services;
 
-import java.sql.Date;
-import java.util.List;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.business.cybord.models.entities.SaldoPrestamo;
-import com.business.cybord.repositories.SaldoAhorroRepository;
-import com.business.cybord.repositories.SaldoPrestamoRepository;
+import com.business.cybord.repositories.dao.SaldoPrestamoDao;
 
 @Service
 public class SaldoPrestamoService {
 
+	
 	@Autowired
-	private SaldoPrestamoRepository repository;
+	private SaldoPrestamoDao dao;
 
-	public List<SaldoPrestamo> getSaldoPrestamoInteresByPeriod(String fechaInicial, String fechaFinal) {
-		return repository.getSaldoPrestamoInteresesByPeriod(Date.valueOf(fechaInicial), Date.valueOf(fechaFinal));
+	public BigDecimal getSaldoPrestamoInteresByPeriod(LocalDate fechaInicial, LocalDate fechaFinal) {
+		return dao.getSaldoPrestamoInteresesByPeriod(fechaInicial, fechaFinal);
 	}
 	
 }

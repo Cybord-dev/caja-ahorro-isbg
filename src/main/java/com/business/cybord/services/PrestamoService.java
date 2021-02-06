@@ -3,8 +3,7 @@ package com.business.cybord.services;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -217,7 +216,7 @@ public class PrestamoService {
 		}
 		BigDecimal montoEfectivamentePagado = montoEfectivamentePagado(prestamo);
 		BigDecimal saldoPorAval = (prestamo.getMonto().subtract(montoEfectivamentePagado))
-				.divide(new BigDecimal(avales.size()));
+				.divide(new BigDecimal(avales.size()),2, RoundingMode.FLOOR);
 		prestamo.setEstatus(EstatusPrestamoEnum.A_PAGAR_POR_AVAL.name());
 		repository.save(prestamo);
 		List<Prestamo> prestamosGenerados = new ArrayList<>();
@@ -239,39 +238,31 @@ public class PrestamoService {
 		return mapper.getDtosFromEntity(prestamosGenerados);
 	}
 
-	public CalculoInteresDto calculoInteres(String fechaInicial, String fechaFinal) {
+	public CalculoInteresDto calculoInteres(LocalDate fechaInicial, LocalDate fechaFinal) {
 		
-		try {
-			if(new SimpleDateFormat("yyyy-MM-dd").parse(fechaInicial).after(new SimpleDateFormat("yyyy-MM-dd").parse(fechaFinal))) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-						String.format("Fecha Incial %s es mayor a fecha final %s  ", fechaInicial, fechaFinal));
-			}
-		} catch (ParseException e) {
+		
+		if(fechaInicial.isAfter(fechaFinal)) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					"Formato incorrecto de Fechas el formato debe ser yyyy/MM/dd");
+					String.format("Fecha Incial %s es mayor a fecha final %s  ", fechaInicial, fechaFinal));
 		}
-			
-		List<SaldoAhorro> saldosAhorroDelPeriodo = saldoAhorroService.getSaldosAhorroByPeriod(fechaInicial, fechaFinal);
-		BigDecimal saldoAhorroTotal = saldosAhorroDelPeriodo.stream().map(sa -> sa.getMonto()).reduce(BigDecimal.ZERO, (a,b)->a.add(b));
-		List<SaldoPrestamo> saldoPrestamoInteres = saldoPrestamoService.getSaldoPrestamoInteresByPeriod(fechaInicial, fechaFinal);
-		BigDecimal saldoPrestamoInteresTotal = saldoPrestamoInteres.stream().map(sp-> sp.getMonto()).reduce(BigDecimal.ZERO, (a,b)-> a.add(b));
-		BigDecimal interesRetencion = saldoPrestamoInteresTotal.multiply(
+		
+		BigDecimal saldoAhorroTotal = saldoAhorroService.getSaldosAhorroTotal();
+		BigDecimal saldoPrestamoInteres = saldoPrestamoService.getSaldoPrestamoInteresByPeriod(fechaInicial, fechaFinal);
+		BigDecimal interesRetencion = saldoPrestamoInteres.multiply(
 				new BigDecimal(catalogoService.getCatPropiedadByTipoAndNombre(Constants.TIPO_CONFIGURACIONES, Constants.TASA_INTERES_RETENCION).getValor())
-				.divide(new BigDecimal(100)));
-		BigDecimal interesDelPerido = saldoPrestamoInteresTotal.subtract(interesRetencion);
+				.divide(new BigDecimal(100),2, RoundingMode.FLOOR));
+		BigDecimal interesDelPerido = saldoPrestamoInteres.subtract(interesRetencion);
 		BigDecimal porcentajeInteresDelPeriodo;
 		
 		if(saldoAhorroTotal.signum() > 0) {
-			porcentajeInteresDelPeriodo = (interesDelPerido.divide(saldoAhorroTotal,4, RoundingMode.HALF_UP)).multiply(new BigDecimal(100));
+			porcentajeInteresDelPeriodo = (interesDelPerido.divide(saldoAhorroTotal,4, RoundingMode.FLOOR)).multiply(new BigDecimal(100));
 		}else {
 			porcentajeInteresDelPeriodo = BigDecimal.ZERO;
 		}
 		
 		return  new CalculoInteresDtoBuilder()
-				.setSaldoAhorro(saldoAhorroMapper.getDtosFromEntity(saldosAhorroDelPeriodo))
 				.setSaldoAhorroTotal(saldoAhorroTotal)
-				.setSaldoPrestamoInteres(saldoPrestamoMapper.getDtosFromEntity(saldoPrestamoInteres))
-				.setSaldoPrestamoInteresTotal(saldoPrestamoInteresTotal)
+				.setSaldoPrestamoInteresTotal(saldoPrestamoInteres)
 				.setInteresRetenido(interesRetencion)
 				.setInteresDelPeriodo(interesDelPerido)
 				.setPorcentajeInteresDelPeriodo(porcentajeInteresDelPeriodo)
@@ -287,8 +278,10 @@ public class PrestamoService {
 				.setIdUsuario(prestamo.getIdDeudor()).setMontoPrestamo(prestamo.getMonto())
 				.setNoQuincenas(prestamo.getNoQuincenas()).setSaldoPendiente(prestamo.getSaldoPendiente())
 				.setTipo(TipoSaldoPrestamoEnum.PAGO.name())
-				.setMonto(prestamo.getMonto().divide(new BigDecimal(prestamo.getNoQuincenas()))).setValidado(false)
-				.setOrigen(Constants.ORIGEN_SISTEMA).build();
+				.setMonto(prestamo.getMonto().divide(new BigDecimal(prestamo.getNoQuincenas()),2, RoundingMode.FLOOR))
+				.setValidado(false)
+				.setOrigen(Constants.ORIGEN_SISTEMA)
+				.build();
 		return saldosDao.insertSaldoPrestamo(saldoPrestamo);
 
 	}
@@ -298,7 +291,7 @@ public class PrestamoService {
 				.setIdUsuario(prestamo.getIdDeudor()).setMontoPrestamo(prestamo.getMonto())
 				.setNoQuincenas(prestamo.getNoQuincenas()).setSaldoPendiente(prestamo.getSaldoPendiente())
 				.setTipo(TipoSaldoPrestamoEnum.INTERES.name())
-				.setMonto(prestamo.getMonto().multiply(prestamo.getTasaInteres().divide(new BigDecimal(100))))
+				.setMonto(prestamo.getMonto().multiply(prestamo.getTasaInteres().divide(new BigDecimal(100),2, RoundingMode.FLOOR)))
 				.setValidado(false).setOrigen(Constants.ORIGEN_SISTEMA).build();
 		return saldosDao.insertSaldoPrestamo(saldoPrestamo);
 	}
