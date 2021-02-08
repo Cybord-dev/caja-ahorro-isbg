@@ -7,6 +7,11 @@
         "name": "Administracion roles",
         "url": "/administracion/usuarios",
         "icon": "icon-user-unfollow"
+      },
+      {
+        "name": "Configuraciones",
+        "url": "/administracion/configuraciones",
+        "icon": "icon-compass"
       }
     ]
   }

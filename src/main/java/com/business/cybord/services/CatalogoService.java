@@ -39,6 +39,15 @@ public class CatalogoService {
 		log.info("creando CAT_PROPIEDADES: [{}]", dto);
 		return mapper.getCatDtoFromEntidad(repository.save(mapper.getEntidadFromCatDto(dto)));
 	}
+	
+	public CatalogoDto updateCatalogoPropiedad(String tipo, String nombre, CatalogoDto dto) {
+		log.info("actualizando CAT_PROPIEDADES: [{}]", dto);
+		Catalogo cat = repository.findByTipoAndNombre(tipo, nombre)
+		.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+				String.format("El catalogo %s  no contiene el valor %s", tipo, nombre)));
+		cat.setValor(dto.getValor());
+		return mapper.getCatDtoFromEntidad(repository.save(cat));
+	}
 
 	public void deleteCatalogoPropiedadById(Integer id) {
 		log.info("borrando CAT_PROPIEDADES con id {} ", id);
