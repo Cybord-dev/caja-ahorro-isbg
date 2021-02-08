@@ -1,5 +1,6 @@
 package com.business.cybord.controllers;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.business.cybord.models.dtos.PrestamoDto;
+import com.business.cybord.models.dtos.RecursoDto;
 import com.business.cybord.models.dtos.SaldoPrestamoDto;
 import com.business.cybord.services.PrestamoService;
 
@@ -68,6 +70,11 @@ public class PrestamoController {
 	@GetMapping("/saldo-prestamos")
 	public ResponseEntity<Page<SaldoPrestamoDto>> getPrestamosyParams(@RequestParam Map<String, String> parameters){
 		return new ResponseEntity<>(service.getPrestamosyParams(parameters), HttpStatus.OK);	
+	}
+	
+	@GetMapping("/saldo-prestamos/report")
+	public ResponseEntity<RecursoDto> getPrestamosReportParams(@RequestParam Map<String, String> parameters) throws IOException{
+		return new ResponseEntity<>(service.getPrestamosReportParams(parameters), HttpStatus.OK);	
 	}
 
 	@PostMapping("/prestamos/{idPrestamo}/saldos")
