@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,6 +40,12 @@ public class CatalogosController {
 	public ResponseEntity<CatalogoDto> createCatalogoPropiedad(
 			@RequestBody @Validated CatalogoDto dto) {
 		return new ResponseEntity<>(service.createCatalogoPropiedad(dto), HttpStatus.CREATED);
+	}
+	
+	@PutMapping("/{tipo}/{nombre}")
+	public ResponseEntity<CatalogoDto> updatePropiedadByTipoAndNombre(@PathVariable String tipo,
+			@PathVariable String nombre, @RequestBody @Validated CatalogoDto dto) {
+		return new ResponseEntity<>(service.updateCatalogoPropiedad(tipo, nombre, dto), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{id}")
