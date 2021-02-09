@@ -25,15 +25,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.cybord.mappers.PrestamoMapper;
-import com.business.cybord.mappers.SaldoAhorroMapper;
-import com.business.cybord.mappers.SaldoPrestamoMapper;
 import com.business.cybord.models.Constants;
 import com.business.cybord.models.dtos.CalculoInteresDto;
 import com.business.cybord.models.dtos.PrestamoDto;
 import com.business.cybord.models.dtos.SaldoPrestamoDto;
 import com.business.cybord.models.entities.Prestamo;
-import com.business.cybord.models.entities.SaldoAhorro;
-import com.business.cybord.models.entities.SaldoPrestamo;
 import com.business.cybord.models.entities.Usuario;
 import com.business.cybord.models.entities.ValidacionAval;
 import com.business.cybord.models.enums.EstatusPrestamoEnum;
@@ -66,13 +62,7 @@ public class PrestamoService {
 	private PrestamoMapper mapper;
 	
 	@Autowired
-	private SaldoPrestamoMapper saldoPrestamoMapper;
-	
-	@Autowired
 	private CatalogoService catalogoService;
-	
-	@Autowired
-	private SaldoAhorroMapper saldoAhorroMapper;
 	
 	@Autowired
 	private SaldoPrestamoService saldoPrestamoService;
@@ -216,7 +206,7 @@ public class PrestamoService {
 		}
 		BigDecimal montoEfectivamentePagado = montoEfectivamentePagado(prestamo);
 		BigDecimal saldoPorAval = (prestamo.getMonto().subtract(montoEfectivamentePagado))
-				.divide(new BigDecimal(avales.size()),2, RoundingMode.FLOOR);
+				.divide(new BigDecimal(avales.size()),2, RoundingMode.HALF_UP);
 		prestamo.setEstatus(EstatusPrestamoEnum.A_PAGAR_POR_AVAL.name());
 		repository.save(prestamo);
 		List<Prestamo> prestamosGenerados = new ArrayList<>();
