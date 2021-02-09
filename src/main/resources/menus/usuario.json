@@ -4,9 +4,9 @@
    "icon": "icon-user",
    "children": [
       {
-        "name": "Historico",
+        "name": "Mi ahorro",
         "url": "/usuarios/reportes",
-        "icon": "icon-book-open"
+        "icon": "icon-envelope-letter"
       },
       {
         "name":"Trámites Ahorro",
@@ -19,14 +19,9 @@
         "icon": "icon-drawer"
       },
       {
-        "name":"Pagos Prestamos",
-        "url": "/usuarios/pagos",
-        "icon": "icon-wallet"
-      },
-      {
-        "name":"Prestamos Activos",
+        "name":"Mis Prestamos",
         "url": "/usuarios/prestamos-activos",
-        "icon": "icon-folder"
+        "icon": "icon-wallet"
       },
       {
         "name":"Aceptacion aval",

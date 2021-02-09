@@ -1,10 +1,12 @@
 package com.business.cybord.services;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -28,6 +30,7 @@ import com.business.cybord.mappers.PrestamoMapper;
 import com.business.cybord.models.Constants;
 import com.business.cybord.models.dtos.CalculoInteresDto;
 import com.business.cybord.models.dtos.PrestamoDto;
+import com.business.cybord.models.dtos.RecursoDto;
 import com.business.cybord.models.dtos.SaldoPrestamoDto;
 import com.business.cybord.models.entities.Prestamo;
 import com.business.cybord.models.entities.Usuario;
@@ -75,6 +78,9 @@ public class PrestamoService {
 
 	@Autowired
 	private UsuariosRepository usuarioRepository;
+	
+	@Autowired
+	private DownloaderService reportService;
 
 	private static final Logger log = LoggerFactory.getLogger(PrestamoService.class);
 
@@ -96,6 +102,33 @@ public class PrestamoService {
 		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
 		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
 		return saldosDao.findAll(parameters, PageRequest.of(page, size, Sort.by("fechaActualizacion")));
+	}
+	
+	public RecursoDto getPrestamosReportParams(Map<String, String> parameters) throws IOException {
+		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
+		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
+		Page<SaldoPrestamoDto> saldos = saldosDao.findAll(parameters, PageRequest.of(page, size, Sort.by("fechaActualizacion")));
+
+		List<Map<String, String>> data = saldos.getContent().stream().map(s -> {
+			Map<String, String> map = new HashMap<>();
+			map.put("VALIDADO", (s.getValidado() == Boolean.TRUE)?"SI":"NO");
+			map.put("MONTO", s.getMonto().toString());
+			map.put("NO QUINCENAS", s.getNoQuincenas().toString());
+			map.put("TASA INTERES", String.format("%%%s", s.getTasaInteres().toString()));
+			map.put("TIPO EMPLEADO", s.getEstatus());
+			map.put("NO EMPLEADO", s.getNoEmpleado());
+			map.put("NOMBRE", s.getNombreEmpleado());
+			map.put("MONTO PRESTAMO", s.getMontoPrestamo().toString());
+			map.put("SALDO PENDIENTE", s.getSaldoPendiente().toString());
+			map.put("TIPO", s.getTipo());
+			map.put("ESTATUS", s.getEstatus());
+			map.put("MODIFICADO", s.getOrigen());
+			map.put("FECHA ALTA", s.getFechaCreacion().toString());
+			map.put("FECHA MODIFICACION", s.getFechaActualizacion().toString());
+			return map;
+		}).collect(Collectors.toList());
+
+		return reportService.generateBase64Report("REGISTROS PRESTAMO", data);
 	}
 
 	public PrestamoDto getPrestamoByIdPrestamoAndIdusuario(Integer idUsuario, Integer idPrestamo) {
