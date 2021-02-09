@@ -14,7 +14,6 @@ public class SaldoPrestamoBuilder extends AbstractBuilder<SaldoPrestamoDto> {
 
 	public SaldoPrestamoBuilder setId(Integer id) {
 		instance.setId(id);
-		;
 		return this;
 	}
 

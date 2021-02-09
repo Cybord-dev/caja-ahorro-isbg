@@ -3,11 +3,13 @@
  */
 package com.business.cybord.repositories.dao;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +29,7 @@ import org.springframework.stereotype.Repository;
 
 import com.business.cybord.models.Constants.SqlConstants;
 import com.business.cybord.models.dtos.SaldoPrestamoDto;
+import com.business.cybord.models.enums.TipoSaldoPrestamoEnum;
 import com.business.cybord.models.enums.sql.PrestamoFilterEnum;
 import com.business.cybord.models.enums.sql.SaldoPrestamoFilterEnum;
 import com.business.cybord.models.enums.sql.UsuariosFilterEnum;
@@ -60,6 +63,9 @@ public class SaldoPrestamoDao {
 
 	private static final String UPDATE_SALDPO_PRESTAMO = "UPDATE isbg.saldo_prestamo SET validado=?, origen=?,fecha_actualizacion= now() WHERE id_saldo_prestamo=?";
 
+	private static final String SALDO_PRESTAMO_PERIODO = "SELECT SUM(monto) FROM isbg.saldo_prestamo sp WHERE tipo = ? AND validado = 1 AND fecha_creacion BETWEEN ? AND ?";
+
+	
 	public SaldoPrestamoDto insertSaldoPrestamo(SaldoPrestamoDto saldo) {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		template.update(new PreparedStatementCreator() {
@@ -269,4 +275,12 @@ public class SaldoPrestamoDao {
 		log.info(selectByParams.toString());
 		return selectByParams.toString();
 	}
+
+	public BigDecimal getSaldoPrestamoInteresesByPeriod(LocalDate fechaInicial, LocalDate fechaFinal) {
+		String[] params = new String[]  {
+               TipoSaldoPrestamoEnum.INTERES.name(),fechaInicial.toString(), fechaFinal.toString()};
+		return template.queryForObject(SALDO_PRESTAMO_PERIODO,params, BigDecimal.class);
+	}
+
+	
 }

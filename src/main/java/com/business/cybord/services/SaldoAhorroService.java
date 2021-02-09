@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +12,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.cybord.mappers.SaldoAhorroMapper;
+import com.business.cybord.models.Constants;
 import com.business.cybord.models.Meses;
 import com.business.cybord.models.dtos.RecursoDto;
 import com.business.cybord.models.dtos.SaldoAhorroDto;
@@ -56,6 +60,13 @@ public class SaldoAhorroService {
 
 	@Autowired
 	private CajaUtilityService cajaUtilityService;
+	
+	@Autowired
+	private CatalogoService catalogoService;
+	
+	
+	private static final Logger log = LoggerFactory.getLogger(SaldoAhorroService.class);
+
 
 	public Page<ReporteSaldosDto> getSaldosAhorros(Map<String, String> parameters) {
 		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
@@ -289,6 +300,24 @@ public class SaldoAhorroService {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, "Tu sesion no se encuentra activa");
 		}
 
+	}
+
+	public BigDecimal getSaldosAhorroTotal() {
+		
+		LocalDate fechaFinal = LocalDate.now();
+		Month mesActual = fechaFinal.getMonth();
+		Month inicioCaja = Month.valueOf(catalogoService.getCatPropiedadByTipoAndNombre(Constants.TIPO_CONFIGURACIONES, Constants.INICIO_CAJA).getValor());
+		
+		int year = fechaFinal.getYear();
+		
+		if(mesActual.compareTo(inicioCaja)<0) {
+			year = year -1;
+		}
+		
+		LocalDate fechaInicial = LocalDate.of(year, inicioCaja, 1);
+		log.info("Fecha Inicial {}", fechaInicial);
+		
+		return reportesSaldosDao.getSaldoAhorroTotal(fechaInicial, fechaFinal);
 	}
 
 }

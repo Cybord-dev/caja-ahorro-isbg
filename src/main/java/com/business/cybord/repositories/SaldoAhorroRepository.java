@@ -26,4 +26,7 @@ public interface SaldoAhorroRepository extends JpaRepository<SaldoAhorro, Intege
 	@Query("select s from SaldoAhorro s where s.id = :id_ahorro and s.idUsuario = :id_usuario")
 	public Optional<SaldoAhorro> findByIdUsuarioAndId( @Param("id_usuario") Integer idUsuario, @Param("id_ahorro") Integer idSaldo);
 
+
+	
+
 }
