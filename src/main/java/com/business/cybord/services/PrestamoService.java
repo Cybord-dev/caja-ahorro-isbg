@@ -6,7 +6,6 @@ import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +30,6 @@ import com.business.cybord.mappers.PrestamoMapper;
 import com.business.cybord.mappers.SaldoAhorroMapper;
 import com.business.cybord.models.Constants;
 import com.business.cybord.models.dtos.CalculoInteresDto;
-import com.business.cybord.models.dtos.CapacidadPagoDto;
 import com.business.cybord.models.dtos.PrestamoDto;
 import com.business.cybord.models.dtos.RecursoDto;
 import com.business.cybord.models.dtos.SaldoAhorroDto;
@@ -305,6 +303,7 @@ public class PrestamoService {
 		
 	}
 	
+	@Transactional(rollbackOn = { DataAccessException.class, SQLException.class, ResponseStatusException.class })
 	public List<SaldoAhorroDto> generacionRenglonIntereses(LocalDate fechaInicial, LocalDate fechaFinal) {
 		validarFecha(fechaInicial, fechaFinal);
 		CalculoInteresDto interesesDto =  calculoInteres(fechaInicial, fechaFinal);
@@ -313,13 +312,11 @@ public class PrestamoService {
 		
 		List<SaldoAhorro> saldoAhorroCreados = new ArrayList<>();
 		
-		List<String> tipoAhorradores = Arrays.asList(TipoUsuarioEnum.INTERNO.getTipo(),TipoUsuarioEnum.EXTERNO.getTipo() );
-		
-		for(String tipoAhorrodor : tipoAhorradores) {
-			List<Usuario> ahorradores = usuarioRepository.findByTipoUsuarioAndAhorrador(tipoAhorrodor, Boolean.TRUE);
+		for(TipoUsuarioEnum tipoAhorrodor : TipoUsuarioEnum.values()) {
+			List<Usuario> ahorradores = usuarioRepository.findByTipoUsuarioAndAhorrador(tipoAhorrodor.getTipo(), Boolean.TRUE);
 			
 			for(Usuario usuario: ahorradores) {
-				BigDecimal ahorro = saldoAhorroRepository.findSaldoAhorroSumByIdUsuario(usuario.getId());
+				BigDecimal ahorro = saldoAhorroService.findSaldoAhorroSumByIdUsuario(usuario.getId());
 				if(ahorro != null) {
 					BigDecimal interesUsurio = ahorro.multiply(interesesDto.getPorcentajeInteresDelPeriodo().divide(new BigDecimal(100),6, RoundingMode.FLOOR));				
 					saldoAhorroCreados.add(createSaldoAhorroInteres(usuario.getId(),interesUsurio));
