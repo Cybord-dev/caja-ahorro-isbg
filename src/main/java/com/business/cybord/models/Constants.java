@@ -8,6 +8,7 @@ public class Constants {
 	public static final String INICIO_CAJA = "INICIO-CAJA";
 	public static final String TASA_INTERES_RETENCION = "TASA-INTERES-RETENCION";
 	public static final String ORIGEN_SISTEMA = "SISTEMA";
+	public static final int ID_USUARIO_CAJA = 0;
 	
 	public class SqlConstants{
 		public static final String  LIMIT="LIMIT";
