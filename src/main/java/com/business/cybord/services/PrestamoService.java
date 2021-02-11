@@ -27,23 +27,30 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.cybord.mappers.PrestamoMapper;
+import com.business.cybord.mappers.SaldoAhorroMapper;
 import com.business.cybord.models.Constants;
 import com.business.cybord.models.dtos.CalculoInteresDto;
 import com.business.cybord.models.dtos.PrestamoDto;
 import com.business.cybord.models.dtos.RecursoDto;
+import com.business.cybord.models.dtos.SaldoAhorroDto;
 import com.business.cybord.models.dtos.SaldoPrestamoDto;
 import com.business.cybord.models.entities.Prestamo;
+import com.business.cybord.models.entities.SaldoAhorro;
 import com.business.cybord.models.entities.Usuario;
 import com.business.cybord.models.entities.ValidacionAval;
 import com.business.cybord.models.enums.EstatusPrestamoEnum;
+import com.business.cybord.models.enums.TipoAhorroEnum;
 import com.business.cybord.models.enums.TipoSaldoPrestamoEnum;
+import com.business.cybord.models.enums.TipoUsuarioEnum;
 import com.business.cybord.repositories.PrestamoRepository;
+import com.business.cybord.repositories.SaldoAhorroRepository;
 import com.business.cybord.repositories.UsuariosRepository;
 import com.business.cybord.repositories.ValidacionAvalRepository;
 import com.business.cybord.repositories.dao.PrestamoDao;
 import com.business.cybord.repositories.dao.SaldoPrestamoDao;
 import com.business.cybord.utils.builder.CalculoInteresDtoBuilder;
 import com.business.cybord.utils.builder.PrestamoBuilder;
+import com.business.cybord.utils.builder.SaldoAhorroBuilder;
 import com.business.cybord.utils.builder.SaldoPrestamoBuilder;
 
 
@@ -65,6 +72,9 @@ public class PrestamoService {
 	private PrestamoMapper mapper;
 	
 	@Autowired
+	private SaldoAhorroMapper mapperSaldoAhorro;
+	
+	@Autowired
 	private CatalogoService catalogoService;
 	
 	@Autowired
@@ -75,6 +85,9 @@ public class PrestamoService {
 	
 	@Autowired
 	private SaldoAhorroService saldoAhorroService;
+	
+	@Autowired
+	private SaldoAhorroRepository saldoAhorroRepository;
 
 	@Autowired
 	private UsuariosRepository usuarioRepository;
@@ -263,11 +276,7 @@ public class PrestamoService {
 
 	public CalculoInteresDto calculoInteres(LocalDate fechaInicial, LocalDate fechaFinal) {
 		
-		
-		if(fechaInicial.isAfter(fechaFinal)) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					String.format("Fecha Incial %s es mayor a fecha final %s  ", fechaInicial, fechaFinal));
-		}
+		validarFecha(fechaInicial, fechaFinal);		
 		
 		BigDecimal saldoAhorroTotal = saldoAhorroService.getSaldosAhorroTotal();
 		BigDecimal saldoPrestamoInteres = saldoPrestamoService.getSaldoPrestamoInteresByPeriod(fechaInicial, fechaFinal);
@@ -278,7 +287,7 @@ public class PrestamoService {
 		BigDecimal porcentajeInteresDelPeriodo;
 		
 		if(saldoAhorroTotal.signum() > 0) {
-			porcentajeInteresDelPeriodo = (interesDelPerido.divide(saldoAhorroTotal,4, RoundingMode.FLOOR)).multiply(new BigDecimal(100));
+			porcentajeInteresDelPeriodo = (interesDelPerido.divide(saldoAhorroTotal,6, RoundingMode.FLOOR)).multiply(new BigDecimal(100));
 		}else {
 			porcentajeInteresDelPeriodo = BigDecimal.ZERO;
 		}
@@ -292,6 +301,38 @@ public class PrestamoService {
 				.build();
 		
 		
+	}
+	
+	@Transactional(rollbackOn = { DataAccessException.class, SQLException.class, ResponseStatusException.class })
+	public List<SaldoAhorroDto> generacionRenglonIntereses(LocalDate fechaInicial, LocalDate fechaFinal) {
+		validarFecha(fechaInicial, fechaFinal);
+		CalculoInteresDto interesesDto =  calculoInteres(fechaInicial, fechaFinal);
+				
+		BigDecimal interesRepartido = BigDecimal.ZERO;
+		
+		List<SaldoAhorro> saldoAhorroCreados = new ArrayList<>();
+		
+		for(TipoUsuarioEnum tipoAhorrodor : TipoUsuarioEnum.values()) {
+			List<Usuario> ahorradores = usuarioRepository.findByTipoUsuarioAndAhorrador(tipoAhorrodor.getTipo(), Boolean.TRUE);
+			
+			for(Usuario usuario: ahorradores) {
+				BigDecimal ahorro = saldoAhorroService.findSaldoAhorroSumByIdUsuario(usuario.getId());
+				if(ahorro != null) {
+					BigDecimal interesUsurio = ahorro.multiply(interesesDto.getPorcentajeInteresDelPeriodo().divide(new BigDecimal(100),6, RoundingMode.FLOOR));				
+					saldoAhorroCreados.add(createSaldoAhorroInteres(usuario.getId(),interesUsurio));
+					interesRepartido = interesRepartido.add(interesUsurio);
+				}
+			}		
+		}
+		
+		if(interesRepartido.compareTo(interesesDto.getInteresDelPerido()) <=0 ) {
+			log.info("Interes repartido {}", interesRepartido);
+			saldoAhorroCreados.add(createSaldoAhorroInteres(Constants.ID_USUARIO_CAJA,interesesDto.getSaldoPrestamoInteresTotal().subtract(interesRepartido)));
+		}else {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error en la generacion de intereses");
+		}
+		
+		return mapperSaldoAhorro.getDtosFromEntity(saldoAhorroCreados);
 	}
 
 	
@@ -307,6 +348,18 @@ public class PrestamoService {
 				.build();
 		return saldosDao.insertSaldoPrestamo(saldoPrestamo);
 
+	}
+	
+	private SaldoAhorro createSaldoAhorroInteres(Integer idUsuario, BigDecimal monto) {
+		SaldoAhorro saldoAhorro = new SaldoAhorroBuilder()
+				.setIdUsuario(idUsuario)
+				.setMonto(monto)
+				.setOrigen(Constants.ORIGEN_SISTEMA)
+				.setTipo(TipoAhorroEnum.INTERES.getTipo())
+				.build();
+		
+		return saldoAhorroRepository.save(saldoAhorro);
+		
 	}
 
 	private SaldoPrestamoDto createSaldoPrestamoInteres(Prestamo prestamo) {
@@ -324,6 +377,13 @@ public class PrestamoService {
 				.filter(sp -> !sp.getTipo().equals(TipoSaldoPrestamoEnum.INTERES.name()))
 				.filter(sp -> sp.getValidado()).map(sp -> sp.getMonto())
 				.reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
+	}
+	
+	private void validarFecha(LocalDate fechaInicial, LocalDate fechaFinal) {
+		if(fechaInicial.isAfter(fechaFinal)) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					String.format("Fecha Incial %s es mayor a fecha final %s  ", fechaInicial, fechaFinal));
+		}
 	}
 
 

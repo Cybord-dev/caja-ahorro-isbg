@@ -4,6 +4,7 @@ public enum TipoAhorroEnum {
 
 	AHORRO("ahorro"),
 	DEPOSITO("deposito"),
+	INTERES("interes"),
 	RETIRO("retiro");
 	
 	private String tipo;

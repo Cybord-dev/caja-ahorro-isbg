@@ -305,10 +305,22 @@ public class SaldoAhorroService {
 	public BigDecimal getSaldosAhorroTotal() {
 		
 		LocalDate fechaFinal = LocalDate.now();
-		Month mesActual = fechaFinal.getMonth();
+		LocalDate fechaInicial = calcularFechaInicioCaja(fechaFinal);
+		
+		return reportesSaldosDao.getSaldoAhorroTotal(fechaInicial, fechaFinal);
+	}
+	
+	public BigDecimal findSaldoAhorroSumByIdUsuario(Integer id) {
+		LocalDate fechaFinal = LocalDate.now();
+		LocalDate fechaInicial = calcularFechaInicioCaja(fechaFinal);
+		return respository.findSaldoAhorroSumByIdUsuario(id, Date.valueOf(fechaInicial), Date.valueOf(fechaFinal));
+	}
+	
+	private LocalDate calcularFechaInicioCaja(LocalDate fechaActual) {
+		Month mesActual = fechaActual.getMonth();
 		Month inicioCaja = Month.valueOf(catalogoService.getCatPropiedadByTipoAndNombre(Constants.TIPO_CONFIGURACIONES, Constants.INICIO_CAJA).getValor());
 		
-		int year = fechaFinal.getYear();
+		int year = fechaActual.getYear();
 		
 		if(mesActual.compareTo(inicioCaja)<0) {
 			year = year -1;
@@ -317,7 +329,7 @@ public class SaldoAhorroService {
 		LocalDate fechaInicial = LocalDate.of(year, inicioCaja, 1);
 		log.info("Fecha Inicial {}", fechaInicial);
 		
-		return reportesSaldosDao.getSaldoAhorroTotal(fechaInicial, fechaFinal);
+		return fechaInicial;
 	}
 
 }
