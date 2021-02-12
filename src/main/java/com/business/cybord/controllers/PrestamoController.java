@@ -100,7 +100,7 @@ public class PrestamoController {
 		return new ResponseEntity<>(service.traspasarPrestamo(idPrestamo), HttpStatus.CREATED);
 	}
 	
-	@PostMapping("/usuarios/{idUsuario}/traspasar-prestamo/")
+	@PostMapping("/usuarios/{idUsuario}/traspasar-prestamo")
 	public ResponseEntity<List<PrestamoDto>> traspasarPrestamosUsuario(@PathVariable Integer idUsuario){
 		return new ResponseEntity<>(service.trasparPrestamosUsuario(idUsuario), HttpStatus.CREATED);
 	}
