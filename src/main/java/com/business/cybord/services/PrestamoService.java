@@ -334,6 +334,27 @@ public class PrestamoService {
 		
 		return mapperSaldoAhorro.getDtosFromEntity(saldoAhorroCreados);
 	}
+	
+	@Transactional(rollbackOn = { DataAccessException.class, SQLException.class, ResponseStatusException.class })
+	public List<PrestamoDto>trasparPrestamosUsuario(Integer idUsuario) {
+		usuarioRepository.findById(idUsuario).orElseThrow(()->  new ResponseStatusException(HttpStatus.NOT_FOUND,
+						String.format("No existe el usuario con id %d", idUsuario)));
+		
+		List<Prestamo> prestamosActivos =  repository.findByIdDeudorActivoSuspendido(idUsuario);
+		
+		if(prestamosActivos.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					String.format("El usuario con id %d no tiene prestamos activos", idUsuario)); 
+		}
+		
+		List<PrestamoDto> prestamosCreados = new ArrayList<>();
+		
+		for(Prestamo prestamoActual : prestamosActivos) {
+			prestamosCreados.addAll(traspasarPrestamo(prestamoActual.getId()));
+		}
+						
+		return prestamosCreados;
+	}
 
 	
 	
@@ -361,6 +382,7 @@ public class PrestamoService {
 		return saldoAhorroRepository.save(saldoAhorro);
 		
 	}
+			
 
 	private SaldoPrestamoDto createSaldoPrestamoInteres(Prestamo prestamo) {
 		SaldoPrestamoDto saldoPrestamo = new SaldoPrestamoBuilder().setIdPrestamo(prestamo.getId())
@@ -385,6 +407,8 @@ public class PrestamoService {
 					String.format("Fecha Incial %s es mayor a fecha final %s  ", fechaInicial, fechaFinal));
 		}
 	}
+
+	
 
 
 }
