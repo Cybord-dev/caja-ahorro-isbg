@@ -100,6 +100,11 @@ public class PrestamoController {
 		return new ResponseEntity<>(service.traspasarPrestamo(idPrestamo), HttpStatus.CREATED);
 	}
 	
+	@PostMapping("/usuarios/{idUsuario}/traspasar-prestamo/")
+	public ResponseEntity<List<PrestamoDto>> traspasarPrestamosUsuario(@PathVariable Integer idUsuario){
+		return new ResponseEntity<>(service.trasparPrestamosUsuario(idUsuario), HttpStatus.CREATED);
+	}
+	
 	@GetMapping("/calculo-interes")
 	public ResponseEntity<CalculoInteresDto> calculoInteres(
 			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd")  LocalDate fechaInicial, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd")  LocalDate fechaFinal){
