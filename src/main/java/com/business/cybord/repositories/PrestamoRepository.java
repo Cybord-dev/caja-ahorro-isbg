@@ -26,7 +26,7 @@ public interface PrestamoRepository extends JpaRepository<Prestamo, Integer> {
 	public Optional<Prestamo> findByIdAndIdDeudorAndIdSaldo(@Param("idUsuario") Integer idUsuario,
 			@Param("idPrestamo") Integer idPrestamo, @Param("idSaldo") Integer idSaldo);
 
-	@Query("SELECT e FROM Prestamo e WHERE e.estatus = 'com.business.cybord.models.enums.ACTIVO' or e.estatus = 'TRASPASADO'")
+	@Query("SELECT e FROM Prestamo e WHERE e.estatus = 'ACTIVO' or e.estatus = 'TRASPASADO'")
 	List<Prestamo> findActivoTraspasado();
 	
 }
