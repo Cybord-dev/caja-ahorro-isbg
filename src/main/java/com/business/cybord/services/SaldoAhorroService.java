@@ -115,6 +115,9 @@ public class SaldoAhorroService {
 	public List<SaldoAhorroDto> getSaldosAhorroByUsuario(Integer id) {
 		LocalDate start = cajaUtilityService.getInicioCajaActual();
 		LocalDate end = cajaUtilityService.getFinCajaActual();
+		
+		log.info("finding ahorro of user {}, between {} and {}", id, start, end);
+		
 		return mapper
 				.getDtosFromEntity(respository.findAhorosUsuarioCajaActual(id, Date.valueOf(start), Date.valueOf(end)));
 	}
