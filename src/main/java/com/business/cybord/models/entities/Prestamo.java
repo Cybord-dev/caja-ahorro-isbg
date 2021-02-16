@@ -66,9 +66,9 @@ public class Prestamo {
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_prestamo", referencedColumnName = "id_prestamo", insertable = false, updatable = false)
 	private List<SaldoPrestamo> saldosPrestamo;
-
+	
 	@OneToOne
-	@JoinColumn(name = "id_solicitud", referencedColumnName = "id_solicitud")
+	@JoinColumn(name = "id_solicitud", referencedColumnName = "id_solicitud", updatable = false)
 	private Solicitud solicitud;
 
 	public int getId() {
@@ -172,8 +172,7 @@ public class Prestamo {
 		return "Prestamo [id=" + id + ", idDeudor=" + idDeudor + ", estatus=" + estatus + ", monto=" + monto
 				+ ", noQuincenas=" + noQuincenas + ", tasaInteres=" + tasaInteres + ", saldoPendiente=" + saldoPendiente
 				+ ", fechaTerminacion=" + fechaTerminacion + ", fechaCreacion=" + fechaCreacion
-				+ ", fechaActualizacion=" + fechaActualizacion + ", saldosPrestamo=" + saldosPrestamo + ", solicitud="
-				+ solicitud + "]";
+				+ ", fechaActualizacion=" + fechaActualizacion + ", saldosPrestamo=" + saldosPrestamo +"]";
 	}
 
 }

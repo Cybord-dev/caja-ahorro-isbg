@@ -144,8 +144,10 @@ public class UsuarioService {
 		List<PrestamoDto> activePrestamos = prestamoService.getPrestamosdeUnUsuarioByIdNotCompleted(usuario.getId());
 		for (PrestamoDto prestamoDto : activePrestamos) {
 			sueldoUtilizable = sueldoUtilizable
-					.subtract(prestamoDto.getMonto().divide(new BigDecimal(prestamoDto.getNoQuincenas())))
-					.subtract(prestamoDto.getMonto().multiply(new BigDecimal(0.01)))
+					.subtract(prestamoDto.getMonto())
+					.setScale(2, RoundingMode.HALF_UP)
+					.divide(BigDecimal.valueOf(prestamoDto.getNoQuincenas()), RoundingMode.HALF_UP)
+					.subtract(prestamoDto.getMonto().multiply(BigDecimal.valueOf(0.01)))
 					.setScale(2, RoundingMode.HALF_UP);
 		}
 		List<ValidacionAvalDto> prestamoAvales = validacionAvalDao.getActivePrestamosByAval(usuario.getId());
