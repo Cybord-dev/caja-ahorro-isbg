@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -277,8 +278,9 @@ public class SaldoPrestamoDao {
 	}
 
 	public BigDecimal getSaldoPrestamoInteresesByPeriod(LocalDate fechaInicial, LocalDate fechaFinal) {
+		LocalDateTime fechaFinalTime = LocalDateTime.of(fechaFinal.getYear(),fechaFinal.getMonth(), fechaFinal.getDayOfMonth(), 23, 59);
 		String[] params = new String[]  {
-               TipoSaldoPrestamoEnum.INTERES.name(),fechaInicial.toString(), fechaFinal.toString()};
+               TipoSaldoPrestamoEnum.INTERES.name(),fechaInicial.toString(), fechaFinalTime.toString()};
 		return template.queryForObject(SALDO_PRESTAMO_PERIODO,params, BigDecimal.class);
 	}
 
