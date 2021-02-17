@@ -331,12 +331,12 @@ public class PrestamoService {
 	public InteresGeneradoLogDto generacionRenglonIntereses() {
 						
 		LocalDate fechaFinal = LocalDate.now();
-		InteresGeneradoLog ultimoInteresGenerado = interesGeneradoRepository.findFirstByOrderByFechaEjecucionDesc();
+		Optional<InteresGeneradoLog> ultimoInteresGenerado = interesGeneradoRepository.findFirstByOrderByFechaEjecucionDesc();
 		
 		LocalDate fechaInicial;
-		if(ultimoInteresGenerado !=null) {
+		if(ultimoInteresGenerado.isPresent()) {
 		
-			 fechaInicial = Instant.ofEpochMilli(ultimoInteresGenerado.getFechaEjecucion().getTime())
+			 fechaInicial = Instant.ofEpochMilli(ultimoInteresGenerado.get().getFechaEjecucion().getTime())
 			      .atZone(ZoneId.systemDefault())
 			      .toLocalDate();
 		}else {
