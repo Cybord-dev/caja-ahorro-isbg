@@ -3,6 +3,7 @@ package com.business.cybord.controllers;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -107,13 +108,13 @@ public class PrestamoController {
 	
 	@GetMapping("/calculo-interes")
 	public ResponseEntity<CalculoInteresDto> calculoInteres(
-			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd")  LocalDate fechaInicial, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd")  LocalDate fechaFinal){
-		return new ResponseEntity<>(service.calculoInteres(fechaInicial, fechaFinal), HttpStatus.OK);
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")  LocalDateTime fechaInicial, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")  LocalDateTime fechaFinal, @RequestParam String tipoUsuario){
+		return new ResponseEntity<>(service.calculoInteres(tipoUsuario, fechaInicial, fechaFinal), HttpStatus.OK);
 	}
 	
 	@PostMapping("/generacion-renglon-interes")
-	public ResponseEntity<InteresGeneradoLogDto> generacionRenglonInteres(){
-		return new ResponseEntity<>(service.generacionRenglonIntereses(), HttpStatus.CREATED);
+	public ResponseEntity<InteresGeneradoLogDto> generacionRenglonInteres(@RequestParam String tipoUsuario){
+		return new ResponseEntity<>(service.generacionRenglonIntereses(tipoUsuario), HttpStatus.CREATED);
 	}
 
 }

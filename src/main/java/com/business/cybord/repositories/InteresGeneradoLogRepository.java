@@ -10,7 +10,7 @@ import com.business.cybord.models.entities.InteresGeneradoLog;
 public interface InteresGeneradoLogRepository extends JpaRepository<InteresGeneradoLog, Integer> {
 
 	
-	public Optional<InteresGeneradoLog> findFirstByOrderByFechaEjecucionDesc();
+	public Optional<InteresGeneradoLog> findFirstByTipoUsuarioOrderByFechaEjecucionDesc(String tipoUsuario );
 	
 	
 }

@@ -2,6 +2,8 @@ package com.business.cybord.services;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,8 +17,8 @@ public class SaldoPrestamoService {
 	@Autowired
 	private SaldoPrestamoDao dao;
 
-	public BigDecimal getSaldoPrestamoInteresByPeriod(LocalDate fechaInicial, LocalDate fechaFinal) {
-		return dao.getSaldoPrestamoInteresesByPeriod(fechaInicial, fechaFinal);
+	public Optional<BigDecimal> getSaldoPrestamoInteresByPeriod(String tipoUsuario, LocalDateTime fechaInicial, LocalDateTime fechaFinal) {
+		return dao.getSaldoPrestamoInteresesByPeriod(tipoUsuario, fechaInicial, fechaFinal);
 	}
 	
 }

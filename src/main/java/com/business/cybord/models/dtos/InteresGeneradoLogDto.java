@@ -15,7 +15,7 @@ public class InteresGeneradoLogDto implements Serializable {
 	private static final long serialVersionUID = -3179811973816672988L;
 
 	private int id;
-	@JsonFormat(shape = JsonFormat.Shape.STRING)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date fechaEjecucion;
 	private String tipoUsuario;
 	private BigDecimal saldoAhorro;
