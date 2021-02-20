@@ -41,6 +41,9 @@ public class SaldoPrestamo {
 
 	@Column(name = "validado")
 	private Boolean validado;
+	
+	@Column(name = "observaciones")
+	private String observaciones;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
@@ -98,6 +101,14 @@ public class SaldoPrestamo {
 
 	public void setValidado(Boolean validado) {
 		this.validado = validado;
+	}
+	
+	public String getObservaciones() {
+		return observaciones;
+	}
+
+	public void setObservaciones(String observaciones) {
+		this.observaciones = observaciones;
 	}
 
 	public Date getFechaCreacion() {

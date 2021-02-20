@@ -41,6 +41,11 @@ public class SaldoPrestamoBuilder extends AbstractBuilder<SaldoPrestamoDto> {
 		instance.setEstatus(estatus);
 		return this;
 	}
+	
+	public SaldoPrestamoBuilder setObservaciones(String observaciones) {
+		instance.setObservaciones(observaciones);
+		return this;
+	}
 
 	public SaldoPrestamoBuilder setNoQuincenas(Integer noQuincenas) {
 		instance.setNoQuincenas(noQuincenas);

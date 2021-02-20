@@ -12,7 +12,8 @@ public class SaldoPrestamoReportRowMapper implements RowMapper<SaldoPrestamoDto>
 
 	@Override
 	public SaldoPrestamoDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-		return new SaldoPrestamoBuilder().setId(rs.getInt("id_saldo_prestamo")).setIdPrestamo(rs.getInt("id_prestamo"))
+		return new SaldoPrestamoBuilder().setId(rs.getInt("id_saldo_prestamo"))
+				.setIdPrestamo(rs.getInt("id_prestamo")).setObservaciones(rs.getString("observaciones"))
 				.setIdUsuario(rs.getInt("id_deudor")).setMontoPrestamo(rs.getBigDecimal("monto_prestamo"))
 				.setSaldoPendiente(rs.getBigDecimal("saldo_pendiente")).setEstatus(rs.getString("estatus"))
 				.setNoQuincenas(rs.getInt("no_quincenas")).setTasaInteres(rs.getBigDecimal("tasa_interes"))

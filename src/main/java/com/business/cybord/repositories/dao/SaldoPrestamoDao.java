@@ -138,6 +138,7 @@ public class SaldoPrestamoDao {
 		saldoPrestamo.addColumn("tipo", "String", null);
 		saldoPrestamo.addColumn("id_saldo_prestamo", "String", null);
 		saldoPrestamo.addColumn("id_prestamo", "String", null);
+		saldoPrestamo.addColumn("observaciones", "String", null);
 		usuarios.addColumn("nombre", "String", null);
 		usuarios.addColumn("id_usuario", "String", null);
 		usuarios.addColumn("tipo_usuario", "caca", null);
@@ -161,6 +162,7 @@ public class SaldoPrestamoDao {
 				.addColumns(saldoPrestamo.findColumns("validado")).addColumns(saldoPrestamo.findColumns("monto"))
 				.addColumns(saldoPrestamo.findColumns("origen")).addColumns(saldoPrestamo.findColumns("tipo"))
 				.addColumns(saldoPrestamo.findColumns("id_saldo_prestamo"))
+				.addColumns(saldoPrestamo.findColumns("observaciones"))
 				.addColumns(saldoPrestamo.findColumns("id_prestamo")).addColumns(usuarios.findColumns("no_empleado"))
 				.addColumns(usuarios.findColumns("nombre")).addColumns(usuarios.findColumns("tipo_usuario"))
 				.addColumns(usuarios.findColumns("id_usuario")).addColumns(prestamo.findColumns("estatus"))

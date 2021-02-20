@@ -31,6 +31,7 @@ public class SaldoPrestamoDto implements Serializable {
 	private String origen;
 	private BigDecimal monto;
 	private Boolean validado;
+	private String observaciones;
 	private LocalDate fechaCreacion;
 	private LocalDateTime fechaActualizacion;
 
@@ -128,6 +129,14 @@ public class SaldoPrestamoDto implements Serializable {
 
 	public void setValidado(Boolean validado) {
 		this.validado = validado;
+	}
+	
+	public String getObservaciones() {
+		return observaciones;
+	}
+
+	public void setObservaciones(String observaciones) {
+		this.observaciones = observaciones;
 	}
 
 	public LocalDate getFechaCreacion() {
