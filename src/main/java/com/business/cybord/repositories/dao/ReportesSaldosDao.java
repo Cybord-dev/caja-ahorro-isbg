@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +31,6 @@ import com.business.cybord.utils.extractor.ReporteSaldosRowMapper;
 import com.business.cybord.utils.extractor.SaldoAhorroCajaAgrupadoRowMapper;
 import com.business.cybord.utils.extractor.SaldoAhorroCajaRowMapper;
 import com.business.cybord.utils.extractor.SaldoAhorroDtoRowMapper;
-import com.business.cybord.utils.helper.DateHelper;
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
 import com.healthmarketscience.sqlbuilder.FunctionCall;
 import com.healthmarketscience.sqlbuilder.SelectQuery;
@@ -48,7 +46,7 @@ public class ReportesSaldosDao {
 	private JdbcTemplate jdbcTemplate;
 
 	private DateFormat dateFormat = new SimpleDateFormat(SqlConstants.DATE_FORMAT);
-	private DateHelper dh = new DateHelper();
+
 
 	private static final String AHORRO_CAJA_POR_TIPO_ANUAL = "SELECT SUM(monto) as monto, tipo,MONTH(fecha_creacion) as mes  "
 			+ "FROM saldo_ahorro where fecha_creacion between ? AND ?  AND validado=1 "
@@ -135,9 +133,9 @@ public class ReportesSaldosDao {
 
 	public String reportQuery(Map<String, String> parameters, Pageable pageable) {
 		String since = parameters.containsKey(SqlConstants.SINCE) ? parameters.get(SqlConstants.SINCE)
-				: dateFormat.format(new DateTime().minusYears(1).toDate());
+				: dateFormat.format(new DateTime().minusMonths(18).toDate());
 		String to = parameters.containsKey(SqlConstants.TO) ? parameters.get(SqlConstants.TO)
-				: dateFormat.format(dh.addDays(new Date(), 2));
+				: dateFormat.format(new DateTime().plusDays(1).toDate());
 		DbSchema schema = new DbSpec().addDefaultSchema();
 		DbTable saldoAhorro = schema.addTable("saldo_ahorro");
 		DbTable usuarios = schema.addTable("usuarios");
@@ -193,9 +191,9 @@ public class ReportesSaldosDao {
 
 	public String solicitudCount(Map<String, String> parameters) {
 		String since = parameters.containsKey(SqlConstants.SINCE) ? parameters.get(SqlConstants.SINCE)
-				: dateFormat.format(new DateTime().minusYears(1).toDate());
+				: dateFormat.format(new DateTime().minusMonths(18).toDate());
 		String to = parameters.containsKey(SqlConstants.TO) ? parameters.get(SqlConstants.TO)
-				: dateFormat.format(dh.addOneDay(new Date()));
+				: dateFormat.format(new DateTime().plusDays(1).toDate());
 		DbSchema schema = new DbSpec().addDefaultSchema();
 		DbTable saldoAhorro = schema.addTable("saldo_ahorro");
 		DbTable usuarios = schema.addTable("usuarios");
