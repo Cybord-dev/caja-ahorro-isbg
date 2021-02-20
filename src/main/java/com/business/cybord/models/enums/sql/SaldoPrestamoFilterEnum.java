@@ -2,7 +2,10 @@ package com.business.cybord.models.enums.sql;
 
 public enum SaldoPrestamoFilterEnum {
 	MONTO("monto", "monto", false),
-	ORIGEN("origen", "origen", true);
+	ORIGEN("origen", "origen", true),
+	VALIDADO("validado", "validado", false),
+	TIPO("tipo", "tipo", true);
+	
 
 	private String paramName;
 	private String fieldName;
