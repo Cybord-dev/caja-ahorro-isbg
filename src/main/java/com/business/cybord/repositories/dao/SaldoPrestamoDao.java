@@ -6,22 +6,28 @@ package com.business.cybord.repositories.dao;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -60,7 +66,12 @@ public class SaldoPrestamoDao {
 
 	private static final String UPDATE_SALDPO_PRESTAMO = "UPDATE isbg.saldo_prestamo SET validado=?, origen=?,fecha_actualizacion= now() WHERE id_saldo_prestamo=?";
 
-	private static final String SALDO_PRESTAMO_PERIODO = "SELECT SUM(monto) FROM isbg.saldo_prestamo sp WHERE tipo = ? AND validado = 1 AND fecha_creacion BETWEEN ? AND ?";
+	private static final String SALDO_PRESTAMO_PERIODO = "SELECT SUM(saldo_prestamo.monto) FROM saldo_prestamo"
+									+" INNER JOIN prestamo ON saldo_prestamo.id_prestamo = prestamo.id_prestamo"  
+									+" INNER JOIN usuarios ON usuarios.id_usuario = prestamo.id_deudor" 
+									+" WHERE saldo_prestamo.tipo = ? AND saldo_prestamo.validado = 1 "
+									+ " AND usuarios.tipo_usuario = ? "
+									+ " AND saldo_prestamo.fecha_creacion BETWEEN ? AND ? ";
 
 	
 	public SaldoPrestamoDto insertSaldoPrestamo(SaldoPrestamoDto saldo) {
@@ -277,10 +288,28 @@ public class SaldoPrestamoDao {
 		return selectByParams.toString();
 	}
 
-	public BigDecimal getSaldoPrestamoInteresesByPeriod(LocalDate fechaInicial, LocalDate fechaFinal) {
-		String[] params = new String[]  {
-               TipoSaldoPrestamoEnum.INTERES.name(),fechaInicial.toString(), fechaFinal.toString()};
-		return template.queryForObject(SALDO_PRESTAMO_PERIODO,params, BigDecimal.class);
+	public Optional<BigDecimal> getSaldoPrestamoInteresesByPeriod(String tipoUsuario, LocalDateTime fechaInicial, LocalDateTime fechaFinal) {
+	
+		
+		return template.query(new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+				PreparedStatement ps = con.prepareStatement(SALDO_PRESTAMO_PERIODO);
+				ps.setString(1, TipoSaldoPrestamoEnum.INTERES.name());
+				ps.setString(2, tipoUsuario);
+				ps.setTimestamp(3, Timestamp.valueOf(fechaInicial));
+				ps.setTimestamp(4, Timestamp.valueOf(fechaFinal));
+				return ps;
+			}
+		}, new ResultSetExtractor<Optional<BigDecimal>>() {
+
+			@Override
+			public Optional<BigDecimal> extractData(ResultSet rs) throws SQLException, DataAccessException {
+				
+				 return rs.next() ? rs.getBigDecimal(1)!= null?Optional.of(rs.getBigDecimal(1)) :Optional.empty() : Optional.empty();
+			}
+		});
+		
 	}
 
 	

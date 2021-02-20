@@ -3,22 +3,27 @@ package com.business.cybord.repositories.dao;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Repository;
 
 import com.business.cybord.models.Constants.SqlConstants;
@@ -236,10 +241,27 @@ public class ReportesSaldosDao {
 		return selectStoresByParams.toString();
 	}
 
-	public BigDecimal getSaldoAhorroTotal(LocalDate fechaInicial, LocalDate fechaFinal) {
-		String[] params = new String[]  {
-	               fechaInicial.toString(), fechaFinal.toString()};
-			return jdbcTemplate.queryForObject(SALDO_PRESTAMO_TOTAL,params, BigDecimal.class);
+	public Optional<BigDecimal> getSaldoAhorroTotal(LocalDate fechaInicial, LocalDate fechaFinal) {
+
+			return jdbcTemplate.query(new PreparedStatementCreator() {
+				@Override
+				public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+					PreparedStatement ps = con.prepareStatement(SALDO_PRESTAMO_TOTAL);
+					ps.setTimestamp(1, Timestamp.valueOf(fechaInicial.atStartOfDay()));
+					ps.setTimestamp(2, Timestamp.valueOf(fechaFinal.atTime(23, 59)));
+					return ps;
+				}
+			}, new ResultSetExtractor<Optional<BigDecimal>>() {
+
+				@Override
+				public Optional<BigDecimal> extractData(ResultSet rs) throws SQLException, DataAccessException {
+					
+					 return rs.next() ? rs.getBigDecimal(1)!= null?Optional.of(rs.getBigDecimal(1)) :Optional.empty() : Optional.empty();
+				}
+			});
+	
+	
+	
 	}
 
 }

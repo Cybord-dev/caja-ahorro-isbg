@@ -3,8 +3,9 @@ package com.business.cybord.services;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.Month;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +26,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.cybord.mappers.SaldoAhorroMapper;
-import com.business.cybord.models.Constants;
 import com.business.cybord.models.Meses;
 import com.business.cybord.models.dtos.RecursoDto;
 import com.business.cybord.models.dtos.SaldoAhorroDto;
@@ -61,8 +61,6 @@ public class SaldoAhorroService {
 	@Autowired
 	private CajaUtilityService cajaUtilityService;
 	
-	@Autowired
-	private CatalogoService catalogoService;
 	
 	
 	private static final Logger log = LoggerFactory.getLogger(SaldoAhorroService.class);
@@ -305,34 +303,14 @@ public class SaldoAhorroService {
 
 	}
 
-	public BigDecimal getSaldosAhorroTotal() {
-		
-		LocalDate fechaFinal = LocalDate.now();
-		LocalDate fechaInicial = calcularFechaInicioCaja(fechaFinal);
-		
-		return reportesSaldosDao.getSaldoAhorroTotal(fechaInicial, fechaFinal);
+	public Optional<BigDecimal> getSaldosAhorroTotal() {
+		return reportesSaldosDao.getSaldoAhorroTotal(cajaUtilityService.getInicioCajaActual(), LocalDate.now());
 	}
 	
-	public BigDecimal findSaldoAhorroSumByIdUsuario(Integer id) {
-		LocalDate fechaFinal = LocalDate.now();
-		LocalDate fechaInicial = calcularFechaInicioCaja(fechaFinal);
-		return respository.findSaldoAhorroSumByIdUsuario(id, Date.valueOf(fechaInicial), Date.valueOf(fechaFinal));
+	public Optional<BigDecimal> findSaldoAhorroSumByIdUsuario(Integer id) {
+		return respository.findSaldoAhorroSumByIdUsuario(id, Date.valueOf(cajaUtilityService.getInicioCajaActual()), Timestamp.valueOf(LocalDateTime.now()));
 	}
 	
-	private LocalDate calcularFechaInicioCaja(LocalDate fechaActual) {
-		Month mesActual = fechaActual.getMonth();
-		Month inicioCaja = Month.valueOf(catalogoService.getCatPropiedadByTipoAndNombre(Constants.TIPO_CONFIGURACIONES, Constants.INICIO_CAJA).getValor());
-		
-		int year = fechaActual.getYear();
-		
-		if(mesActual.compareTo(inicioCaja)<0) {
-			year = year -1;
-		}
-		
-		LocalDate fechaInicial = LocalDate.of(year, inicioCaja, 1);
-		log.info("Fecha Inicial {}", fechaInicial);
-		
-		return fechaInicial;
-	}
+
 
 }
