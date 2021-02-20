@@ -39,7 +39,6 @@ import com.business.cybord.models.enums.sql.PrestamoFilterEnum;
 import com.business.cybord.models.enums.sql.SaldoPrestamoFilterEnum;
 import com.business.cybord.models.enums.sql.UsuariosFilterEnum;
 import com.business.cybord.utils.extractor.SaldoPrestamoReportRowMapper;
-import com.business.cybord.utils.helper.DateHelper;
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
 import com.healthmarketscience.sqlbuilder.FunctionCall;
 import com.healthmarketscience.sqlbuilder.SelectQuery;
@@ -59,7 +58,6 @@ public class SaldoPrestamoDao {
 	private JdbcTemplate template;
 
 	private DateFormat dateFormat = new SimpleDateFormat(SqlConstants.DATE_FORMAT);
-	private DateHelper dh = new DateHelper();
 
 	private static final Logger log = LoggerFactory.getLogger(SaldoPrestamoDao.class);
 
@@ -121,14 +119,15 @@ public class SaldoPrestamoDao {
 				return ps;
 			}
 		}, new SaldoPrestamoReportRowMapper());
+		
 		return new PageImpl<>(rows, pageable, total);
 	}
 
 	public String query(Map<String, String> parameters, Pageable pageable) {
 		String since = parameters.containsKey(SqlConstants.SINCE) ? parameters.get(SqlConstants.SINCE)
-				: dateFormat.format(new DateTime().minusYears(1).toDate());
+				: dateFormat.format(new DateTime().minusMonths(18).toDate());
 		String to = parameters.containsKey(SqlConstants.TO) ? parameters.get(SqlConstants.TO)
-				: dateFormat.format(dh.addDays(new Date(), 2));
+				: dateFormat.format(new DateTime().plusDays(2).toDate());
 		DbSchema schema = new DbSpec().addDefaultSchema();
 
 		DbTable saldoPrestamo = schema.addTable("saldo_prestamo");
@@ -148,6 +147,7 @@ public class SaldoPrestamoDao {
 		saldoPrestamo.addColumn("tipo", "String", null);
 		saldoPrestamo.addColumn("id_saldo_prestamo", "String", null);
 		saldoPrestamo.addColumn("id_prestamo", "String", null);
+		saldoPrestamo.addColumn("observaciones", "String", null);
 		usuarios.addColumn("nombre", "String", null);
 		usuarios.addColumn("id_usuario", "String", null);
 		usuarios.addColumn("tipo_usuario", "caca", null);
@@ -171,6 +171,7 @@ public class SaldoPrestamoDao {
 				.addColumns(saldoPrestamo.findColumns("validado")).addColumns(saldoPrestamo.findColumns("monto"))
 				.addColumns(saldoPrestamo.findColumns("origen")).addColumns(saldoPrestamo.findColumns("tipo"))
 				.addColumns(saldoPrestamo.findColumns("id_saldo_prestamo"))
+				.addColumns(saldoPrestamo.findColumns("observaciones"))
 				.addColumns(saldoPrestamo.findColumns("id_prestamo")).addColumns(usuarios.findColumns("no_empleado"))
 				.addColumns(usuarios.findColumns("nombre")).addColumns(usuarios.findColumns("tipo_usuario"))
 				.addColumns(usuarios.findColumns("id_usuario")).addColumns(prestamo.findColumns("estatus"))
@@ -224,9 +225,9 @@ public class SaldoPrestamoDao {
 
 	public String saldoPrestamoCount(Map<String, String> parameters) {
 		String since = parameters.containsKey(SqlConstants.SINCE) ? parameters.get(SqlConstants.SINCE)
-				: dateFormat.format(new DateTime().minusYears(1).toDate());
+				: dateFormat.format(new DateTime().minusMonths(18).toDate());
 		String to = parameters.containsKey(SqlConstants.TO) ? parameters.get(SqlConstants.TO)
-				: dateFormat.format(dh.addOneDay(new Date()));
+				: dateFormat.format(new DateTime().plusDays(2).toDate());
 		DbSchema schema = new DbSpec().addDefaultSchema();
 
 		DbTable saldoPrestamo = schema.addTable("saldo_prestamo");
@@ -282,6 +283,7 @@ public class SaldoPrestamoDao {
 				}
 			}
 		}
+		// TODO fix count query to fix pagination
 		log.info(selectByParams.toString());
 		return selectByParams.toString();
 	}
