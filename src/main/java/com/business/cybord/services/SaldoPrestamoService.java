@@ -1,7 +1,6 @@
 package com.business.cybord.services;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -13,12 +12,12 @@ import com.business.cybord.repositories.dao.SaldoPrestamoDao;
 @Service
 public class SaldoPrestamoService {
 
-	
 	@Autowired
 	private SaldoPrestamoDao dao;
 
-	public Optional<BigDecimal> getSaldoPrestamoInteresByPeriod(String tipoUsuario, LocalDateTime fechaInicial, LocalDateTime fechaFinal) {
+	public Optional<BigDecimal> getSaldoPrestamoInteresByPeriod(String tipoUsuario, LocalDateTime fechaInicial,
+			LocalDateTime fechaFinal) {
 		return dao.getSaldoPrestamoInteresesByPeriod(tipoUsuario, fechaInicial, fechaFinal);
 	}
-	
+
 }

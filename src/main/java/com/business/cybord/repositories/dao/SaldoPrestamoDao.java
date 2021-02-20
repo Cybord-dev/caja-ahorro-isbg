@@ -12,7 +12,6 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -67,13 +66,11 @@ public class SaldoPrestamoDao {
 	private static final String UPDATE_SALDPO_PRESTAMO = "UPDATE isbg.saldo_prestamo SET validado=?, origen=?,fecha_actualizacion= now() WHERE id_saldo_prestamo=?";
 
 	private static final String SALDO_PRESTAMO_PERIODO = "SELECT SUM(saldo_prestamo.monto) FROM saldo_prestamo"
-									+" INNER JOIN prestamo ON saldo_prestamo.id_prestamo = prestamo.id_prestamo"  
-									+" INNER JOIN usuarios ON usuarios.id_usuario = prestamo.id_deudor" 
-									+" WHERE saldo_prestamo.tipo = ? AND saldo_prestamo.validado = 1 "
-									+ " AND usuarios.tipo_usuario = ? "
-									+ " AND saldo_prestamo.fecha_creacion BETWEEN ? AND ? ";
+			+ " INNER JOIN prestamo ON saldo_prestamo.id_prestamo = prestamo.id_prestamo"
+			+ " INNER JOIN usuarios ON usuarios.id_usuario = prestamo.id_deudor"
+			+ " WHERE saldo_prestamo.tipo = ? AND saldo_prestamo.validado = 1 " + " AND usuarios.tipo_usuario = ? "
+			+ " AND saldo_prestamo.fecha_creacion BETWEEN ? AND ? ";
 
-	
 	public SaldoPrestamoDto insertSaldoPrestamo(SaldoPrestamoDto saldo) {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		template.update(new PreparedStatementCreator() {
@@ -119,7 +116,7 @@ public class SaldoPrestamoDao {
 				return ps;
 			}
 		}, new SaldoPrestamoReportRowMapper());
-		
+
 		return new PageImpl<>(rows, pageable, total);
 	}
 
@@ -288,9 +285,9 @@ public class SaldoPrestamoDao {
 		return selectByParams.toString();
 	}
 
-	public Optional<BigDecimal> getSaldoPrestamoInteresesByPeriod(String tipoUsuario, LocalDateTime fechaInicial, LocalDateTime fechaFinal) {
-	
-		
+	public Optional<BigDecimal> getSaldoPrestamoInteresesByPeriod(String tipoUsuario, LocalDateTime fechaInicial,
+			LocalDateTime fechaFinal) {
+
 		return template.query(new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
@@ -305,12 +302,12 @@ public class SaldoPrestamoDao {
 
 			@Override
 			public Optional<BigDecimal> extractData(ResultSet rs) throws SQLException, DataAccessException {
-				
-				 return rs.next() ? rs.getBigDecimal(1)!= null?Optional.of(rs.getBigDecimal(1)) :Optional.empty() : Optional.empty();
+
+				return rs.next() ? rs.getBigDecimal(1) != null ? Optional.of(rs.getBigDecimal(1)) : Optional.empty()
+						: Optional.empty();
 			}
 		});
-		
+
 	}
 
-	
 }
