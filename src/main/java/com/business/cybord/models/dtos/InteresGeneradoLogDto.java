@@ -92,9 +92,6 @@ public class InteresGeneradoLogDto implements Serializable {
 		this.interesCaja = interesCaja;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
 
 	@Override
 	public String toString() {

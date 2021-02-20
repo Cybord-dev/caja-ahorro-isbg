@@ -2,7 +2,6 @@ package com.business.cybord.controllers;
 
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.business.cybord.models.dtos.CalculoInteresDto;
+import com.business.cybord.models.dtos.GeneracionRenglonDto;
 import com.business.cybord.models.dtos.InteresGeneradoLogDto;
 import com.business.cybord.models.dtos.PrestamoDto;
 import com.business.cybord.models.dtos.RecursoDto;
@@ -113,8 +113,8 @@ public class PrestamoController {
 	}
 	
 	@PostMapping("/generacion-renglon-interes")
-	public ResponseEntity<InteresGeneradoLogDto> generacionRenglonInteres(@RequestParam String tipoUsuario){
-		return new ResponseEntity<>(service.generacionRenglonIntereses(tipoUsuario), HttpStatus.CREATED);
+	public ResponseEntity<InteresGeneradoLogDto> generacionRenglonInteres(@RequestBody GeneracionRenglonDto generacionRenglonDto){
+		return new ResponseEntity<>(service.generacionRenglonIntereses(generacionRenglonDto), HttpStatus.CREATED);
 	}
 
 }

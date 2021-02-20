@@ -32,6 +32,7 @@ import com.business.cybord.mappers.InteresGeneradoLogMapper;
 import com.business.cybord.mappers.PrestamoMapper;
 import com.business.cybord.models.Constants;
 import com.business.cybord.models.dtos.CalculoInteresDto;
+import com.business.cybord.models.dtos.GeneracionRenglonDto;
 import com.business.cybord.models.dtos.InteresGeneradoLogDto;
 import com.business.cybord.models.dtos.PrestamoDto;
 import com.business.cybord.models.dtos.RecursoDto;
@@ -286,58 +287,57 @@ public class PrestamoService {
 	}
 
 	public CalculoInteresDto calculoInteres(String tipoUsuario, LocalDateTime fechaInicial, LocalDateTime fechaFinal) {
-		
+
 		TipoUsuarioEnum tipoUsuarioValue;
-		
+
 		try {
 			tipoUsuarioValue = TipoUsuarioEnum.valueOf(tipoUsuario);
 		} catch (IllegalArgumentException e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El tipo de usuario no es valido");
 		}
-		
-		validarFecha(fechaInicial, fechaFinal);		
-		
+
+		validarFecha(fechaInicial, fechaFinal);
+
 		Optional<BigDecimal> saldoAhorroTotal = saldoAhorroService.getSaldosAhorroTotal();
 
-		Optional<BigDecimal> saldoPrestamoInteres = saldoPrestamoService.getSaldoPrestamoInteresByPeriod(tipoUsuarioValue.getTipo(),fechaInicial,
-				fechaFinal);
-		
-		if(!saldoAhorroTotal.isPresent() || !saldoPrestamoInteres.isPresent()  ) {
+		Optional<BigDecimal> saldoPrestamoInteres = saldoPrestamoService
+				.getSaldoPrestamoInteresByPeriod(tipoUsuarioValue.getTipo(), fechaInicial, fechaFinal);
+
+		if (!saldoAhorroTotal.isPresent() || !saldoPrestamoInteres.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
 					"No existen intereses para el periodo o aun no existen ahorros");
-		}
-		
-		BigDecimal interesRetencion = saldoPrestamoInteres.get().multiply(new BigDecimal(catalogoService
-				.getCatPropiedadByTipoAndNombre(Constants.TIPO_CONFIGURACIONES, Constants.TASA_INTERES_RETENCION)
-				.getValor()).divide(new BigDecimal(100), 2, RoundingMode.FLOOR));
+		} else {
 
-		BigDecimal interesDelPerido = saldoPrestamoInteres.get().subtract(interesRetencion);
-		BigDecimal porcentajeInteresDelPeriodo;
-		
-		if(saldoAhorroTotal.get().signum() > 0) {
-			porcentajeInteresDelPeriodo = (interesDelPerido.divide(saldoAhorroTotal.get(),6, RoundingMode.FLOOR)).multiply(new BigDecimal(100));
-		}else {
-			porcentajeInteresDelPeriodo = BigDecimal.ZERO;
-		}
-		
-		return  new CalculoInteresDtoBuilder()
-				.setSaldoAhorroTotal(saldoAhorroTotal.get())
-				.setSaldoPrestamoInteresTotal(saldoPrestamoInteres.get())
-				.setInteresRetenido(interesRetencion)
-				.setInteresDelPeriodo(interesDelPerido)
-				.setPorcentajeInteresDelPeriodo(porcentajeInteresDelPeriodo)
-				.build();
-		
-		
+			BigDecimal interesRetencion = saldoPrestamoInteres.get()
+					.multiply(new BigDecimal(catalogoService.getCatPropiedadByTipoAndNombre(
+							Constants.TIPO_CONFIGURACIONES, Constants.TASA_INTERES_RETENCION).getValor())
+									.divide(new BigDecimal(100), 2, RoundingMode.FLOOR));
+
+			BigDecimal interesDelPerido = saldoPrestamoInteres.get().subtract(interesRetencion);
+			BigDecimal porcentajeInteresDelPeriodo;
+
+			if (saldoAhorroTotal.get().signum() > 0) {
+				porcentajeInteresDelPeriodo = (interesDelPerido.divide(saldoAhorroTotal.get(), 6, RoundingMode.FLOOR))
+						.multiply(new BigDecimal(100));
+			} else {
+				porcentajeInteresDelPeriodo = BigDecimal.ZERO;
+			}
+
+			return new CalculoInteresDtoBuilder().setSaldoAhorroTotal(saldoAhorroTotal.get())
+					.setSaldoPrestamoInteresTotal(saldoPrestamoInteres.get()).setInteresRetenido(interesRetencion)
+					.setInteresDelPeriodo(interesDelPerido).setPorcentajeInteresDelPeriodo(porcentajeInteresDelPeriodo)
+					.build();
+
+		}	
 	}
 	
 	@Transactional(rollbackOn = { DataAccessException.class, SQLException.class, ResponseStatusException.class })
 
-	public InteresGeneradoLogDto generacionRenglonIntereses(String tipoUsuario) {
+	public InteresGeneradoLogDto generacionRenglonIntereses(GeneracionRenglonDto generacionRenglonDto) {
 		
 		TipoUsuarioEnum tipoUsuarioValue;
 		try {
-			tipoUsuarioValue = TipoUsuarioEnum.valueOf(tipoUsuario);
+			tipoUsuarioValue = TipoUsuarioEnum.valueOf(generacionRenglonDto.getTipoUsuario());
 		} catch (IllegalArgumentException e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El tipo de usuario no es valido");
 		}
