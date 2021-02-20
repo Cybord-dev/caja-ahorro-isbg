@@ -28,7 +28,7 @@ public interface SaldoAhorroRepository extends JpaRepository<SaldoAhorro, Intege
 	public Optional<SaldoAhorro> findByIdUsuarioAndId( @Param("id_usuario") Integer idUsuario, @Param("id_ahorro") Integer idSaldo);
 
 	@Query("SELECT SUM(s.monto) FROM SaldoAhorro s WHERE s.validado = true AND s.idUsuario = :id_usuario and s.fechaCreacion between :start and :end")
-	public BigDecimal findSaldoAhorroSumByIdUsuario(@Param("id_usuario") Integer idUsuario, @Param("start") Date start, @Param("end") Date end);
+	public Optional<BigDecimal> findSaldoAhorroSumByIdUsuario(@Param("id_usuario") Integer idUsuario, @Param("start") Date start, @Param("end") Date end);
 	
 
 }

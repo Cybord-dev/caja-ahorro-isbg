@@ -2,7 +2,7 @@ package com.business.cybord.controllers;
 
 
 import java.io.IOException;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -23,9 +23,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.business.cybord.models.dtos.CalculoInteresDto;
+import com.business.cybord.models.dtos.GeneracionRenglonDto;
+import com.business.cybord.models.dtos.InteresGeneradoLogDto;
 import com.business.cybord.models.dtos.PrestamoDto;
 import com.business.cybord.models.dtos.RecursoDto;
-import com.business.cybord.models.dtos.SaldoAhorroDto;
 import com.business.cybord.models.dtos.SaldoPrestamoDto;
 import com.business.cybord.services.PrestamoService;
 
@@ -107,14 +108,13 @@ public class PrestamoController {
 	
 	@GetMapping("/calculo-interes")
 	public ResponseEntity<CalculoInteresDto> calculoInteres(
-			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd")  LocalDate fechaInicial, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd")  LocalDate fechaFinal){
-		return new ResponseEntity<>(service.calculoInteres(fechaInicial, fechaFinal), HttpStatus.OK);
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")  LocalDateTime fechaInicial, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")  LocalDateTime fechaFinal, @RequestParam String tipoUsuario){
+		return new ResponseEntity<>(service.calculoInteres(tipoUsuario, fechaInicial, fechaFinal), HttpStatus.OK);
 	}
 	
 	@PostMapping("/generacion-renglon-interes")
-	public ResponseEntity<List<SaldoAhorroDto>> generacionRenglonInteres(
-			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd")  LocalDate fechaInicial, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd")  LocalDate fechaFinal){
-		return new ResponseEntity<>(service.generacionRenglonIntereses(fechaInicial, fechaFinal), HttpStatus.CREATED);
+	public ResponseEntity<InteresGeneradoLogDto> generacionRenglonInteres(@RequestBody GeneracionRenglonDto generacionRenglonDto){
+		return new ResponseEntity<>(service.generacionRenglonIntereses(generacionRenglonDto), HttpStatus.CREATED);
 	}
 
 }

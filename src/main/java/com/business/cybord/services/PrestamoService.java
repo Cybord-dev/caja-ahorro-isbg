@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
-import java.time.LocalDate;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,14 +28,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.business.cybord.mappers.InteresGeneradoLogMapper;
 import com.business.cybord.mappers.PrestamoMapper;
-import com.business.cybord.mappers.SaldoAhorroMapper;
 import com.business.cybord.models.Constants;
 import com.business.cybord.models.dtos.CalculoInteresDto;
+import com.business.cybord.models.dtos.GeneracionRenglonDto;
+import com.business.cybord.models.dtos.InteresGeneradoLogDto;
 import com.business.cybord.models.dtos.PrestamoDto;
 import com.business.cybord.models.dtos.RecursoDto;
-import com.business.cybord.models.dtos.SaldoAhorroDto;
 import com.business.cybord.models.dtos.SaldoPrestamoDto;
+import com.business.cybord.models.entities.InteresGeneradoLog;
 import com.business.cybord.models.entities.Prestamo;
 import com.business.cybord.models.entities.SaldoAhorro;
 import com.business.cybord.models.entities.Usuario;
@@ -42,6 +46,7 @@ import com.business.cybord.models.enums.EstatusPrestamoEnum;
 import com.business.cybord.models.enums.TipoAhorroEnum;
 import com.business.cybord.models.enums.TipoSaldoPrestamoEnum;
 import com.business.cybord.models.enums.TipoUsuarioEnum;
+import com.business.cybord.repositories.InteresGeneradoLogRepository;
 import com.business.cybord.repositories.PrestamoRepository;
 import com.business.cybord.repositories.SaldoAhorroRepository;
 import com.business.cybord.repositories.UsuariosRepository;
@@ -49,6 +54,7 @@ import com.business.cybord.repositories.ValidacionAvalRepository;
 import com.business.cybord.repositories.dao.PrestamoDao;
 import com.business.cybord.repositories.dao.SaldoPrestamoDao;
 import com.business.cybord.utils.builder.CalculoInteresDtoBuilder;
+import com.business.cybord.utils.builder.InteresGeneradoLogBuilder;
 import com.business.cybord.utils.builder.PrestamoBuilder;
 import com.business.cybord.utils.builder.SaldoAhorroBuilder;
 import com.business.cybord.utils.builder.SaldoPrestamoBuilder;
@@ -72,9 +78,6 @@ public class PrestamoService {
 	private PrestamoMapper mapper;
 	
 	@Autowired
-	private SaldoAhorroMapper mapperSaldoAhorro;
-	
-	@Autowired
 	private CatalogoService catalogoService;
 	
 	@Autowired
@@ -94,6 +97,15 @@ public class PrestamoService {
 	
 	@Autowired
 	private DownloaderService reportService;
+	
+	@Autowired 
+	private InteresGeneradoLogRepository interesGeneradoRepository; 
+	
+	@Autowired
+	private InteresGeneradoLogMapper interesGeneradoLogMapper; 
+	
+	@Autowired
+	private CajaUtilityService cajaUtilityService;
 
 	private static final Logger log = LoggerFactory.getLogger(PrestamoService.class);
 
@@ -274,40 +286,80 @@ public class PrestamoService {
 		return mapper.getDtosFromEntity(prestamosGenerados);
 	}
 
-	public CalculoInteresDto calculoInteres(LocalDate fechaInicial, LocalDate fechaFinal) {
-		
-		validarFecha(fechaInicial, fechaFinal);		
-		
-		BigDecimal saldoAhorroTotal = saldoAhorroService.getSaldosAhorroTotal();
-		BigDecimal saldoPrestamoInteres = saldoPrestamoService.getSaldoPrestamoInteresByPeriod(fechaInicial, fechaFinal);
-		BigDecimal interesRetencion = saldoPrestamoInteres.multiply(
-				new BigDecimal(catalogoService.getCatPropiedadByTipoAndNombre(Constants.TIPO_CONFIGURACIONES, Constants.TASA_INTERES_RETENCION).getValor())
-				.divide(new BigDecimal(100),2, RoundingMode.FLOOR));
-		BigDecimal interesDelPerido = saldoPrestamoInteres.subtract(interesRetencion);
-		BigDecimal porcentajeInteresDelPeriodo;
-		
-		if(saldoAhorroTotal.signum() > 0) {
-			porcentajeInteresDelPeriodo = (interesDelPerido.divide(saldoAhorroTotal,6, RoundingMode.FLOOR)).multiply(new BigDecimal(100));
-		}else {
-			porcentajeInteresDelPeriodo = BigDecimal.ZERO;
+	public CalculoInteresDto calculoInteres(String tipoUsuario, LocalDateTime fechaInicial, LocalDateTime fechaFinal) {
+
+		TipoUsuarioEnum tipoUsuarioValue;
+
+		try {
+			tipoUsuarioValue = TipoUsuarioEnum.valueOf(tipoUsuario);
+		} catch (IllegalArgumentException e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El tipo de usuario no es valido");
 		}
-		
-		return  new CalculoInteresDtoBuilder()
-				.setSaldoAhorroTotal(saldoAhorroTotal)
-				.setSaldoPrestamoInteresTotal(saldoPrestamoInteres)
-				.setInteresRetenido(interesRetencion)
-				.setInteresDelPeriodo(interesDelPerido)
-				.setPorcentajeInteresDelPeriodo(porcentajeInteresDelPeriodo)
-				.build();
-		
-		
+
+		validarFecha(fechaInicial, fechaFinal);
+
+		Optional<BigDecimal> saldoAhorroTotal = saldoAhorroService.getSaldosAhorroTotal();
+
+		Optional<BigDecimal> saldoPrestamoInteres = saldoPrestamoService
+				.getSaldoPrestamoInteresByPeriod(tipoUsuarioValue.getTipo(), fechaInicial, fechaFinal);
+
+		if (!saldoAhorroTotal.isPresent() || !saldoPrestamoInteres.isPresent()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					"No existen intereses para el periodo o aun no existen ahorros");
+		} else {
+
+			BigDecimal interesRetencion = saldoPrestamoInteres.get()
+					.multiply(new BigDecimal(catalogoService.getCatPropiedadByTipoAndNombre(
+							Constants.TIPO_CONFIGURACIONES, Constants.TASA_INTERES_RETENCION).getValor())
+									.divide(new BigDecimal(100), 2, RoundingMode.FLOOR));
+
+			BigDecimal interesDelPerido = saldoPrestamoInteres.get().subtract(interesRetencion);
+			BigDecimal porcentajeInteresDelPeriodo;
+
+			if (saldoAhorroTotal.get().signum() > 0) {
+				porcentajeInteresDelPeriodo = (interesDelPerido.divide(saldoAhorroTotal.get(), 6, RoundingMode.FLOOR))
+						.multiply(new BigDecimal(100));
+			} else {
+				porcentajeInteresDelPeriodo = BigDecimal.ZERO;
+			}
+
+			return new CalculoInteresDtoBuilder().setSaldoAhorroTotal(saldoAhorroTotal.get())
+					.setSaldoPrestamoInteresTotal(saldoPrestamoInteres.get()).setInteresRetenido(interesRetencion)
+					.setInteresDelPeriodo(interesDelPerido).setPorcentajeInteresDelPeriodo(porcentajeInteresDelPeriodo)
+					.build();
+
+		}	
 	}
 	
 	@Transactional(rollbackOn = { DataAccessException.class, SQLException.class, ResponseStatusException.class })
-	public List<SaldoAhorroDto> generacionRenglonIntereses(LocalDate fechaInicial, LocalDate fechaFinal) {
-		validarFecha(fechaInicial, fechaFinal);
-		CalculoInteresDto interesesDto =  calculoInteres(fechaInicial, fechaFinal);
-				
+
+	public InteresGeneradoLogDto generacionRenglonIntereses(GeneracionRenglonDto generacionRenglonDto) {
+		
+		TipoUsuarioEnum tipoUsuarioValue;
+		try {
+			tipoUsuarioValue = TipoUsuarioEnum.valueOf(generacionRenglonDto.getTipoUsuario());
+		} catch (IllegalArgumentException e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El tipo de usuario no es valido");
+		}
+		
+		LocalDateTime fechaFinal = LocalDateTime.now();
+		Optional<InteresGeneradoLog> ultimoInteresGenerado = interesGeneradoRepository.findFirstByTipoUsuarioOrderByFechaEjecucionDesc(tipoUsuarioValue.getTipo());
+		
+		LocalDateTime fechaInicial;
+		if(ultimoInteresGenerado.isPresent()) {
+		
+			 fechaInicial = Instant.ofEpochMilli(ultimoInteresGenerado.get().getFechaEjecucion().getTime())
+			      .atZone(ZoneId.systemDefault())
+			      .toLocalDateTime();
+		}else {
+			
+			fechaInicial = cajaUtilityService.getInicioCajaActual().atStartOfDay();			
+		}
+		
+	
+		CalculoInteresDto interesesDto = calculoInteres(tipoUsuarioValue.getTipo(), fechaInicial, fechaFinal);
+		
+
 		BigDecimal interesRepartido = BigDecimal.ZERO;
 		
 		List<SaldoAhorro> saldoAhorroCreados = new ArrayList<>();
@@ -316,9 +368,9 @@ public class PrestamoService {
 			List<Usuario> ahorradores = usuarioRepository.findByTipoUsuarioAndAhorrador(tipoAhorrodor.getTipo(), Boolean.TRUE);
 			
 			for(Usuario usuario: ahorradores) {
-				BigDecimal ahorro = saldoAhorroService.findSaldoAhorroSumByIdUsuario(usuario.getId());
-				if(ahorro != null) {
-					BigDecimal interesUsurio = ahorro.multiply(interesesDto.getPorcentajeInteresDelPeriodo().divide(new BigDecimal(100),6, RoundingMode.FLOOR));				
+				Optional<BigDecimal> ahorro = saldoAhorroService.findSaldoAhorroSumByIdUsuario(usuario.getId());
+				if(ahorro.isPresent()) {
+					BigDecimal interesUsurio = ahorro.get().multiply(interesesDto.getPorcentajeInteresDelPeriodo().divide(new BigDecimal(100),6, RoundingMode.FLOOR));				
 					saldoAhorroCreados.add(createSaldoAhorroInteres(usuario.getId(),interesUsurio));
 					interesRepartido = interesRepartido.add(interesUsurio);
 				}
@@ -329,10 +381,22 @@ public class PrestamoService {
 			log.info("Interes repartido {}", interesRepartido);
 			saldoAhorroCreados.add(createSaldoAhorroInteres(Constants.ID_USUARIO_CAJA,interesesDto.getSaldoPrestamoInteresTotal().subtract(interesRepartido)));
 		}else {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error en la generacion de intereses");
+			throw new ResponseStatusException(HttpStatus.CONFLICT, "Error en la generacion de intereses");
 		}
+
+
+		InteresGeneradoLog interesGeneradoLog = new InteresGeneradoLogBuilder()
+				.setSaldoAhorro(interesesDto.getSaldoAhorroTotal())
+				.setPorcentajeInteres(interesesDto.getPorcentajeInteresDelPeriodo())
+				.setInteresGenerado(interesesDto.getSaldoPrestamoInteresTotal())
+				.setInteresRepartido(interesRepartido)
+				.setInteresCaja(interesesDto.getSaldoPrestamoInteresTotal().subtract(interesRepartido))
+				.setTipoUsuario(tipoUsuarioValue.getTipo())
+				.build();
 		
-		return mapperSaldoAhorro.getDtosFromEntity(saldoAhorroCreados);
+		interesGeneradoLog = interesGeneradoRepository.save(interesGeneradoLog);
+		return interesGeneradoLogMapper.getDtoFromEntity(interesGeneradoLog);
+
 	}
 	
 	@Transactional(rollbackOn = { DataAccessException.class, SQLException.class, ResponseStatusException.class })
@@ -377,8 +441,10 @@ public class PrestamoService {
 				.setMonto(monto)
 				.setOrigen(Constants.ORIGEN_SISTEMA)
 				.setTipo(TipoAhorroEnum.INTERES.getTipo())
+				.setValidado(Boolean.TRUE)
 				.build();
-		
+
+
 		return saldoAhorroRepository.save(saldoAhorro);
 		
 	}
@@ -401,13 +467,13 @@ public class PrestamoService {
 				.reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
 	}
 	
-	private void validarFecha(LocalDate fechaInicial, LocalDate fechaFinal) {
+	private void validarFecha(LocalDateTime fechaInicial, LocalDateTime fechaFinal) {
 		if(fechaInicial.isAfter(fechaFinal)) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 					String.format("Fecha Incial %s es mayor a fecha final %s  ", fechaInicial, fechaFinal));
 		}
 	}
-
+	
 	
 
 
