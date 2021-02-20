@@ -116,7 +116,7 @@ public class SaldoPrestamoDao {
 		String since = parameters.containsKey(SqlConstants.SINCE) ? parameters.get(SqlConstants.SINCE)
 				: dateFormat.format(new DateTime().minusMonths(18).toDate());
 		String to = parameters.containsKey(SqlConstants.TO) ? parameters.get(SqlConstants.TO)
-				: dateFormat.format(new DateTime().plusDays(1).toDate());
+				: dateFormat.format(new DateTime().plusDays(2).toDate());
 		DbSchema schema = new DbSpec().addDefaultSchema();
 
 		DbTable saldoPrestamo = schema.addTable("saldo_prestamo");
@@ -216,7 +216,7 @@ public class SaldoPrestamoDao {
 		String since = parameters.containsKey(SqlConstants.SINCE) ? parameters.get(SqlConstants.SINCE)
 				: dateFormat.format(new DateTime().minusMonths(18).toDate());
 		String to = parameters.containsKey(SqlConstants.TO) ? parameters.get(SqlConstants.TO)
-				: dateFormat.format(new DateTime().plusDays(1).toDate());
+				: dateFormat.format(new DateTime().plusDays(2).toDate());
 		DbSchema schema = new DbSpec().addDefaultSchema();
 
 		DbTable saldoPrestamo = schema.addTable("saldo_prestamo");
