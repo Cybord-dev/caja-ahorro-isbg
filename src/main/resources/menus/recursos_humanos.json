@@ -22,6 +22,16 @@
         "name": "Conciliación informacion",
         "url": "/recursos-humanos/conciliacion",
         "icon": "icon-cloud-upload"
+      },
+      {
+        "name": "Reportes de ahorro",
+        "url": "/recursos-humanos/reportes-ahorro",
+        "icon": "icon-envelope-letter"
+      },
+      {
+        "name": "Reportes de prestamo",
+        "url": "/recursos-humanos/reportes-prestamo",
+        "icon": "icon-wallet"
       }
     ]
   }

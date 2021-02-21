@@ -3,15 +3,30 @@
    "url": "/usuarios",
    "icon": "icon-user",
    "children": [
-      {
-        "name": "Historico ahorro",
-        "url": "/usuarios/reportes",
-        "icon": "icon-chart"
+       {
+        "name": "Mi ahorro",
+        "url": "/usuarios/saldo-ahorro",
+        "icon": "icon-envelope-letter"
       },
       {
         "name":"Trámites Ahorro",
         "url": "/usuarios/tramites",
-        "icon": "icon-doc"
+        "icon": "icon-docs"
+      },
+      {
+        "name":"Trámites Prestamo",
+        "url": "/usuarios/prestamos",
+        "icon": "icon-drawer"
+      },
+      {
+        "name":"Mis Prestamos",
+        "url": "/usuarios/prestamos-activos",
+        "icon": "icon-wallet"
+      },
+      {
+        "name":"Aceptacion aval",
+        "url": "/usuarios/avales",
+        "icon": "icon-people"
       }
     ]
 }

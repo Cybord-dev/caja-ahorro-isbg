@@ -7,6 +7,8 @@ import com.business.cybord.states.solicitudes.SolicitudCancelacionAhorroExterno;
 import com.business.cybord.states.solicitudes.SolicitudCancelacionAhorroInterno;
 import com.business.cybord.states.solicitudes.SolicitudModificacionAhorroExterna;
 import com.business.cybord.states.solicitudes.SolicitudModificacionAhorroInterna;
+import com.business.cybord.states.solicitudes.SolicitudPrestamoExterno;
+import com.business.cybord.states.solicitudes.SolicitudPrestamoInterno;
 import com.business.cybord.states.solicitudes.SolicitudRetiroAnticipadoExterno;
 import com.business.cybord.states.solicitudes.SolicitudRetiroAnticipadoInterno;
 
@@ -74,7 +76,21 @@ public enum SolicitudFactoryEnum {
 			return new SolicitudModificacionAhorroExterna();
 		}
 
-	},;
+	},SOLICITUD_PRESTAMO_EXTERNO{
+
+		@Override
+		public SolicitudPrestamoExterno getInstance() {
+			return new SolicitudPrestamoExterno();
+		}
+
+	},SOLICITUD_PRESTAMO_INTERNO{
+
+		@Override
+		public SolicitudPrestamoInterno getInstance() {
+			return new SolicitudPrestamoInterno();
+		}
+
+	};
 
 	public abstract ISolicitud getInstance();
 

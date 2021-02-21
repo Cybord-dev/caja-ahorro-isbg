@@ -21,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.business.cybord.mappers.SolicitudMapper;
 import com.business.cybord.mappers.UsuariosMapper;
+import com.business.cybord.models.dtos.CapacidadPagoDto;
 import com.business.cybord.models.dtos.RecursoDto;
 import com.business.cybord.models.dtos.SaldoAhorroDto;
 import com.business.cybord.models.dtos.SolicitudDto;
@@ -47,6 +48,8 @@ public class SolicitudService {
 	@Autowired
 	private UsuariosRepository repositoryUsuario;
 	@Autowired
+	private UsuarioService usuarioService;
+	@Autowired
 	private SolicitudRepository repositorySolicitud;
 	@Autowired
 	private AtributoSolicitudRepository atributoSolicitudRepository;
@@ -62,23 +65,24 @@ public class SolicitudService {
 	private SaldoAhorroService saldoAhorroService;
 	@Autowired
 	private SolicitudDao solicitudDao;
-	
+	@Autowired
+	private ValidacionAvalService validacionAvalService;
 	@Autowired
 	private DownloaderService reportService;
-
 
 	public Page<UserSolicitudDto> getAllSolicitudes(Map<String, String> parameters) {
 		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
 		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
 		return solicitudDao.findAll(parameters, PageRequest.of(page, size, Sort.by("fechaActualizacion")));
 	}
-	
+
 	public RecursoDto getSolicitudesReport(Map<String, String> parameters) throws IOException {
 		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
 		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
-		
-		Page<UserSolicitudDto> requestsPage = solicitudDao.findAll(parameters, PageRequest.of(page, size, Sort.by("fechaActualizacion")));
-		
+
+		Page<UserSolicitudDto> requestsPage = solicitudDao.findAll(parameters,
+				PageRequest.of(page, size, Sort.by("fechaActualizacion")));
+
 		List<Map<String, String>> data = requestsPage.getContent().stream().map(s -> {
 			Map<String, String> map = new HashMap<>();
 			map.put("ID SOLICITUD", s.getId().toString());
@@ -87,10 +91,10 @@ public class SolicitudService {
 			map.put("NOMBRE", s.getNombre());
 			map.put("ESTATUS", s.getStatus());
 			map.put("TIPO SOLICITUD", s.getTipo());
-			
+
 			return map;
 		}).collect(Collectors.toList());
-		
+
 		return reportService.generateBase64Report(String.format("SOLICITUDES_%tF", new Date()), data);
 	}
 
@@ -122,8 +126,9 @@ public class SolicitudService {
 		Usuario usuario = repositoryUsuario.findById(idUsuario)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 						String.format("el usuario id= %d no existe", idUsuario)));
-		List<SaldoAhorroDto> saldos=saldoAhorroService.getSaldosAhorroByUsuario(usuario.getId());
-		executeRules(solicitudDto, usuariosMapper.getDtoFromUserEntity(usuario),saldos);
+		List<SaldoAhorroDto> saldos = saldoAhorroService.getSaldosAhorroByUsuario(usuario.getId());
+		executeRules(solicitudDto, usuariosMapper.getDtoFromUserEntity(usuario), saldos,
+				usuarioService.calculoCapacidadPago(usuario.getId()));
 		SolicitudFactoryEnum sfte = SolicitudFactoryTypeEnum
 				.findByReferenceName(solicitudDto.getTipo(), usuario.getTipoUsuario())
 				.orElseThrow(() -> new IsbgServiceException(
@@ -134,29 +139,33 @@ public class SolicitudService {
 		if (solicitudDto.getFechaEjecucion() == null) {
 			solicitudDto.setFechaEjecucion(new Date());
 		}
-		if (solicitudDto.getAtributos().containsKey(TipoAtributoSolicitudEnum.FECHA.name())) { 
-			solicitudDto.getAtributos().put(TipoAtributoSolicitudEnum.FECHA.name(), String.format("%tF", new Date()));
-		}
 		ISolicitud solicitud = sfte.getInstance();
 		solicitudDto.setStatus(solicitud.nextState().getName());
 		Solicitud nueva = mapper.getEntityFromSolicitudDto(solicitudDto);
 		nueva.setUsuario(usuario);
 		nueva = repositorySolicitud.save(nueva);
 		nueva.setAtributos(new ArrayList<>());
-
+		solicitudDto.setId(nueva.getId());
 		for (AtributoSolicitud att : solicitudDto.getAttributesAsList()) {
-			att.setSolicitud(nueva);
-			nueva.getAtributos().add(atributoSolicitudRepository.save(att));
+			if (att.getNombre().contains(TipoAtributoSolicitudEnum.AVAL.name())) {
+				validacionAvalService.createAvalRegister(solicitudDto.getAttributesAsList(), solicitudDto,
+						Integer.valueOf(att.getValor()));
+			} else {
+				att.setSolicitud(nueva);
+				nueva.getAtributos().add(atributoSolicitudRepository.save(att));
+			}
 		}
 		return mapper.getDtoFromSolicitudEntity(nueva);
 	}
 
-	private void executeRules(SolicitudDto solicitudDto, UsuarioDto usuarioDto,List<SaldoAhorroDto> saldos) throws IsbgServiceException {
+	private void executeRules(SolicitudDto solicitudDto, UsuarioDto usuarioDto, List<SaldoAhorroDto> saldos,
+			CapacidadPagoDto capacidad) throws IsbgServiceException {
 		ISuite suite = suiteManager.getSolicitudSuite(solicitudDto.getTipo());
 		Facts facts = new Facts();
 		List<String> results = new ArrayList<>();
 		facts.put("solicitud", solicitudDto);
 		facts.put("usuario", usuarioDto);
+		facts.put("capacidad", capacidad);
 		facts.put("results", results);
 		facts.put("saldos", saldos);
 		rulesEngine.fire(suite.getSuite(), facts);
@@ -167,14 +176,15 @@ public class SolicitudService {
 	}
 
 	public SolicitudDto actualizarSolicitud(int idSolicitud, SolicitudDto nueva) {
-		Optional<Solicitud> solicitud = repositorySolicitud.findById(idSolicitud);
-		if (solicitud.isPresent()) {
-			solicitud.get().update(mapper.getEntityFromSolicitudDto(nueva));
-			return mapper.getDtoFromSolicitudEntity(solicitud.get());
-		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					String.format("la solicitud id=%d no existe", idSolicitud));
-		}
+		Solicitud solicitud = repositorySolicitud.findById(idSolicitud)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+						String.format("la solicitud id=%d no existe", idSolicitud)));
+
+		solicitud.setStatus(nueva.getStatus());
+		solicitud.setStatusDetalle(nueva.getStatusDetalle());
+		solicitud.setFechaActualizacion(new Date());
+
+		return mapper.getDtoFromSolicitudEntity(repositorySolicitud.save(solicitud));
 	}
 
 	public void deleteSolicitud(int idSolicitud) {

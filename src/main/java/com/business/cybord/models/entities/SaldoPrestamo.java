@@ -32,12 +32,18 @@ public class SaldoPrestamo {
 
 	@Column(name = "tipo")
 	private String tipo;
+	
+	@Column(name = "origen")
+	private String origen;
 
 	@Column(name = "monto")
 	private BigDecimal monto;
 
 	@Column(name = "validado")
 	private Boolean validado;
+	
+	@Column(name = "observaciones")
+	private String observaciones;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
@@ -73,6 +79,14 @@ public class SaldoPrestamo {
 		this.tipo = tipo;
 	}
 
+	public String getOrigen() {
+		return origen;
+	}
+
+	public void setOrigen(String origen) {
+		this.origen = origen;
+	}
+
 	public BigDecimal getMonto() {
 		return monto;
 	}
@@ -87,6 +101,14 @@ public class SaldoPrestamo {
 
 	public void setValidado(Boolean validado) {
 		this.validado = validado;
+	}
+	
+	public String getObservaciones() {
+		return observaciones;
+	}
+
+	public void setObservaciones(String observaciones) {
+		this.observaciones = observaciones;
 	}
 
 	public Date getFechaCreacion() {

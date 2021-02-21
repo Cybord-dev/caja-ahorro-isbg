@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import com.business.cybord.models.config.FileConfig;
 import com.business.cybord.models.dtos.SaldoAhorroDto;
 import com.business.cybord.models.dtos.SolicitudDto;
-import com.business.cybord.models.dtos.ValidacionDto;
+import com.business.cybord.models.dtos.ValidacionSolicitudDto;
 import com.business.cybord.models.entities.AtributoSolicitud;
 import com.business.cybord.models.entities.DatosUsuario;
 import com.business.cybord.models.entities.Usuario;
@@ -21,6 +21,7 @@ import com.business.cybord.models.enums.EventFactoryTypeEnum;
 import com.business.cybord.models.enums.TipoAhorroEnum;
 import com.business.cybord.models.enums.TipoAtributoSolicitudEnum;
 import com.business.cybord.models.enums.TipoAtributoUsuarioEnum;
+import com.business.cybord.models.enums.TipoPdfEnum;
 import com.business.cybord.models.enums.config.TipoArchivoEnum;
 import com.business.cybord.models.error.IsbgServiceException;
 import com.business.cybord.repositories.UsuariosRepository;
@@ -29,6 +30,7 @@ import com.business.cybord.services.MailService;
 import com.business.cybord.services.PdfServiceGenerator;
 import com.business.cybord.services.SaldoAhorroService;
 import com.business.cybord.utils.builder.SolicitudPdfModelDtoBuilder;
+import com.business.cybord.utils.helper.FileHelper;
 import com.business.cybord.utils.helper.NumberTranslatorHelper;
 
 @Service
@@ -37,7 +39,7 @@ public class SolicitudCancelacionAhorroExecutor implements SolicitudExecutor {
 
 	@Autowired
 	protected UsuariosRepository repositoryUsuario;
-	
+
 	@Autowired
 	protected DatoUsuarioService datoUsuarioService;
 
@@ -46,15 +48,18 @@ public class SolicitudCancelacionAhorroExecutor implements SolicitudExecutor {
 
 	@Autowired
 	protected MailService mailService;
-	
+
 	@Autowired
 	private PdfServiceGenerator pdfServiceGenerator;
 
 	@Autowired
 	private NumberTranslatorHelper numberTranslatorHelper;
-	
+
+	@Autowired
+	private FileHelper fileHelper;
+
 	@Override
-	public void execute(SolicitudDto solicitudDto, ValidacionDto validacionDto) throws IsbgServiceException {
+	public void execute(SolicitudDto solicitudDto, ValidacionSolicitudDto validacionDto) throws IsbgServiceException {
 		Usuario usuario = repositoryUsuario.findById(solicitudDto.getIdUsuario())
 				.orElseThrow(() -> new IsbgServiceException("Error actualizando datos en solicitud ahorro",
 						String.format("El usuario  %d no existe", solicitudDto.getIdUsuario()),
@@ -66,12 +71,12 @@ public class SolicitudCancelacionAhorroExecutor implements SolicitudExecutor {
 					.orElseThrow(() -> new IsbgServiceException("Error actualizando daatos en solicitud ahorro",
 							String.format("El usuario  %d no tiene sueldo", solicitudDto.getIdUsuario()),
 							HttpStatus.CONFLICT.value()));
-			
+
 			AtributoSolicitud fecha = solicitudDto.getAttributesAsList().stream()
 					.filter(a -> a.getNombre().equals(TipoAtributoSolicitudEnum.FECHA.name())).findFirst()
 					.orElseThrow(() -> new IsbgServiceException("No existe el monto en la solicitud",
 							"No existe el monto en la solicitud", HttpStatus.CONFLICT.value()));
-			
+
 			AtributoSolicitud razon = solicitudDto.getAttributesAsList().stream()
 					.filter(a -> a.getNombre().equals(TipoAtributoSolicitudEnum.RAZON_CANCELACION.name())).findFirst()
 					.orElseThrow(() -> new IsbgServiceException("No existe la razon en la solicitud",
@@ -81,51 +86,52 @@ public class SolicitudCancelacionAhorroExecutor implements SolicitudExecutor {
 					.filter(a -> a.getTipoDato().equals(TipoAtributoUsuarioEnum.OFICINA.name())).findFirst();
 			BigDecimal ahorro = new BigDecimal(0);
 			for (SaldoAhorroDto a : ahorros) {
-				if(a.getValidado()) {
+				if (a.getValidado()) {
 					ahorro = ahorro.add(a.getMonto());
 				}
 			}
-			if(ahorro.compareTo(new BigDecimal(0))<0) {
-				ahorro=new BigDecimal(0);
+			if (ahorro.compareTo(new BigDecimal(0)) < 0) {
+				ahorro = new BigDecimal(0);
 			}
 			saldoAhorroService.insertSadoAhorro(usuario.getId(), new SaldoAhorroDto(usuario.getId(),
-					TipoAhorroEnum.RETIRO.getTipo(), ahorro.multiply(new BigDecimal(-1)), true),"Sistema");
+					TipoAhorroEnum.RETIRO.getTipo(), ahorro.multiply(new BigDecimal(-1)), true), "Sistema");
 			usuario.setAhorrador(false);
 			repositoryUsuario.save(usuario);
 			datoUsuarioService.borraDatoUsuario(dato.getId());
-			
-			
-			//TODO: AGREGAR RAZON DE CANCELACION
+
 			String texto = String.format(
-					"%s, con número de trabajador %s , " + 
-					"adscrito a la Oficina de %s solicito por este medio se cancele el" + 
-					"descuento que se aplica en mi pago de nómina la cantidad de $%s(%s)" + 
-					"a partir de la fecha %s, debido a %s ,asimismo se me reintegre la" + 
-					"Cantidad ahorrada en la cuenta del PROGRAMA DE AHORRO VOLUNTARIO.",
+					"%s, con número de trabajador %s , "
+							+ "adscrito a la Oficina de %s solicito por este medio se cancele el"
+							+ "descuento que se aplica en mi pago de nómina la cantidad de $%s(%s)"
+							+ "a partir de la fecha %s, debido a %s ,asimismo se me reintegre la"
+							+ "Cantidad ahorrada en la cuenta del PROGRAMA DE AHORRO VOLUNTARIO.",
 					usuario.getNombre(), usuario.getNoEmpleado(), oficina.isPresent() ? oficina.get().getDato() : "",
-							ahorro,numberTranslatorHelper.getStringNumber(ahorro, "MXN"),fecha.getValor(),razon.getValor());
-			
+					ahorro, numberTranslatorHelper.getStringNumber(ahorro, "MXN"), fecha.getValor(), razon.getValor());
+
 			SolicitudPdfModelDtoBuilder modelBuilderDto = new SolicitudPdfModelDtoBuilder().setFecha(new Date())
 					.setTitulo("Solicitud de Cancelación con Devolución del Ahorro Voluntario").setTexto(texto)
 					.setNombre(usuario.getNombre());
 			FileConfig fileConfig = new FileConfig(TipoArchivoEnum.PDF, "SolicitudCancelacionAhorro",
-					pdfServiceGenerator.generateSolicitudesAhorroPdf(modelBuilderDto.build(), solicitudDto.getId()));
+					pdfServiceGenerator.generateSolicitudesAhorroPdf(TipoPdfEnum.AHORRO,
+							fileHelper.solicitudXmlToPdf(modelBuilderDto.build()), solicitudDto.getId()));
 			mailService.sentEmail(usuario.getEmail(),
 					String.format("Notificacion de finalizacion de la solicitud:%s", solicitudDto.getTipo()),
-					String.format("Hola %s,\n\nSe completo  tu solicitud con el folio %d del tipo %s y tu retiro de  %.2f \n\nSaludos.", usuario.getNombre(),
-							solicitudDto.getId(), solicitudDto.getTipo(),ahorro),fileConfig);
+					String.format(
+							"Hola %s,\n\nSe completo  tu solicitud con el folio %d del tipo %s y tu retiro de  %.2f \n\nSaludos.",
+							usuario.getNombre(), solicitudDto.getId(), solicitudDto.getTipo(), ahorro),
+					fileConfig);
 		} else {
 			mailService.sentEmail(usuario.getEmail(),
 					String.format("Notificacion de autorizacion de la solicitud:%s", solicitudDto.getTipo()),
 					String.format(
 							"Hola %s,\n\nSe realizo la validacion numero  %d para tu solicitud con el folio:%d del tipo %s en el area %s \n\nSaludos.",
-							usuario.getNombre(), validacionDto.getNumeroValidacion(),solicitudDto.getId(), solicitudDto.getTipo(),
-							validacionDto.getArea()));
+							usuario.getNombre(), validacionDto.getNumeroValidacion(), solicitudDto.getId(),
+							solicitudDto.getTipo(), validacionDto.getArea()));
 		}
 	}
 
 	@Override
-	public void rechazo(SolicitudDto solicitudDto, ValidacionDto validacionDto) throws IsbgServiceException {
+	public void rechazo(SolicitudDto solicitudDto, ValidacionSolicitudDto validacionDto) throws IsbgServiceException {
 		Usuario usuario = repositoryUsuario.findById(solicitudDto.getIdUsuario())
 				.orElseThrow(() -> new IsbgServiceException("Error actualizando daatos en solicitud ahorro",
 						String.format("El usuario  %d no existe", solicitudDto.getIdUsuario()),

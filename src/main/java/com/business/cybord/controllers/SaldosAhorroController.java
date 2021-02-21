@@ -36,24 +36,24 @@ public class SaldosAhorroController {
 	@Autowired
 	private SaldoAhorroService service;
 
-	@GetMapping("/saldosAhorro")
+	@GetMapping("/saldo-ahorros")
 	public ResponseEntity<Page<ReporteSaldosDto>> getSaldosAhorrosCurrentCaja(
 			@RequestParam Map<String, String> parameters) {
 		return new ResponseEntity<>(service.getSaldosAhorros(parameters), HttpStatus.OK);
 	}
 
-	@GetMapping("/saldosAhorro/report")
+	@GetMapping("/saldo-ahorros/report")
 	public ResponseEntity<RecursoDto> getSaldosAhorrosReporte(@RequestParam Map<String, String> parameters)
 			throws IOException {
 		return new ResponseEntity<>(service.getSaldosAhorrosReport(parameters), HttpStatus.OK);
 	}
 
-	@GetMapping("/saldosAhorro/anual")
+	@GetMapping("/saldo-ahorros/anual")
 	public ResponseEntity<Map<String, List<SaldoAhorroCajaDto>>> getSaldosAhorrosCurrentCajaAnual() {
 		return new ResponseEntity<>(service.getSaldosAhorrosCurrentCajaAnual(), HttpStatus.OK);
 	}
 
-	@GetMapping("/saldosAhorro/anual/agrupado")
+	@GetMapping("/saldo-ahorros/anual/agrupado")
 	public ResponseEntity<List<SaldoAhorroCajaDto>> getSaldosAhorrosCurrentCajaAnualAgrupado() {
 		return new ResponseEntity<>(service.getSaldosAhorrosCurrentCajaAnualAgrupado(), HttpStatus.OK);
 	}

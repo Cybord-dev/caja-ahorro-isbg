@@ -1,5 +1,6 @@
 package com.business.cybord.repositories;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -25,5 +26,9 @@ public interface SaldoAhorroRepository extends JpaRepository<SaldoAhorro, Intege
 	
 	@Query("select s from SaldoAhorro s where s.id = :id_ahorro and s.idUsuario = :id_usuario")
 	public Optional<SaldoAhorro> findByIdUsuarioAndId( @Param("id_usuario") Integer idUsuario, @Param("id_ahorro") Integer idSaldo);
+
+	@Query("SELECT SUM(s.monto) FROM SaldoAhorro s WHERE s.validado = true AND s.idUsuario = :id_usuario and s.fechaCreacion between :start and :end")
+	public Optional<BigDecimal> findSaldoAhorroSumByIdUsuario(@Param("id_usuario") Integer idUsuario, @Param("start") Date start, @Param("end") Date end);
+	
 
 }

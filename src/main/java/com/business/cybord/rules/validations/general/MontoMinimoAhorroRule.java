@@ -8,15 +8,13 @@ import org.jeasy.rules.annotation.Fact;
 import org.jeasy.rules.annotation.Rule;
 
 import com.business.cybord.models.dtos.SolicitudDto;
-import com.business.cybord.models.dtos.UsuarioDto;
 import com.business.cybord.models.enums.TipoAtributoEnum;
 
 @Rule(name = "MontoMinimoAhorroRule", description = "Se valida el monto minimo de ahorro")
 public class MontoMinimoAhorroRule {
 
 	@Condition
-	public boolean condition(@Fact("solicitud") SolicitudDto solicitudDto, @Fact("usuario") UsuarioDto usuarioDto,
-			@Fact("results") List<String> results) {
+	public boolean condition(@Fact("solicitud") SolicitudDto solicitudDto, @Fact("results") List<String> results) {
 		if (solicitudDto != null && solicitudDto.getAtributos() != null
 				&& solicitudDto.getAtributos().containsKey(TipoAtributoEnum.MONTO.name())) {
 			return Double.valueOf(solicitudDto.getAtributos().get(TipoAtributoEnum.MONTO.name())) < 100.00;

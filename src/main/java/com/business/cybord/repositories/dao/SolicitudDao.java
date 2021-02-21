@@ -62,14 +62,14 @@ public class SolicitudDao {
 		String since = parameters.containsKey(SqlConstants.SINCE) ? parameters.get(SqlConstants.SINCE)
 				: dateFormat.format(new DateTime().minusYears(1).toDate());
 		String to = parameters.containsKey(SqlConstants.TO) ? parameters.get(SqlConstants.TO)
-				: dateFormat.format(dh.addDays(new Date(),2));
+				: dateFormat.format(dh.addDays(new Date(), 2));
 		DbSchema schema = new DbSpec().addDefaultSchema();
 		DbTable solicitudes = schema.addTable("solicitudes");
 		DbTable usuarios = schema.addTable("usuarios");
 		DbColumn columnA = new DbColumn(solicitudes, "id_usuario", "integer", 0);
 		DbColumn columnB = new DbColumn(usuarios, "id_usuario", "integer", 0);
 		solicitudes.addColumn("fecha_creacion", "String", null);
-		solicitudes.addColumn("fecha_ejecucion","String",null);
+		solicitudes.addColumn("fecha_ejecucion", "String", null);
 		solicitudes.addColumn("id_solicitud", "String", null);
 		solicitudes.addColumn("tipo_solicitud", "String", null);
 		solicitudes.addColumn("estatus", "String", null);
@@ -79,15 +79,11 @@ public class SolicitudDao {
 		usuarios.addColumn("no_empleado", "String", null);
 
 		SelectQuery selectStoresByParams = new SelectQuery().addFromTable(solicitudes)
-				.addColumns(solicitudes.findColumns("id_solicitud"))
-				.addColumns(solicitudes.findColumns("id_usuario"))
-				.addColumns(solicitudes.findColumns("estatus"))
-				.addColumns(solicitudes.findColumns("fecha_creacion"))
+				.addColumns(solicitudes.findColumns("id_solicitud")).addColumns(solicitudes.findColumns("id_usuario"))
+				.addColumns(solicitudes.findColumns("estatus")).addColumns(solicitudes.findColumns("fecha_creacion"))
 				.addColumns(solicitudes.findColumns("fecha_ejecucion"))
-				.addColumns(solicitudes.findColumns("tipo_solicitud"))
-				.addColumns(usuarios.findColumns("tipo_usuario"))
-				.addColumns(usuarios.findColumns("id_usuario"))
-				.addColumns(usuarios.findColumns("no_empleado"))
+				.addColumns(solicitudes.findColumns("tipo_solicitud")).addColumns(usuarios.findColumns("tipo_usuario"))
+				.addColumns(usuarios.findColumns("id_usuario")).addColumns(usuarios.findColumns("no_empleado"))
 				.addColumns(usuarios.findColumns("nombre"))
 				.addJoin(SelectQuery.JoinType.INNER, solicitudes, usuarios, BinaryCondition.equalTo(columnA, columnB))
 				.addCondition(BinaryCondition.greaterThanOrEq(solicitudes.findColumn("fecha_creacion"), since))

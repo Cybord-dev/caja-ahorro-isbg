@@ -8,10 +8,10 @@ import org.mapstruct.ReportingPolicy;
 
 import com.business.cybord.models.dtos.AtributoSolicitudDto;
 import com.business.cybord.models.dtos.SolicitudDto;
-import com.business.cybord.models.dtos.ValidacionDto;
+import com.business.cybord.models.dtos.ValidacionSolicitudDto;
 import com.business.cybord.models.entities.AtributoSolicitud;
 import com.business.cybord.models.entities.Solicitud;
-import com.business.cybord.models.entities.Validacion;
+import com.business.cybord.models.entities.ValidacionSolicitud;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring")
 public interface SolicitudMapper {
@@ -33,7 +33,7 @@ public interface SolicitudMapper {
 	List<AtributoSolicitud> getEntitiesFromAtributosSolicitudDto(List<AtributoSolicitudDto> dtos);
 	
 	//Validaciones
-	Validacion getEntityFromValidacionesDto(ValidacionDto dto);
-	ValidacionDto getDtoFromValidacionesEntity(Validacion dto);
-	List<ValidacionDto> validacionDtoToValidacion(List<Validacion>dto);
+	ValidacionSolicitud getEntityFromValidacionesDto(ValidacionSolicitudDto dto);
+	ValidacionSolicitudDto getDtoFromValidacionesEntity(ValidacionSolicitud dto);
+	List<ValidacionSolicitudDto> validacionDtoToValidacion(List<ValidacionSolicitud>dto);
 }

@@ -3,7 +3,9 @@ package com.business.cybord.services;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +13,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -56,6 +60,11 @@ public class SaldoAhorroService {
 
 	@Autowired
 	private CajaUtilityService cajaUtilityService;
+	
+	
+	
+	private static final Logger log = LoggerFactory.getLogger(SaldoAhorroService.class);
+
 
 	public Page<ReporteSaldosDto> getSaldosAhorros(Map<String, String> parameters) {
 		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
@@ -104,6 +113,9 @@ public class SaldoAhorroService {
 	public List<SaldoAhorroDto> getSaldosAhorroByUsuario(Integer id) {
 		LocalDate start = cajaUtilityService.getInicioCajaActual();
 		LocalDate end = cajaUtilityService.getFinCajaActual();
+		
+		log.info("finding ahorro of user {}, between {} and {}", id, start, end);
+		
 		return mapper
 				.getDtosFromEntity(respository.findAhorosUsuarioCajaActual(id, Date.valueOf(start), Date.valueOf(end)));
 	}
@@ -112,7 +124,6 @@ public class SaldoAhorroService {
 		Optional<SaldoAhorro> saldoAhorro = respository.findByIdUsuarioAndId(idUsuario, idSaldo);
 		if (saldoAhorro.isPresent()) {
 			return mapper.getDtoFromEntity(saldoAhorro.get());
-
 		} else {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 					String.format("No existe una cohencidencia de saldo y suauario %d", idUsuario));
@@ -291,5 +302,15 @@ public class SaldoAhorroService {
 		}
 
 	}
+
+	public Optional<BigDecimal> getSaldosAhorroTotal() {
+		return reportesSaldosDao.getSaldoAhorroTotal(cajaUtilityService.getInicioCajaActual(), LocalDate.now());
+	}
+	
+	public Optional<BigDecimal> findSaldoAhorroSumByIdUsuario(Integer id) {
+		return respository.findSaldoAhorroSumByIdUsuario(id, Date.valueOf(cajaUtilityService.getInicioCajaActual()), Timestamp.valueOf(LocalDateTime.now()));
+	}
+	
+
 
 }

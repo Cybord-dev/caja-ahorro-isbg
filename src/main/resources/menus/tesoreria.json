@@ -4,14 +4,24 @@
 	"icon": "icon-credit-card",
 	"children": [
 		{
-			"name": "Retiros Ahorro",
+			"name": "Validacion de Retiros",
 			"url": "/tesoreria/validaciones",
 			"icon": "icon-check"
 		},
 		{
-			"name": "Historico retiro ahorro",
+			"name": "Historico retiro",
 			"url": "/tesoreria/historico",
 			"icon": "icon-list"
+		},
+		{
+			"name": "Reportes de ahorro",
+			"url": "/tesoreria/reportes-ahorro",
+			"icon": "icon-envelope-letter"
+		},
+		{
+			"name": "Reportes de prestamo",
+			"url": "/tesoreria/reportes-prestamo",
+			"icon": "icon-wallet"
 		}
 	]
- }
+}
