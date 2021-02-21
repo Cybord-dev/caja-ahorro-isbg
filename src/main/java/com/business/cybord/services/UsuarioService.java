@@ -129,7 +129,7 @@ public class UsuarioService {
 		entity.setActivo(usuario.getActivo());
 		if(Boolean.FALSE.equals(usuario.getActivo())) {
 			if(prestamoService.getPrestamosByUsuarioId(usuario.getId()).stream()
-					.filter(p->!EstatusPrestamoEnum.TERMINADO.name().equals(p.getEstatus()) && !EstatusPrestamoEnum.TRASPASADO_TERMINADO.name().equals(p.getEstatus()))
+					.filter(p->EstatusPrestamoEnum.ACTIVO.name().equals(p.getEstatus()) || EstatusPrestamoEnum.SUSPENDIDO.name().equals(p.getEstatus()))
 					.count() > 0) {
 				throw new ResponseStatusException(HttpStatus.CONFLICT, "El usuario no puede ser desactivado, el usuario aun cuenta con prestamos activos");
 			}
