@@ -22,7 +22,7 @@ public class CantidadPrestamosRule {
 
 	@Action
 	public void execute(@Fact("results") List<String> results) {
-		results.add("El usuario ya tiene 3 prestamos");
+		results.add("El usuario ya tiene 3 prestamos activos");
 	}
 	
 }
