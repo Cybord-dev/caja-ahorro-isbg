@@ -12,13 +12,12 @@ import org.jeasy.rules.annotation.Fact;
 import org.jeasy.rules.annotation.Rule;
 
 import com.business.cybord.models.dtos.SolicitudDto;
-import com.business.cybord.models.dtos.UsuarioDto;
 
 @Rule(name = "FechaInicioAhorroRule", description = "Se valida la fecha minima de ahorro")
 public class FechaInicioAhorroRule {
 
 	@Condition
-	public boolean condition(@Fact("solicitud") SolicitudDto solicitudDto, @Fact("usuario") UsuarioDto usuarioDto,
+	public boolean condition(@Fact("solicitud") SolicitudDto solicitudDto,
 			@Fact("results") List<String> results) {
 		 LocalDate endDate =
 		 LocalDate.now().withMonth(Month.NOVEMBER.getValue()).withDayOfMonth(1);

@@ -62,7 +62,7 @@ public class UsuarioService {
 
 	@Autowired
 	private PrestamoService prestamoService;
-	
+
 	@Autowired
 	private SaldoAhorroService ahorroService;
 
@@ -123,19 +123,22 @@ public class UsuarioService {
 
 	@Transactional(rollbackOn = { DataAccessException.class, SQLException.class, ResponseStatusException.class })
 	public UsuarioDto actualizarUsuario(UsuarioDto usuario, int id) {
-		Usuario entity = repository.findById(id).orElseThrow(
-				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("El usuario %s no existe.", usuario.getEmail())));
+		Usuario entity = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+				String.format("El usuario %s no existe.", usuario.getEmail())));
 		entity.setEmail(usuario.getEmail());
 		entity.setActivo(usuario.getActivo());
-		if(Boolean.FALSE.equals(usuario.getActivo())) {
-			if(prestamoService.getPrestamosByUsuarioId(usuario.getId()).stream()
-					.filter(p->!EstatusPrestamoEnum.TERMINADO.name().equals(p.getEstatus()) && !EstatusPrestamoEnum.TRASPASADO_TERMINADO.name().equals(p.getEstatus()))
+		if (Boolean.FALSE.equals(usuario.getActivo())) {
+			if (prestamoService.getPrestamosByUsuarioId(usuario.getId()).stream()
+					.filter(p -> !EstatusPrestamoEnum.TERMINADO.name().equals(p.getEstatus())
+							&& !EstatusPrestamoEnum.TRASPASADO_TERMINADO.name().equals(p.getEstatus()))
 					.count() > 0) {
-				throw new ResponseStatusException(HttpStatus.CONFLICT, "El usuario no puede ser desactivado, el usuario aun cuenta con prestamos activos");
+				throw new ResponseStatusException(HttpStatus.CONFLICT,
+						"El usuario no puede ser desactivado, el usuario aun cuenta con prestamos activos");
 			}
 			Optional<BigDecimal> ahorro = ahorroService.findSaldoAhorroSumByIdUsuario(usuario.getId());
-			if(ahorro.isPresent() && ahorro.get().compareTo(BigDecimal.ZERO)>0) {
-				throw new ResponseStatusException(HttpStatus.CONFLICT, "El usuario no puede ser desactivado, el usuario aun cuenta con un saldo a favor de ahorro");
+			if (ahorro.isPresent() && ahorro.get().compareTo(BigDecimal.ZERO) > 0) {
+				throw new ResponseStatusException(HttpStatus.CONFLICT,
+						"El usuario no puede ser desactivado, el usuario aun cuenta con un saldo a favor de ahorro");
 			}
 		}
 		entity.setNombre(usuario.getNombre());
@@ -163,12 +166,13 @@ public class UsuarioService {
 		}
 		List<PrestamoDto> activePrestamos = prestamoService.getPrestamosdeUnUsuarioByIdNotCompleted(usuario.getId());
 		for (PrestamoDto prestamoDto : activePrestamos) {
-			sueldoUtilizable = sueldoUtilizable
-					.subtract(prestamoDto.getMonto())
-					.setScale(2, RoundingMode.HALF_UP)
-					.divide(BigDecimal.valueOf(prestamoDto.getNoQuincenas()), RoundingMode.HALF_UP)
-					.subtract(prestamoDto.getMonto().multiply(BigDecimal.valueOf(0.01)))
-					.setScale(2, RoundingMode.HALF_UP);
+			BigDecimal pagoQuincenalPrestamo = prestamoDto.getMonto()
+					.add(prestamoDto.getMonto()
+							.multiply(prestamoDto.getTasaInteres().divide(new BigDecimal(100), 2, RoundingMode.FLOOR))
+							.multiply(new BigDecimal(prestamoDto.getNoQuincenas())));
+			pagoQuincenalPrestamo = pagoQuincenalPrestamo.divide(new BigDecimal(prestamoDto.getNoQuincenas()), 2,
+					RoundingMode.FLOOR);
+			sueldoUtilizable = sueldoUtilizable.subtract(pagoQuincenalPrestamo);
 		}
 		List<ValidacionAvalDto> prestamoAvales = validacionAvalDao.getActivePrestamosByAval(usuario.getId());
 		capacidad.setAvalados(prestamoAvales);
