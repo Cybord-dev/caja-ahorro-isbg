@@ -20,7 +20,7 @@
         "icon": "icon-list"
       },
       {
-        "name": "Conciliacion",
+        "name": "Conciliacion Ahorro",
         "url": "/contabilidad/conciliacion",
         "icon": "icon-calculator"
       },
@@ -42,11 +42,6 @@
       {
         "name": "Reportes de prestamo",
         "url": "/contabilidad/reportes-prestamo",
-        "icon": "icon-wallet"
-      },
-      {
-        "name": "Validacion pagos",
-        "url": "/recursos-humanos/pagos-capital",
         "icon": "icon-wallet"
       }
     ]

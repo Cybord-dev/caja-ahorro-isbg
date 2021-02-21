@@ -61,7 +61,7 @@ public class SaldoPrestamoDao {
 	private static final Logger log = LoggerFactory.getLogger(SaldoPrestamoDao.class);
 
 	private static final String INSERT_SALDO_PRESTAMO = "INSERT INTO isbg.saldo_prestamo"
-			+ "(id_prestamo, tipo, monto, validado, origen, fecha_creacion, fecha_actualizacion) VALUES(?, ?, ?, ?, ?, now(), now())";
+			+ "(id_prestamo, tipo, monto, validado, origen,observaciones, fecha_creacion, fecha_actualizacion) VALUES(?, ?, ?, ?, ?, ?, now(), now())";
 
 	private static final String UPDATE_SALDPO_PRESTAMO = "UPDATE isbg.saldo_prestamo SET validado=?, origen=?,fecha_actualizacion= now() WHERE id_saldo_prestamo=?";
 
@@ -83,6 +83,7 @@ public class SaldoPrestamoDao {
 				ps.setBigDecimal(3, saldo.getMonto());
 				ps.setBoolean(4, Boolean.FALSE);
 				ps.setString(5, saldo.getOrigen());
+				ps.setString(6, saldo.getObservaciones());
 				return ps;
 			}
 		}, keyHolder);

@@ -202,7 +202,7 @@ public class PrestamoService {
 		if(updated == 1 && dto.getValidado() && dto.getOrigen() != null) {
 			Prestamo prestamo  = repository.findById(dto.getIdPrestamo())
 					.orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "El saldo no se encuentra ligado a ningun prestamo"));
-			if(dto.getTipo().equals(TipoSaldoPrestamoEnum.PAGO.name())) {
+			if(!dto.getTipo().equals(TipoSaldoPrestamoEnum.INTERES.name())) {
 				prestamo.setSaldoPendiente(prestamo.getSaldoPendiente().subtract(dto.getMonto()));
 					if(prestamo.getSaldoPendiente().compareTo(BigDecimal.ZERO ) <= 0) {
 						prestamo.setEstatus(EstatusPrestamoEnum.TERMINADO.name());
