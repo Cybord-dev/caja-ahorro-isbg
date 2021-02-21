@@ -1,19 +1,5 @@
 package com.business.cybord.services;
 
-import com.business.cybord.mappers.UsuariosMapper;
-import com.business.cybord.models.dtos.CapacidadPagoDto;
-import com.business.cybord.models.dtos.MenuItem;
-import com.business.cybord.models.dtos.PrestamoDto;
-import com.business.cybord.models.dtos.RecursoDto;
-import com.business.cybord.models.dtos.UserInfoDto;
-import com.business.cybord.models.dtos.UsuarioDto;
-import com.business.cybord.models.dtos.ValidacionAvalDto;
-import com.business.cybord.models.dtos.composed.UserAhorroDto;
-import com.business.cybord.models.entities.Usuario;
-import com.business.cybord.repositories.UsuariosRepository;
-import com.business.cybord.repositories.dao.UserRepositoryDao;
-import com.business.cybord.repositories.dao.ValidacionAvalDao;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -26,7 +12,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +24,26 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import com.business.cybord.mappers.UsuariosMapper;
+import com.business.cybord.models.dtos.CapacidadPagoDto;
+import com.business.cybord.models.dtos.MenuItem;
+import com.business.cybord.models.dtos.PrestamoDto;
+import com.business.cybord.models.dtos.RecursoDto;
+import com.business.cybord.models.dtos.UserInfoDto;
+import com.business.cybord.models.dtos.UsuarioDto;
+import com.business.cybord.models.dtos.ValidacionAvalDto;
+import com.business.cybord.models.dtos.composed.UserAhorroDto;
+import com.business.cybord.models.entities.Usuario;
+import com.business.cybord.models.enums.EstatusPrestamoEnum;
+import com.business.cybord.models.enums.TipoAtributoUsuarioEnum;
+import com.business.cybord.repositories.UsuariosRepository;
+import com.business.cybord.repositories.dao.UserRepositoryDao;
+import com.business.cybord.repositories.dao.ValidacionAvalDao;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 
