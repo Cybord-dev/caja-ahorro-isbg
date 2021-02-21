@@ -201,12 +201,15 @@ public class PrestamoService {
 		int updated = saldosDao.updateSaldoPrestamo(idSaldo, dto);
 		if(updated == 1 && dto.getValidado() && dto.getOrigen() != null) {
 			Prestamo prestamo  = repository.findById(dto.getIdPrestamo())
-					.orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "El saldo no se encuenttra ligado a ningun prestamo"));
-			
-			prestamo.setSaldoPendiente(prestamo.getSaldoPendiente().subtract(dto.getMonto()));
-			
-			log.info("Updating saldo pendiente del prestamo : {}", prestamo);
-			repository.save(prestamo);
+					.orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "El saldo no se encuentra ligado a ningun prestamo"));
+			if(dto.getTipo().equals(TipoSaldoPrestamoEnum.PAGO.name())) {
+				prestamo.setSaldoPendiente(prestamo.getSaldoPendiente().subtract(dto.getMonto()));
+					if(prestamo.getSaldoPendiente().compareTo(BigDecimal.ZERO ) <= 0) {
+						prestamo.setEstatus(EstatusPrestamoEnum.TERMINADO.name());
+					}
+				log.info("Updating saldo pendiente del prestamo : {}", prestamo);
+				repository.save(prestamo);
+			}
 		}else {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El saldo no fue correctamente actualizado");
 		}
@@ -371,8 +374,9 @@ public class PrestamoService {
 				Optional<BigDecimal> ahorro = saldoAhorroService.findSaldoAhorroSumByIdUsuario(usuario.getId());
 				if(ahorro.isPresent()) {
 					BigDecimal interesUsurio = ahorro.get().multiply(interesesDto.getPorcentajeInteresDelPeriodo().divide(new BigDecimal(100),6, RoundingMode.FLOOR));				
-					saldoAhorroCreados.add(createSaldoAhorroInteres(usuario.getId(),interesUsurio));
-					interesRepartido = interesRepartido.add(interesUsurio);
+					SaldoAhorro saldoAhorroInteresCreado = createSaldoAhorroInteres(usuario.getId(),interesUsurio);
+					saldoAhorroCreados.add(saldoAhorroInteresCreado);
+					interesRepartido = interesRepartido.add(saldoAhorroInteresCreado.getMonto());
 				}
 			}		
 		}
@@ -438,7 +442,7 @@ public class PrestamoService {
 	private SaldoAhorro createSaldoAhorroInteres(Integer idUsuario, BigDecimal monto) {
 		SaldoAhorro saldoAhorro = new SaldoAhorroBuilder()
 				.setIdUsuario(idUsuario)
-				.setMonto(monto)
+				.setMonto(monto.setScale(2, RoundingMode.FLOOR))
 				.setOrigen(Constants.ORIGEN_SISTEMA)
 				.setTipo(TipoAhorroEnum.INTERES.getTipo())
 				.setValidado(Boolean.TRUE)
