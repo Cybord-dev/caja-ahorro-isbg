@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -12,9 +13,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -34,6 +38,7 @@ import com.business.cybord.models.dtos.UsuarioDto;
 import com.business.cybord.models.dtos.ValidacionAvalDto;
 import com.business.cybord.models.dtos.composed.UserAhorroDto;
 import com.business.cybord.models.entities.Usuario;
+import com.business.cybord.models.enums.EstatusPrestamoEnum;
 import com.business.cybord.models.enums.TipoAtributoUsuarioEnum;
 import com.business.cybord.repositories.UsuariosRepository;
 import com.business.cybord.repositories.dao.UserRepositoryDao;
@@ -57,6 +62,9 @@ public class UsuarioService {
 
 	@Autowired
 	private PrestamoService prestamoService;
+	
+	@Autowired
+	private SaldoAhorroService ahorroService;
 
 	@Autowired
 	private ValidacionAvalDao validacionAvalDao;
@@ -113,11 +121,23 @@ public class UsuarioService {
 		}
 	}
 
+	@Transactional(rollbackOn = { DataAccessException.class, SQLException.class, ResponseStatusException.class })
 	public UsuarioDto actualizarUsuario(UsuarioDto usuario, int id) {
 		Usuario entity = repository.findById(id).orElseThrow(
-				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("El usuario no existe.")));
+				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("El usuario %s no existe.", usuario.getEmail())));
 		entity.setEmail(usuario.getEmail());
 		entity.setActivo(usuario.getActivo());
+		if(Boolean.FALSE.equals(usuario.getActivo())) {
+			if(prestamoService.getPrestamosByUsuarioId(usuario.getId()).stream()
+					.filter(p->!EstatusPrestamoEnum.TERMINADO.name().equals(p.getEstatus()) && !EstatusPrestamoEnum.TRASPASADO_TERMINADO.name().equals(p.getEstatus()))
+					.count() > 0) {
+				throw new ResponseStatusException(HttpStatus.CONFLICT, "El usuario no puede ser desactivado, el usuario aun cuenta con prestamos activos");
+			}
+			Optional<BigDecimal> ahorro = ahorroService.findSaldoAhorroSumByIdUsuario(usuario.getId());
+			if(ahorro.isPresent() && ahorro.get().compareTo(BigDecimal.ZERO)>0) {
+				throw new ResponseStatusException(HttpStatus.CONFLICT, "El usuario no puede ser desactivado, el usuario aun cuenta con un saldo a favor de ahorro");
+			}
+		}
 		entity.setNombre(usuario.getNombre());
 		entity.setTipoUsuario(usuario.getTipoUsuario());
 		entity.setNoEmpleado(usuario.getNoEmpleado());
