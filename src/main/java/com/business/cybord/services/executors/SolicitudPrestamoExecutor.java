@@ -88,7 +88,8 @@ public class SolicitudPrestamoExecutor extends AbstractSolicitudExecutor impleme
 					getAttributeFromList(TipoAtributoSolicitudEnum.MONTO, solicitudDto.getAttributesAsList())
 							.getValor());
 
-			BigDecimal interes = monto.divide(new BigDecimal(100), 2, RoundingMode.FLOOR);
+			BigDecimal interes = monto.divide(new BigDecimal(100), 2, RoundingMode.FLOOR)
+					.multiply(new BigDecimal(numQuincenas));
 
 			PrestamoBuilder prestamoBuilder = new PrestamoBuilder().setEstatus(EstatusPrestamoEnum.ACTIVO.name())
 					.setFechaTerminacion(calculaFechaTerminacion(numQuincenas, terminationDate))

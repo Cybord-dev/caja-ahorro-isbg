@@ -281,7 +281,6 @@ public class SaldoPrestamoDao {
 				}
 			}
 		}
-		// TODO fix count query to fix pagination
 		log.info(selectByParams.toString());
 		return selectByParams.toString();
 	}

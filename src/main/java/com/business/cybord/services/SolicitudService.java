@@ -21,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.business.cybord.mappers.SolicitudMapper;
 import com.business.cybord.mappers.UsuariosMapper;
+import com.business.cybord.models.dtos.CapacidadPagoDto;
 import com.business.cybord.models.dtos.RecursoDto;
 import com.business.cybord.models.dtos.SaldoAhorroDto;
 import com.business.cybord.models.dtos.SolicitudDto;
@@ -46,6 +47,8 @@ public class SolicitudService {
 
 	@Autowired
 	private UsuariosRepository repositoryUsuario;
+	@Autowired
+	private UsuarioService usuarioService;
 	@Autowired
 	private SolicitudRepository repositorySolicitud;
 	@Autowired
@@ -124,7 +127,8 @@ public class SolicitudService {
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 						String.format("el usuario id= %d no existe", idUsuario)));
 		List<SaldoAhorroDto> saldos = saldoAhorroService.getSaldosAhorroByUsuario(usuario.getId());
-		executeRules(solicitudDto, usuariosMapper.getDtoFromUserEntity(usuario), saldos);
+		executeRules(solicitudDto, usuariosMapper.getDtoFromUserEntity(usuario), saldos,
+				usuarioService.calculoCapacidadPago(usuario.getId()));
 		SolicitudFactoryEnum sfte = SolicitudFactoryTypeEnum
 				.findByReferenceName(solicitudDto.getTipo(), usuario.getTipoUsuario())
 				.orElseThrow(() -> new IsbgServiceException(
@@ -154,13 +158,14 @@ public class SolicitudService {
 		return mapper.getDtoFromSolicitudEntity(nueva);
 	}
 
-	private void executeRules(SolicitudDto solicitudDto, UsuarioDto usuarioDto, List<SaldoAhorroDto> saldos)
-			throws IsbgServiceException {
+	private void executeRules(SolicitudDto solicitudDto, UsuarioDto usuarioDto, List<SaldoAhorroDto> saldos,
+			CapacidadPagoDto capacidad) throws IsbgServiceException {
 		ISuite suite = suiteManager.getSolicitudSuite(solicitudDto.getTipo());
 		Facts facts = new Facts();
 		List<String> results = new ArrayList<>();
 		facts.put("solicitud", solicitudDto);
 		facts.put("usuario", usuarioDto);
+		facts.put("capacidad", capacidad);
 		facts.put("results", results);
 		facts.put("saldos", saldos);
 		rulesEngine.fire(suite.getSuite(), facts);

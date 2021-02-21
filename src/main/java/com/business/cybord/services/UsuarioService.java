@@ -1,5 +1,19 @@
 package com.business.cybord.services;
 
+import com.business.cybord.mappers.UsuariosMapper;
+import com.business.cybord.models.dtos.CapacidadPagoDto;
+import com.business.cybord.models.dtos.MenuItem;
+import com.business.cybord.models.dtos.PrestamoDto;
+import com.business.cybord.models.dtos.RecursoDto;
+import com.business.cybord.models.dtos.UserInfoDto;
+import com.business.cybord.models.dtos.UsuarioDto;
+import com.business.cybord.models.dtos.ValidacionAvalDto;
+import com.business.cybord.models.dtos.composed.UserAhorroDto;
+import com.business.cybord.models.entities.Usuario;
+import com.business.cybord.repositories.UsuariosRepository;
+import com.business.cybord.repositories.dao.UserRepositoryDao;
+import com.business.cybord.repositories.dao.ValidacionAvalDao;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -12,9 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import javax.transaction.Transactional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,26 +36,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
-import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.business.cybord.mappers.UsuariosMapper;
-import com.business.cybord.models.dtos.CapacidadPagoDto;
-import com.business.cybord.models.dtos.MenuItem;
-import com.business.cybord.models.dtos.PrestamoDto;
-import com.business.cybord.models.dtos.RecursoDto;
-import com.business.cybord.models.dtos.UserInfoDto;
-import com.business.cybord.models.dtos.UsuarioDto;
-import com.business.cybord.models.dtos.ValidacionAvalDto;
-import com.business.cybord.models.dtos.composed.UserAhorroDto;
-import com.business.cybord.models.entities.Usuario;
-import com.business.cybord.models.enums.EstatusPrestamoEnum;
-import com.business.cybord.models.enums.TipoAtributoUsuarioEnum;
-import com.business.cybord.repositories.UsuariosRepository;
-import com.business.cybord.repositories.dao.UserRepositoryDao;
-import com.business.cybord.repositories.dao.ValidacionAvalDao;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
+
 
 @Service
 public class UsuarioService {
@@ -62,7 +58,7 @@ public class UsuarioService {
 
 	@Autowired
 	private PrestamoService prestamoService;
-	
+
 	@Autowired
 	private SaldoAhorroService ahorroService;
 
@@ -123,19 +119,21 @@ public class UsuarioService {
 
 	@Transactional(rollbackOn = { DataAccessException.class, SQLException.class, ResponseStatusException.class })
 	public UsuarioDto actualizarUsuario(UsuarioDto usuario, int id) {
-		Usuario entity = repository.findById(id).orElseThrow(
-				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("El usuario %s no existe.", usuario.getEmail())));
+		Usuario entity = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+				String.format("El usuario %s no existe.", usuario.getEmail())));
 		entity.setEmail(usuario.getEmail());
 		entity.setActivo(usuario.getActivo());
 		if(Boolean.FALSE.equals(usuario.getActivo())) {
 			if(prestamoService.getPrestamosByUsuarioId(usuario.getId()).stream()
 					.filter(p->EstatusPrestamoEnum.ACTIVO.name().equals(p.getEstatus()) || EstatusPrestamoEnum.SUSPENDIDO.name().equals(p.getEstatus()))
 					.count() > 0) {
-				throw new ResponseStatusException(HttpStatus.CONFLICT, "El usuario no puede ser desactivado, el usuario aun cuenta con prestamos activos");
+				throw new ResponseStatusException(HttpStatus.CONFLICT,
+						"El usuario no puede ser desactivado, el usuario aun cuenta con prestamos activos");
 			}
 			Optional<BigDecimal> ahorro = ahorroService.findSaldoAhorroSumByIdUsuario(usuario.getId());
-			if(ahorro.isPresent() && ahorro.get().compareTo(BigDecimal.ZERO)>0) {
-				throw new ResponseStatusException(HttpStatus.CONFLICT, "El usuario no puede ser desactivado, el usuario aun cuenta con un saldo a favor de ahorro");
+			if (ahorro.isPresent() && ahorro.get().compareTo(BigDecimal.ZERO) > 0) {
+				throw new ResponseStatusException(HttpStatus.CONFLICT,
+						"El usuario no puede ser desactivado, el usuario aun cuenta con un saldo a favor de ahorro");
 			}
 		}
 		entity.setNombre(usuario.getNombre());
@@ -163,12 +161,13 @@ public class UsuarioService {
 		}
 		List<PrestamoDto> activePrestamos = prestamoService.getPrestamosdeUnUsuarioByIdNotCompleted(usuario.getId());
 		for (PrestamoDto prestamoDto : activePrestamos) {
-			sueldoUtilizable = sueldoUtilizable
-					.subtract(prestamoDto.getMonto())
-					.setScale(2, RoundingMode.HALF_UP)
-					.divide(BigDecimal.valueOf(prestamoDto.getNoQuincenas()), RoundingMode.HALF_UP)
-					.subtract(prestamoDto.getMonto().multiply(BigDecimal.valueOf(0.01)))
-					.setScale(2, RoundingMode.HALF_UP);
+			BigDecimal pagoQuincenalPrestamo = prestamoDto.getMonto()
+					.add(prestamoDto.getMonto()
+							.multiply(prestamoDto.getTasaInteres().divide(new BigDecimal(100), 2, RoundingMode.FLOOR))
+							.multiply(new BigDecimal(prestamoDto.getNoQuincenas())));
+			pagoQuincenalPrestamo = pagoQuincenalPrestamo.divide(new BigDecimal(prestamoDto.getNoQuincenas()), 2,
+					RoundingMode.FLOOR);
+			sueldoUtilizable = sueldoUtilizable.subtract(pagoQuincenalPrestamo);
 		}
 		List<ValidacionAvalDto> prestamoAvales = validacionAvalDao.getActivePrestamosByAval(usuario.getId());
 		capacidad.setAvalados(prestamoAvales);
