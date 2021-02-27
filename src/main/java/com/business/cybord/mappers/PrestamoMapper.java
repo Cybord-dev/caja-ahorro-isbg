@@ -17,11 +17,11 @@ public interface PrestamoMapper {
 
 	@Mapping(target = "solicitud", ignore = true)
 	Prestamo getEntityFromDto(PrestamoDto dto);
-
 	List<Prestamo> getEntitysFromDtos(List<PrestamoDto> dto);
 
 	@Mapping(target = "solicitud", ignore = true)
-	PrestamoDto getDtoFromEntity(Prestamo dto);
+	PrestamoDto getDtoFromEntity(Prestamo entity);
+	List<PrestamoDto> getDtosFromEntities(List<Prestamo> entities);
 
 	List<PrestamoDto> getDtosFromEntity(List<Prestamo> entities);
 

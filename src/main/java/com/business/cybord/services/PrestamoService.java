@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -112,7 +113,11 @@ public class PrestamoService {
 	public Page<PrestamoDto> findPrestamosByFiltros(Map<String, String> parameters) {
 		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
 		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
-		return dao.findAll(parameters, PageRequest.of(page, size, Sort.by("fechaActualizacion")));
+		//return dao.findAll(parameters, PageRequest.of(page, size, Sort.by("fechaActualizacion")));
+		
+		Page<Prestamo> prestamos = repository.findAll(PageRequest.of(page, size));
+		
+		return new PageImpl<>(mapper.getDtosFromEntities(prestamos.getContent()), PageRequest.of(page, size), prestamos.getTotalElements());
 	}
 
 	public List<PrestamoDto> getPrestamosByUsuarioId(Integer id) {

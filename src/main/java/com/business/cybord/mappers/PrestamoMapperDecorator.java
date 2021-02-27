@@ -45,6 +45,12 @@ public class PrestamoMapperDecorator implements PrestamoMapper {
 		prestamo.setSolicitud(solicitudDto);
 		return prestamo;
 	}
+	
+	@Override
+	public List<PrestamoDto> getDtosFromEntities(List<Prestamo> entities) {
+		return delegate.getDtosFromEntities(entities);
+	}
+	
 
 	@Override
 	public List<PrestamoDto> getDtosFromEntity(List<Prestamo> entities) {
@@ -75,5 +81,7 @@ public class PrestamoMapperDecorator implements PrestamoMapper {
 		List<SaldoPrestamoDto> saldoPrestamoDtos = delegate.getSaldoDtosFromEntities(entities);
 		return saldoPrestamoDtos;
 	}
+
+	
 
 }
