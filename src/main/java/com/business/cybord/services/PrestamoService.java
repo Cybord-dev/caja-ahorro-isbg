@@ -59,6 +59,9 @@ import com.business.cybord.utils.builder.PrestamoBuilder;
 import com.business.cybord.utils.builder.SaldoAhorroBuilder;
 import com.business.cybord.utils.builder.SaldoPrestamoBuilder;
 
+
+
+
 @Service
 public class PrestamoService {
 
@@ -189,6 +192,8 @@ public class PrestamoService {
 	public SaldoPrestamoDto insertPagoPrestamo(Integer idPrestamo, SaldoPrestamoDto dto) {
 		repository.findById(idPrestamo).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
 				String.format("El prestamo con id %d  no existe.", idPrestamo)));
+		int noPago = saldosDao.getNoPago(dto.getId());
+		dto.setNoPago(noPago);
 		return saldosDao.insertSaldoPrestamo(dto);
 	}
 
@@ -224,24 +229,26 @@ public class PrestamoService {
 		List<SaldoPrestamoDto> generados = new ArrayList<>();
 
 		for (Prestamo activo : activos) {
+			int noPago = saldosDao.getNoPago(activo.getId());
 			BigDecimal sum = montoEfectivamentePagado(activo);
 			if (sum.equals(activo.getMonto())) {
 				activo.setEstatus(EstatusPrestamoEnum.TERMINADO.name());
 				repository.save(activo);
 			} else {
-				generados.add(createSaldoPrestamoPago(activo));
-				generados.add(createSaldoPrestamoInteres(activo));
+				generados.add(createSaldoPrestamoPago(activo, noPago));
+				generados.add(createSaldoPrestamoInteres(activo, noPago));
 			}
 		}
 
 		for (Prestamo traspasado : traspasados) {
+			int noPago = saldosDao.getNoPago(traspasado.getId());
 			BigDecimal sum = montoEfectivamentePagado(traspasado);
 
 			if (sum.equals(traspasado.getMonto())) {
 				traspasado.setEstatus(EstatusPrestamoEnum.TRASPASADO_TERMINADO.name());
 				repository.save(traspasado);
 			} else {
-				generados.add(createSaldoPrestamoPago(traspasado));
+				generados.add(createSaldoPrestamoPago(traspasado, noPago));
 			}
 		}
 		return generados;
@@ -420,8 +427,11 @@ public class PrestamoService {
 		return prestamosCreados;
 	}
 
-	private SaldoPrestamoDto createSaldoPrestamoPago(Prestamo prestamo) {
+	
+	
+	private SaldoPrestamoDto createSaldoPrestamoPago(Prestamo prestamo, int noPago) {
 		SaldoPrestamoDto saldoPrestamo = new SaldoPrestamoBuilder().setIdPrestamo(prestamo.getId())
+				.setNoPago(noPago)
 				.setIdUsuario(prestamo.getIdDeudor()).setMontoPrestamo(prestamo.getMonto())
 				.setNoQuincenas(prestamo.getNoQuincenas()).setSaldoPendiente(prestamo.getSaldoPendiente())
 				.setTipo(TipoSaldoPrestamoEnum.PAGO.name())
@@ -440,8 +450,9 @@ public class PrestamoService {
 
 	}
 
-	private SaldoPrestamoDto createSaldoPrestamoInteres(Prestamo prestamo) {
+	private SaldoPrestamoDto createSaldoPrestamoInteres(Prestamo prestamo, int noPago) {
 		SaldoPrestamoDto saldoPrestamo = new SaldoPrestamoBuilder().setIdPrestamo(prestamo.getId())
+				.setNoPago(noPago)
 				.setIdUsuario(prestamo.getIdDeudor()).setMontoPrestamo(prestamo.getMonto())
 				.setNoQuincenas(prestamo.getNoQuincenas()).setSaldoPendiente(prestamo.getSaldoPendiente())
 				.setTipo(TipoSaldoPrestamoEnum.INTERES.name())

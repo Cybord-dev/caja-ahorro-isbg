@@ -17,6 +17,7 @@ public class SaldoPrestamoDto implements Serializable {
 	private Integer idPrestamo;
 	// =============================
 	private Integer idUsuario;
+	private Integer noPago;
 	private BigDecimal montoPrestamo;
 	private BigDecimal saldoPendiente;
 	private String estatus;
@@ -45,6 +46,16 @@ public class SaldoPrestamoDto implements Serializable {
 
 	public Integer getIdPrestamo() {
 		return idPrestamo;
+	}
+	
+	
+
+	public Integer getNoPago() {
+		return noPago;
+	}
+
+	public void setNoPago(Integer noPago) {
+		this.noPago = noPago;
 	}
 
 	public void setIdPrestamo(Integer idPrestamo) {
@@ -181,11 +192,17 @@ public class SaldoPrestamoDto implements Serializable {
 
 	@Override
 	public String toString() {
-		return "SaldoPrestamoDto [id=" + id + ", idPrestamo=" + idPrestamo + ", idUsuario=" + idUsuario
-				+ ", montoPrestamo=" + montoPrestamo + ", saldoPendiente=" + saldoPendiente + ", estatus=" + estatus
-				+ ", noQuincenas=" + noQuincenas + ", tasaInteres=" + tasaInteres + ", noEmpleado=" + noEmpleado
-				+ ", nombreEmpleado=" + nombreEmpleado + ", tipoUsuario=" + tipoUsuario + ", tipo=" + tipo + ", origen="
-				+ origen + ", monto=" + monto + ", validado=" + validado + ", fechaCreacion=" + fechaCreacion
-				+ ", fechaActualizacion=" + fechaActualizacion + "]";
+		return "SaldoPrestamoDto [id=" + id + ", idPrestamo=" + idPrestamo + ", idUsuario=" + idUsuario + ", noPago="
+				+ noPago + ", montoPrestamo=" + montoPrestamo + ", saldoPendiente=" + saldoPendiente + ", estatus="
+				+ estatus + ", noQuincenas=" + noQuincenas + ", tasaInteres=" + tasaInteres + ", noEmpleado="
+				+ noEmpleado + ", nombreEmpleado=" + nombreEmpleado + ", tipoUsuario=" + tipoUsuario + ", tipo=" + tipo
+				+ ", origen=" + origen + ", monto=" + monto + ", validado=" + validado + ", observaciones="
+				+ observaciones + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
+				+ "]";
 	}
+
+	
+
+
+	
 }
