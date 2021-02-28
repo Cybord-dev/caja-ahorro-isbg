@@ -26,15 +26,27 @@ import com.business.cybord.models.dtos.composed.ConciliaSaldoDto;
 import com.business.cybord.models.dtos.composed.ConciliadorReportDto;
 import com.business.cybord.models.dtos.composed.ReporteSaldosDto;
 import com.business.cybord.models.dtos.composed.SaldoAhorroCajaDto;
+import com.business.cybord.models.dtos.reports.ReporteAhorroDto;
 import com.business.cybord.models.error.IsbgServiceException;
 import com.business.cybord.services.SaldoAhorroService;
 
 @RestController
 @RequestMapping("/api/v1")
-public class SaldosAhorroController {
+public class AhorroController {
 
 	@Autowired
 	private SaldoAhorroService service;
+	
+	
+	@GetMapping("/ahorros")
+	public ResponseEntity<Page<ReporteAhorroDto>> findAllAvalesByFiltros(@RequestParam Map<String, String> parameters) {
+		return new ResponseEntity<>(service.getPagedReporteAhorroByFiltros(parameters), HttpStatus.OK);
+	}
+	
+	@GetMapping("/ahorros/report")
+	public ResponseEntity<RecursoDto> findAllAvalesByFiltrosReport(@RequestParam Map<String, String> parameters) throws IOException {
+		return new ResponseEntity<>(service.getPagedReporteAhorroByFiltrosReport(parameters), HttpStatus.OK);
+	}
 
 	@GetMapping("/saldo-ahorros")
 	public ResponseEntity<Page<ReporteSaldosDto>> getSaldosAhorrosCurrentCaja(
@@ -83,7 +95,7 @@ public class SaldosAhorroController {
 
 	@PostMapping("/ahorros/internos")
 	public ResponseEntity<List<ConciliaSaldoDto>> ahorrosInternos(@RequestBody @Valid List<ConciliaSaldoDto> dtos,
-			Authentication authentication) throws IsbgServiceException {
+			Authentication authentication){
 		return new ResponseEntity<>(service.ahorrosInternos(dtos, authentication), HttpStatus.CREATED);
 	}
 
