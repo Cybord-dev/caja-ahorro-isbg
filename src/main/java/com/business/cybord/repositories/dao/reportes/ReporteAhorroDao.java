@@ -3,13 +3,11 @@ package com.business.cybord.repositories.dao.reportes;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +22,6 @@ import com.business.cybord.models.Constants.SqlConstants;
 import com.business.cybord.models.dtos.reports.ReporteAhorroDto;
 import com.business.cybord.models.enums.sql.UsuarioAhorroFilterEnum;
 import com.business.cybord.utils.extractor.reportes.ReporteAhorroRowMapper;
-import com.business.cybord.utils.helper.DateHelper;
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
 import com.healthmarketscience.sqlbuilder.FunctionCall;
 import com.healthmarketscience.sqlbuilder.SelectQuery;
@@ -37,18 +34,14 @@ public class ReporteAhorroDao {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-
-	private DateFormat dateFormat = new SimpleDateFormat(SqlConstants.DATE_FORMAT);
-
-	private DateHelper dh = new DateHelper();
 	
-	private final static  String TOTAL="(SELECT "
+	private static final   String TOTAL="(SELECT "
 									+ "		SUM(B.monto) AS monto"
 									+ "	FROM saldo_ahorro B"
 									+ "	where t0.id_usuario=B.id_usuario"
 									+ "		and validado=true) as total";
 	
-	private  String valor="(SELECT "
+	private static final String VALOR ="(SELECT "
 				+ "		SUM(B.monto) AS monto "
 				+ "	FROM saldo_ahorro B "
 				+ "	where t0.id_usuario=B.id_usuario"
@@ -58,32 +51,36 @@ public class ReporteAhorroDao {
 
 	private static final Logger log = LoggerFactory.getLogger(ReporteAhorroDao.class);
 
-	public Page<ReporteAhorroDto> findAll(Map<String, String> parameters, Pageable pageable) {
+	public Page<ReporteAhorroDto> findAll(Map<String, String> parameters,LocalDate since, LocalDate to, Pageable pageable) {
 		int total = jdbcTemplate.queryForObject(count(parameters), new Object[] {}, (rs, rowNum) -> rs.getInt(1));
 
 		List<ReporteAhorroDto> rows = jdbcTemplate.query(new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-				PreparedStatement ps = con.prepareStatement(query(parameters, pageable));
-				return ps;
+				return con.prepareStatement(query(parameters,since,to, pageable));
 			}
 		}, new ReporteAhorroRowMapper());
 		return new PageImpl<>(rows, pageable, total);
 	}
 
-	public String query(Map<String, String> parameters, Pageable pageable) {
+	public String query(Map<String, String> parameters,LocalDate since, LocalDate to, Pageable pageable) {
 		DbSchema schema = new DbSpec().addDefaultSchema();
 
 		DbTable usuarios = schema.addTable("usuarios");
 
+		usuarios.addColumn("id_usuario","String", null);
+		usuarios.addColumn("tipo_usuario", "String", null);
 		usuarios.addColumn("nombre", "String", null);
 		usuarios.addColumn("no_empleado", "String", null);
+		
 		usuarios.addColumn("total", "String", null);
 		usuarios.addColumn("ahorro", "String", null);
 		usuarios.addColumn("ajuste", "String", null);
 		usuarios.addColumn("interes", "String", null);
 
 		SelectQuery select = new SelectQuery().addFromTable(usuarios)
+				.addColumns(usuarios.findColumns("id_usuario"))
+				.addColumns(usuarios.findColumns("tipo_usuario"))
 				.addColumns(usuarios.findColumns("nombre"))
 				.addColumns(usuarios.findColumns("no_empleado"))
 				.addColumns(usuarios.findColumns("total"))
@@ -108,8 +105,8 @@ public class ReporteAhorroDao {
 				.concat(" " + SqlConstants.LIMIT + " " + pageable.getPageSize() + " " + SqlConstants.OFFSET + " "
 						+ pageable.getOffset());
 		log.info(query);
-		log.info(queryRefactor(query,parameters));
-		return queryRefactor(query,parameters);
+		log.info(queryRefactor(query,parameters,since, to));
+		return queryRefactor(query,parameters,since, to);
 	}
 
 	public String count(Map<String, String> parameters) {
@@ -136,15 +133,12 @@ public class ReporteAhorroDao {
 	}
 	
 	
-	private String queryRefactor(String query,Map<String, String> parameters) {
-		String since = parameters.containsKey(SqlConstants.SINCE) ? parameters.get(SqlConstants.SINCE)
-				: dateFormat.format(new DateTime().minusYears(1).toDate());
-		String to = parameters.containsKey(SqlConstants.TO) ? parameters.get(SqlConstants.TO)
-				: dateFormat.format(dh.addDays(new Date(), 2));
+	private String queryRefactor(String query,Map<String, String> parameters, LocalDate since, LocalDate to) {
+		DateTimeFormatter formatter =  DateTimeFormatter.ISO_LOCAL_DATE;
 		return query.replace("t0.total", TOTAL)
-		.replace("t0.ahorro", valor.replace("?", "ahorro").replace("f1", since).replace("f2", to))
-		.replace("t0.ajuste", valor.replace("?", "ajuste").replace("f1", since).replace("f2", to))
-		.replace("t0.interes", valor.replace("?", "interes").replace("f1", since).replace("f2", to));
+		.replace("t0.ahorro", VALOR.replace("?", "ahorro").replace("f1", since.format(formatter)).replace("f2", to.format(formatter)))
+		.replace("t0.ajuste", VALOR.replace("?", "ajuste").replace("f1", since.format(formatter)).replace("f2", to.format(formatter)))
+		.replace("t0.interes", VALOR.replace("?", "interes").replace("f1", since.format(formatter)).replace("f2", to.format(formatter)));
 	}
 	
 }

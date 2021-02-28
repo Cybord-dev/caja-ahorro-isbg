@@ -2,6 +2,7 @@ package com.business.cybord.services;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -34,11 +35,13 @@ import com.business.cybord.models.dtos.composed.ConciliaSaldoDto;
 import com.business.cybord.models.dtos.composed.ConciliadorReportDto;
 import com.business.cybord.models.dtos.composed.ReporteSaldosDto;
 import com.business.cybord.models.dtos.composed.SaldoAhorroCajaDto;
+import com.business.cybord.models.dtos.reports.ReporteAhorroDto;
 import com.business.cybord.models.entities.SaldoAhorro;
 import com.business.cybord.models.enums.TipoAtributoUsuarioEnum;
 import com.business.cybord.models.error.IsbgServiceException;
 import com.business.cybord.repositories.SaldoAhorroRepository;
 import com.business.cybord.repositories.dao.ReportesSaldosDao;
+import com.business.cybord.repositories.dao.reportes.ReporteAhorroDao;
 
 @Service
 public class SaldoAhorroService {
@@ -60,11 +63,11 @@ public class SaldoAhorroService {
 
 	@Autowired
 	private CajaUtilityService cajaUtilityService;
-	
-	
-	
-	private static final Logger log = LoggerFactory.getLogger(SaldoAhorroService.class);
 
+	@Autowired
+	private ReporteAhorroDao reporteAhorroDao;
+
+	private static final Logger log = LoggerFactory.getLogger(SaldoAhorroService.class);
 
 	public Page<ReporteSaldosDto> getSaldosAhorros(Map<String, String> parameters) {
 		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
@@ -94,6 +97,37 @@ public class SaldoAhorroService {
 		return reportService.generateBase64Report("REGISTRO AHORRO", data);
 	}
 
+	public Page<ReporteAhorroDto> getPagedReporteAhorroByFiltros(Map<String, String> parameters) {
+		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
+		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
+
+		return reporteAhorroDao.findAll(parameters, cajaUtilityService.getInicioCajaActual(),
+				cajaUtilityService.getFinCajaActual(), PageRequest.of(page, size));
+	}
+	
+	public RecursoDto getPagedReporteAhorroByFiltrosReport(Map<String, String> parameters) throws IOException {
+		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
+		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
+
+		Page<ReporteAhorroDto> ahorros = reporteAhorroDao.findAll(parameters, cajaUtilityService.getInicioCajaActual(),
+				cajaUtilityService.getFinCajaActual(), PageRequest.of(page, size));
+
+		List<Map<String, String>> data = ahorros.getContent().stream().map(s -> {
+			Map<String, String> map = new HashMap<>();
+			map.put("ID USUARIO", s.getIdUsuario().toString());
+			map.put("TIPO USUARIO", s.getTipoUsuario());
+			map.put("NO EMPLEADO", s.getNoEmpleado());
+			map.put("NOMBRE", s.getNombre());
+			map.put("MONTO AHORRO", s.getAhorro().setScale(2, RoundingMode.HALF_UP).toString());
+			map.put("MONTO AJUSTE", s.getAjuste().setScale(2, RoundingMode.HALF_UP).toString());
+			map.put("MONTO INTERES", s.getInteres().setScale(2, RoundingMode.HALF_UP).toString());
+			map.put("AHORRO TOTAL", s.getTotal().setScale(2, RoundingMode.HALF_UP).toString());
+			return map;
+		}).collect(Collectors.toList());
+
+		return reportService.generateBase64Report("AHORRO USUARIOS", data);
+	}
+
 	public Map<String, List<SaldoAhorroCajaDto>> getSaldosAhorrosCurrentCajaAnual() {
 		LocalDate start = cajaUtilityService.getInicioCajaActual();
 		LocalDate end = cajaUtilityService.getFinCajaActual();
@@ -113,9 +147,9 @@ public class SaldoAhorroService {
 	public List<SaldoAhorroDto> getSaldosAhorroByUsuario(Integer id) {
 		LocalDate start = cajaUtilityService.getInicioCajaActual();
 		LocalDate end = cajaUtilityService.getFinCajaActual();
-		
+
 		log.info("finding ahorro of user {}, between {} and {}", id, start, end);
-		
+
 		return mapper
 				.getDtosFromEntity(respository.findAhorosUsuarioCajaActual(id, Date.valueOf(start), Date.valueOf(end)));
 	}
@@ -246,14 +280,14 @@ public class SaldoAhorroService {
 
 	public List<ConciliaSaldoDto> ahorrosInternos(List<ConciliaSaldoDto> saldos, Authentication authentication) {
 		OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
-		String origen=null;
-		List<ConciliaSaldoDto> saldosGuardados=new ArrayList<>();
+		String origen = null;
+		List<ConciliaSaldoDto> saldosGuardados = new ArrayList<>();
 		if (oidcUser != null && oidcUser.getAttributes() != null && oidcUser.getEmail() != null) {
 			origen = oidcUser.getEmail();
 		}
 		for (ConciliaSaldoDto dto : saldos) {
-			Optional<SaldoAhorro> ahorro=respository.findById(dto.getId());
-			if(ahorro.isPresent()) {
+			Optional<SaldoAhorro> ahorro = respository.findById(dto.getId());
+			if (ahorro.isPresent()) {
 				ahorro.get().setId(dto.getId());
 				ahorro.get().setOrigen(origen);
 				ahorro.get().setValidado(true);
@@ -306,11 +340,10 @@ public class SaldoAhorroService {
 	public Optional<BigDecimal> getSaldosAhorroTotal() {
 		return reportesSaldosDao.getSaldoAhorroTotal(cajaUtilityService.getInicioCajaActual(), LocalDate.now());
 	}
-	
-	public Optional<BigDecimal> findSaldoAhorroSumByIdUsuario(Integer id) {
-		return respository.findSaldoAhorroSumByIdUsuario(id, Date.valueOf(cajaUtilityService.getInicioCajaActual()), Timestamp.valueOf(LocalDateTime.now()));
-	}
-	
 
+	public Optional<BigDecimal> findSaldoAhorroSumByIdUsuario(Integer id) {
+		return respository.findSaldoAhorroSumByIdUsuario(id, Date.valueOf(cajaUtilityService.getInicioCajaActual()),
+				Timestamp.valueOf(LocalDateTime.now()));
+	}
 
 }

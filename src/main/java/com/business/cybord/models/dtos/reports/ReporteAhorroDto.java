@@ -11,12 +11,31 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class ReporteAhorroDto implements Serializable {
 
 	private static final long serialVersionUID = 1901090365823000293L;
+	private Integer idUsuario;
+	private String tipoUsuario;
 	private String noEmpleado;
 	private String nombre;
 	private BigDecimal total;
 	private BigDecimal ahorro;
 	private BigDecimal ajuste;
 	private BigDecimal interes;
+	
+
+	public Integer getIdUsuario() {
+		return idUsuario;
+	}
+
+	public void setIdUsuario(Integer idUsuario) {
+		this.idUsuario = idUsuario;
+	}
+
+	public String getTipoUsuario() {
+		return tipoUsuario;
+	}
+
+	public void setTipoUsuario(String tipoUsuario) {
+		this.tipoUsuario = tipoUsuario;
+	}
 
 	public String getNoEmpleado() {
 		return noEmpleado;
