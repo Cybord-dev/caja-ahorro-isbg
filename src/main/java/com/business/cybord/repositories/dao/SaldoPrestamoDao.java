@@ -61,7 +61,7 @@ public class SaldoPrestamoDao {
 	private static final Logger log = LoggerFactory.getLogger(SaldoPrestamoDao.class);
 
 	private static final String INSERT_SALDO_PRESTAMO = "INSERT INTO isbg.saldo_prestamo"
-			+ "(id_prestamo, tipo, monto, validado, origen,observaciones, fecha_creacion, fecha_actualizacion) VALUES(?, ?, ?, ?, ?, ?, now(), now())";
+			+ "(id_prestamo,no_pago, tipo, monto, validado, origen,observaciones, fecha_creacion, fecha_actualizacion) VALUES(?, ? ,?, ?, ?, ?, ?, now(), now())";
 
 	private static final String UPDATE_SALDPO_PRESTAMO = "UPDATE isbg.saldo_prestamo SET validado=?, origen=?,fecha_actualizacion= now() WHERE id_saldo_prestamo=?";
 
@@ -70,6 +70,10 @@ public class SaldoPrestamoDao {
 			+ " INNER JOIN usuarios ON usuarios.id_usuario = prestamo.id_deudor"
 			+ " WHERE saldo_prestamo.tipo = ? AND saldo_prestamo.validado = 1 " + " AND usuarios.tipo_usuario = ? "
 			+ " AND saldo_prestamo.fecha_creacion BETWEEN ? AND ? ";
+	
+	private static final String NO_PAGO = "SELECT IF(MAX(no_pago) IS NULL, 1, MAX(no_pago)+1) AS no_pago  FROM saldo_prestamo where id_prestamo = ?";
+
+
 
 	public SaldoPrestamoDto insertSaldoPrestamo(SaldoPrestamoDto saldo) {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -79,11 +83,12 @@ public class SaldoPrestamoDao {
 				PreparedStatement ps = con.prepareStatement(INSERT_SALDO_PRESTAMO,
 						new String[] { "id_saldo_prestamo" });
 				ps.setInt(1, saldo.getIdPrestamo());
-				ps.setString(2, saldo.getTipo());
-				ps.setBigDecimal(3, saldo.getMonto());
-				ps.setBoolean(4, Boolean.FALSE);
-				ps.setString(5, saldo.getOrigen());
-				ps.setString(6, saldo.getObservaciones());
+				ps.setInt(2, saldo.getNoPago());
+				ps.setString(3, saldo.getTipo());
+				ps.setBigDecimal(4, saldo.getMonto());
+				ps.setBoolean(5, Boolean.FALSE);
+				ps.setString(6, saldo.getOrigen());
+				ps.setString(7, saldo.getObservaciones());
 				return ps;
 			}
 		}, keyHolder);
@@ -308,6 +313,24 @@ public class SaldoPrestamoDao {
 			}
 		});
 
+	}
+	
+	public Integer getNoPago(int ipPrestamo) {
+		return template.query(new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+				PreparedStatement ps = con.prepareStatement(NO_PAGO);
+				ps.setInt(1, ipPrestamo);
+				return ps;
+			}
+		}, new ResultSetExtractor<Integer>() {
+
+			@Override
+			public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {
+
+				return rs.next() ? rs.getInt(1) : 0;
+			}
+		});
 	}
 
 }
