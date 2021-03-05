@@ -192,7 +192,7 @@ public class PrestamoService {
 	public SaldoPrestamoDto insertPagoPrestamo(Integer idPrestamo, SaldoPrestamoDto dto) {
 		repository.findById(idPrestamo).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
 				String.format("El prestamo con id %d  no existe.", idPrestamo)));
-		int noPago = saldosDao.getNoPago(dto.getId());
+		int noPago = saldosDao.getNoPago(idPrestamo);
 		dto.setNoPago(noPago);
 		return saldosDao.insertSaldoPrestamo(dto);
 	}
