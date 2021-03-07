@@ -23,4 +23,5 @@ public class ReporteAhorroRowMapper  implements RowMapper<ReporteAhorroDto> {
 		result.setTotal(rs.getBigDecimal("total")!= null ? rs.getBigDecimal("total"): BigDecimal.ZERO);
 		return result;
 	}
+	
 }

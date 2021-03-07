@@ -37,7 +37,6 @@ public class AhorroController {
 	@Autowired
 	private SaldoAhorroService service;
 	
-	
 	@GetMapping("/ahorros")
 	public ResponseEntity<Page<ReporteAhorroDto>> findAllAvalesByFiltros(@RequestParam Map<String, String> parameters) {
 		return new ResponseEntity<>(service.getPagedReporteAhorroByFiltros(parameters), HttpStatus.OK);

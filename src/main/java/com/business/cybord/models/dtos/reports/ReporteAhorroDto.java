@@ -19,7 +19,6 @@ public class ReporteAhorroDto implements Serializable {
 	private BigDecimal ahorro;
 	private BigDecimal ajuste;
 	private BigDecimal interes;
-	
 
 	public Integer getIdUsuario() {
 		return idUsuario;

@@ -1,6 +1,5 @@
 package com.business.cybord.controllers;
 
-
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,6 +27,7 @@ import com.business.cybord.models.dtos.InteresGeneradoLogDto;
 import com.business.cybord.models.dtos.PrestamoDto;
 import com.business.cybord.models.dtos.RecursoDto;
 import com.business.cybord.models.dtos.SaldoPrestamoDto;
+import com.business.cybord.models.dtos.reports.ReportePrestamoDto;
 import com.business.cybord.services.PrestamoService;
 
 @RestController
@@ -36,11 +36,22 @@ public class PrestamoController {
 
 	@Autowired
 	private PrestamoService service;
-	
+
 	@GetMapping("/prestamos")
-	public ResponseEntity<Page<PrestamoDto>> findAllAvalesByFiltros(
-			@RequestParam Map<String, String> parameters) {
+	public ResponseEntity<Page<PrestamoDto>> findAllAvalesByFiltros(@RequestParam Map<String, String> parameters) {
 		return new ResponseEntity<>(service.findPrestamosByFiltros(parameters), HttpStatus.OK);
+	}
+
+	@GetMapping("/prestamos-usuarios")
+	public ResponseEntity<Page<ReportePrestamoDto>> getPagedReportePrestamosByFiltros(
+			@RequestParam Map<String, String> parameters) {
+		return new ResponseEntity<>(service.getPagedReportePrestamosByFiltros(parameters), HttpStatus.OK);
+	}
+
+	@GetMapping("/prestamos-usuarios/report")
+	public ResponseEntity<RecursoDto> getPagedReportePrestamosByFiltrosReport(
+			@RequestParam Map<String, String> parameters) throws IOException {
+		return new ResponseEntity<>(service.getPagedReportePrestamosByFiltrosReport(parameters), HttpStatus.OK);
 	}
 
 	@GetMapping("/usuarios/{idUsuario}/prestamos")
@@ -53,18 +64,17 @@ public class PrestamoController {
 			@RequestBody @Valid PrestamoDto dto) {
 		return new ResponseEntity<>(service.insertPrestamo(idUsuario, dto), HttpStatus.CREATED);
 	}
-	
+
 	@GetMapping("/usuarios/{idUsuario}/prestamos/pendientes")
 	public ResponseEntity<List<PrestamoDto>> getPrestamosByUsuariosPendientes(@PathVariable Integer idUsuario) {
 		return new ResponseEntity<>(service.getPrestamosdeUnUsuarioByIdNotCompleted(idUsuario), HttpStatus.OK);
 	}
-	
 
 	@GetMapping("/usuarios/{idUsuario}/prestamos/{idPrestamo}/saldos/{idSaldo}")
 	public ResponseEntity<PrestamoDto> getPrestamoPorIdPrestamoYIdusuarioYIdSaldo(@PathVariable Integer idUsuario,
 			@PathVariable Integer idPrestamo, @PathVariable Integer idSaldo) {
-		return new ResponseEntity<>(service.getPrestamoByIdPrestamoAndIdusuarioAndIdSaldo(idUsuario, idPrestamo, idSaldo),
-				HttpStatus.OK);
+		return new ResponseEntity<>(
+				service.getPrestamoByIdPrestamoAndIdusuarioAndIdSaldo(idUsuario, idPrestamo, idSaldo), HttpStatus.OK);
 	}
 
 	@PostMapping("/prestamos/generar-saldo")
@@ -72,15 +82,16 @@ public class PrestamoController {
 		return new ResponseEntity<>(service.generarSaldoPrestamo(), HttpStatus.CREATED);
 
 	}
-	
+
 	@GetMapping("/saldo-prestamos")
-	public ResponseEntity<Page<SaldoPrestamoDto>> getPrestamosyParams(@RequestParam Map<String, String> parameters){
-		return new ResponseEntity<>(service.getPrestamosyParams(parameters), HttpStatus.OK);	
+	public ResponseEntity<Page<SaldoPrestamoDto>> getPrestamosyParams(@RequestParam Map<String, String> parameters) {
+		return new ResponseEntity<>(service.getPrestamosyParams(parameters), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/saldo-prestamos/report")
-	public ResponseEntity<RecursoDto> getPrestamosReportParams(@RequestParam Map<String, String> parameters) throws IOException{
-		return new ResponseEntity<>(service.getPrestamosReportParams(parameters), HttpStatus.OK);	
+	public ResponseEntity<RecursoDto> getPrestamosReportParams(@RequestParam Map<String, String> parameters)
+			throws IOException {
+		return new ResponseEntity<>(service.getPrestamosReportParams(parameters), HttpStatus.OK);
 	}
 
 	@PostMapping("/prestamos/{idPrestamo}/saldos")
@@ -88,32 +99,34 @@ public class PrestamoController {
 			@RequestBody @Valid SaldoPrestamoDto saldo) {
 		return new ResponseEntity<>(service.insertPagoPrestamo(idPrestamo, saldo), HttpStatus.CREATED);
 	}
-	
+
 	@PutMapping("/saldo-prestamos/{idSaldo}")
 	public ResponseEntity<SaldoPrestamoDto> updatePagoPrestamo(@PathVariable Integer idSaldo,
 			@RequestBody @Valid SaldoPrestamoDto saldo) {
 		return new ResponseEntity<>(service.updatePagoPrestamo(idSaldo, saldo), HttpStatus.OK);
 	}
 
-	
 	@PostMapping("/prestamos/{idPrestamo}/traspasar-prestamo")
-	public ResponseEntity<List<PrestamoDto>> traspasarPrestamo(@PathVariable Integer idPrestamo){
+	public ResponseEntity<List<PrestamoDto>> traspasarPrestamo(@PathVariable Integer idPrestamo) {
 		return new ResponseEntity<>(service.traspasarPrestamo(idPrestamo), HttpStatus.CREATED);
 	}
-	
+
 	@PostMapping("/usuarios/{idUsuario}/traspasar-prestamo")
-	public ResponseEntity<List<PrestamoDto>> traspasarPrestamosUsuario(@PathVariable Integer idUsuario){
+	public ResponseEntity<List<PrestamoDto>> traspasarPrestamosUsuario(@PathVariable Integer idUsuario) {
 		return new ResponseEntity<>(service.trasparPrestamosUsuario(idUsuario), HttpStatus.CREATED);
 	}
-	
+
 	@GetMapping("/calculo-interes")
 	public ResponseEntity<CalculoInteresDto> calculoInteres(
-			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")  LocalDateTime fechaInicial, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")  LocalDateTime fechaFinal, @RequestParam String tipoUsuario){
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime fechaInicial,
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime fechaFinal,
+			@RequestParam String tipoUsuario) {
 		return new ResponseEntity<>(service.calculoInteres(tipoUsuario, fechaInicial, fechaFinal), HttpStatus.OK);
 	}
-	
+
 	@PostMapping("/generacion-renglon-interes")
-	public ResponseEntity<InteresGeneradoLogDto> generacionRenglonInteres(@RequestBody GeneracionRenglonDto generacionRenglonDto){
+	public ResponseEntity<InteresGeneradoLogDto> generacionRenglonInteres(
+			@RequestBody GeneracionRenglonDto generacionRenglonDto) {
 		return new ResponseEntity<>(service.generacionRenglonIntereses(generacionRenglonDto), HttpStatus.CREATED);
 	}
 

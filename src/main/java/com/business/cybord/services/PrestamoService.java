@@ -38,6 +38,7 @@ import com.business.cybord.models.dtos.InteresGeneradoLogDto;
 import com.business.cybord.models.dtos.PrestamoDto;
 import com.business.cybord.models.dtos.RecursoDto;
 import com.business.cybord.models.dtos.SaldoPrestamoDto;
+import com.business.cybord.models.dtos.reports.ReportePrestamoDto;
 import com.business.cybord.models.entities.InteresGeneradoLog;
 import com.business.cybord.models.entities.Prestamo;
 import com.business.cybord.models.entities.SaldoAhorro;
@@ -53,14 +54,12 @@ import com.business.cybord.repositories.SaldoAhorroRepository;
 import com.business.cybord.repositories.UsuariosRepository;
 import com.business.cybord.repositories.ValidacionAvalRepository;
 import com.business.cybord.repositories.dao.SaldoPrestamoDao;
+import com.business.cybord.repositories.dao.reportes.ReportePrestamoDao;
 import com.business.cybord.utils.builder.CalculoInteresDtoBuilder;
 import com.business.cybord.utils.builder.InteresGeneradoLogBuilder;
 import com.business.cybord.utils.builder.PrestamoBuilder;
 import com.business.cybord.utils.builder.SaldoAhorroBuilder;
 import com.business.cybord.utils.builder.SaldoPrestamoBuilder;
-
-
-
 
 @Service
 public class PrestamoService {
@@ -103,9 +102,41 @@ public class PrestamoService {
 
 	@Autowired
 	private CajaUtilityService cajaUtilityService;
+	
+	@Autowired
+	private ReportePrestamoDao reportePrestamoDao;
 
 	private static final Logger log = LoggerFactory.getLogger(PrestamoService.class);
 
+	public Page<ReportePrestamoDto> getPagedReportePrestamosByFiltros(Map<String, String> parameters) {
+		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
+		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
+
+		return reportePrestamoDao.findAll(parameters, cajaUtilityService.getInicioCajaActual(),
+				cajaUtilityService.getFinCajaActual(), PageRequest.of(page, size));
+	}
+	
+	public RecursoDto getPagedReportePrestamosByFiltrosReport(Map<String, String> parameters) throws IOException {
+		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
+		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
+
+		Page<ReportePrestamoDto> prestamos = reportePrestamoDao.findAll(parameters, cajaUtilityService.getInicioCajaActual(),
+				cajaUtilityService.getFinCajaActual(), PageRequest.of(page, size));
+
+		List<Map<String, String>> data = prestamos.getContent().stream().map(s -> {
+			Map<String, String> map = new HashMap<>();
+			map.put("ID USUARIO", s.getIdUsuario().toString());
+			map.put("TIPO USUARIO", s.getTipoUsuario());
+			map.put("NO EMPLEADO", s.getNoEmpleado());
+			map.put("NOMBRE", s.getNombre());
+			map.put("MONTO AJUSTE", s.getAjuste().setScale(2, RoundingMode.HALF_UP).toString());
+			map.put("MONTO INTERES", s.getInteres().setScale(2, RoundingMode.HALF_UP).toString());
+			return map;
+		}).collect(Collectors.toList());
+
+		return reportService.generateBase64Report("PRESTAMOS USUARIOS", data);
+	}
+	
 	public Page<PrestamoDto> findPrestamosByFiltros(Map<String, String> parameters) {
 		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
 		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));

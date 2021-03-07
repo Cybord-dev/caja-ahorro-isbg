@@ -35,6 +35,8 @@ public class ReporteAhorroDao {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
+	private static final Logger log = LoggerFactory.getLogger(ReporteAhorroDao.class);
+	
 	private static final   String TOTAL="(SELECT "
 									+ "		SUM(B.monto) AS monto"
 									+ "	FROM saldo_ahorro B"
@@ -49,7 +51,7 @@ public class ReporteAhorroDao {
 				+ "	    and fecha_creacion between 'f1' and 'f2'"
 				+ "        and tipo='?') as ?";
 
-	private static final Logger log = LoggerFactory.getLogger(ReporteAhorroDao.class);
+	
 
 	public Page<ReporteAhorroDto> findAll(Map<String, String> parameters,LocalDate since, LocalDate to, Pageable pageable) {
 		int total = jdbcTemplate.queryForObject(count(parameters), new Object[] {}, (rs, rowNum) -> rs.getInt(1));
@@ -77,6 +79,7 @@ public class ReporteAhorroDao {
 		usuarios.addColumn("ahorro", "String", null);
 		usuarios.addColumn("ajuste", "String", null);
 		usuarios.addColumn("interes", "String", null);
+		usuarios.addColumn("retiro", "String", null);
 
 		SelectQuery select = new SelectQuery().addFromTable(usuarios)
 				.addColumns(usuarios.findColumns("id_usuario"))
@@ -86,7 +89,8 @@ public class ReporteAhorroDao {
 				.addColumns(usuarios.findColumns("total"))
 				.addColumns(usuarios.findColumns("ahorro"))
 				.addColumns(usuarios.findColumns("ajuste"))
-				.addColumns(usuarios.findColumns("interes"));
+				.addColumns(usuarios.findColumns("interes"))
+				.addColumns(usuarios.findColumns("retiro"));
 
 		for (UsuarioAhorroFilterEnum usuario : UsuarioAhorroFilterEnum.values()) {
 			if (parameters.containsKey(usuario.getParamName())) {
@@ -138,7 +142,9 @@ public class ReporteAhorroDao {
 		return query.replace("t0.total", TOTAL)
 		.replace("t0.ahorro", VALOR.replace("?", "ahorro").replace("f1", since.format(formatter)).replace("f2", to.format(formatter)))
 		.replace("t0.ajuste", VALOR.replace("?", "ajuste").replace("f1", since.format(formatter)).replace("f2", to.format(formatter)))
-		.replace("t0.interes", VALOR.replace("?", "interes").replace("f1", since.format(formatter)).replace("f2", to.format(formatter)));
+		.replace("t0.interes", VALOR.replace("?", "interes").replace("f1", since.format(formatter)).replace("f2", to.format(formatter)))
+		.replace("t0.retiro", VALOR.replace("?", "retiro").replace("f1", since.format(formatter)).replace("f2", to.format(formatter)));
+		
 	}
 	
 }
