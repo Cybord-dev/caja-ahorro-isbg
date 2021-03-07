@@ -16,6 +16,7 @@ public class ReporteAhorroRowMapper  implements RowMapper<ReporteAhorroDto> {
 		result.setAhorro(rs.getBigDecimal("ahorro")!= null ? rs.getBigDecimal("ahorro"): BigDecimal.ZERO);
 		result.setAjuste(rs.getBigDecimal("ajuste")!= null ? rs.getBigDecimal("ajuste"): BigDecimal.ZERO);
 		result.setInteres(rs.getBigDecimal("interes")!=null ? rs.getBigDecimal("interes"): BigDecimal.ZERO);
+		result.setRetiro(rs.getBigDecimal("retiro")!=null ? rs.getBigDecimal("retiro"): BigDecimal.ZERO);
 		result.setIdUsuario(rs.getInt("id_usuario"));
 		result.setTipoUsuario(rs.getString("tipo_usuario"));
 		result.setNoEmpleado(rs.getString("no_empleado"));

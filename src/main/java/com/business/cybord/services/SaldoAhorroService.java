@@ -120,6 +120,7 @@ public class SaldoAhorroService {
 			map.put("NOMBRE", s.getNombre());
 			map.put("MONTO AHORRO", s.getAhorro().setScale(2, RoundingMode.HALF_UP).toString());
 			map.put("MONTO AJUSTE", s.getAjuste().setScale(2, RoundingMode.HALF_UP).toString());
+			map.put("MONTO RETIRO", s.getRetiro().setScale(2, RoundingMode.HALF_UP).toString());
 			map.put("MONTO INTERES", s.getInteres().setScale(2, RoundingMode.HALF_UP).toString());
 			map.put("AHORRO TOTAL", s.getTotal().setScale(2, RoundingMode.HALF_UP).toString());
 			return map;

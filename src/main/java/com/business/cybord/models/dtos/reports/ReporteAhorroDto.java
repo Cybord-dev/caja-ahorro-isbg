@@ -18,6 +18,7 @@ public class ReporteAhorroDto implements Serializable {
 	private BigDecimal total;
 	private BigDecimal ahorro;
 	private BigDecimal ajuste;
+	private BigDecimal retiro;
 	private BigDecimal interes;
 
 	public Integer getIdUsuario() {
@@ -75,6 +76,14 @@ public class ReporteAhorroDto implements Serializable {
 	public void setAjuste(BigDecimal ajuste) {
 		this.ajuste = ajuste;
 	}
+	
+	public BigDecimal getRetiro() {
+		return retiro;
+	}
+
+	public void setRetiro(BigDecimal retiro) {
+		this.retiro = retiro;
+	}
 
 	public BigDecimal getInteres() {
 		return interes;
@@ -86,8 +95,8 @@ public class ReporteAhorroDto implements Serializable {
 
 	@Override
 	public String toString() {
-		return "ReporteAhorroDto [noEmpleado=" + noEmpleado + ", nombre=" + nombre + ", total=" + total + ", ahorro="
-				+ ahorro + ", ajuste=" + ajuste + ", interes=" + interes + "]";
+		return "ReporteAhorroDto [idUsuario=" + idUsuario + ", tipoUsuario=" + tipoUsuario + ", noEmpleado="
+				+ noEmpleado + ", nombre=" + nombre + ", total=" + total + ", ahorro=" + ahorro + ", ajuste=" + ajuste
+				+ ", retiro=" + retiro + ", interes=" + interes + "]";
 	}
-
 }
