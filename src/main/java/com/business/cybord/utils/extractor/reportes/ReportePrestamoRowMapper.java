@@ -20,7 +20,7 @@ public class ReportePrestamoRowMapper implements RowMapper<ReportePrestamoDto> {
 		result.setTipo(rs.getString("estatus"));
 		result.setTasaInteres(rs.getBigDecimal("tasa_interes") != null ? rs.getBigDecimal("tasa_interes") : BigDecimal.ZERO);
 		result.setInteres(rs.getBigDecimal("interes") != null ? rs.getBigDecimal("interes") : BigDecimal.ZERO);
-		result.setPagos(rs.getBigDecimal("pagos") != null ? rs.getBigDecimal("pagos") : BigDecimal.ZERO);
+		result.setPagos(rs.getBigDecimal("pago") != null ? rs.getBigDecimal("pago") : BigDecimal.ZERO);
 		result.setAjuste(rs.getBigDecimal("ajuste") != null ? rs.getBigDecimal("ajuste") : BigDecimal.ZERO);
 		result.setTotalPagado(
 				rs.getBigDecimal("total_pagado") != null ? rs.getBigDecimal("total_pagado") : BigDecimal.ZERO);

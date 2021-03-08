@@ -75,6 +75,7 @@ public class ReportePrestamoDao {
 		usuarios.addColumn("nombre", "String", null);
 		usuarios.addColumn("no_empleado", "String", null);
 
+		usuarios.addColumn("id_prestamo", "String", null);
 		prestamo.addColumn("estatus", "String", null);
 		prestamo.addColumn("interes_prestamo", "String", null);
 		prestamo.addColumn("tasa_interes", "String", null);
@@ -96,6 +97,7 @@ public class ReportePrestamoDao {
 				.addColumns(usuarios.findColumns("nombre"))
 				.addColumns(usuarios.findColumns("no_empleado"))
 				.addColumns(prestamo.findColumns("tasa_interes"))
+				.addColumns(prestamo.findColumns("id_prestamo"))
 				.addColumns(prestamo.findColumns("estatus"))
 				.addColumns(prestamo.findColumns("interes_prestamo"))
 				.addColumns(prestamo.findColumns("saldo_pendiente"))
@@ -180,7 +182,7 @@ public class ReportePrestamoDao {
 		return query.replace("t1.total_pagado", TOTAL)
 				.replace("t1.interes_prestamo", CASE)
 				.replace("t1.pagos",
-						VALOR.replace("?", "pagos").replace("f1", since.format(formatter)).replace("f2",
+						VALOR.replace("?", "pago").replace("f1", since.format(formatter)).replace("f2",
 								to.format(formatter)))
 				.replace("t1.ajuste",
 						VALOR.replace("?", "ajuste").replace("f1", since.format(formatter)).replace("f2",

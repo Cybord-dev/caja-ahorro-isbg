@@ -19,6 +19,7 @@ public class ReportePrestamoDto implements Serializable {
 	private String noEmpleado;
 	private String nombre;
 
+	private Integer idPrestamo;
 	private Integer idSolicitud;
 	private Integer noQuincenas;
 	private BigDecimal tasaInteres;
@@ -65,6 +66,14 @@ public class ReportePrestamoDto implements Serializable {
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
+	}
+	
+	public Integer getIdPrestamo() {
+		return idPrestamo;
+	}
+
+	public void setIdPrestamo(Integer idPrestamo) {
+		this.idPrestamo = idPrestamo;
 	}
 
 	public Integer getIdSolicitud() {
