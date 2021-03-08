@@ -38,17 +38,11 @@ public class PrestamoController {
 	private PrestamoService service;
 
 	@GetMapping("/prestamos")
-	public ResponseEntity<Page<PrestamoDto>> findAllAvalesByFiltros(@RequestParam Map<String, String> parameters) {
-		return new ResponseEntity<>(service.findPrestamosByFiltros(parameters), HttpStatus.OK);
-	}
-
-	@GetMapping("/prestamos-usuarios")
-	public ResponseEntity<Page<ReportePrestamoDto>> getPagedReportePrestamosByFiltros(
-			@RequestParam Map<String, String> parameters) {
+	public ResponseEntity<Page<ReportePrestamoDto>> findPrestamosByFiltros(@RequestParam Map<String, String> parameters) {
 		return new ResponseEntity<>(service.getPagedReportePrestamosByFiltros(parameters), HttpStatus.OK);
 	}
 
-	@GetMapping("/prestamos-usuarios/report")
+	@GetMapping("/prestamos/report")
 	public ResponseEntity<RecursoDto> getPagedReportePrestamosByFiltrosReport(
 			@RequestParam Map<String, String> parameters) throws IOException {
 		return new ResponseEntity<>(service.getPagedReportePrestamosByFiltrosReport(parameters), HttpStatus.OK);

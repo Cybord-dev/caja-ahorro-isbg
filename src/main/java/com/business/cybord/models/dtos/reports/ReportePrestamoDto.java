@@ -2,6 +2,8 @@ package com.business.cybord.models.dtos.reports;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -18,8 +20,9 @@ public class ReportePrestamoDto implements Serializable {
 	private String nombre;
 
 	private Integer idSolicitud;
-	private String estatus;
 	private Integer noQuincenas;
+	private BigDecimal tasaInteres;
+	private String tipo;
 
 	private BigDecimal montoPrestamo;
 	private BigDecimal interesPrestamo;
@@ -28,6 +31,9 @@ public class ReportePrestamoDto implements Serializable {
 	private BigDecimal pagos;
 	private BigDecimal ajuste;
 	private BigDecimal totalPagado;
+	
+	private LocalDate fechaCreacion;
+	private LocalDateTime fechaActualizacion;
 
 	public Integer getIdUsuario() {
 		return idUsuario;
@@ -68,21 +74,29 @@ public class ReportePrestamoDto implements Serializable {
 	public void setIdSolicitud(Integer idSolicitud) {
 		this.idSolicitud = idSolicitud;
 	}
-
-	public String getEstatus() {
-		return estatus;
-	}
-
-	public void setEstatus(String estatus) {
-		this.estatus = estatus;
-	}
-
+	
 	public Integer getNoQuincenas() {
 		return noQuincenas;
 	}
 
 	public void setNoQuincenas(Integer noQuincenas) {
 		this.noQuincenas = noQuincenas;
+	}
+	
+	public BigDecimal getTasaInteres() {
+		return tasaInteres;
+	}
+
+	public void setTasaInteres(BigDecimal tasaInteres) {
+		this.tasaInteres = tasaInteres;
+	}
+	
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
 	}
 
 	public BigDecimal getMontoPrestamo() {
@@ -140,11 +154,27 @@ public class ReportePrestamoDto implements Serializable {
 	public void setTotalPagado(BigDecimal totalPagado) {
 		this.totalPagado = totalPagado;
 	}
+	
+	public LocalDate getFechaCreacion() {
+		return fechaCreacion;
+	}
+
+	public void setFechaCreacion(LocalDate fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
+	}
+
+	public LocalDateTime getFechaActualizacion() {
+		return fechaActualizacion;
+	}
+
+	public void setFechaActualizacion(LocalDateTime fechaActualizacion) {
+		this.fechaActualizacion = fechaActualizacion;
+	}
 
 	@Override
 	public String toString() {
 		return "ReportePrestamoDto [idUsuario=" + idUsuario + ", tipoUsuario=" + tipoUsuario + ", noEmpleado="
-				+ noEmpleado + ", nombre=" + nombre + ", idSolicitud=" + idSolicitud + ", estatus=" + estatus
+				+ noEmpleado + ", nombre=" + nombre + ", idSolicitud=" + idSolicitud + ", tipo=" + tipo
 				+ ", noQuincenas=" + noQuincenas + ", montoPrestamo=" + montoPrestamo + ", interesPrestamo="
 				+ interesPrestamo + ", saldoPendiente=" + saldoPendiente + ", interes=" + interes + ", pagos=" + pagos
 				+ ", ajuste=" + ajuste + ", totalPagado=" + totalPagado + "]";

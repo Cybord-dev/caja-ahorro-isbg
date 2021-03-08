@@ -17,6 +17,8 @@ public class ReportePrestamoRowMapper implements RowMapper<ReportePrestamoDto> {
 				rs.getBigDecimal("interes_prestamo") != null ? rs.getBigDecimal("interes_prestamo") : BigDecimal.ZERO);
 		result.setSaldoPendiente(
 				rs.getBigDecimal("saldo_pendiente") != null ? rs.getBigDecimal("saldo_pendiente") : BigDecimal.ZERO);
+		result.setTipo(rs.getString("estatus"));
+		result.setTasaInteres(rs.getBigDecimal("tasa_interes") != null ? rs.getBigDecimal("tasa_interes") : BigDecimal.ZERO);
 		result.setInteres(rs.getBigDecimal("interes") != null ? rs.getBigDecimal("interes") : BigDecimal.ZERO);
 		result.setPagos(rs.getBigDecimal("pagos") != null ? rs.getBigDecimal("pagos") : BigDecimal.ZERO);
 		result.setAjuste(rs.getBigDecimal("ajuste") != null ? rs.getBigDecimal("ajuste") : BigDecimal.ZERO);
@@ -31,6 +33,8 @@ public class ReportePrestamoRowMapper implements RowMapper<ReportePrestamoDto> {
 		result.setNombre(rs.getString("nombre"));
 		result.setMontoPrestamo(
 				rs.getBigDecimal("monto") != null ? rs.getBigDecimal("monto") : BigDecimal.ZERO);
+		result.setFechaCreacion(rs.getDate("fecha_creacion").toLocalDate());
+		result.setFechaActualizacion(rs.getTimestamp("fecha_actualizacion").toLocalDateTime());
 		return result;
 	}
 

@@ -5,8 +5,10 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -102,41 +104,62 @@ public class PrestamoService {
 
 	@Autowired
 	private CajaUtilityService cajaUtilityService;
-	
+
 	@Autowired
 	private ReportePrestamoDao reportePrestamoDao;
+
+	private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
 
 	private static final Logger log = LoggerFactory.getLogger(PrestamoService.class);
 
 	public Page<ReportePrestamoDto> getPagedReportePrestamosByFiltros(Map<String, String> parameters) {
 		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
 		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
+		LocalDate start = parameters.containsKey("since") ? LocalDate.parse(parameters.get("since"), formatter)
+				: cajaUtilityService.getInicioCajaActual();
+		LocalDate end = parameters.containsKey("to") ? LocalDate.parse(parameters.get("to"), formatter)
+				: cajaUtilityService.getFinCajaActual();
 
-		return reportePrestamoDao.findAll(parameters, cajaUtilityService.getInicioCajaActual(),
-				cajaUtilityService.getFinCajaActual(), PageRequest.of(page, size));
+		return reportePrestamoDao.findAll(parameters, start, end, PageRequest.of(page, size));
 	}
-	
+
 	public RecursoDto getPagedReportePrestamosByFiltrosReport(Map<String, String> parameters) throws IOException {
 		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
 		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
 
-		Page<ReportePrestamoDto> prestamos = reportePrestamoDao.findAll(parameters, cajaUtilityService.getInicioCajaActual(),
-				cajaUtilityService.getFinCajaActual(), PageRequest.of(page, size));
+		LocalDate start = parameters.containsKey("since") ? LocalDate.parse(parameters.get("since"), formatter)
+				: cajaUtilityService.getInicioCajaActual();
+		LocalDate end = parameters.containsKey("to") ? LocalDate.parse(parameters.get("to"), formatter)
+				: cajaUtilityService.getFinCajaActual();
+
+		Page<ReportePrestamoDto> prestamos = reportePrestamoDao.findAll(parameters, start, end,
+				PageRequest.of(page, size));
 
 		List<Map<String, String>> data = prestamos.getContent().stream().map(s -> {
 			Map<String, String> map = new HashMap<>();
+			map.put("ID SOLICITUD", s.getIdSolicitud().toString());
 			map.put("ID USUARIO", s.getIdUsuario().toString());
 			map.put("TIPO USUARIO", s.getTipoUsuario());
 			map.put("NO EMPLEADO", s.getNoEmpleado());
 			map.put("NOMBRE", s.getNombre());
-			map.put("MONTO AJUSTE", s.getAjuste().setScale(2, RoundingMode.HALF_UP).toString());
+			map.put("TIPO", s.getTipo());
+			map.put("MONTO PRESTAMO", s.getMontoPrestamo().setScale(2, RoundingMode.HALF_UP).toString());
+			map.put("TASA INTERES", s.getTasaInteres().setScale(2, RoundingMode.HALF_UP).toString());
+			map.put("NO QUINCENAS",s.getNoQuincenas().toString());
+			map.put("MONTO PAGOS", s.getPagos().setScale(2, RoundingMode.HALF_UP).toString());
 			map.put("MONTO INTERES", s.getInteres().setScale(2, RoundingMode.HALF_UP).toString());
+			map.put("MONTO AJUSTE", s.getAjuste().setScale(2, RoundingMode.HALF_UP).toString());
+			map.put("INTERES TOTAL",s.getInteresPrestamo().setScale(2, RoundingMode.HALF_UP).toString());
+			map.put("SALDO PENDIENTE",s.getSaldoPendiente().setScale(2, RoundingMode.HALF_UP).toString());
+			map.put("FECHA_CREACION", s.getFechaCreacion().toString());
+			map.put("FECHA_ACTUALIZACION", s.getFechaActualizacion().toString());
+			
 			return map;
 		}).collect(Collectors.toList());
 
 		return reportService.generateBase64Report("PRESTAMOS USUARIOS", data);
 	}
-	
+
 	public Page<PrestamoDto> findPrestamosByFiltros(Map<String, String> parameters) {
 		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
 		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
@@ -458,11 +481,8 @@ public class PrestamoService {
 		return prestamosCreados;
 	}
 
-	
-	
 	private SaldoPrestamoDto createSaldoPrestamoPago(Prestamo prestamo, int noPago) {
-		SaldoPrestamoDto saldoPrestamo = new SaldoPrestamoBuilder().setIdPrestamo(prestamo.getId())
-				.setNoPago(noPago)
+		SaldoPrestamoDto saldoPrestamo = new SaldoPrestamoBuilder().setIdPrestamo(prestamo.getId()).setNoPago(noPago)
 				.setIdUsuario(prestamo.getIdDeudor()).setMontoPrestamo(prestamo.getMonto())
 				.setNoQuincenas(prestamo.getNoQuincenas()).setSaldoPendiente(prestamo.getSaldoPendiente())
 				.setTipo(TipoSaldoPrestamoEnum.PAGO.name())
@@ -482,8 +502,7 @@ public class PrestamoService {
 	}
 
 	private SaldoPrestamoDto createSaldoPrestamoInteres(Prestamo prestamo, int noPago) {
-		SaldoPrestamoDto saldoPrestamo = new SaldoPrestamoBuilder().setIdPrestamo(prestamo.getId())
-				.setNoPago(noPago)
+		SaldoPrestamoDto saldoPrestamo = new SaldoPrestamoBuilder().setIdPrestamo(prestamo.getId()).setNoPago(noPago)
 				.setIdUsuario(prestamo.getIdDeudor()).setMontoPrestamo(prestamo.getMonto())
 				.setNoQuincenas(prestamo.getNoQuincenas()).setSaldoPendiente(prestamo.getSaldoPendiente())
 				.setTipo(TipoSaldoPrestamoEnum.INTERES.name())

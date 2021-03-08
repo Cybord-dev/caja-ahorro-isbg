@@ -37,8 +37,7 @@ public class ReportePrestamoDao {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
-	private static final String CASE = "case when t1.estatus='A_PAGAR_POR_AVAL'" + "        then 0" + "        else"
-			+ "			t1.no_quincenas*t1.monto*.01" + "		end as interes_prestamo";
+	private static final String CASE = "if(t1.estatus ='TRASPASADO', 0, t1.no_quincenas*t1.monto*.01 ) as interes_prestamo";
 
 	private static final String TOTAL = "(SELECT " + "		SUM(C.monto) AS monto" + "	FROM saldo_prestamo C"
 			+ "	where t1.id_prestamo=C.id_prestamo" + "		and validado=true) as total_pagado";
@@ -76,7 +75,9 @@ public class ReportePrestamoDao {
 		usuarios.addColumn("nombre", "String", null);
 		usuarios.addColumn("no_empleado", "String", null);
 
+		prestamo.addColumn("estatus", "String", null);
 		prestamo.addColumn("interes_prestamo", "String", null);
+		prestamo.addColumn("tasa_interes", "String", null);
 		prestamo.addColumn("saldo_pendiente", "String", null);
 		prestamo.addColumn("interes", "String", null);
 		prestamo.addColumn("pagos", "String", null);
@@ -85,6 +86,8 @@ public class ReportePrestamoDao {
 		prestamo.addColumn("id_solicitud", "String", null);
 		prestamo.addColumn("no_quincenas", "String", null);
 		prestamo.addColumn("monto", "String", null);
+		prestamo.addColumn("fecha_creacion", "String", null);
+		prestamo.addColumn("fecha_actualizacion", "String", null);
 
 		SelectQuery select = new SelectQuery().addFromTable(prestamo)
 				.addJoin(SelectQuery.JoinType.INNER,prestamo , usuarios, BinaryCondition.equalTo(columnA, columnB))
@@ -92,6 +95,8 @@ public class ReportePrestamoDao {
 				.addColumns(usuarios.findColumns("tipo_usuario"))
 				.addColumns(usuarios.findColumns("nombre"))
 				.addColumns(usuarios.findColumns("no_empleado"))
+				.addColumns(prestamo.findColumns("tasa_interes"))
+				.addColumns(prestamo.findColumns("estatus"))
 				.addColumns(prestamo.findColumns("interes_prestamo"))
 				.addColumns(prestamo.findColumns("saldo_pendiente"))
 				.addColumns(prestamo.findColumns("interes"))
@@ -100,7 +105,9 @@ public class ReportePrestamoDao {
 				.addColumns(prestamo.findColumns("total_pagado"))
 				.addColumns(prestamo.findColumns("id_solicitud"))
 				.addColumns(prestamo.findColumns("no_quincenas"))
-				.addColumns(prestamo.findColumns("monto"));
+				.addColumns(prestamo.findColumns("monto"))
+				.addColumns(prestamo.findColumns("fecha_creacion"))
+				.addColumns(prestamo.findColumns("fecha_actualizacion"));
 				
 
 		for (UsuarioAhorroFilterEnum usuario : UsuarioAhorroFilterEnum.values()) {
