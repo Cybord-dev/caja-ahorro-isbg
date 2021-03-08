@@ -50,7 +50,7 @@ public class ReportePrestamoDao {
 
 	public Page<ReportePrestamoDto> findAll(Map<String, String> parameters, LocalDate since, LocalDate to,
 			Pageable pageable) {
-		int total = jdbcTemplate.queryForObject(count(parameters), new Object[] {}, (rs, rowNum) -> rs.getInt(1));
+		int total = jdbcTemplate.queryForObject(count(parameters, since, to), new Object[] {}, (rs, rowNum) -> rs.getInt(1));
 
 		List<ReportePrestamoDto> rows = jdbcTemplate.query(new PreparedStatementCreator() {
 			@Override
@@ -75,7 +75,7 @@ public class ReportePrestamoDao {
 		usuarios.addColumn("nombre", "String", null);
 		usuarios.addColumn("no_empleado", "String", null);
 
-		usuarios.addColumn("id_prestamo", "String", null);
+		prestamo.addColumn("id_prestamo", "String", null);
 		prestamo.addColumn("estatus", "String", null);
 		prestamo.addColumn("interes_prestamo", "String", null);
 		prestamo.addColumn("tasa_interes", "String", null);
@@ -109,7 +109,9 @@ public class ReportePrestamoDao {
 				.addColumns(prestamo.findColumns("no_quincenas"))
 				.addColumns(prestamo.findColumns("monto"))
 				.addColumns(prestamo.findColumns("fecha_creacion"))
-				.addColumns(prestamo.findColumns("fecha_actualizacion"));
+				.addColumns(prestamo.findColumns("fecha_actualizacion"))
+				.addCondition(BinaryCondition.greaterThanOrEq(prestamo.findColumn("fecha_creacion"), since))
+				.addCondition(BinaryCondition.lessThanOrEq(prestamo.findColumn("fecha_creacion"), to));
 				
 
 		for (UsuarioAhorroFilterEnum usuario : UsuarioAhorroFilterEnum.values()) {
@@ -136,11 +138,11 @@ public class ReportePrestamoDao {
 		String query = select.toString().concat(" " + SqlConstants.LIMIT + " " + pageable.getPageSize() + " "
 				+ SqlConstants.OFFSET + " " + pageable.getOffset());
 		log.info(query);
-		log.info(queryRefactor(query, parameters, since, to));
-		return queryRefactor(query, parameters, since, to);
+		log.info(queryRefactor(query, parameters, since));
+		return queryRefactor(query, parameters, since);
 	}
 
-	public String count(Map<String, String> parameters) {
+	public String count(Map<String, String> parameters,LocalDate since, LocalDate to ) {
 		DbSchema schema = new DbSpec().addDefaultSchema();
 
 		DbTable usuarios = schema.addTable("usuarios");
@@ -150,7 +152,9 @@ public class ReportePrestamoDao {
 		DbColumn columnB = new DbColumn(usuarios, "id_usuario", "integer", 0);
 
 		SelectQuery selectByParams = new SelectQuery().addFromTable(usuarios).addCustomColumns(FunctionCall.countAll())
-				.addJoin(SelectQuery.JoinType.INNER, usuarios, prestamo, BinaryCondition.equalTo(columnA, columnB));
+				.addJoin(SelectQuery.JoinType.INNER, usuarios, prestamo, BinaryCondition.equalTo(columnA, columnB))
+				.addCondition(BinaryCondition.greaterThanOrEq(prestamo.findColumn("fecha_creacion"), since))
+				.addCondition(BinaryCondition.lessThanOrEq(prestamo.findColumn("fecha_creacion"), to));
 
 		for (UsuarioAhorroFilterEnum usuario : UsuarioAhorroFilterEnum.values()) {
 			if (parameters.containsKey(usuario.getParamName())) {
@@ -177,17 +181,17 @@ public class ReportePrestamoDao {
 		return selectByParams.toString();
 	}
 
-	private String queryRefactor(String query, Map<String, String> parameters, LocalDate since, LocalDate to) {
+	private String queryRefactor(String query, Map<String, String> parameters, LocalDate since) {
 		DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
 		return query.replace("t1.total_pagado", TOTAL)
 				.replace("t1.interes_prestamo", CASE)
 				.replace("t1.pagos",
 						VALOR.replace("?", "pago").replace("f1", since.format(formatter)).replace("f2",
-								to.format(formatter)))
+								LocalDate.now().format(formatter)))
 				.replace("t1.ajuste",
 						VALOR.replace("?", "ajuste").replace("f1", since.format(formatter)).replace("f2",
-								to.format(formatter)))
+								LocalDate.now().format(formatter)))
 				.replace("t1.interes", VALOR.replace("?", "interes").replace("f1", since.format(formatter))
-						.replace("f2", to.format(formatter)));
+						.replace("f2", LocalDate.now().format(formatter)));
 	}
 }
