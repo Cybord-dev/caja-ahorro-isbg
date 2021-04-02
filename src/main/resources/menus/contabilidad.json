@@ -30,9 +30,9 @@
         "icon": "icon-globe"
       },
       {
-      	"name": "Conciliacion prestamos",
-      	"url": "/contabilidad/conciliacion-prestamos",
-      	"icon": "icon-calculator"
+      	"name": "Pagos prestamos",
+      	"url": "/contabilidad/pagos-prestamos",
+      	"icon": "icon-diamond"
       },
       {
         "name": "Reportes de ahorro",

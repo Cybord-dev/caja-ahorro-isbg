@@ -44,7 +44,7 @@ public class SaldoPrestamo {
 	private BigDecimal monto;
 
 	@Column(name = "validado")
-	private Boolean validado;
+	private String validado;
 	
 	@Column(name = "observaciones")
 	private String observaciones;
@@ -99,11 +99,11 @@ public class SaldoPrestamo {
 		this.monto = monto;
 	}
 
-	public Boolean getValidado() {
+	public String getValidado() {
 		return validado;
 	}
 
-	public void setValidado(Boolean validado) {
+	public void setValidado(String validado) {
 		this.validado = validado;
 	}
 	

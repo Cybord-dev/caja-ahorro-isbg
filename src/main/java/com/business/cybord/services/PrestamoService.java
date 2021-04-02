@@ -47,6 +47,7 @@ import com.business.cybord.models.entities.SaldoAhorro;
 import com.business.cybord.models.entities.Usuario;
 import com.business.cybord.models.entities.ValidacionAval;
 import com.business.cybord.models.enums.EstatusPrestamoEnum;
+import com.business.cybord.models.enums.SaldoPrestamoEstatus;
 import com.business.cybord.models.enums.TipoAhorroEnum;
 import com.business.cybord.models.enums.TipoSaldoPrestamoEnum;
 import com.business.cybord.models.enums.TipoUsuarioEnum;
@@ -197,7 +198,7 @@ public class PrestamoService {
 			map.put("MONTO", s.getMonto().toString());
 			map.put("NO PAGO", s.getNoPago().toString());
 			map.put("TIPO", s.getTipo());
-			map.put("VALIDADO", (s.getValidado() == Boolean.TRUE) ? "SI" : "NO");
+			map.put("VALIDADO", s.getValidado());
 			map.put("NO QUINCENAS", s.getNoQuincenas().toString());
 			map.put("MONTO PRESTAMO", s.getMontoPrestamo().toString());
 			map.put("SALDO PENDIENTE", s.getSaldoPendiente().toString());
@@ -255,6 +256,10 @@ public class PrestamoService {
 		dto.setNoPago(noPago);
 		return saldosDao.insertSaldoPrestamo(dto);
 	}
+	
+	public List<SaldoPrestamoDto> getPagosByIdPrestamoAndNoPago(Integer idPrestamo, Integer noPago){
+		return saldosDao.getSaldosByIdPrestamoAndNoPago(idPrestamo, noPago);
+	}
 
 	/**
 	 * Valida los pagos de un pretamos ligados al mismo idPrestamo y noPago, todos los pagos ligados
@@ -268,7 +273,9 @@ public class PrestamoService {
 		
 		List<SaldoPrestamoDto> saldos = saldosDao.getSaldosByIdPrestamoAndNoPago(idPrestamo, noPago);
 		
-		int updatedRecords = saldos.stream().map(s-> saldosDao.updateSaldoPrestamo(s.getId(), s)).reduce(0, (a,b)->a+b);
+		int updatedRecords = saldos.stream().map(s->{ 
+			s.setValidado(SaldoPrestamoEstatus.VALIDO.name());
+			return saldosDao.updateSaldoPrestamo(s.getId(), s);}).reduce(0, (a,b)->a+b);
 		
 		if (!saldos.isEmpty() && saldos.size() == updatedRecords) {
 			Prestamo prestamo = repository.findById(saldos.get(0).getIdPrestamo())
@@ -276,7 +283,7 @@ public class PrestamoService {
 							"El saldo no se encuentra ligado a ningun prestamo"));
 			
 			for (SaldoPrestamoDto saldo : saldos) {
-				saldo.setValidado(Boolean.TRUE);
+				saldo.setValidado(SaldoPrestamoEstatus.VALIDO.name());
 				saldo.setOrigen(validador);
 				if (!saldo.getTipo().equals(TipoSaldoPrestamoEnum.INTERES.name())) {
 					prestamo.setSaldoPendiente(prestamo.getSaldoPendiente().subtract(saldo.getMonto()));
@@ -506,7 +513,7 @@ public class PrestamoService {
 				.setNoQuincenas(prestamo.getNoQuincenas()).setSaldoPendiente(prestamo.getSaldoPendiente())
 				.setTipo(TipoSaldoPrestamoEnum.PAGO.name())
 				.setMonto(prestamo.getMonto().divide(new BigDecimal(prestamo.getNoQuincenas()), 2, RoundingMode.FLOOR))
-				.setValidado(false).setOrigen(Constants.ORIGEN_SISTEMA).build();
+				.setValidado(SaldoPrestamoEstatus.EN_VALIDACION.name()).setOrigen(Constants.ORIGEN_SISTEMA).build();
 		return saldosDao.insertSaldoPrestamo(saldoPrestamo);
 
 	}
@@ -527,13 +534,13 @@ public class PrestamoService {
 				.setTipo(TipoSaldoPrestamoEnum.INTERES.name())
 				.setMonto(prestamo.getMonto()
 						.multiply(prestamo.getTasaInteres().divide(new BigDecimal(100), 2, RoundingMode.FLOOR)))
-				.setValidado(false).setOrigen(Constants.ORIGEN_SISTEMA).build();
+				.setValidado(SaldoPrestamoEstatus.EN_VALIDACION.name()).setOrigen(Constants.ORIGEN_SISTEMA).build();
 		return saldosDao.insertSaldoPrestamo(saldoPrestamo);
 	}
 
 	private BigDecimal montoEfectivamentePagado(Prestamo prestamo) {
 		return prestamo.getSaldosPrestamo().stream()
-				.filter(sp -> !sp.getTipo().equals(TipoSaldoPrestamoEnum.INTERES.name())).filter(sp -> sp.getValidado())
+				.filter(sp -> !sp.getTipo().equals(TipoSaldoPrestamoEnum.INTERES.name())).filter(sp -> SaldoPrestamoEstatus.VALIDO.equals(SaldoPrestamoEstatus.valueOf(sp.getValidado())) )
 				.map(sp -> sp.getMonto()).reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
 	}
 

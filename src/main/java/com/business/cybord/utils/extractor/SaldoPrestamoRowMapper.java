@@ -25,7 +25,7 @@ public class SaldoPrestamoRowMapper implements RowMapper<SaldoPrestamoDto> {
 				.setTipo(rs.getString("tipo"))
 				.setOrigen(rs.getString("origen"))
 				.setMonto(rs.getBigDecimal("monto"))
-				.setValidado(rs.getBoolean("validado"))
+				.setValidado(rs.getString("validado"))
 				.setFechaCreacion(rs.getDate("fecha_creacion").toLocalDate())
 				.setFechaActualizacion(rs.getTimestamp("fecha_actualizacion").toLocalDateTime())
 				.build();

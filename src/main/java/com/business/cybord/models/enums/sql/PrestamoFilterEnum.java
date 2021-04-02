@@ -6,7 +6,7 @@ public enum PrestamoFilterEnum {
 	ID_PRESTAMO("idPrestamo", "id_prestamo", false),
 	ID_SOLICITUD("idSolicitud", "id_solicitud", false),
 	NO_QUINCENAS("noQuincenas", "no_quincenas", false),
-	ESTATUS("tipo", "estatus", false);
+	ESTATUS("estatus", "estatus", false);
 
 	
 	private String paramName;

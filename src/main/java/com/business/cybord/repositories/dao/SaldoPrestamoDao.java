@@ -65,7 +65,8 @@ public class SaldoPrestamoDao {
 
 	private static final String UPDATE_SALDPO_PRESTAMO = "UPDATE isbg.saldo_prestamo SET validado=?, origen=?,fecha_actualizacion= now() WHERE id_saldo_prestamo=?";
 	
-	private static final String SALDOS_BY_PRESTAMO_AND_NO_PAGO = "SELECT * FROM isbg.saldo_prestamo WHERE id_prestamo = ? AND no_pago = ?";
+	private static final String SALDOS_BY_PRESTAMO_AND_NO_PAGO = "SELECT sp.id_saldo_prestamo, sp.id_prestamo,p.id_deudor,sp.no_pago,p.monto  as monto_prestamo , p.saldo_pendiente, p.estatus, p.no_quincenas, p.tasa_interes,sp.tipo,sp.origen,sp.validado, sp.monto, sp.fecha_creacion , sp.fecha_actualizacion " + 
+			"FROM prestamo p  INNER JOIN saldo_prestamo sp ON sp.id_prestamo = p.id_prestamo WHERE sp.id_prestamo = ? AND sp.no_pago = ?";
 
 	private static final String SALDO_PRESTAMO_PERIODO = "SELECT SUM(saldo_prestamo.monto) FROM saldo_prestamo"
 			+ " INNER JOIN prestamo ON saldo_prestamo.id_prestamo = prestamo.id_prestamo"
@@ -103,7 +104,7 @@ public class SaldoPrestamoDao {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 				PreparedStatement ps = con.prepareStatement(UPDATE_SALDPO_PRESTAMO);
-				ps.setBoolean(1, saldo.getValidado());
+				ps.setString(1, saldo.getValidado());
 				ps.setString(2, saldo.getOrigen());
 				ps.setInt(3, id);
 				return ps;
@@ -229,7 +230,7 @@ public class SaldoPrestamoDao {
 								new CustomSql(String.format("%s.tasa_interes", pTbAlias)))
 						.addCustomColumns(new CustomSql(String.format("%s.fecha_creacion", spTbAlias)),
 								new CustomSql(String.format("%s.fecha_actualizacion", spTbAlias)),
-								new CustomSql(String.format("SUM(%s.validado) as validado", spTbAlias)),
+								new CustomSql(String.format("%s.validado", spTbAlias)),
 								new CustomSql(String.format("%s.origen", spTbAlias)),
 								new CustomSql(String.format("%s.tipo", spTbAlias)),
 								new CustomSql(String.format("%s.id_saldo_prestamo", spTbAlias)),
