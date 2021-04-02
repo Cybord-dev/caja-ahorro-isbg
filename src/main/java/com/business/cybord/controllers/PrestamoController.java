@@ -94,10 +94,10 @@ public class PrestamoController {
 		return new ResponseEntity<>(service.insertPagoPrestamo(idPrestamo, saldo), HttpStatus.CREATED);
 	}
 
-	@PutMapping("/saldo-prestamos/{idSaldo}")
-	public ResponseEntity<SaldoPrestamoDto> updatePagoPrestamo(@PathVariable Integer idSaldo,
-			@RequestBody @Valid SaldoPrestamoDto saldo) {
-		return new ResponseEntity<>(service.updatePagoPrestamo(idSaldo, saldo), HttpStatus.OK);
+	@PutMapping("/prestamos/{idPrestamo}/saldos/{noPago}")
+	public ResponseEntity<PrestamoDto> updatePagoPrestamo(@PathVariable Integer idPrestamo,@PathVariable Integer noPago,
+			@RequestBody String validador) {
+		return new ResponseEntity<>(service.updatePagoPrestamo(idPrestamo, noPago, validador), HttpStatus.OK);
 	}
 
 	@PostMapping("/prestamos/{idPrestamo}/traspasar-prestamo")

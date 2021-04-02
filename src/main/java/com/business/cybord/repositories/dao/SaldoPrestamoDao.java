@@ -37,6 +37,7 @@ import com.business.cybord.models.enums.sql.PrestamoFilterEnum;
 import com.business.cybord.models.enums.sql.SaldoPrestamoFilterEnum;
 import com.business.cybord.models.enums.sql.UsuariosFilterEnum;
 import com.business.cybord.utils.extractor.SaldoPrestamoReportRowMapper;
+import com.business.cybord.utils.extractor.SaldoPrestamoRowMapper;
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
 import com.healthmarketscience.sqlbuilder.CustomSql;
 import com.healthmarketscience.sqlbuilder.SelectQuery;
@@ -63,6 +64,8 @@ public class SaldoPrestamoDao {
 			+ "(id_prestamo,no_pago, tipo, monto, validado, origen,observaciones, fecha_creacion, fecha_actualizacion) VALUES(?, ? ,?, ?, ?, ?, ?, now(), now())";
 
 	private static final String UPDATE_SALDPO_PRESTAMO = "UPDATE isbg.saldo_prestamo SET validado=?, origen=?,fecha_actualizacion= now() WHERE id_saldo_prestamo=?";
+	
+	private static final String SALDOS_BY_PRESTAMO_AND_NO_PAGO = "SELECT * FROM isbg.saldo_prestamo WHERE id_prestamo = ? AND no_pago = ?";
 
 	private static final String SALDO_PRESTAMO_PERIODO = "SELECT SUM(saldo_prestamo.monto) FROM saldo_prestamo"
 			+ " INNER JOIN prestamo ON saldo_prestamo.id_prestamo = prestamo.id_prestamo"
@@ -106,6 +109,18 @@ public class SaldoPrestamoDao {
 				return ps;
 			}
 		});
+	}
+	
+	public List<SaldoPrestamoDto> getSaldosByIdPrestamoAndNoPago(Integer idPrestamo, Integer noPago){
+		return template.query(new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+				PreparedStatement ps = con.prepareStatement(SALDOS_BY_PRESTAMO_AND_NO_PAGO);
+				ps.setInt(1, idPrestamo);
+				ps.setInt(2, noPago);
+				return ps;
+			}
+		}, new SaldoPrestamoRowMapper());
 	}
 
 	public Page<SaldoPrestamoDto> findAll(Map<String, String> parameters, Pageable pageable) {
@@ -220,6 +235,7 @@ public class SaldoPrestamoDao {
 								new CustomSql(String.format("%s.id_saldo_prestamo", spTbAlias)),
 								new CustomSql(String.format("%s.observaciones", spTbAlias)),
 								new CustomSql(String.format("%s.id_prestamo", spTbAlias)),
+								new CustomSql(String.format("%s.no_pago", spTbAlias)),
 								new CustomSql(new CustomSql(String.format("SUM(%s.monto) as monto", spTbAlias)))),
 				prestamo, usuarios, saldoPrestamo, parameters);
 

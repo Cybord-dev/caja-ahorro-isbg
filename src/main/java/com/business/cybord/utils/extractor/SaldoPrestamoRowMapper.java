@@ -16,6 +16,7 @@ public class SaldoPrestamoRowMapper implements RowMapper<SaldoPrestamoDto> {
 				.setId(rs.getInt("id_saldo_prestamo"))
 				.setIdPrestamo(rs.getInt("id_prestamo"))
 				.setIdUsuario(rs.getInt("id_deudor"))
+				.setNoPago(rs.getInt("no_pago"))
 				.setMontoPrestamo(rs.getBigDecimal("monto_prestamo"))
 				.setSaldoPendiente(rs.getBigDecimal("saldo_pendiente"))
 				.setEstatus(rs.getString("estatus"))

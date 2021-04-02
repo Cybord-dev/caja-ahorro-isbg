@@ -79,9 +79,6 @@ public class PrestamoService {
 	private CatalogoService catalogoService;
 
 	@Autowired
-	private SaldoPrestamoService saldoPrestamoService;
-
-	@Autowired
 	private ValidacionAvalRepository avalRepository;
 
 	@Autowired
@@ -107,6 +104,13 @@ public class PrestamoService {
 
 	@Autowired
 	private ReportePrestamoDao reportePrestamoDao;
+	
+	
+
+	public Optional<BigDecimal> getSaldoPrestamoInteresByPeriod(String tipoUsuario, LocalDateTime fechaInicial,
+			LocalDateTime fechaFinal) {
+		return saldosDao.getSaldoPrestamoInteresesByPeriod(tipoUsuario, fechaInicial, fechaFinal);
+	}
 
 	private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
 
@@ -251,26 +255,41 @@ public class PrestamoService {
 		return saldosDao.insertSaldoPrestamo(dto);
 	}
 
+	/**
+	 * Valida los pagos de un pretamos ligados al mismo idPrestamo y noPago, todos los pagos ligados
+	 * seran validados y se cambiara el estatus a 1
+	 * @param idPrestamo identificador unico del prestamo
+	 * @param noPago no de pago
+	 * @return Regresala informacion del prestamo, descontando los pagos realizados
+	 */
 	@Transactional(rollbackOn = { DataAccessException.class, SQLException.class })
-	public SaldoPrestamoDto updatePagoPrestamo(Integer idSaldo, SaldoPrestamoDto dto) {
-
-		int updated = saldosDao.updateSaldoPrestamo(idSaldo, dto);
-		if (updated == 1 && dto.getValidado() && dto.getOrigen() != null) {
-			Prestamo prestamo = repository.findById(dto.getIdPrestamo())
+	public PrestamoDto updatePagoPrestamo(Integer idPrestamo, Integer noPago, String validador) {
+		
+		List<SaldoPrestamoDto> saldos = saldosDao.getSaldosByIdPrestamoAndNoPago(idPrestamo, noPago);
+		
+		int updatedRecords = saldos.stream().map(s-> saldosDao.updateSaldoPrestamo(s.getId(), s)).reduce(0, (a,b)->a+b);
+		
+		if (!saldos.isEmpty() && saldos.size() == updatedRecords) {
+			Prestamo prestamo = repository.findById(saldos.get(0).getIdPrestamo())
 					.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 							"El saldo no se encuentra ligado a ningun prestamo"));
-			if (!dto.getTipo().equals(TipoSaldoPrestamoEnum.INTERES.name())) {
-				prestamo.setSaldoPendiente(prestamo.getSaldoPendiente().subtract(dto.getMonto()));
-				if (prestamo.getSaldoPendiente().compareTo(BigDecimal.ZERO) <= 0) {
-					prestamo.setEstatus(EstatusPrestamoEnum.TERMINADO.name());
+			
+			for (SaldoPrestamoDto saldo : saldos) {
+				saldo.setValidado(Boolean.TRUE);
+				saldo.setOrigen(validador);
+				if (!saldo.getTipo().equals(TipoSaldoPrestamoEnum.INTERES.name())) {
+					prestamo.setSaldoPendiente(prestamo.getSaldoPendiente().subtract(saldo.getMonto()));
+					if (prestamo.getSaldoPendiente().compareTo(BigDecimal.ZERO) <= 0) {
+						prestamo.setEstatus(EstatusPrestamoEnum.TERMINADO.name());
+					}
 				}
-				log.info("Updating saldo pendiente del prestamo : {}", prestamo);
-				repository.save(prestamo);
 			}
+			log.info("Updating saldo pendiente del prestamo : {}", prestamo);
+			repository.save(prestamo);
+			return mapper.getDtoFromEntity(prestamo);
 		} else {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El saldo no fue correctamente actualizado");
-		}
-		return dto;
+		}	
 	}
 
 	@Transactional(rollbackOn = { DataAccessException.class, SQLException.class })
@@ -362,8 +381,8 @@ public class PrestamoService {
 
 		Optional<BigDecimal> saldoAhorroTotal = saldoAhorroService.getSaldosAhorroTotal();
 
-		Optional<BigDecimal> saldoPrestamoInteres = saldoPrestamoService
-				.getSaldoPrestamoInteresByPeriod(tipoUsuarioValue.getTipo(), fechaInicial, fechaFinal);
+		Optional<BigDecimal> saldoPrestamoInteres = saldosDao
+				.getSaldoPrestamoInteresesByPeriod(tipoUsuarioValue.getTipo(), fechaInicial, fechaFinal);
 
 		if (!saldoAhorroTotal.isPresent() || !saldoPrestamoInteres.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,

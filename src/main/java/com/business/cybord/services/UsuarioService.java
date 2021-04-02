@@ -212,7 +212,7 @@ public class UsuarioService {
 	private List<MenuItem> getMenuFromResource(String fileName) {
 		try {
 			List<MenuItem> menu = new ArrayList<>();
-			menu.add(new MenuItem(fileName, true));
+			//menu.add(new MenuItem(fileName, true));
 			InputStream is = Thread.currentThread().getContextClassLoader()
 					.getResourceAsStream(String.format("menus/%s.json", fileName));
 			if (is != null) {
