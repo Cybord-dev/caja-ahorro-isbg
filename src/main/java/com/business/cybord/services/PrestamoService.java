@@ -194,18 +194,19 @@ public class PrestamoService {
 
 		List<Map<String, String>> data = saldos.getContent().stream().map(s -> {
 			Map<String, String> map = new HashMap<>();
-			map.put("VALIDADO", (s.getValidado() == Boolean.TRUE) ? "SI" : "NO");
 			map.put("MONTO", s.getMonto().toString());
+			map.put("NO PAGO", s.getNoPago().toString());
+			map.put("TIPO", s.getTipo());
+			map.put("VALIDADO", (s.getValidado() == Boolean.TRUE) ? "SI" : "NO");
 			map.put("NO QUINCENAS", s.getNoQuincenas().toString());
-			map.put("TASA INTERES", String.format("%%%s", s.getTasaInteres().toString()));
-			map.put("TIPO EMPLEADO", s.getEstatus());
-			map.put("NO EMPLEADO", s.getNoEmpleado());
-			map.put("NOMBRE", s.getNombreEmpleado());
 			map.put("MONTO PRESTAMO", s.getMontoPrestamo().toString());
 			map.put("SALDO PENDIENTE", s.getSaldoPendiente().toString());
-			map.put("TIPO", s.getTipo());
+			map.put("TIPO EMPLEADO", s.getTipoUsuario());
+			map.put("NO EMPLEADO", s.getNoEmpleado());
+			map.put("NOMBRE", s.getNombreEmpleado());
 			map.put("ESTATUS", s.getEstatus());
 			map.put("MODIFICADO", s.getOrigen());
+			map.put("OBSERVACIONES", s.getObservaciones());
 			map.put("FECHA ALTA", s.getFechaCreacion().toString());
 			map.put("FECHA MODIFICACION", s.getFechaActualizacion().toString());
 			return map;
@@ -413,7 +414,6 @@ public class PrestamoService {
 	}
 
 	@Transactional(rollbackOn = { DataAccessException.class, SQLException.class, ResponseStatusException.class })
-
 	public InteresGeneradoLogDto generacionRenglonIntereses(GeneracionRenglonDto generacionRenglonDto) {
 
 		TipoUsuarioEnum tipoUsuarioValue;
