@@ -22,6 +22,11 @@
 			"name": "Reportes de prestamo",
 			"url": "/tesoreria/reportes-prestamo",
 			"icon": "icon-wallet"
-		}
+		},
+      	{
+      		"name": "Pagos prestamos",
+      		"url": "/tesoreria/pagos-prestamos",
+      		"icon": "icon-diamond"
+      	}
 	]
 }

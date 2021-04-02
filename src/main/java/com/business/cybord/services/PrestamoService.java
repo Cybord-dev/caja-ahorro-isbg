@@ -269,7 +269,7 @@ public class PrestamoService {
 	 * @return Regresala informacion del prestamo, descontando los pagos realizados
 	 */
 	@Transactional(rollbackOn = { DataAccessException.class, SQLException.class })
-	public PrestamoDto updatePagoPrestamo(Integer idPrestamo, Integer noPago, String validador) {
+	public PrestamoDto approvePagoPrestamo(Integer idPrestamo, Integer noPago, String validador) {
 		
 		List<SaldoPrestamoDto> saldos = saldosDao.getSaldosByIdPrestamoAndNoPago(idPrestamo, noPago);
 		
@@ -298,6 +298,18 @@ public class PrestamoService {
 		} else {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El saldo no fue correctamente actualizado");
 		}	
+	}
+	
+	@Transactional(rollbackOn = { DataAccessException.class, SQLException.class })
+	public void rejectPagoPrestamo(Integer idPrestamo, Integer noPago, String validador) {
+		
+		List<SaldoPrestamoDto> saldos = saldosDao.getSaldosByIdPrestamoAndNoPago(idPrestamo, noPago);
+		int updatedRecords = saldos.stream().map(s->{ 
+			s.setValidado(SaldoPrestamoEstatus.RECHAZADO.name());
+			return saldosDao.updateSaldoPrestamo(s.getId(), s);}).reduce(0, (a,b)->a+b);
+		if (saldos.size() != updatedRecords) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El saldo no fue correctamente actualizado");
+		} 
 	}
 
 	@Transactional(rollbackOn = { DataAccessException.class, SQLException.class })

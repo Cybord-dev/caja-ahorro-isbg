@@ -32,6 +32,11 @@
         "name": "Reportes de prestamo",
         "url": "/recursos-humanos/reportes-prestamo",
         "icon": "icon-wallet"
+      },
+      {
+      	"name": "Pagos prestamos",
+      	"url": "/recursos-humanos/pagos-prestamos",
+      	"icon": "icon-diamond"
       }
     ]
   }

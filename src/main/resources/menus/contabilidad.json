@@ -30,11 +30,6 @@
         "icon": "icon-globe"
       },
       {
-      	"name": "Pagos prestamos",
-      	"url": "/contabilidad/pagos-prestamos",
-      	"icon": "icon-diamond"
-      },
-      {
         "name": "Reportes de ahorro",
         "url": "/contabilidad/reportes-ahorro",
         "icon": "icon-envelope-letter"
@@ -43,6 +38,11 @@
         "name": "Reportes de prestamo",
         "url": "/contabilidad/reportes-prestamo",
         "icon": "icon-wallet"
+      },
+      {
+      	"name": "Pagos prestamos",
+      	"url": "/contabilidad/pagos-prestamos",
+      	"icon": "icon-diamond"
       }
     ]
   }

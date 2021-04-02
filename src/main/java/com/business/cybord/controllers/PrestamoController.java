@@ -99,10 +99,17 @@ public class PrestamoController {
 		return new ResponseEntity<>(service.getPagosByIdPrestamoAndNoPago(idPrestamo, noPago), HttpStatus.OK);
 	}
 
-	@PutMapping("/prestamos/{idPrestamo}/pagos/{noPago}")
-	public ResponseEntity<PrestamoDto> updatePagoPrestamo(@PathVariable Integer idPrestamo,@PathVariable Integer noPago,
+	@PutMapping("/prestamos/{idPrestamo}/pagos/{noPago}/aprobar")
+	public ResponseEntity<PrestamoDto> approvePagoPrestamo(@PathVariable Integer idPrestamo,@PathVariable Integer noPago,
 			@RequestBody String validador) {
-		return new ResponseEntity<>(service.updatePagoPrestamo(idPrestamo, noPago, validador), HttpStatus.OK);
+		return new ResponseEntity<>(service.approvePagoPrestamo(idPrestamo, noPago, validador), HttpStatus.OK);
+	}
+	
+	@PutMapping("/prestamos/{idPrestamo}/pagos/{noPago}/rechazar")
+	public ResponseEntity<Void> rejectPagoPrestamo(@PathVariable Integer idPrestamo,@PathVariable Integer noPago,
+			@RequestBody String validador) {
+		service.rejectPagoPrestamo(idPrestamo, noPago, validador);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@PostMapping("/prestamos/{idPrestamo}/traspasar-prestamo")
