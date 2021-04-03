@@ -1,17 +1,17 @@
 {
-    "name": "Gerencia Interna",
+    "name": "GERENCIA INTERNA",
     "url": "/gerencia-interna",
     "icon": "icon-user-follow",
    "children": [
       {
         "name": "Aprobaciónes",
         "url": "/gerencia-interna/validaciones",
-        "icon": "icon-check"
+        "icon": "icon-arrow-right"
       },
       {
         "name": "Historico validaciones",
         "url": "/gerencia-interna/historico",
-        "icon": "icon-list"
+        "icon": "icon-arrow-right"
       }
     ]
   }

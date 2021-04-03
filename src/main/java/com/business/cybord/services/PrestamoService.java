@@ -405,7 +405,7 @@ public class PrestamoService {
 				.getSaldoPrestamoInteresesByPeriod(tipoUsuarioValue.getTipo(), fechaInicial, fechaFinal);
 
 		if (!saldoAhorroTotal.isPresent() || !saldoPrestamoInteres.isPresent()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+			throw new ResponseStatusException(HttpStatus.CONFLICT,
 					"No existen intereses para el periodo o aun no existen ahorros");
 		} else {
 

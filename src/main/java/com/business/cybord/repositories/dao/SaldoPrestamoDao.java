@@ -71,7 +71,7 @@ public class SaldoPrestamoDao {
 	private static final String SALDO_PRESTAMO_PERIODO = "SELECT SUM(saldo_prestamo.monto) FROM saldo_prestamo"
 			+ " INNER JOIN prestamo ON saldo_prestamo.id_prestamo = prestamo.id_prestamo"
 			+ " INNER JOIN usuarios ON usuarios.id_usuario = prestamo.id_deudor"
-			+ " WHERE saldo_prestamo.tipo = ? AND saldo_prestamo.validado = 1 " + " AND usuarios.tipo_usuario = ? "
+			+ " WHERE saldo_prestamo.tipo = ? AND saldo_prestamo.validado = 'VALIDO' " + " AND usuarios.tipo_usuario = ? "
 			+ " AND saldo_prestamo.fecha_creacion BETWEEN ? AND ? ";
 
 	private static final String NO_PAGO = "SELECT IF(MAX(no_pago) IS NULL, 1, MAX(no_pago)+1) AS no_pago  FROM saldo_prestamo where id_prestamo = ?";
