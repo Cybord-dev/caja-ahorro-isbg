@@ -16,6 +16,11 @@ public class SaldoPrestamoBuilder extends AbstractBuilder<SaldoPrestamoDto> {
 		instance.setId(id);
 		return this;
 	}
+	
+	public SaldoPrestamoBuilder setNoPago(Integer noPago) {
+		instance.setNoPago(noPago);
+		return this;
+	}
 
 	public SaldoPrestamoBuilder setIdPrestamo(Integer idPrestamo) {
 		instance.setIdPrestamo(idPrestamo);
@@ -72,7 +77,7 @@ public class SaldoPrestamoBuilder extends AbstractBuilder<SaldoPrestamoDto> {
 		return this;
 	}
 
-	public SaldoPrestamoBuilder setValidado(Boolean validado) {
+	public SaldoPrestamoBuilder setValidado(String validado) {
 		instance.setValidado(validado);
 		return this;
 	}

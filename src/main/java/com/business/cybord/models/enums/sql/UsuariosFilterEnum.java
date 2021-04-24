@@ -1,6 +1,6 @@
 package com.business.cybord.models.enums.sql;
 
-public enum UsuariosFilterEnum {
+public enum UsuariosFilterEnum{
 
 	NOMBRE("nombre", "nombre", true),
 	NO_EMPLEADO("noEmpleado", "no_empleado", false),

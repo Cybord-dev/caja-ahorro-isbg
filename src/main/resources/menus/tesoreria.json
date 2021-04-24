@@ -1,27 +1,32 @@
 {
-	"name": "Tesoreria",
+	"name": "TESORERIA",
 	"url": "/tesoreria",
 	"icon": "icon-credit-card",
 	"children": [
 		{
 			"name": "Validacion de Retiros",
 			"url": "/tesoreria/validaciones",
-			"icon": "icon-check"
+			"icon": "icon-arrow-right"
 		},
 		{
 			"name": "Historico retiro",
 			"url": "/tesoreria/historico",
-			"icon": "icon-list"
+			"icon": "icon-arrow-right"
 		},
 		{
 			"name": "Reportes de ahorro",
 			"url": "/tesoreria/reportes-ahorro",
-			"icon": "icon-envelope-letter"
+			"icon": "icon-arrow-right"
 		},
 		{
 			"name": "Reportes de prestamo",
 			"url": "/tesoreria/reportes-prestamo",
-			"icon": "icon-wallet"
-		}
+			"icon": "icon-arrow-right"
+		},
+      	{
+      		"name": "Pagos prestamos",
+      		"url": "/tesoreria/pagos-prestamos",
+      		"icon": "icon-arrow-right"
+      	}
 	]
 }
