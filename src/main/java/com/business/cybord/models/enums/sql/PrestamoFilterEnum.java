@@ -2,10 +2,10 @@ package com.business.cybord.models.enums.sql;
 
 public enum PrestamoFilterEnum {
 
-	ID_DEUDOR("id_deudor", "id_deudor", false),
-	ID_PRESTAMO("id_prestamo", "id_prestamo", false),
-	ID_SOLICITUD("id_solicitud", "id_solicitud", false),
-	NO_QUINCENAS("no_quincenas", "no_quincenas", false),
+	ID_DEUDOR("idDeudor", "id_deudor", false),
+	ID_PRESTAMO("idPrestamo", "id_prestamo", false),
+	ID_SOLICITUD("idSolicitud", "id_solicitud", false),
+	NO_QUINCENAS("noQuincenas", "no_quincenas", false),
 	ESTATUS("estatus", "estatus", false);
 
 	

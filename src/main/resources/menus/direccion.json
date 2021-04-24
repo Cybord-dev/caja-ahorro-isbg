@@ -1,17 +1,17 @@
 {
-    "name": "Dirección",
+    "name": "DIRECCION",
     "url": "/direccion",
     "icon": "icon-user-follow",
    "children": [
       {
         "name": "Aprobaciónes",
         "url": "/direccion/validaciones",
-        "icon": "icon-check"
+        "icon": "icon-arrow-right"
       },
       {
         "name": "Historico validaciones",
         "url": "/direccion/historico",
-        "icon": "icon-list"
+        "icon": "icon-arrow-right"
       }
     ]
   }

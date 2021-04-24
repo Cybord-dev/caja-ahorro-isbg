@@ -29,6 +29,10 @@ public class SaldoPrestamo {
 
 	@Column(name = "id_prestamo")
 	private int idPrestamo;
+	
+	@Column(name = "no_pago")
+	private int noPago;
+	
 
 	@Column(name = "tipo")
 	private String tipo;
@@ -40,7 +44,7 @@ public class SaldoPrestamo {
 	private BigDecimal monto;
 
 	@Column(name = "validado")
-	private Boolean validado;
+	private String validado;
 	
 	@Column(name = "observaciones")
 	private String observaciones;
@@ -95,11 +99,11 @@ public class SaldoPrestamo {
 		this.monto = monto;
 	}
 
-	public Boolean getValidado() {
+	public String getValidado() {
 		return validado;
 	}
 
-	public void setValidado(Boolean validado) {
+	public void setValidado(String validado) {
 		this.validado = validado;
 	}
 	
@@ -127,11 +131,22 @@ public class SaldoPrestamo {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
+	public int getNoPago() {
+		return noPago;
+	}
+
+	public void setNoPago(int noPago) {
+		this.noPago = noPago;
+	}
+
 	@Override
 	public String toString() {
-		return "SaldoPrestamo [id=" + id + ", idPrestamo=" + idPrestamo + ", tipo=" + tipo + ", monto=" + monto
-				+ ", validado=" + validado + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
-				+ fechaActualizacion + "]";
+		return "SaldoPrestamo [id=" + id + ", idPrestamo=" + idPrestamo + ", noPago=" + noPago + ", tipo=" + tipo
+				+ ", origen=" + origen + ", monto=" + monto + ", validado=" + validado + ", observaciones="
+				+ observaciones + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
+				+ "]";
 	}
+
+	
 
 }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author ralfdemoledor
@@ -18,7 +19,9 @@ public class MenuItem implements Serializable {
 	private String name;
 	private String icon;
 	private String url;
+	private String classItem;
 	private String variant;
+	private Boolean divider;
 	private Boolean title;
 	private List<MenuItem> children;
 	
@@ -46,12 +49,29 @@ public class MenuItem implements Serializable {
 	public void setUrl(String url) {
 		this.url = url;
 	}
+	@JsonProperty("class")
+	public String getClassItem() {
+		return classItem;
+	}
+	@JsonProperty("class")
+	public void setClassItem(String classItem) {
+		this.classItem = classItem;
+	}
 	public String getVariant() {
 		return variant;
 	}
 	public void setVariant(String variant) {
 		this.variant = variant;
 	}
+	
+	public Boolean getDivider() {
+		return divider;
+	}
+
+	public void setDivider(Boolean divider) {
+		this.divider = divider;
+	}
+
 	public Boolean getTitle() {
 		return title;
 	}

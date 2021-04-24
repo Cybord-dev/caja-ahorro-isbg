@@ -5,8 +5,10 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -37,12 +40,14 @@ import com.business.cybord.models.dtos.InteresGeneradoLogDto;
 import com.business.cybord.models.dtos.PrestamoDto;
 import com.business.cybord.models.dtos.RecursoDto;
 import com.business.cybord.models.dtos.SaldoPrestamoDto;
+import com.business.cybord.models.dtos.reports.ReportePrestamoDto;
 import com.business.cybord.models.entities.InteresGeneradoLog;
 import com.business.cybord.models.entities.Prestamo;
 import com.business.cybord.models.entities.SaldoAhorro;
 import com.business.cybord.models.entities.Usuario;
 import com.business.cybord.models.entities.ValidacionAval;
 import com.business.cybord.models.enums.EstatusPrestamoEnum;
+import com.business.cybord.models.enums.SaldoPrestamoEstatus;
 import com.business.cybord.models.enums.TipoAhorroEnum;
 import com.business.cybord.models.enums.TipoSaldoPrestamoEnum;
 import com.business.cybord.models.enums.TipoUsuarioEnum;
@@ -51,16 +56,13 @@ import com.business.cybord.repositories.PrestamoRepository;
 import com.business.cybord.repositories.SaldoAhorroRepository;
 import com.business.cybord.repositories.UsuariosRepository;
 import com.business.cybord.repositories.ValidacionAvalRepository;
-import com.business.cybord.repositories.dao.PrestamoDao;
 import com.business.cybord.repositories.dao.SaldoPrestamoDao;
+import com.business.cybord.repositories.dao.reportes.ReportePrestamoDao;
 import com.business.cybord.utils.builder.CalculoInteresDtoBuilder;
 import com.business.cybord.utils.builder.InteresGeneradoLogBuilder;
 import com.business.cybord.utils.builder.PrestamoBuilder;
 import com.business.cybord.utils.builder.SaldoAhorroBuilder;
 import com.business.cybord.utils.builder.SaldoPrestamoBuilder;
-
-
-
 
 @Service
 public class PrestamoService {
@@ -69,50 +71,106 @@ public class PrestamoService {
 	private PrestamoRepository repository;
 
 	@Autowired
-	private PrestamoDao dao;
-
-	@Autowired
 	private SaldoPrestamoDao saldosDao;
 
 	@Autowired
 	private PrestamoMapper mapper;
-	
+
 	@Autowired
 	private CatalogoService catalogoService;
-	
-	@Autowired
-	private SaldoPrestamoService saldoPrestamoService;
 
 	@Autowired
 	private ValidacionAvalRepository avalRepository;
-	
+
 	@Autowired
 	private SaldoAhorroService saldoAhorroService;
-	
+
 	@Autowired
 	private SaldoAhorroRepository saldoAhorroRepository;
 
 	@Autowired
 	private UsuariosRepository usuarioRepository;
-	
+
 	@Autowired
 	private DownloaderService reportService;
-	
-	@Autowired 
-	private InteresGeneradoLogRepository interesGeneradoRepository; 
-	
+
 	@Autowired
-	private InteresGeneradoLogMapper interesGeneradoLogMapper; 
-	
+	private InteresGeneradoLogRepository interesGeneradoRepository;
+
+	@Autowired
+	private InteresGeneradoLogMapper interesGeneradoLogMapper;
+
 	@Autowired
 	private CajaUtilityService cajaUtilityService;
 
+	@Autowired
+	private ReportePrestamoDao reportePrestamoDao;
+	
+	
+
+	public Optional<BigDecimal> getSaldoPrestamoInteresByPeriod(String tipoUsuario, LocalDateTime fechaInicial,
+			LocalDateTime fechaFinal) {
+		return saldosDao.getSaldoPrestamoInteresesByPeriod(tipoUsuario, fechaInicial, fechaFinal);
+	}
+
+	private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
+
 	private static final Logger log = LoggerFactory.getLogger(PrestamoService.class);
+
+	public Page<ReportePrestamoDto> getPagedReportePrestamosByFiltros(Map<String, String> parameters) {
+		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
+		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
+		LocalDate start = parameters.containsKey("since") ? LocalDate.parse(parameters.get("since"), formatter)
+				: cajaUtilityService.getInicioCajaActual();
+		LocalDate end = parameters.containsKey("to") ? LocalDate.parse(parameters.get("to"), formatter)
+				: cajaUtilityService.getFinCajaActual();
+
+		return reportePrestamoDao.findAll(parameters, start, end, PageRequest.of(page, size));
+	}
+
+	public RecursoDto getPagedReportePrestamosByFiltrosReport(Map<String, String> parameters) throws IOException {
+		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
+		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
+
+		LocalDate start = parameters.containsKey("since") ? LocalDate.parse(parameters.get("since"), formatter)
+				: cajaUtilityService.getInicioCajaActual();
+		LocalDate end = parameters.containsKey("to") ? LocalDate.parse(parameters.get("to"), formatter)
+				: cajaUtilityService.getFinCajaActual();
+
+		Page<ReportePrestamoDto> prestamos = reportePrestamoDao.findAll(parameters, start, end,
+				PageRequest.of(page, size));
+
+		List<Map<String, String>> data = prestamos.getContent().stream().map(s -> {
+			Map<String, String> map = new HashMap<>();
+			map.put("ID SOLICITUD", s.getIdSolicitud().toString());
+			map.put("ID USUARIO", s.getIdUsuario().toString());
+			map.put("TIPO USUARIO", s.getTipoUsuario());
+			map.put("NO EMPLEADO", s.getNoEmpleado());
+			map.put("NOMBRE", s.getNombre());
+			map.put("TIPO", s.getTipo());
+			map.put("MONTO PRESTAMO", s.getMontoPrestamo().setScale(2, RoundingMode.HALF_UP).toString());
+			map.put("TASA INTERES", s.getTasaInteres().setScale(2, RoundingMode.HALF_UP).toString());
+			map.put("NO QUINCENAS",s.getNoQuincenas().toString());
+			map.put("MONTO PAGOS", s.getPagos().setScale(2, RoundingMode.HALF_UP).toString());
+			map.put("MONTO INTERES", s.getInteres().setScale(2, RoundingMode.HALF_UP).toString());
+			map.put("MONTO AJUSTE", s.getAjuste().setScale(2, RoundingMode.HALF_UP).toString());
+			map.put("INTERES TOTAL",s.getInteresPrestamo().setScale(2, RoundingMode.HALF_UP).toString());
+			map.put("SALDO PENDIENTE",s.getSaldoPendiente().setScale(2, RoundingMode.HALF_UP).toString());
+			map.put("FECHA_CREACION", s.getFechaCreacion().toString());
+			map.put("FECHA_ACTUALIZACION", s.getFechaActualizacion().toString());
+			
+			return map;
+		}).collect(Collectors.toList());
+
+		return reportService.generateBase64Report("PRESTAMOS USUARIOS", data);
+	}
 
 	public Page<PrestamoDto> findPrestamosByFiltros(Map<String, String> parameters) {
 		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
 		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
-		return dao.findAll(parameters, PageRequest.of(page, size, Sort.by("fechaActualizacion")));
+		Page<Prestamo> prestamos = repository.findAll(PageRequest.of(page, size));
+		return new PageImpl<>(mapper.getDtosFromEntities(prestamos.getContent()), PageRequest.of(page, size),
+				prestamos.getTotalElements());
 	}
 
 	public List<PrestamoDto> getPrestamosByUsuarioId(Integer id) {
@@ -128,26 +186,28 @@ public class PrestamoService {
 		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
 		return saldosDao.findAll(parameters, PageRequest.of(page, size, Sort.by("fechaActualizacion")));
 	}
-	
+
 	public RecursoDto getPrestamosReportParams(Map<String, String> parameters) throws IOException {
 		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
 		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
-		Page<SaldoPrestamoDto> saldos = saldosDao.findAll(parameters, PageRequest.of(page, size, Sort.by("fechaActualizacion")));
+		Page<SaldoPrestamoDto> saldos = saldosDao.findAll(parameters,
+				PageRequest.of(page, size, Sort.by("fechaActualizacion")));
 
 		List<Map<String, String>> data = saldos.getContent().stream().map(s -> {
 			Map<String, String> map = new HashMap<>();
-			map.put("VALIDADO", (s.getValidado() == Boolean.TRUE)?"SI":"NO");
 			map.put("MONTO", s.getMonto().toString());
+			map.put("NO PAGO", s.getNoPago().toString());
+			map.put("TIPO", s.getTipo());
+			map.put("VALIDADO", s.getValidado());
 			map.put("NO QUINCENAS", s.getNoQuincenas().toString());
-			map.put("TASA INTERES", String.format("%%%s", s.getTasaInteres().toString()));
-			map.put("TIPO EMPLEADO", s.getEstatus());
-			map.put("NO EMPLEADO", s.getNoEmpleado());
-			map.put("NOMBRE", s.getNombreEmpleado());
 			map.put("MONTO PRESTAMO", s.getMontoPrestamo().toString());
 			map.put("SALDO PENDIENTE", s.getSaldoPendiente().toString());
-			map.put("TIPO", s.getTipo());
+			map.put("TIPO EMPLEADO", s.getTipoUsuario());
+			map.put("NO EMPLEADO", s.getNoEmpleado());
+			map.put("NOMBRE", s.getNombreEmpleado());
 			map.put("ESTATUS", s.getEstatus());
 			map.put("MODIFICADO", s.getOrigen());
+			map.put("OBSERVACIONES", s.getObservaciones());
 			map.put("FECHA ALTA", s.getFechaCreacion().toString());
 			map.put("FECHA MODIFICACION", s.getFechaActualizacion().toString());
 			return map;
@@ -192,28 +252,64 @@ public class PrestamoService {
 	public SaldoPrestamoDto insertPagoPrestamo(Integer idPrestamo, SaldoPrestamoDto dto) {
 		repository.findById(idPrestamo).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
 				String.format("El prestamo con id %d  no existe.", idPrestamo)));
+		int noPago = saldosDao.getNoPago(idPrestamo);
+		dto.setNoPago(noPago);
 		return saldosDao.insertSaldoPrestamo(dto);
 	}
+	
+	public List<SaldoPrestamoDto> getPagosByIdPrestamoAndNoPago(Integer idPrestamo, Integer noPago){
+		return saldosDao.getSaldosByIdPrestamoAndNoPago(idPrestamo, noPago);
+	}
 
+	/**
+	 * Valida los pagos de un pretamos ligados al mismo idPrestamo y noPago, todos los pagos ligados
+	 * seran validados y se cambiara el estatus a 1
+	 * @param idPrestamo identificador unico del prestamo
+	 * @param noPago no de pago
+	 * @return Regresala informacion del prestamo, descontando los pagos realizados
+	 */
 	@Transactional(rollbackOn = { DataAccessException.class, SQLException.class })
-	public SaldoPrestamoDto updatePagoPrestamo(Integer idSaldo, SaldoPrestamoDto dto) {
+	public PrestamoDto approvePagoPrestamo(Integer idPrestamo, Integer noPago, String validador) {
 		
-		int updated = saldosDao.updateSaldoPrestamo(idSaldo, dto);
-		if(updated == 1 && dto.getValidado() && dto.getOrigen() != null) {
-			Prestamo prestamo  = repository.findById(dto.getIdPrestamo())
-					.orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "El saldo no se encuentra ligado a ningun prestamo"));
-			if(!dto.getTipo().equals(TipoSaldoPrestamoEnum.INTERES.name())) {
-				prestamo.setSaldoPendiente(prestamo.getSaldoPendiente().subtract(dto.getMonto()));
-					if(prestamo.getSaldoPendiente().compareTo(BigDecimal.ZERO ) <= 0) {
+		List<SaldoPrestamoDto> saldos = saldosDao.getSaldosByIdPrestamoAndNoPago(idPrestamo, noPago);
+		
+		int updatedRecords = saldos.stream().map(s->{ 
+			s.setValidado(SaldoPrestamoEstatus.VALIDO.name());
+			return saldosDao.updateSaldoPrestamo(s.getId(), s);}).reduce(0, (a,b)->a+b);
+		
+		if (!saldos.isEmpty() && saldos.size() == updatedRecords) {
+			Prestamo prestamo = repository.findById(saldos.get(0).getIdPrestamo())
+					.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+							"El saldo no se encuentra ligado a ningun prestamo"));
+			
+			for (SaldoPrestamoDto saldo : saldos) {
+				saldo.setValidado(SaldoPrestamoEstatus.VALIDO.name());
+				saldo.setOrigen(validador);
+				if (!saldo.getTipo().equals(TipoSaldoPrestamoEnum.INTERES.name())) {
+					prestamo.setSaldoPendiente(prestamo.getSaldoPendiente().subtract(saldo.getMonto()));
+					if (prestamo.getSaldoPendiente().compareTo(BigDecimal.ZERO) <= 0) {
 						prestamo.setEstatus(EstatusPrestamoEnum.TERMINADO.name());
 					}
-				log.info("Updating saldo pendiente del prestamo : {}", prestamo);
-				repository.save(prestamo);
+				}
 			}
-		}else {
+			log.info("Updating saldo pendiente del prestamo : {}", prestamo);
+			repository.save(prestamo);
+			return mapper.getDtoFromEntity(prestamo);
+		} else {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El saldo no fue correctamente actualizado");
-		}
-		return dto;
+		}	
+	}
+	
+	@Transactional(rollbackOn = { DataAccessException.class, SQLException.class })
+	public void rejectPagoPrestamo(Integer idPrestamo, Integer noPago, String validador) {
+		
+		List<SaldoPrestamoDto> saldos = saldosDao.getSaldosByIdPrestamoAndNoPago(idPrestamo, noPago);
+		int updatedRecords = saldos.stream().map(s->{ 
+			s.setValidado(SaldoPrestamoEstatus.RECHAZADO.name());
+			return saldosDao.updateSaldoPrestamo(s.getId(), s);}).reduce(0, (a,b)->a+b);
+		if (saldos.size() != updatedRecords) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El saldo no fue correctamente actualizado");
+		} 
 	}
 
 	@Transactional(rollbackOn = { DataAccessException.class, SQLException.class })
@@ -226,24 +322,26 @@ public class PrestamoService {
 		List<SaldoPrestamoDto> generados = new ArrayList<>();
 
 		for (Prestamo activo : activos) {
+			int noPago = saldosDao.getNoPago(activo.getId());
 			BigDecimal sum = montoEfectivamentePagado(activo);
 			if (sum.equals(activo.getMonto())) {
 				activo.setEstatus(EstatusPrestamoEnum.TERMINADO.name());
 				repository.save(activo);
 			} else {
-				generados.add(createSaldoPrestamoPago(activo));
-				generados.add(createSaldoPrestamoInteres(activo));
+				generados.add(createSaldoPrestamoPago(activo, noPago));
+				generados.add(createSaldoPrestamoInteres(activo, noPago));
 			}
 		}
 
 		for (Prestamo traspasado : traspasados) {
+			int noPago = saldosDao.getNoPago(traspasado.getId());
 			BigDecimal sum = montoEfectivamentePagado(traspasado);
 
 			if (sum.equals(traspasado.getMonto())) {
 				traspasado.setEstatus(EstatusPrestamoEnum.TRASPASADO_TERMINADO.name());
 				repository.save(traspasado);
 			} else {
-				generados.add(createSaldoPrestamoPago(traspasado));
+				generados.add(createSaldoPrestamoPago(traspasado, noPago));
 			}
 		}
 		return generados;
@@ -267,7 +365,7 @@ public class PrestamoService {
 		}
 		BigDecimal montoEfectivamentePagado = montoEfectivamentePagado(prestamo);
 		BigDecimal saldoPorAval = (prestamo.getMonto().subtract(montoEfectivamentePagado))
-				.divide(new BigDecimal(avales.size()),2, RoundingMode.HALF_UP);
+				.divide(new BigDecimal(avales.size()), 2, RoundingMode.HALF_UP);
 		prestamo.setEstatus(EstatusPrestamoEnum.A_PAGAR_POR_AVAL.name());
 		repository.save(prestamo);
 		List<Prestamo> prestamosGenerados = new ArrayList<>();
@@ -303,11 +401,11 @@ public class PrestamoService {
 
 		Optional<BigDecimal> saldoAhorroTotal = saldoAhorroService.getSaldosAhorroTotal();
 
-		Optional<BigDecimal> saldoPrestamoInteres = saldoPrestamoService
-				.getSaldoPrestamoInteresByPeriod(tipoUsuarioValue.getTipo(), fechaInicial, fechaFinal);
+		Optional<BigDecimal> saldoPrestamoInteres = saldosDao
+				.getSaldoPrestamoInteresesByPeriod(tipoUsuarioValue.getTipo(), fechaInicial, fechaFinal);
 
 		if (!saldoAhorroTotal.isPresent() || !saldoPrestamoInteres.isPresent()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+			throw new ResponseStatusException(HttpStatus.CONFLICT,
 					"No existen intereses para el periodo o aun no existen ahorros");
 		} else {
 
@@ -331,154 +429,138 @@ public class PrestamoService {
 					.setInteresDelPeriodo(interesDelPerido).setPorcentajeInteresDelPeriodo(porcentajeInteresDelPeriodo)
 					.build();
 
-		}	
+		}
 	}
-	
-	@Transactional(rollbackOn = { DataAccessException.class, SQLException.class, ResponseStatusException.class })
 
+	@Transactional(rollbackOn = { DataAccessException.class, SQLException.class, ResponseStatusException.class })
 	public InteresGeneradoLogDto generacionRenglonIntereses(GeneracionRenglonDto generacionRenglonDto) {
-		
+
 		TipoUsuarioEnum tipoUsuarioValue;
 		try {
 			tipoUsuarioValue = TipoUsuarioEnum.valueOf(generacionRenglonDto.getTipoUsuario());
 		} catch (IllegalArgumentException e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El tipo de usuario no es valido");
 		}
-		
+
 		LocalDateTime fechaFinal = LocalDateTime.now();
-		Optional<InteresGeneradoLog> ultimoInteresGenerado = interesGeneradoRepository.findFirstByTipoUsuarioOrderByFechaEjecucionDesc(tipoUsuarioValue.getTipo());
-		
+		Optional<InteresGeneradoLog> ultimoInteresGenerado = interesGeneradoRepository
+				.findFirstByTipoUsuarioOrderByFechaEjecucionDesc(tipoUsuarioValue.getTipo());
+
 		LocalDateTime fechaInicial;
-		if(ultimoInteresGenerado.isPresent()) {
-		
-			 fechaInicial = Instant.ofEpochMilli(ultimoInteresGenerado.get().getFechaEjecucion().getTime())
-			      .atZone(ZoneId.systemDefault())
-			      .toLocalDateTime();
-		}else {
-			
-			fechaInicial = cajaUtilityService.getInicioCajaActual().atStartOfDay();			
+		if (ultimoInteresGenerado.isPresent()) {
+
+			fechaInicial = Instant.ofEpochMilli(ultimoInteresGenerado.get().getFechaEjecucion().getTime())
+					.atZone(ZoneId.systemDefault()).toLocalDateTime();
+		} else {
+
+			fechaInicial = cajaUtilityService.getInicioCajaActual().atStartOfDay();
 		}
-		
-	
+
 		CalculoInteresDto interesesDto = calculoInteres(tipoUsuarioValue.getTipo(), fechaInicial, fechaFinal);
-		
 
 		BigDecimal interesRepartido = BigDecimal.ZERO;
-		
+
 		List<SaldoAhorro> saldoAhorroCreados = new ArrayList<>();
-		
-		for(TipoUsuarioEnum tipoAhorrodor : TipoUsuarioEnum.values()) {
-			List<Usuario> ahorradores = usuarioRepository.findByTipoUsuarioAndAhorrador(tipoAhorrodor.getTipo(), Boolean.TRUE);
-			
-			for(Usuario usuario: ahorradores) {
+
+		for (TipoUsuarioEnum tipoAhorrodor : TipoUsuarioEnum.values()) {
+			List<Usuario> ahorradores = usuarioRepository.findByTipoUsuarioAndAhorrador(tipoAhorrodor.getTipo(),
+					Boolean.TRUE);
+
+			for (Usuario usuario : ahorradores) {
 				Optional<BigDecimal> ahorro = saldoAhorroService.findSaldoAhorroSumByIdUsuario(usuario.getId());
-				if(ahorro.isPresent()) {
-					BigDecimal interesUsurio = ahorro.get().multiply(interesesDto.getPorcentajeInteresDelPeriodo().divide(new BigDecimal(100),6, RoundingMode.FLOOR));				
-					SaldoAhorro saldoAhorroInteresCreado = createSaldoAhorroInteres(usuario.getId(),interesUsurio);
+				if (ahorro.isPresent()) {
+					BigDecimal interesUsurio = ahorro.get().multiply(interesesDto.getPorcentajeInteresDelPeriodo()
+							.divide(new BigDecimal(100), 6, RoundingMode.FLOOR));
+					SaldoAhorro saldoAhorroInteresCreado = createSaldoAhorroInteres(usuario.getId(), interesUsurio);
 					saldoAhorroCreados.add(saldoAhorroInteresCreado);
 					interesRepartido = interesRepartido.add(saldoAhorroInteresCreado.getMonto());
 				}
-			}		
-		}
-		
-		if(interesRepartido.compareTo(interesesDto.getInteresDelPerido()) <=0 ) {
-			log.info("Interes repartido {}", interesRepartido);
-			saldoAhorroCreados.add(createSaldoAhorroInteres(Constants.ID_USUARIO_CAJA,interesesDto.getSaldoPrestamoInteresTotal().subtract(interesRepartido)));
-		}else {
-			throw new ResponseStatusException(HttpStatus.CONFLICT, "Error en la generacion de intereses");
+			}
 		}
 
+		if (interesRepartido.compareTo(interesesDto.getInteresDelPerido()) <= 0) {
+			log.info("Interes repartido {}", interesRepartido);
+			saldoAhorroCreados.add(createSaldoAhorroInteres(Constants.ID_USUARIO_CAJA,
+					interesesDto.getSaldoPrestamoInteresTotal().subtract(interesRepartido)));
+		} else {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, "Error en la generacion de intereses");
+		}
 
 		InteresGeneradoLog interesGeneradoLog = new InteresGeneradoLogBuilder()
 				.setSaldoAhorro(interesesDto.getSaldoAhorroTotal())
 				.setPorcentajeInteres(interesesDto.getPorcentajeInteresDelPeriodo())
-				.setInteresGenerado(interesesDto.getSaldoPrestamoInteresTotal())
-				.setInteresRepartido(interesRepartido)
+				.setInteresGenerado(interesesDto.getSaldoPrestamoInteresTotal()).setInteresRepartido(interesRepartido)
 				.setInteresCaja(interesesDto.getSaldoPrestamoInteresTotal().subtract(interesRepartido))
-				.setTipoUsuario(tipoUsuarioValue.getTipo())
-				.build();
-		
+				.setTipoUsuario(tipoUsuarioValue.getTipo()).build();
+
 		interesGeneradoLog = interesGeneradoRepository.save(interesGeneradoLog);
 		return interesGeneradoLogMapper.getDtoFromEntity(interesGeneradoLog);
 
 	}
-	
+
 	@Transactional(rollbackOn = { DataAccessException.class, SQLException.class, ResponseStatusException.class })
-	public List<PrestamoDto>trasparPrestamosUsuario(Integer idUsuario) {
-		usuarioRepository.findById(idUsuario).orElseThrow(()->  new ResponseStatusException(HttpStatus.NOT_FOUND,
-						String.format("No existe el usuario con id %d", idUsuario)));
-		
-		List<Prestamo> prestamosActivos =  repository.findByIdDeudorActivoSuspendido(idUsuario);
-		
-		if(prestamosActivos.isEmpty()) {
+	public List<PrestamoDto> trasparPrestamosUsuario(Integer idUsuario) {
+		usuarioRepository.findById(idUsuario).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+				String.format("No existe el usuario con id %d", idUsuario)));
+
+		List<Prestamo> prestamosActivos = repository.findByIdDeudorActivoSuspendido(idUsuario);
+
+		if (prestamosActivos.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					String.format("El usuario con id %d no tiene prestamos activos", idUsuario)); 
+					String.format("El usuario con id %d no tiene prestamos activos", idUsuario));
 		}
-		
+
 		List<PrestamoDto> prestamosCreados = new ArrayList<>();
-		
-		for(Prestamo prestamoActual : prestamosActivos) {
+
+		for (Prestamo prestamoActual : prestamosActivos) {
 			prestamosCreados.addAll(traspasarPrestamo(prestamoActual.getId()));
 		}
-						
+
 		return prestamosCreados;
 	}
 
-	
-	
-	private SaldoPrestamoDto createSaldoPrestamoPago(Prestamo prestamo) {
-		SaldoPrestamoDto saldoPrestamo = new SaldoPrestamoBuilder().setIdPrestamo(prestamo.getId())
+	private SaldoPrestamoDto createSaldoPrestamoPago(Prestamo prestamo, int noPago) {
+		SaldoPrestamoDto saldoPrestamo = new SaldoPrestamoBuilder().setIdPrestamo(prestamo.getId()).setNoPago(noPago)
 				.setIdUsuario(prestamo.getIdDeudor()).setMontoPrestamo(prestamo.getMonto())
 				.setNoQuincenas(prestamo.getNoQuincenas()).setSaldoPendiente(prestamo.getSaldoPendiente())
 				.setTipo(TipoSaldoPrestamoEnum.PAGO.name())
-				.setMonto(prestamo.getMonto().divide(new BigDecimal(prestamo.getNoQuincenas()),2, RoundingMode.FLOOR))
-				.setValidado(false)
-				.setOrigen(Constants.ORIGEN_SISTEMA)
-				.build();
+				.setMonto(prestamo.getMonto().divide(new BigDecimal(prestamo.getNoQuincenas()), 2, RoundingMode.FLOOR))
+				.setValidado(SaldoPrestamoEstatus.EN_VALIDACION.name()).setOrigen(Constants.ORIGEN_SISTEMA).build();
 		return saldosDao.insertSaldoPrestamo(saldoPrestamo);
 
 	}
-	
-	private SaldoAhorro createSaldoAhorroInteres(Integer idUsuario, BigDecimal monto) {
-		SaldoAhorro saldoAhorro = new SaldoAhorroBuilder()
-				.setIdUsuario(idUsuario)
-				.setMonto(monto.setScale(2, RoundingMode.FLOOR))
-				.setOrigen(Constants.ORIGEN_SISTEMA)
-				.setTipo(TipoAhorroEnum.INTERES.getTipo())
-				.setValidado(Boolean.TRUE)
-				.build();
 
+	private SaldoAhorro createSaldoAhorroInteres(Integer idUsuario, BigDecimal monto) {
+		SaldoAhorro saldoAhorro = new SaldoAhorroBuilder().setIdUsuario(idUsuario)
+				.setMonto(monto.setScale(2, RoundingMode.FLOOR)).setOrigen(Constants.ORIGEN_SISTEMA)
+				.setTipo(TipoAhorroEnum.INTERES.getTipo()).setValidado(Boolean.TRUE).build();
 
 		return saldoAhorroRepository.save(saldoAhorro);
-		
-	}
-			
 
-	private SaldoPrestamoDto createSaldoPrestamoInteres(Prestamo prestamo) {
-		SaldoPrestamoDto saldoPrestamo = new SaldoPrestamoBuilder().setIdPrestamo(prestamo.getId())
+	}
+
+	private SaldoPrestamoDto createSaldoPrestamoInteres(Prestamo prestamo, int noPago) {
+		SaldoPrestamoDto saldoPrestamo = new SaldoPrestamoBuilder().setIdPrestamo(prestamo.getId()).setNoPago(noPago)
 				.setIdUsuario(prestamo.getIdDeudor()).setMontoPrestamo(prestamo.getMonto())
 				.setNoQuincenas(prestamo.getNoQuincenas()).setSaldoPendiente(prestamo.getSaldoPendiente())
 				.setTipo(TipoSaldoPrestamoEnum.INTERES.name())
-				.setMonto(prestamo.getMonto().multiply(prestamo.getTasaInteres().divide(new BigDecimal(100),2, RoundingMode.FLOOR)))
-				.setValidado(false).setOrigen(Constants.ORIGEN_SISTEMA).build();
+				.setMonto(prestamo.getMonto()
+						.multiply(prestamo.getTasaInteres().divide(new BigDecimal(100), 2, RoundingMode.FLOOR)))
+				.setValidado(SaldoPrestamoEstatus.EN_VALIDACION.name()).setOrigen(Constants.ORIGEN_SISTEMA).build();
 		return saldosDao.insertSaldoPrestamo(saldoPrestamo);
 	}
 
 	private BigDecimal montoEfectivamentePagado(Prestamo prestamo) {
 		return prestamo.getSaldosPrestamo().stream()
-				.filter(sp -> !sp.getTipo().equals(TipoSaldoPrestamoEnum.INTERES.name()))
-				.filter(sp -> sp.getValidado()).map(sp -> sp.getMonto())
-				.reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
+				.filter(sp -> !sp.getTipo().equals(TipoSaldoPrestamoEnum.INTERES.name())).filter(sp -> SaldoPrestamoEstatus.VALIDO.equals(SaldoPrestamoEstatus.valueOf(sp.getValidado())) )
+				.map(sp -> sp.getMonto()).reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
 	}
-	
+
 	private void validarFecha(LocalDateTime fechaInicial, LocalDateTime fechaFinal) {
-		if(fechaInicial.isAfter(fechaFinal)) {
+		if (fechaInicial.isAfter(fechaFinal)) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 					String.format("Fecha Incial %s es mayor a fecha final %s  ", fechaInicial, fechaFinal));
 		}
 	}
-	
-	
-
 
 }
