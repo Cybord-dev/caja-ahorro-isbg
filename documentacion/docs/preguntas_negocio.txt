@@ -1,0 +1,4 @@
+1.-Usuarios externos se dan de alta igual que los internas
+2.-la taza de interes del prestamo es variante
+3.-puede existir un prestamo sin ahorrador
+4.-Un ahorrador debe tener su saldo de ahorro y saldo de deuda separado

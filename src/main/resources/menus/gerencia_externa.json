@@ -1,0 +1,17 @@
+{
+    "name": "GERENCIA EXTERNA",
+    "url": "/gerencia-externa",
+    "icon": "icon-user-follow",
+   "children": [
+      {
+        "name": "Aprobaciónes",
+        "url": "/gerencia-externa/validaciones",
+        "icon": "icon-arrow-right"
+      },
+      {
+        "name": "Historico validaciones",
+        "url": "/gerencia-externa/historico",
+        "icon": "icon-arrow-right"
+      }
+    ]
+  }

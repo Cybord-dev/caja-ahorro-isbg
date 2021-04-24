@@ -1,0 +1,32 @@
+{
+   "name": "USUARIO",
+   "url": "/usuarios",
+   "icon": "icon-user",
+   "children": [
+       {
+        "name": "Mi ahorro",
+        "url": "/usuarios/saldo-ahorro",
+        "icon": "icon-arrow-right"
+      },
+      {
+        "name":"Trámites Ahorro",
+        "url": "/usuarios/tramites",
+        "icon": "icon-arrow-right"
+      },
+      {
+        "name":"Trámites Prestamo",
+        "url": "/usuarios/prestamos",
+        "icon": "icon-arrow-right"
+      },
+      {
+        "name":"Mis Prestamos",
+        "url": "/usuarios/prestamos-activos",
+        "icon": "icon-arrow-right"
+      },
+      {
+        "name":"Aceptacion aval",
+        "url": "/usuarios/avales",
+        "icon": "icon-arrow-right"
+      }
+    ]
+}

@@ -1,0 +1,92 @@
+server:
+  port: 8080
+  
+spring:
+  profiles:
+    active: "local"
+  main:
+    banner-mode: "off"
+    
+---
+      
+spring:
+  profiles: stg
+  datasource:
+    url: jdbc:mysql://test-db.caygcdtmmphs.us-west-1.rds.amazonaws.com:3306/isbg
+    username: master
+    password: 51g35ISBG
+    driverClassName: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+      
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 821564819362-i74glsh0fobf9je7j5p51skrago06h8t.apps.googleusercontent.com
+            client-secret: UeLCKfI_-p-l9bMOCFxc-EEj
+          
+  main:
+    banner-mode: "off"
+  resources:
+    static-locations: 
+    - classpath:/static/ 
+ 
+---    
+    
+spring:
+  profiles: dev
+  datasource:
+        url: jdbc:mysql://localhost:3306/isbg?serverTimezone=UTC
+        username: root
+        password: hola123
+        driverClassName: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none      
+      
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 821564819362-i74glsh0fobf9je7j5p51skrago06h8t.apps.googleusercontent.com
+            client-secret: UeLCKfI_-p-l9bMOCFxc-EEj
+          
+  main:
+    banner-mode: "off"
+  resources:
+    static-locations: 
+    - classpath:/static/   
+    
+---    
+    
+spring:
+  profiles: local
+  datasource:
+        url: jdbc:mysql://test-db.caygcdtmmphs.us-west-1.rds.amazonaws.com:3306/isbg
+        username: master
+        password: 51g35ISBG
+        driverClassName: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none      
+      
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 821564819362-i74glsh0fobf9je7j5p51skrago06h8t.apps.googleusercontent.com
+            client-secret: UeLCKfI_-p-l9bMOCFxc-EEj
+          
+  main:
+    banner-mode: "off"
+  resources:
+    static-locations: 
+    - classpath:/static/ 

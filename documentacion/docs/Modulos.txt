@@ -1,0 +1,61 @@
+
+Modulos
+Calculos
+    -Precalculos de ahorro
+Ahorro(V1)
+    +Clien†e
+        -Solicitud de Ahorro
+        -Reporte de Ahorro
+        -Solicitud de Cancelacion de Ahorro
+        -Modificacion ahorro
+        -Solicitud de retiro anticipado
+    +RH 
+        -BAjas y altas extracurrilares
+        -Validacion
+            +Cargar la informacion que no tiene el sitema
+                1.-Cuanto gana mensualmente
+                2.-Antiguedad
+                3.-Datos externos de gastos
+                    a)Infonavit
+                    b)Seguros
+        -Reportes de ahorradores 
+        -*Carga masiva de informacion
+    +Contabilidad
+        -validacion
+        -Carga de ahorro externo
+        -Conciliacion
+        -Reportes   
+            +Cuantro entra quincenal
+            +Cuanto se va
+    +Tesoreria
+        -Validacion de retiros anticipados
+        -Retiro de cancelacion de ahorro
+        -*Reportes
+    +Administracion(Gerencia)
+        -Validador
+        -Reportes
+
+
+Prestamo(V2)
+
+Solitud de ahorro
+    1.-Validacion RH
+    2.-Validacion conta
+    3.-Validacion Administracion
+    4.-Completado
+    5.-Rechazo rh -Razon
+    6.-Rechazo conta -Razon
+    7.-Rechazo administracion -Razon
+
+Solitud de cambio de porcentaje
+Solitud de retiro de retiro anticipado
+Solicitud de cancelacion de ahorro
+
+Solicitud de prestamos
+    1.-Validacion RH
+    2.-Validacion conta
+    3.-Validacion Administracion
+    4.-Completado
+
+Prestamo
+cliente->prevalida->rh->conta->admin->teso->admin->deda prestamos

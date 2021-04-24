@@ -1,0 +1,42 @@
+{
+    "name": "RECURSOS HUMANOS",
+    "url": "/recursos-humanos",
+    "icon": "icon-people",
+    "children": [
+      {
+        "name": "Altas y bajas",
+        "url": "/recursos-humanos/usuarios",
+        "icon": "icon-arrow-right"
+      },
+      {
+        "name": "Aprobaciones",
+        "url": "/recursos-humanos/validaciones",
+        "icon": "icon-arrow-right"
+      },
+      {
+        "name": "Historico validaciones",
+        "url": "/recursos-humanos/historico",
+       "icon": "icon-arrow-right"
+      },
+      {
+        "name": "Conciliación informacion",
+        "url": "/recursos-humanos/conciliacion",
+        "icon": "icon-arrow-right"
+      },
+      {
+        "name": "Reportes de ahorro",
+        "url": "/recursos-humanos/reportes-ahorro",
+        "icon": "icon-arrow-right"
+      },
+      {
+        "name": "Reportes de prestamo",
+        "url": "/recursos-humanos/reportes-prestamo",
+        "icon": "icon-arrow-right"
+      },
+      {
+      	"name": "Pagos prestamos",
+      	"url": "/recursos-humanos/pagos-prestamos",
+      	"icon": "icon-arrow-right"
+      }
+    ]
+  }

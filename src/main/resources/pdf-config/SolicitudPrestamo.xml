@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+    <xsl:template match="/SolicitudPdfModel">
+        <root xmlns="http://www.w3.org/1999/XSL/Format" xmlns:fox="http://xmlgraphics.apache.org/fop/extensions">
+            <layout-master-set>
+                <simple-page-master page-height="279mm" page-width="216mm" margin="30mm" master-name="letter">
+                    <region-body />
+                    <region-after extent="3mm" />
+                </simple-page-master>
+            </layout-master-set>
+            <page-sequence master-reference="letter">
+                <title>Solicitud</title>
+
+                <static-content flow-name="xsl-region-after">
+                    <block font-size="2.5mm">
+                        <inline-container width="160.0mm">
+                            <block font-weight="bold" font-size="3mm" text-align="left">Deposito a cuenta de nomina</block>
+                        </inline-container>
+
+                        <inline-container text-align="right" width="47mm">
+                            <block>
+                                Página
+                                <page-number />
+                                de
+                                <page-number-citation ref-id="last-item" />
+                            </block>
+                        </inline-container>
+                    </block>
+                </static-content>
+
+                <flow flow-name="xsl-region-body">
+
+                    <block-container height="10mm" margin-bottom="10mm" padding="0mm">
+                        <block>
+                             <inline-container width="160.0mm">
+                                <block text-align="right" font-size="4mm"  margin-top="5mm">
+                                   <xsl:value-of select="Fecha" />
+                                 </block>
+                            </inline-container>
+                        </block>
+                    </block-container>
+                
+                     <block-container height="15mm" margin-bottom="1mm" padding="0mm">
+                        <block>
+                            <inline-container width="160.0mm">
+                                <block text-align="center" font-size="6mm" font-weight="bold" margin-top="1mm">
+                                    PROGRAMA DE AHORRO VOLUNTARIO
+                                </block>
+                            </inline-container>
+                        </block>
+                    </block-container>
+
+                    <block-container height="20mm" margin-bottom="1mm" padding="0mm">
+                        <block>
+                            <inline-container width="160.0mm">
+                                <block text-align="center" font-size="6mm" font-weight="bold" margin-top="1mm">
+                                    <xsl:value-of select="Titulo" />
+                                </block>
+                            </inline-container>
+                        </block>
+                    </block-container>
+
+                     <block-container height="10mm" margin-bottom="5mm" padding="0mm">
+                        <block>
+                            <inline-container width="160.0mm">
+                                <block text-align="left" font-size="5mm"  font-weight="bold" margin-top="5mm">
+                                    Solicitante:
+                                </block>
+                            </inline-container>
+                        </block>
+                    </block-container>
+
+                    <block-container height="3mm" margin-bottom="1mm" padding="0mm">
+                        <block>
+                            <inline-container width="40.0mm">
+                                <block text-align="left" font-size="3mm" >
+                                    Fecha Solicitud:
+                                </block>
+                            </inline-container>
+                            <inline-container width="120.0mm">
+                                <block text-align="left" font-size="3mm" >
+                                   <xsl:value-of select="Fecha" />
+                                </block>
+                            </inline-container>
+                        </block>
+                    </block-container>
+                     <block-container height="3mm" margin-bottom="1mm" padding="0mm">
+                        <block>
+                            <inline-container width="40.0mm">
+                                <block text-align="left" font-size="3mm" >
+                                    Nombre:
+                                </block>
+                            </inline-container>
+                            <inline-container width="120.0mm">
+                                <block text-align="left" font-size="3mm"  >
+                                   <xsl:value-of select="Nombre" />
+                                </block>
+                            </inline-container>
+                        </block>
+                    </block-container>
+                    <block-container height="3mm" margin-bottom="1mm" padding="0mm">
+                        <block>
+                            <inline-container width="40.0mm">
+                                <block text-align="left" font-size="3mm" >
+                                   Clave de trabajador:
+                                </block>
+                            </inline-container>
+                            <inline-container width="120.0mm">
+                                <block text-align="left" font-size="3mm"  >
+                                   <xsl:value-of select="NoEmpleado" />
+                                </block>
+                            </inline-container>
+                        </block>
+                    </block-container>
+                     <block-container height="10mm" margin-bottom="1mm" padding="0mm">
+                        <block>
+                            <inline-container width="40.0mm">
+                                <block text-align="left" font-size="3mm" >
+                                   Oficina:
+                                </block>
+                            </inline-container>
+                            <inline-container width="120.0mm">
+                                <block text-align="left" font-size="3mm"  >
+                                   <xsl:value-of select="Oficina" />
+                                </block>
+                            </inline-container>
+                        </block>
+                    </block-container>
+                     <block-container height="10mm" margin-bottom="3mm" padding="0mm">
+                        <block>
+                            <inline-container width="20.0mm">
+                                <block text-align="left" font-size="5mm" font-weight="bold" >
+                                   Avales:
+                                </block>
+                            </inline-container>
+                            <inline-container width="150.0mm">
+                                <block text-align="left" font-size="3mm"  >
+                                   Nota de no contar con el requisito de los avales, no se autorizara el préstamo.
+                                </block>
+                            </inline-container>
+                        </block>
+                    </block-container>
+                    <block-container height="5mm" margin-bottom="3mm" padding="0mm">
+                        <block>
+                            <inline-container width="160.0mm">
+                                <block text-align="left" font-size="5mm" >
+                                   Nombres:
+                                </block>
+                            </inline-container>
+                        </block>
+                    </block-container>
+
+                    <block-container height="10mm" margin-bottom="2mm" padding="2mm">
+                         <xsl:for-each select="Avales/Aval">
+                            <table>
+                                <table-body>
+                                    <table-row text-align="left">
+                                        <table-cell >
+                                            <block margin-top="0.5mm" margin-bottom="0.5mm">
+                                                -<xsl:value-of select="@Nombre"/>
+                                            </block>
+                                        </table-cell>
+                                    </table-row>
+                                </table-body>
+                            </table>
+                         </xsl:for-each>
+                    </block-container>
+
+
+                    <block-container height="8mm" margin-bottom="4mm" padding="5mm">
+                        <block>
+                            <inline-container width="160.0mm">
+                                <block text-align="justify"  color="red" line-height="4.00mm"  font-size="4mm"  margin-top="0mm">
+                                  <xsl:value-of select="Texto" />
+                                </block>
+                            </inline-container>
+                        </block>
+                    </block-container>
+
+                    <block-container height="10mm" margin-bottom="4mm" padding="0mm">
+                        <block>
+                            <inline-container width="160.0mm">
+                                <block text-align="left" font-size="4mm"   font-weight="bold" margin-top="2mm">
+                                    Servicios:
+                                </block>
+                            </inline-container>
+                        </block>
+                    </block-container>
+
+                    <block-container height="3mm" margin-bottom="0mm" padding="0mm">
+                        <block>
+                            <inline-container width="40.0mm">
+                                <block text-align="left" font-size="3mm" >
+                                    Cantidad:
+                                </block>
+                            </inline-container>
+                            <inline-container width="120.0mm">
+                                <block text-align="left" font-size="3mm"  >
+                                   $<xsl:value-of select="Cantidad" />
+                                </block>
+                            </inline-container>
+                        </block>
+                    </block-container>
+                    <block-container height="3mm" margin-bottom="0mm" padding="0mm">
+                        <block>
+                            <inline-container width="40.0mm">
+                                <block text-align="left" font-size="3mm" >
+                                    Interes:
+                                </block>
+                            </inline-container>
+                            <inline-container width="120.0mm">
+                                <block text-align="left" font-size="3mm"  >
+                                   $<xsl:value-of select="Interes" />
+                                </block>
+                            </inline-container>
+                        </block>
+                    </block-container>
+                    <block-container height="3mm" margin-bottom="0mm" padding="0mm">
+                        <block>
+                            <inline-container width="40.0mm">
+                                <block text-align="left" font-size="3mm" >
+                                    Total:
+                                </block>
+                            </inline-container>
+                            <inline-container width="120.0mm">
+                                <block text-align="left" font-size="3mm"  >
+                                   $<xsl:value-of select="Total" />
+                                </block>
+                            </inline-container>
+                        </block>
+                    </block-container>
+                    <block-container height="3mm" margin-bottom="0mm" padding="0mm">
+                        <block>
+                            <inline-container width="40.0mm">
+                                <block text-align="left" font-size="3mm" >
+                                   Quincenas:
+                                </block>
+                            </inline-container>
+                            <inline-container width="120.0mm">
+                                <block text-align="left" font-size="3mm"  >
+                                   <xsl:value-of select="Quincenas" />
+                                </block>
+                            </inline-container>
+                        </block>
+                    </block-container>
+                     <block-container height="3mm" margin-bottom="0mm" padding="0mm">
+                        <block>
+                            <inline-container width="40.0mm">
+                                <block text-align="left" font-size="3mm" >
+                                    Descuento Quincenal:
+                                </block>
+                            </inline-container>
+                            <inline-container width="120.0mm">
+                                <block text-align="left" font-size="3mm"  >
+                                   $<xsl:value-of select="DescuentoQuincenal" />
+                                </block>
+                            </inline-container>
+                        </block>
+                    </block-container>
+
+                    <block-container height="10mm" margin-bottom="0mm" padding="0mm">
+                        <block>
+                            <inline-container width="160.0mm">
+                                <block text-align="left" font-size="3mm"  margin-top="5mm">
+                                    Atentamente
+                                </block>
+                            </inline-container>
+                        </block>
+                    </block-container>
+
+                    <block-container height="15mm" margin-bottom="5mm" padding="0mm">
+                        <block>
+                            <inline-container width="160.0mm">
+                                <block text-align="left" font-size="4mm"  margin-top="5mm">
+                                  <xsl:value-of select="Nombre" />
+                                </block>
+                            </inline-container>
+                        </block>
+                    </block-container>
+                    
+                    <block id="last-item" />
+                </flow>
+            </page-sequence>
+        </root>
+    </xsl:template>
+</xsl:stylesheet>

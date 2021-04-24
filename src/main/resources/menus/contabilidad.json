@@ -1,0 +1,48 @@
+{
+    "name":"CONTABILIDAD",
+    "url": "/contabilidad",
+    "icon": "icon-briefcase",
+    "variant": "success",
+    "children": [
+      {
+        "name": "Altas y bajas",
+        "url": "/contabilidad/usuarios",
+        "icon": "icon-arrow-right"
+      },
+      {
+        "name": "Aprobaciónes",
+        "url": "/contabilidad/validaciones",
+        "icon": "icon-arrow-right"
+      },
+      {
+        "name": "Historico validaciones",
+        "url": "/contabilidad/historico",
+        "icon": "icon-arrow-right"
+      },
+      {
+        "name": "Conciliacion Ahorro",
+        "url": "/contabilidad/conciliacion",
+        "icon": "icon-arrow-right"
+      },
+      {
+        "name": "Carga ahorro externos",
+        "url": "/contabilidad/carga-ahorro",
+        "icon": "icon-arrow-right"
+      },
+      {
+        "name": "Reportes de ahorro",
+        "url": "/contabilidad/reportes-ahorro",
+        "icon": "icon-arrow-right"
+      },
+      {
+        "name": "Reportes de prestamo",
+        "url": "/contabilidad/reportes-prestamo",
+        "icon": "icon-arrow-right"
+      },
+      {
+      	"name": "Pagos prestamos",
+      	"url": "/contabilidad/pagos-prestamos",
+      	"icon": "icon-arrow-right"
+      }
+    ]
+  }
